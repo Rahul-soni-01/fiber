@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{$title}}</title>
+    <link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    {{--
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet"> --}}
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+</head>
+
+<body>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <div id="header" class="row">
+        <div class="col-md-1 header-first"><label id="menu" class="button" for="check"><i
+                    class="ri-menu-line"></i></label></div>
+        <div class="col-md-3 logo"><img src="{{asset('storage/logo.jpg') }}" alt=""></div>
+        <div class="col-md-2 offset-md-6 d-flex align-items-center justify-content-center">
+            {{ auth()->user()->type }}
+            <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
+                    class="ml-2 fa-solid fa-user"></i>
+                <span class="logout-text">Log out</span>
+            </a>
+        </div>
+    </div>
+    {{-- <div id="fakeheader"></div> --}}
+    {{-- <input type="checkbox" id="check" checked hidden> --}}
+    {{-- {{$permissions}} --}}
+    <div class="slidebar" id="slidebar">
+        <ul>
+            <li id="Home" class="sidebar">
+                <a href="{{ route('home') }}"><i class="ri-home-2-line"></i>Home</a>
+            </li>
+           
+            <li id="Party" class="sidebar">
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-cake-line"></i>Party<i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('party.add.view') }}" id="add" class="sub-item">Add Party</a></li>
+                    <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Party</a></li>
+                </ul>
+            </li>
+           
+            <li id="Department" class="sidebar">
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-line"></i>Departments<i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('departments.index') }}" id="view" class="sub-item">Show Departments</a></li>
+                    <li><a href="{{ route('departments.create') }}" id="add" class="sub-item">Add Departments</a></li>
+                </ul>
+                
+            </li>
+            
+            <li id="Permission" class="sidebar">
+                <a class="sub-btn" id="sub-btn-permissions"><i class="ri-lock-2-line"></i>Permissions <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('permissions.index') }}" id="view" class="sub-item">Show Permission</a></li>
+                    <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a></li>
+                </ul>
+            </li>
+
+            <li id="Category" class="sidebar">
+                <a class="sub-btn" id="sub-btn-show"><i class="ri-folder-line"></i>Category <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('category.add') }}" id="add" class="sub-item">Add Category</a></li>
+                    <li><a href="{{ route('category.show') }}" id="view" class="sub-item">Show Category</a></li>
+                </ul>
+            </li>
+            
+            <li id="Inward" class="sidebar">
+                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Inward <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('inward.good.view') }}" id="add" class="sub-item">Add Good Inward</a></li>
+                    <li><a href="{{ route('inward.show') }}" id="view" class="sub-item">Show Inward</a></li>
+                </ul>
+            </li>
+           
+        </ul>
+
+    </div>
+    <div class="special-main" id="special-main">
+        <h3>{{$title}}</h3>
+        <hr style="border:0.5px solid lightgray;">
+        {{$main}}
+    </div>
+
+    <!-- <div class="footer" id="footer">
+        <h1>Footer Page</h1>
+    </div> -->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            const menuButton = document.getElementById('menu');
+            const sidebar = document.getElementById('slidebar');
+            const mainContent = document.getElementById('special-main');
+
+            menuButton.addEventListener('click', () => {
+                // Toggle sidebar visibility
+                if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                    sidebar.style.display = 'block';
+                    mainContent.style.marginLeft = '15%';
+                    mainContent.style.width = '84%';
+                } else {
+                    sidebar.style.display = 'none';
+                    mainContent.style.width = '99%';
+                    mainContent.style.marginLeft = '0';
+                }
+            });
+
+            $(".sub-btn").on("click", function (e) {
+                $(this).next('.sub-menu').slideToggle();
+            });
+        });
+
+        var count = 1;
+        function BtnAdd(categories, subCategories) {
+
+            $('#TBody').append(`
+                <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
+                    <div class="col custom-col">
+                        <select id="data[${count}][cname]" name="data[${count}][cname]" class="form-control" onchange="filterOptions(event)">
+                            <option value="" disabled selected class="0" >Choose a Category</option>
+                        </select>
+                    </div>
+                    <div class="col custom-col">
+                        <select id="data[${count}][scname]" name="data[${count}][scname]" class="form-control" onchange="filterOptions(event)">
+                            <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
+                        </select>
+                    </div>
+                    <div class="col custom-col">
+                        <select id="data[${count}][unit]" name="data[${count}][unit]"
+                            class="form-control">
+                            <option value="">Select</option>
+                            <option value="Pic">Pic</option>
+                            <option value="Mtr">Mtr</option>
+                        </select>
+                    </div>
+                    <div class="col custom-col">
+                        <input type="number" id="data[${count}][qty]" name="data[${count}][qty]"
+                            class="form-control" onchange="total()">
+                    </div>
+                    <div class="col custom-col">
+                        <input type="number" id="data[${count}][rate]" name="data[${count}][rate]"
+                            class="form-control" onchange="total()">
+                    </div>
+                    <div class="col custom-col">
+                        <input type="number" id="data[${count}][p_tax]" name="data[${count}][p_tax]" step="0.01" class="form-control" onchange="total()">
+                    </div>
+                    <div class="col custom-col">
+                        <input type="number" id="data[${count}][tax]" step="0.01" name="data[${count}][tax]"
+                            class="form-control" disabled>
+                    </div>
+                    <div class="col custom-col">
+                        <input type="number" id="data[${count}][total]" name="data[${count}][total]"
+                        step="0.01" class="form-control">
+                    </div>
+                    <div class="col custom-col">
+                        <button type="button" class="btn btn-grey" onclick="BtnDel(this)">Delete</button>
+                    </div>
+                </div>
+            `);
+
+            // Append categories
+            if (categories && Array.isArray(categories)) {
+                categories.forEach(category => {
+                    $(`#data\\[${count}\\]\\[cname\\]`).append(`
+                <option value="${category.id}">${category.category_name}</option>`);
+                });
+            }
+
+            // Append subcategories
+            if (subCategories && Array.isArray(subCategories)) {
+                subCategories.forEach(subCategory => {
+                    $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.cid}" data-unit="${subCategory.unit}" >${subCategory.sub_category_name}</option>`);
+                });
+            }
+
+            count++;
+        }
+
+        function BtnDel(button) {
+            $(button).closest('.row').remove();
+            // count--;
+            total();
+        }
+
+        function total() {
+            for (var i = 0; i < count; i++) {
+                var qty = parseFloat(document.getElementById(`data[${i}][qty]`).value) || 0;
+                var rate = parseFloat(document.getElementById(`data[${i}][rate]`).value) || 0;
+                var p_tax = parseFloat(document.getElementById(`data[${i}][p_tax]`).value) || 0;
+
+                var total = qty * rate;
+                var taxAmount = (total * p_tax) / 100;
+                total += taxAmount;
+
+                document.getElementById(`data[${i}][tax]`).value = taxAmount.toFixed(2);
+                document.getElementById(`data[${i}][total]`).value = total.toFixed(2);
+            }
+            sub_total();
+        }
+
+        function rate() {
+            var amount1 = parseFloat(document.getElementById(`amount_d`).value) || 0;
+            var rate1 = parseFloat(document.getElementById(`rate_r`).value) || 0;
+
+            var amount = amount1 * rate1;
+
+            document.getElementById(`sub_total`).value = amount.toFixed(2);
+            document.getElementById(`amount_r`).value = amount.toFixed(2);
+            document.getElementById(`amount`).value = amount.toFixed(2);
+        }
+
+        function calculateshipping() {
+            var amount = parseFloat(document.getElementById(`amount_r`).value) || 0;
+            var shipping_cost = parseFloat(document.getElementById(`shipping_cost`).value) || 0;
+
+            var total = shipping_cost + amount;
+            document.getElementById(`sub_total`).value = total.toFixed(2);
+            document.getElementById(`amount`).value = total.toFixed(2);
+
+        }
+
+        function sub_total() {
+            var subtotal = 0;
+            for (var i = 0; i < count; i++) {
+                var total = parseFloat(document.getElementById(`data[${i}][total]`).value) || 0;
+                subtotal += total;
+            }
+            document.getElementById("sub_total").value = subtotal.toFixed(2);
+            document.getElementById("amount_r").value = subtotal.toFixed(2);
+            document.getElementById("amount_d").value = subtotal.toFixed(2);
+            calculateAmount();
+        }
+
+        function calculateAmount() {
+            var subtotal = parseFloat(document.getElementById("sub_total").value) || 0;
+            var roundAmount = parseFloat(document.getElementById("round_total").value) || 0;
+            var amount = subtotal - roundAmount;
+            document.getElementById("amount").value = amount.toFixed(2);
+        }
+
+        var row = 1;
+        function AddRow() {
+            $('#TBody').append(`
+            <tr id="${row}">
+                    <td>
+                        <h5>LED
+                            <select required>
+                                <option value="">Select</option>
+                                <option value="12">12</option>
+                                <option value="15">15</option>
+                                <option value="30">30</option>
+                                <option value="45">45</option>
+                            </select>
+                        </h5>
+                    </td>
+                    <td><input type="text" id="srled_${row}" name="srled_${row}"></td>
+                    <td><input type="text" id="ampled_${row}" name="ampled_${row}"></td>
+                    <td><input type="text" id="voltled_${row}" name="voltled_${row}"></td>
+                    <td><input type="text" id="wattled_${row}" name="wattled_${row}">
+                        <button onclick="AddRow()" class="btn btn-dark">Add</i></button>
+                        <button onclick="removeRow(this)" id="${row}" class="btn btn-danger">Delete</i></button>
+                    </td>
+                </tr>
+            `);
+            row++;
+        }
+
+        function removeRow(buttonId){
+            $(buttonId).closest('tr').remove();
+        }
+       /*     */
+    </script>
+</body>
+
+</html>
