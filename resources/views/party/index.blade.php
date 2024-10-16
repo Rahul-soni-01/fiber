@@ -27,7 +27,24 @@
             </form> 
 
             <h1>Party Details </h1>
-
+            @if ($errors->any())
+            <div style="color: red;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            @if ($errors->any())
+            <div style="color: red;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
@@ -36,18 +53,26 @@
                         <th>Address</th>
                         <th>telephone no </th>
                         <th>contact person name </th>
+                        <th>Action </th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    @foreach ($users as $user)
+                    @foreach ($parties as $party)
                         <tr>
-                            <td>{{$user->id}}</td>
-                            <td>{{$user->party_name}}</td>
-                            <td>{{$user->address}}</td>
-                            <td>{{$user->telephone_no}}</td>
-                            <td>{{$user->sender_name}}</td>
+                            <td>{{$party->id}}</td>
+                            <td>{{$party->party_name}}</td>
+                            <td>{{$party->address}}</td>
+                            <td>{{$party->telephone_no}}</td>
+                            <td>{{$party->sender_name}}</td>
+                            <td>
+                                <a href="{{ route('party.edit', ['party_id' => $party->id]) }}"><i class="ri-eye-fill"></i></a>  
+                                <form action="{{ route('party.destroy', $party->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this department?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
+                            </form> </td>
                         </tr>
                     @endforeach
 

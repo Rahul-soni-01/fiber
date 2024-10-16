@@ -7,12 +7,23 @@ use Illuminate\Http\Request;
 
 class TblCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    private function checkPermission(Request $request, $action)
     {
-        //
+        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Category ?? [];
+        return in_array($action, $permissions);
+    }
+
+    public function index(Request $request)
+    {
+        if ($this->checkPermission($request, 'view')) {
+
+            $categories = tbl_category::all();
+
+            // dd($categories);
+            return view('category.index', compact('categories'));
+        }
+        return redirect('/unauthorized');
     }
 
     /**
@@ -24,7 +35,7 @@ class TblCategoryController extends Controller
         $category->category_name = $request->category_name;
 
         $result = $category->save();
-        
+
         if ($result) {
             return redirect('add_category');
 
@@ -44,10 +55,10 @@ class TblCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(tbl_category $tbl_category)
+    public function show(tbl_category $tbl_category, Request $request)
     {
-        $categories = tbl_category::all();
-        return view('add_category', compact('categories'));
+       
+
     }
 
     /**

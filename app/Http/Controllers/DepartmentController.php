@@ -10,13 +10,18 @@ use App\Http\Controllers\TblUserController;
 class DepartmentController extends Controller
 {
 
+    private function checkPermission(Request $request, $action)
+    {
+        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Department ?? [];
+        return in_array($action, $permissions);
+    }
     public function create(Request $request)
     {
-        $tblUserController = app()->make('App\Http\Controllers\TblUserController');
-        $permissions = $tblUserController->permission($request);
-        dd($permissions);
+        if ($this->checkPermission($request, 'add')) {
+            return view('departments.create');
+        }
+        return redirect('/unauthorized');
 
-        return view('departments.create');
     }
 
     public function store(Request $request)
@@ -28,15 +33,25 @@ class DepartmentController extends Controller
         $department = Department::create($request->all());
         return redirect()->route('departments.index')->with('success', 'Department created successfully');
     }
-    public function index()
+    public function index(Request $request)
     {
+        if ($this->checkPermission($request, 'view')) {
         $departments = Department::all();
         return view('departments.index', compact('departments'));
+        }
+        return redirect('/unauthorized');
+
+        
     }
-    public function edit($id)
+    public function edit($id, Request $request)
     {
+        if ($this->checkPermission($request, 'edit')) {
+
         $department = Department::findOrFail($id);
         return view('departments.edit', compact('department'));
+        }
+        return redirect('/unauthorized');
+
     }
 
     public function update(Request $request, $id)
@@ -51,12 +66,17 @@ class DepartmentController extends Controller
 
         return redirect()->route('departments.index')->with('success', 'Department updated successfully.');
     }
-    public function destroy($id)
-{
-    $department = Department::findOrFail($id); // Find the department by ID
-    $department->delete(); // Delete the department
+    public function destroy($id, Request $request)
+    {
+        if ($this->checkPermission($request, 'delete')) {
 
-    return redirect()->route('departments.index')->with('success', 'Department deleted successfully.'); // Redirect with success message
-}
+        $department = Department::findOrFail($id); // Find the department by ID
+        $department->delete(); // Delete the department
+
+        return redirect()->route('departments.index')->with('success', 'Department deleted successfully.'); // Redirect with success message
+        }
+        return redirect('/unauthorized');
+
+    }
     
 }

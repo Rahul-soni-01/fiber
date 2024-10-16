@@ -18,7 +18,7 @@ class ManagePermissionController extends Controller
         $managepermissions = ManagePermission::where("uid", $user_id)->first();
         // dd($managepermissions);
 
-        $managePermissions = ManagePermission::with('user','user.department')->get();
+        $managePermissions = ManagePermission::with('user', 'user.department')->get();
         // Get departments and permissions for each manage permission
         foreach ($managePermissions as $permission) {
             $permission->departments = $permission->departments();
@@ -27,7 +27,53 @@ class ManagePermissionController extends Controller
         // dd($managePermissions);
         return view('ManagePermissions.index', compact('managePermissions'));
     }
-    public function edit($id){
+    public function create()
+    {
+        $assignedUsers = ManagePermission::pluck('uid');
+        $unassignedUsers = tbl_user::whereNotIn('id', $assignedUsers)->get();
+        $departments = Department::all();
+        $permissions = Permission::all();
+        return view('ManagePermissions.create', compact('unassignedUsers', 'departments', 'permissions'));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'd_id' => 'required|array',
+            'p_id' => 'required|array',
+            'uid' => 'required|unique:manage_permission,uid',
+        ]);
+
+        $uid = $request->uid;
+        $d_ids = $request->d_id;
+        $p_id = $request->p_id;
+
+        $departmentsWithPermissions = array_keys($p_id);
+
+        $invalidDepartments = array_diff($departmentsWithPermissions, $d_ids);
+
+        if (!empty($invalidDepartments)) {
+            return back()->withErrors([
+                'permissions' => 'You have selected permissions for unselected departments: ' . implode(', ', $invalidDepartments)
+            ])->withInput();
+        }
+
+        $managePermission = ManagePermission::create([
+            'uid' => $uid,
+            'd_id' => $d_ids,
+            'p_id' => $p_id,
+        ]);
+
+        if ($managePermission) {
+            return redirect()->route('manage.permissions')->with('success', 'Permissions successfully assigned.');
+        } else {
+            return back()->withErrors([
+                'error' => 'Failed to assign permissions. Please try again.'
+            ])->withInput();
+        }
+    }
+
+    public function edit($id)
+    {
         $managePermission = ManagePermission::with('user')->findOrFail($id);
         $users = tbl_user::all();
         $departments = Department::all();
@@ -43,24 +89,23 @@ class ManagePermissionController extends Controller
             'p_id' => 'required|array',
         ]);
         $d_ids = $request->d_id;
-        $p_id =  $request->p_id;
+        $p_id = $request->p_id;
 
         $departmentsWithPermissions = array_keys($p_id);
 
         // Find any departments with permissions that were not selected
         $invalidDepartments = array_diff($departmentsWithPermissions, $d_ids);
-    
+
         if (!empty($invalidDepartments)) {
             // If there are invalid departments, return an error message
             return back()->withErrors([
                 'permissions' => 'You have selected permissions for unselected departments: ' . implode(', ', $invalidDepartments)
             ])->withInput();
         }
-        
+
         $json_d_ids = json_encode($d_ids);
         $json_p_ids = json_encode($p_id);
 
-        
         /*$p_ids = [];
             foreach ($request->p_id as $department_id => $permissions) {
                 $p_ids[$department_id] = array_map('intval', $permissions);
@@ -69,16 +114,16 @@ class ManagePermissionController extends Controller
             $json_p_ids = '[' . implode(',', array_map(function($arr) {
                 return '[' . implode(',', $arr) . ']';
             }, array_values($p_ids))) . ']';*/
-       
+
         $managePermission = DB::table('manage_permission')
             ->where('id', $id)
             ->update([
                 'd_id' => $json_d_ids,
                 'p_id' => $json_p_ids
             ]);
-    
+
         // dd($managePermission);
-        return redirect()->route('manage.permissions')->with('success','Update SuccessFully');
-        
+        return redirect()->route('manage.permissions')->with('success', 'Update SuccessFully');
+
     }
 }

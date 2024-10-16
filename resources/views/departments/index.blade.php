@@ -18,7 +18,6 @@
                         <tr>
                             <td>{{$department->id}}</td>
                             <td>{{$department->name}}</td>
-                            {{-- <td><a href="{{ route('departments.edit', $department->id) }}">Edit</a></td> --}}
 
                             <td><a href="{{ route('departments.edit', ['department_id' => $department->id]) }}"><i class="ri-eye-fill"></i></a>  <form action="{{ route('departments.destroy', $department->id) }}" method="POST" style="display:inline;">
                                 @csrf

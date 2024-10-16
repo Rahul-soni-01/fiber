@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->decimal('inr_rate',4,2);
             $table->string('inr_amount');
+            $table->string('tax');
             $table->string('shipping_cost');
             $table->timestamps();
         });

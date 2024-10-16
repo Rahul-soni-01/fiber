@@ -114,6 +114,69 @@ function append_fields(){
     }
 }
 
+
+function checkQueryParams() {
+    if (window.location.pathname === '/add_sr_no') {
+        urlParams = new URLSearchParams(window.location.search);
+        invoiceNo = urlParams.get('invoice_no');
+        category = urlParams.get('category');
+        subcategory = urlParams.get('subcategory');
+        qty = urlParams.get('qty');
+        price = urlParams.get('price');
+        unit = urlParams.get('unit');
+        if (invoiceNo && category && subcategory && qty && price) {
+            var sr_no = document.getElementById('sr_no').value;  // Correct 'sr_no'
+            document.getElementById('qty').value = qty;
+            document.getElementById('price').value = qty*price;
+            $('.append_fields').html('');
+            if (sr_no === '1'){
+                append_fields();
+            }
+        }
+    }
+}
+
+function check_permission(){
+    csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        $.ajax({
+            type: "POST",
+            url: "/check_permission",
+            data: {
+                _token: csrfToken,
+                id : 1,
+            },
+            success: function(response) {
+                data = response.permissions;
+                $('.sidebar').css('display', 'none');
+                Object.entries(data).forEach(function([key, value]) {
+                    var menuItems = $('.sidebar');
+                    menuItems.each(function() {
+                        var itemId = $(this).attr('id');
+                        if (key === itemId) {
+                            $(this).css('display', 'block');
+                            value.forEach(function(permission) {
+                                console.log(permission);
+                                var submenu = $('.sub-item');
+                                submenu.each(function() {
+                                    var permission_id = $(this).attr('id');
+                                    if (value.includes(permission_id) || value === permission_id) { 
+                                        $(this).css('display', 'block'); 
+                                    } else {
+                                        $(this).css('display', 'none'); 
+                                    }
+                                });
+                            });
+                        } else if (itemId === 'Home') {
+                            $(this).css('display', 'block');
+                        } 
+                    });
+                });
+            }
+        });
+}
+window.onload = checkQueryParams(),check_permission();
+});
+
 function filterOptions(event) {
     let selectName = event.target.name; 
     
@@ -179,65 +242,3 @@ function filterOptions(event) {
         console.log("Other select element triggered the function");
     }
 }
-
-
-function checkQueryParams() {
-    if (window.location.pathname === '/add_sr_no') {
-        urlParams = new URLSearchParams(window.location.search);
-        invoiceNo = urlParams.get('invoice_no');
-        category = urlParams.get('category');
-        subcategory = urlParams.get('subcategory');
-        qty = urlParams.get('qty');
-        price = urlParams.get('price');
-        unit = urlParams.get('unit');
-        if (invoiceNo && category && subcategory && qty && price) {
-            var sr_no = document.getElementById('sr_no').value;  // Correct 'sr_no'
-            document.getElementById('qty').value = qty;
-            document.getElementById('price').value = qty*price;
-            $('.append_fields').html('');
-            if (sr_no === '1'){
-                append_fields();
-            }
-        }
-    }
-}
-
-function check_permission(){
-    csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        $.ajax({
-            type: "POST",
-            url: "/check_permission",
-            data: {
-                _token: csrfToken,
-                id : 1,
-            },
-            success: function(response) {
-                data = response.permissions;
-                $('.sidebar').css('display', 'none');
-                Object.entries(data).forEach(function([key, value]) {
-                    var menuItems = $('.sidebar');
-                    menuItems.each(function() {
-                        var itemId = $(this).attr('id');
-                        if (key === itemId) {
-                            $(this).css('display', 'block');
-                            value.forEach(function(permission) {
-                                var submenu = $('.sub-item');
-                                submenu.each(function() {
-                                    var permission_id = $(this).attr('id');
-                                    if (value.includes(permission_id) || value == permission_id) { 
-                                        $(this).css('display', 'block'); 
-                                    } else {
-                                        $(this).css('display', 'none'); 
-                                    }
-                                });
-                            });
-                        } else if (itemId === 'Home') {
-                            $(this).css('display', 'block');
-                        } 
-                    });
-                });
-            }
-        });
-}
-window.onload = checkQueryParams(),check_permission();
-});

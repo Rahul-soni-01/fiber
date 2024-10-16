@@ -1,8 +1,7 @@
 <x-layout>
-    <x-slot name="title">Show Departments</x-slot>
+    <x-slot name="title">Insert Departments</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <h3>Insert Department</h3>
             <a href="{{ route('departments.index') }}" class="btn btn-primary">Back to Departments</a>
             <form action="{{ route('departments.store' ) }}" method="POST">
                 @csrf

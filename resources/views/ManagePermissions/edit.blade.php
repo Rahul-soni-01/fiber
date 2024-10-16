@@ -7,8 +7,15 @@
             <a href="{{ route('manage.permissions') }}" class="btn btn-primary">Back to Permission</a>
             <form action="{{ route('manage-permissions.update', $managePermission->id) }}" method="POST">
                 @csrf
-
-
+                @if ($errors->any())
+                <div style="color: red;">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 @if ($errors->any())
                 <div style="color: red;">
                     <ul>

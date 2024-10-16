@@ -36,8 +36,8 @@
         <div class="col-md-1 header-first"><label id="menu" class="button" for="check"><i
                     class="ri-menu-line"></i></label></div>
         <div class="col-md-3 logo"><img src="{{asset('storage/logo.jpg') }}" alt=""></div>
-        <div class="col-md-2 offset-md-6 d-flex align-items-center justify-content-center">
-            {{ auth()->user()->type }}
+        <div class="col-md-3 offset-md-5 d-flex align-items-center justify-content-center">
+            {{ auth()->user()->type }} {{ auth()->user()->email }}
             <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
                     class="ml-2 fa-solid fa-user"></i>
                 <span class="logout-text">Log out</span>
@@ -54,10 +54,9 @@
             </li>
            
             <li id="Party" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-cake-line"></i>Party<i
-                        class="ri-arrow-down-s-line"></i></a>
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Party<i class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('party.add.view') }}" id="add" class="sub-item">Add Party</a></li>
+                    <li><a href="{{ route('party.create') }}" id="add" class="sub-item">Add Party</a></li>
                     <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Party</a></li>
                 </ul>
             </li>
@@ -85,7 +84,7 @@
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-folder-line"></i>Category <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('category.add') }}" id="add" class="sub-item">Add Category</a></li>
+                    <li><a href="{{ route('category.create') }}" id="add" class="sub-item">Add Category</a></li>
                     <li><a href="{{ route('category.show') }}" id="view" class="sub-item">Show Category</a></li>
                 </ul>
             </li>
@@ -121,7 +120,7 @@
 
             menuButton.addEventListener('click', () => {
                 // Toggle sidebar visibility
-                if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                if (sidebar.style.display === 'none') {
                     sidebar.style.display = 'block';
                     mainContent.style.marginLeft = '15%';
                     mainContent.style.width = '84%';

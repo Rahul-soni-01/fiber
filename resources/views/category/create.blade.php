@@ -2,8 +2,25 @@
     <x-slot name="title">Add Party</x-slot>
     <x-slot name="main">
         <div class="main1" id="main1">
-            
-            <form action="{{ route('party.add') }}" method="post">
+            @if ($errors->any())
+            <div style="color: red;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            @if ($errors->any())
+            <div style="color: red;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            <form action="{{ route('party.store') }}" method="post">
                 @csrf
                 <div class="container">
                     <div class="row justify-content-center"> <!-- Centering the form on larger screens -->
