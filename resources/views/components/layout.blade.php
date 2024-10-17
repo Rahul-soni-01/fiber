@@ -37,7 +37,7 @@
                     class="ri-menu-line"></i></label></div>
         <div class="col-md-3 logo"><img src="{{asset('storage/logo.jpg') }}" alt=""></div>
         <div class="col-md-3 offset-md-5 d-flex align-items-center justify-content-center">
-            {{ auth()->user()->type }} {{ auth()->user()->email }}
+            <strong>{{ auth()->user()->type }}</strong> &nbsp; || &nbsp; <strong>{{ auth()->user()->name }}</strong>
             <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
                     class="ml-2 fa-solid fa-user"></i>
                 <span class="logout-text">Log out</span>
@@ -85,7 +85,8 @@
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('category.create') }}" id="add" class="sub-item">Add Category</a></li>
-                    <li><a href="{{ route('category.show') }}" id="view" class="sub-item">Show Category</a></li>
+                    <li><a href="{{ route('category.index') }}" id="view" class="sub-item">Show Category</a></li>
+                    <li><a href="{{ route('subcategory.index') }}" id="view" class="sub-item">Show Sub Category</a></li>
                 </ul>
             </li>
             
@@ -94,7 +95,16 @@
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('inward.good.view') }}" id="add" class="sub-item">Add Good Inward</a></li>
-                    <li><a href="{{ route('inward.show') }}" id="view" class="sub-item">Show Inward</a></li>
+                    {{-- <li><a href="{{ route('inward.show') }}" id="view" class="sub-item">Show Inward</a></li> --}}
+                    <li><a href="{{ route('inward.index') }}" id="view" class="sub-item">Show Inward</a></li>
+                </ul>
+            </li>
+            <li id="Report" class="sidebar">
+                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Report <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report Inward</a></li>
+                    <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report Inward</a></li>
                 </ul>
             </li>
            

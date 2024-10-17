@@ -88,7 +88,7 @@ class TblStockController extends Controller
             }
         }
        
-        return redirect()->route('inward.show')->with('success', 'Stock added successfully');
+        return redirect()->route('inward.index')->with('success', 'Stock added successfully');
 
     }
 }

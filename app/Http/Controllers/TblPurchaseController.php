@@ -17,7 +17,7 @@ class TblPurchaseController extends Controller
         $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Inward ?? [];
         return in_array($action, $permissions);
     }
-    public function show(tbl_purchase $tbl_purchase, Request $request)
+    public function index(tbl_purchase $tbl_purchase, Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
 

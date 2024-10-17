@@ -16,7 +16,7 @@
 <body>
     <div class="container" id="main">
         <div class="col-md-4 offset-md-4">
-            <form method="post" action="login" id="login">
+            <form method="post" action="{{route('login.post')}}" id="login">
                 @csrf
                     
                 @if (Session('msg'))

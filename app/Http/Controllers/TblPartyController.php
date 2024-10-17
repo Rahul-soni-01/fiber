@@ -89,7 +89,7 @@ class TblPartyController extends Controller
         if ($this->checkPermission($request, 'edit')) {
 
             $party = tbl_party::findOrFail($id);
-            return view('party.edit', compact('party'));
+                return view('party.edit', compact('party'));
             }
         return redirect('/unauthorized');
     }

@@ -1,9 +1,11 @@
 <x-layout>
-    <x-slot name="title">Add Party</x-slot>
+    <x-slot name="title">Add Category</x-slot>
     <x-slot name="main">
-        <div class="main1" id="main1">
+        <div class="container my-4" id="main1">
+            <!-- Form to Add Category -->
+
             @if ($errors->any())
-            <div style="color: red;">
+            <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -11,45 +13,26 @@
                 </ul>
             </div>
             @endif
-            @if ($errors->any())
-            <div style="color: red;">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-            <form action="{{ route('party.store') }}" method="post">
+            <form action="{{ route('category.store') }}" method="post">
                 @csrf
-                <div class="container">
-                    <div class="row justify-content-center"> <!-- Centering the form on larger screens -->
-                        <div class="col-12 col-lg-6"> <!-- Full width on mobile, 50% on larger screens -->
-                            <div class="mb-3">
-                                <label for="party_name">Party Name</label>
-                                <input type="text" name="party_name" class="form-control"
-                                    placeholder="Enter Party Name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="address">Address</label>
-                                <input type="text" name="address" class="form-control"
-                                    placeholder="Enter Party Address">
-                            </div>
-                            <div class="mb-3">
-                                <label for="tele_no">Telephone No.</label>
-                                <input type="number" name="tele_no" class="form-control" placeholder="Enter Ph/No">
-                            </div>
-                            <div class="mb-3">
-                                <label for="contact_person_name">Contact Person Name</label>
-                                <input type="text" name="contact_person_name" class="form-control"
-                                    placeholder="Enter Person Name">
-                            </div>
-                            <div class="text-center"> <!-- Centering the button -->
-                                <button class="btn btn-dark">Add Party</button>
-                            </div>
-                        </div>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <h3>Category</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="category_name" id="category_name"
+                            placeholder="Enter category name" required>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                 </div>
+            </form>
+            <hr class="my-4">
+
+            <!-- Form to Add Sub Category -->
+            <form action="{{ route('subcategory.store') }}" method="post">
+                @csrf
 
             </form>
         </div>

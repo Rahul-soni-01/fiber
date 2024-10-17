@@ -116,7 +116,7 @@
             @else
                 !! Data already in stock !! </br>
                 {{-- {{ dd($existingrecord); }} --}}
-                <a href="{{ route('inward.show') }}" class="sub-item">Show Inward</a>
+                <a href="{{ route('inward.ndex') }}" class="sub-item">Show Inward</a>
             @endif
         </div>
     </x-slot>

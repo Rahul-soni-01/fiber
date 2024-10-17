@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Show Category</x-slot>
+    <x-slot name="title">Show Sub Category</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
             @if ($errors->any())
@@ -21,43 +21,41 @@
             </div>
             @endif
 
-            <a href="{{ route('category.create') }}" class="btn btn-primary">Add Category</a>
+            <a href="{{ route('subcategory.create') }}" class="btn btn-primary">Add Sub Category</a>
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
                         {{-- <th>Category Add Date</th> --}}
                         <th>Category Name</th>
-                        <th>Action</th>
                         {{-- <th>Sub Category Add Date</th> --}}
-                        {{-- <th>Sub Category Name</th> --}}
-                        {{-- <th>Unit</th> --}}
-                        {{-- <th>Sr No</th> --}}
+                        <th>Sub Category Name</th>
+                        <th>Unit</th>
+                        <th>Sr No</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
-
-                    @foreach ($categories as $category)
+                    @foreach ($subCategories as $subcategory)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        {{-- <td>{{$category['category_date']}}</td> --}}
-                        <td>{{$category['category_name']}}</td>
+                        {{-- <td>{{$subCategory['category_date']}}</td> --}}
+                        <td>{{$subcategory['category_name']}}</td>
+                         {{-- <td>{{$subCategory['sub_category_date']}}</td> --}}
+                        <td>{{$subcategory['sub_category_name']}}</td>
+                        <td>{{$subcategory['unit']}}</td>
+                        <td>{{$subcategory['sr_no']}}</td>
                         <td>
-                            <a href="{{ route('category.edit', ['category_id' => $category['id']]) }}"><i class="ri-eye-fill"></i></a>  
-                            <form action="{{ route('category.destroy', $category['id']) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('subcategory.edit', ['subcategory_id' => $subcategory['id']]) }}"><i class="ri-eye-fill"></i></a>  
+                            <form action="{{ route('subcategory.destroy', $subcategory['id']) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                             <button type="submit" onclick="return confirm('Are you sure you want to delete this department?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
                             </form>
                         </td>
-                        {{-- <td>{{$category['sub_category_date']}}</td> --}}
-                        {{-- <td>{{$category['sub_category_name']}}</td> --}}
-                        {{-- <td>{{$category['unit']}}</td> --}}
-                        {{-- <td>{{$category['sr_no']}}</td> --}}
                     </tr>
                     @endforeach
-
                 </tbody>
             </table>
         </div>

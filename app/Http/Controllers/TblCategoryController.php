@@ -17,71 +17,82 @@ class TblCategoryController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-
             $categories = tbl_category::all();
-
             // dd($categories);
             return view('category.index', compact('categories'));
         }
         return redirect('/unauthorized');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
-        $category = new tbl_category();
-        $category->category_name = $request->category_name;
-
-        $result = $category->save();
-
-        if ($result) {
-            return redirect('add_category');
-
-        } else {
-            return redirect('add_category');
+        if ($this->checkPermission($request, 'add')) {
+            // $category = new tbl_category();
+            return view('category.create');
         }
+        return redirect('/unauthorized');
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        if ($this->checkPermission($request, 'add')) {
+
+            $request->validate([
+                'category_name' => 'required|string|max:255',
+            ]);
+            $category = new tbl_category();
+            $category->category_name = $request->category_name;
+
+            $result = $category->save();
+            if ($result) {
+                return redirect()->route('category.index')->with('success', 'Category added successfully.');
+            } else {
+                return redirect()->back()->with('error', 'Failed to add category.');
+            }
+        }
+        return redirect('/unauthorized');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(tbl_category $tbl_category, Request $request)
     {
        
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(tbl_category $tbl_category)
+    public function edit(tbl_category $tbl_category,$id,Request $request)
     {
-        //
+        if ($this->checkPermission($request, 'edit')) {
+
+            $category = tbl_category::findOrFail($id);
+            return view('category.edit', compact('category'));
+            }
+        return redirect('/unauthorized');
+    }
+    public function update(Request $request, tbl_category $tbl_category,$id)
+    {
+        $request->validate([
+            'category_name' => 'required|string|max:255',
+        ]);
+
+        $category = tbl_category::findOrFail($id);
+        $category->category_name = $request->category_name;
+        $result = $category->save();
+    
+        if ($result) {
+            return redirect()->route('category.index')->with('success', 'Category updated successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to update category.');
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, tbl_category $tbl_category)
+    public function destroy(tbl_category $tbl_category,$id,Request $request)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(tbl_category $tbl_category)
-    {
-        //
+        if ($this->checkPermission($request, 'delete')) {
+            $party = $tbl_category->find($id);
+            $party->delete();
+            return redirect()->route('category.index')->with('success', 'category Deleted Successfully.');
+        }
+        return redirect('/unauthorized');
     }
 }

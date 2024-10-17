@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\tbl_sub_category;
+use App\Models\tbl_category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +14,6 @@ class TblSubCategoryController extends Controller
         $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Category ?? [];
         return in_array($action, $permissions);
     }
-
 
     public function index(Request $request)
     {
@@ -33,24 +33,33 @@ class TblSubCategoryController extends Controller
                     ];
                 });
 
-            return view('category.index', ['categories' => $subCategories]);
+            return view('subcategory.index', ['subCategories' => $subCategories]);
         }
         return redirect('/unauthorized');
     }
 
     public function create(Request $request)
     {
+        if ($this->checkPermission($request, 'add')) {
+            $categories = tbl_category::all();
+            return view('subcategory.create',compact('categories'));
+        }
+        return redirect('/unauthorized');
+    }
+
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function store(tbl_sub_category $tbl_sub_category, Request $request)
+    {
+     
         $rules = [
             'category' => 'required|integer',
             'sub_category' => 'required|string|max:255',
             'unit' => 'required|string|in:Pic,Mtr',
         ];
-
-        if ($request->unit === 'Pic') {
-            $rules['sr_no'] = 'required|integer';
-        } else {
-            $rules['sr_no'] = 'nullable';
-        }
 
         $validatedData = $request->validate($rules);
         $subcategory = new tbl_sub_category();
@@ -61,46 +70,52 @@ class TblSubCategoryController extends Controller
         $result = $subcategory->save();
 
         if ($result) {
-            return redirect('add_category')->with('success', 'Subcategory added successfully!');
+            return redirect()->route('subcategory.index')->with('success', 'Category added successfully.');
         } else {
-            return redirect('add_category')->with('error', 'Failed to add subcategory!');
+            return redirect()->back()->with('error', 'Failed to add subcategory!');
         }
     }
 
-    public function show_category(Request $request)
+    public function edit(tbl_sub_category $tbl_sub_category,Request $request, $id)
     {
-      
+        if ($this->checkPermission($request, 'edit')) {
+
+            $categories = tbl_category::all();
+
+            $subcategory = tbl_sub_category::findOrFail($id);
+            return view('subcategory.edit', compact('subcategory','categories'));
+            }
+        return redirect('/unauthorized');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(tbl_sub_category $tbl_sub_category)
+    public function update(Request $request, tbl_sub_category $tbl_sub_category,$id)
     {
-        //
+        $request->validate([
+            'cid' => 'required|exists:tbl_categories,id', // Check if the category exists in the categories table
+            'sub_category_name' => 'required|string|max:255',
+            'unit' => 'required|string|in:Pic,Mtr',
+            'sr_no' => 'nullable|boolean', // It will be 1 or 0
+        ]);
+    
+        $subcategory = tbl_sub_category::findOrFail($id);
+    
+        $subcategory->cid = $request->input('cid');
+        $subcategory->sub_category_name = $request->input('sub_category_name');
+        $subcategory->unit = $request->input('unit');
+        $subcategory->sr_no = $request->input('sr_no', 0); 
+        $subcategory->save();
+    
+        // Redirect the user back with a success message
+        return redirect()->route('subcategory.index')->with('success', 'Subcategory updated successfully!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(tbl_sub_category $tbl_sub_category)
+    public function destroy(tbl_sub_category $tbl_sub_category,$id,Request $request )
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, tbl_sub_category $tbl_sub_category)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(tbl_sub_category $tbl_sub_category)
-    {
-        //
+        if ($this->checkPermission($request, 'delete')) {
+            $party = $tbl_sub_category->find($id);
+            $party->delete();
+            return redirect()->route('subcategory.index')->with('success', 'Subcategory Deleted Successfully.');
+        }
+        return redirect('/unauthorized');
     }
 }
