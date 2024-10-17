@@ -70,7 +70,7 @@ class TblPartyController extends Controller
         if ($result) {
             return redirect()->route('party.show')->with('success', 'Party added successfully.');
         } else {
-            return redirect()->route()->back()->with('error', 'Failed to add party.');
+            return redirect()->back()->with('error', 'Failed to add party.');
         }
     }
     public function index(tbl_party $tbl_party, Request $request)
