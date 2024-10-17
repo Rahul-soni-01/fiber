@@ -59,8 +59,9 @@ class TblUserController extends Controller
      */
     public function index()
     {
-        $permissions = $this->check();
-        return view('home', compact('permissions'));
+      $users = tbl_user::all();
+      return view( 'user.index', compact('users'));
+
     }
 
     /**
@@ -106,7 +107,8 @@ class TblUserController extends Controller
      */
     public function show(tbl_user $tbl_user)
     {
-        //
+        $permissions = $this->check();
+        return view('home', compact('permissions'));
     }
 
     /**

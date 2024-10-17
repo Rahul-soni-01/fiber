@@ -33,9 +33,10 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
     
     Route::middleware('auth')->group(function () {
         // Home Blade
-        Route::get('/home', [TblUserController::class, 'index'] )->name('home');
+        Route::get('/home', [TblUserController::class, 'show'] )->name('home');
         
         // permsission view & add
+        Route::get('/user', [TblUserController::class, 'index'])->name('user.index');
         Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
         Route::get('/permissions/add', [PermissionController::class, 'create'])->name('permissions.add');
         
@@ -61,10 +62,8 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('edit-party-{party_id}', [TblPartyController::class, 'edit'])->name(('party.edit'));
         Route::put('/party-{id}', [TblPartyController::class, 'update'])->name('party.update');
         Route::delete('/party-{party_id}', [TblPartyController::class, 'destroy'])->name('party.destroy');
-        // Route::post('/party-store', [TblPartyController::class, 'store'])->name('party.store');
         Route::get('search', [TblPartyController::class, 'search'])->name('party.search');
 
-       
         // category crud
         Route::get('category', [TblCategoryController::class, 'index'])->name('category.index');
         Route::get('add_category', [TblCategoryController::class, 'create'])->name('category.create');

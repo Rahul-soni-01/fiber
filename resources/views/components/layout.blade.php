@@ -75,6 +75,7 @@
                 <a class="sub-btn" id="sub-btn-permissions"><i class="ri-lock-2-line"></i>Permissions <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
+                    <li><a href="{{ route('user.index') }}" id="view" class="sub-item">Show User</a></li>
                     <li><a href="{{ route('permissions.index') }}" id="view" class="sub-item">Show Permission</a></li>
                     <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a></li>
                 </ul>
