@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('tbl_users', function (Blueprint $table) {
             $table->dropForeign(['d_id']);
-    
             $table->foreignId('d_id')->default(1)->constrained('departments')->onDelete('cascade');
         });
     }

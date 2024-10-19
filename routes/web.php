@@ -35,10 +35,17 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         // Home Blade
         Route::get('/home', [TblUserController::class, 'show'] )->name('home');
         
-        // permsission view & add
+        // User Crud
         Route::get('/user', [TblUserController::class, 'index'])->name('user.index');
+        Route::get('/user-create', [TblUserController::class, 'create'])->name('user.create');
+        Route::post('/user-store', [TblUserController::class, 'store'])->name('user.store');
+        Route::get('edit-user-{user_id}', [TblUserController::class, 'edit'])->name(('user.edit')); //View deparment By id.
+        Route::put('/user/{id}', [TblUserController::class, 'update'])->name('user.update');
+        Route::delete('/user-{user_id}', [TblUserController::class, 'destroy'])->name('user.destroy');
+        
+
         Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
-        Route::get('/permissions/add', [PermissionController::class, 'create'])->name('permissions.add');
+        Route::get('/permissions-add', [PermissionController::class, 'create'])->name('permissions.add');
         
         // manage-permissions Crud
         Route::get('/manage-permissions', [ManagePermissionController::class, 'index'])->name('manage.permissions');
@@ -50,10 +57,10 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         // departments Crud
         Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
         Route::get('/departments-create', [DepartmentController::class, 'create'])->name('departments.create');
-        Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
         Route::post('/departments-store', [DepartmentController::class, 'store'])->name('departments.store');
-        Route::delete('/departments{department_id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
         Route::get('edit-department{department_id}', [DepartmentController::class, 'edit'])->name(('departments.edit')); //View deparment By id.
+        Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
+        Route::delete('/departments{department_id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
         
         // Party Crud
         Route::get('party-create', [TblPartyController::class, 'create'])->name('party.create');

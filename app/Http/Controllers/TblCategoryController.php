@@ -27,8 +27,9 @@ class TblCategoryController extends Controller
     public function create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
-            // $category = new tbl_category();
-            return view('category.create');
+            $categories = tbl_category::all();
+            return view('category.create', compact('categories'));
+
         }
         return redirect('/unauthorized');
 

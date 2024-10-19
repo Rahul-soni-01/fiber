@@ -48,7 +48,7 @@
                             <form action="{{ route('category.destroy', $category['id']) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                            <button type="submit" onclick="return confirm('Are you sure you want to delete this department?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this Category?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
                             </form>
                         </td>
                         {{-- <td>{{$category['sub_category_date']}}</td> --}}

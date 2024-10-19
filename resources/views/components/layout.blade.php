@@ -21,11 +21,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+        integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
+        integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+
 
     <script>
         $(document).ready(function () {
             $('.table').DataTable();
         });
+
+        /*$('#select-type').selectize({
+            create: function(input) {
+                return {
+                    value: input,
+                    text: input
+                };
+            },
+            onChange: function(value) {
+                if (!value) {
+                    this.clear();
+                }
+            }
+        });*/
     </script>
 </head>
 
@@ -35,8 +56,8 @@
     <div id="header" class="row">
         <div class="col-md-1 header-first"><label id="menu" class="button" for="check"><i
                     class="ri-menu-line"></i></label></div>
-        <div class="col-md-3 logo"><img src="{{asset('storage/logo.jpg') }}" alt=""></div>
-        <div class="col-md-3 offset-md-5 d-flex align-items-center justify-content-center">
+        <div class="col-md-2 logo"><img src="{{asset('storage/logo.jpg') }}" alt=""></div>
+        <div class="col-md-3 offset-md-6 d-flex align-items-center justify-content-center">
             <strong>{{ auth()->user()->type }}</strong> &nbsp; || &nbsp; <strong>{{ auth()->user()->name }}</strong>
             <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
                     class="ml-2 fa-solid fa-user"></i>
@@ -52,15 +73,16 @@
             <li id="Home" class="sidebar">
                 <a href="{{ route('home') }}"><i class="ri-home-2-line"></i>Home</a>
             </li>
-           
+
             <li id="Party" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Party<i class="ri-arrow-down-s-line"></i></a>
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Party<i
+                        class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('party.create') }}" id="add" class="sub-item">Add Party</a></li>
                     <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Party</a></li>
                 </ul>
             </li>
-           
+
             <li id="Department" class="sidebar">
                 <a class="sub-btn" id="sub-btn-add"><i class="ri-user-line"></i>Departments<i
                         class="ri-arrow-down-s-line"></i></a>
@@ -68,18 +90,21 @@
                     <li><a href="{{ route('departments.index') }}" id="view" class="sub-item">Show Departments</a></li>
                     <li><a href="{{ route('departments.create') }}" id="add" class="sub-item">Add Departments</a></li>
                 </ul>
-                
+
             </li>
-            
+            {{-- @if('admin' === auth()->user()->type) --}}
+
             <li id="Permission" class="sidebar">
                 <a class="sub-btn" id="sub-btn-permissions"><i class="ri-lock-2-line"></i>Permissions <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('user.index') }}" id="view" class="sub-item">Show User</a></li>
+                    <li><a href="{{ route('user.create') }}" id="view" class="sub-item">Add User</a></li>
                     <li><a href="{{ route('permissions.index') }}" id="view" class="sub-item">Show Permission</a></li>
                     <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a></li>
                 </ul>
             </li>
+            {{-- @endif --}}
 
             <li id="Category" class="sidebar">
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-folder-line"></i>Category <i
@@ -87,10 +112,12 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('category.create') }}" id="add" class="sub-item">Add Category</a></li>
                     <li><a href="{{ route('category.index') }}" id="view" class="sub-item">Show Category</a></li>
+                    {{-- <li><a href="{{ route('category.create') }}" id="add" class="sub-item">Add Sub Category</a>
+                    </li> --}}
                     <li><a href="{{ route('subcategory.index') }}" id="view" class="sub-item">Show Sub Category</a></li>
                 </ul>
             </li>
-            
+
             <li id="Inward" class="sidebar">
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Inward <i
                         class="ri-arrow-down-s-line"></i></a>
@@ -108,7 +135,7 @@
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report Inward</a></li>
                 </ul>
             </li>
-           
+
         </ul>
 
     </div>
@@ -171,22 +198,22 @@
                         </select>
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][qty]" name="data[${count}][qty]"
+                        <input type="number" id="data[${count}][qty]" name="data[${count}][qty]" placeholder="Quantity"
                             class="form-control" onchange="total()">
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][rate]" name="data[${count}][rate]"
+                        <input type="number" id="data[${count}][rate]" name="data[${count}][rate]" placeholder="Rate"
                             class="form-control" onchange="total()">
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][p_tax]" name="data[${count}][p_tax]" step="0.01" class="form-control" onchange="total()">
+                        <input type="number" id="data[${count}][p_tax]" name="data[${count}][p_tax]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
                     </div>
                     <div class="col custom-col">
                         <input type="number" id="data[${count}][tax]" step="0.01" name="data[${count}][tax]"
                             class="form-control" disabled>
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][total]" name="data[${count}][total]"
+                        <input type="number" id="data[${count}][total]" name="data[${count}][total]" placeholder="Total"
                         step="0.01" class="form-control">
                     </div>
                     <div class="col custom-col">

@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tbl_users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('d_id');
-            $table->timestamps();
+        Schema::create('tbl_user_type', function (Blueprint $table) {
+            $table->id(); // Auto-incrementing ID
+            $table->string('type')->unique(); // Unique type column
+            $table->timestamps(); 
         });
     }
 
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tbl_users');
+        Schema::dropIfExists('tbl_user_type');
     }
 };

@@ -143,7 +143,7 @@
                     <div class="row mt-3">
                         <div class="col-sm-2 offset-sm-8">Amount (₹)</div>
                         <div class="col-sm-2">
-                            <input type="number" id="amount_r" name="amount_r" step="0.01" class="form-control" disabled>
+                            <input type="number" id="amount_r" name="amount_r" step="0.01" class="form-control">
                         </div>
                     </div>
                     <div class="row mt-3">

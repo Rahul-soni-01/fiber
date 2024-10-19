@@ -101,6 +101,16 @@ class TblPurchaseController extends Controller
         return view('show_inward', ['inwards' => $inwards, 'Categories' => $Categories, 'tbl_parties' => $tbl_parties, 'SubCategories' => $SubCategories]);
     }
 
+    public function create(Request $request){
+        if ($this->checkPermission($request, 'add')) {
+
+            $partyname = tbl_party::all();
+            $inwards = tbl_category::all();
+            $items = tbl_sub_category::all();
+            return view('good_inward', compact('partyname', 'inwards', 'items'));
+        }
+        return redirect('/unauthorized');
+    }
 
     public function one_purchase(tbl_purchase $tbl_purchase, $invoice_no)
     {

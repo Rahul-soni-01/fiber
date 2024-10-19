@@ -131,8 +131,8 @@ div#DataTables_Table_0_paginate, .dataTables_filter{
     padding: 16px; */
     min-height: 100%;
     margin-left: 15%;
-    width: 84%;
-    padding: 20px;                
+    /* width: 85%; */
+    padding: 20px; 
     border: 2px solid #ccc;        
     border-radius: 10px;           
     background-color: #f9f9f9;     
@@ -149,6 +149,7 @@ div#DataTables_Table_0_paginate, .dataTables_filter{
     z-index: 2;
     display: flex;
     position: relative;
+    margin-left: 0;
     background-color: rgb(224, 224, 224);
     transition: margin-left .5s;
 }
