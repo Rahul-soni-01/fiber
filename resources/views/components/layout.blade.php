@@ -15,6 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+
     {{--
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet"> --}}
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -27,11 +28,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
         integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <script>
         $(document).ready(function () {
-            $('.table').DataTable();
+            // $('.table').DataTable();
+            $('.table').not('.datatable-remove').DataTable();
+
         });
 
         /*$('#select-type').selectize({
@@ -128,11 +132,11 @@
                 </ul>
             </li>
             <li id="Report" class="sidebar">
-                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Report <i
+                <a class="sub-btn" id="sub-btn-show"><i class="ri-file-chart-line"></i>Report <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report Inward</a></li>
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report Inward</a></li>
+                    <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report Inward</a></li>
                 </ul>
             </li>
 
@@ -308,19 +312,22 @@
             <tr id="${row}">
                     <td>
                         <h5>LED
-                            <select required>
+                            <select required onchange="tbl_stock(${row});" id="subcategory_${row}" class="tbl_sub">
                                 <option value="">Select</option>
-                                <option value="12">12</option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                                <option value="45">45</option>
+                                <option value="1">15</option>
+                                <option value="2">30</option>
+                                <option value="3">45</option>
                             </select>
                         </h5>
                     </td>
-                    <td><input type="text" id="srled_${row}" name="srled_${row}"></td>
-                    <td><input type="text" id="ampled_${row}" name="ampled_${row}"></td>
-                    <td><input type="text" id="voltled_${row}" name="voltled_${row}"></td>
-                    <td><input type="text" id="wattled_${row}" name="wattled_${row}">
+                    <td>
+                        <select required  id="srled_${row}" name="serial_no[]" class="tbl_sr_no">
+                                <option value="">Select</option>
+                            </select>
+                        </td>
+                    <td><input type="text" id="ampled_${row}" name="ampled[]"></td>
+                    <td><input type="text" id="voltled_${row}" name="voltled[]"></td>
+                    <td><input type="text" id="wattled_${row}" name="wattled[]">
                         <button onclick="AddRow()" class="btn btn-dark">Add</i></button>
                         <button onclick="removeRow(this)" id="${row}" class="btn btn-danger">Delete</i></button>
                     </td>
@@ -332,7 +339,39 @@
         function removeRow(buttonId){
             $(buttonId).closest('tr').remove();
         }
-       /*     */
+
+        function tbl_stock(row_id){
+            console.log(row_id);
+            
+            var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
+            if (!subcategory_id) {
+                console.error(`Element with ID subcategory_${row_id} not found!`);
+                return;  // Exit the function if the element is not found
+            }
+            
+            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            $.ajax({
+                type: "POST",
+                url: "/check_stock",
+                data: {
+                    _token: csrfToken,
+                    subcategory_id: subcategory_id,
+                },
+                success: function (response) {
+                    var data = response.data;
+                    var srled = document.getElementById(`srled_${row_id}`);
+                    
+                    srled.innerHTML = '<option value="">Select</option>';
+                    
+                    data.forEach(function(item) {
+                        var option = document.createElement("option");
+                        option.value = item.serial_no;
+                        option.text = item.serial_no;
+                        srled.appendChild(option);
+                    });
+                }
+            });
+        }
     </script>
 </body>
 

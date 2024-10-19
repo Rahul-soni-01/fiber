@@ -158,7 +158,7 @@ class TblUserController extends Controller
             'dept' => 'required|integer',
             'user_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:tbl_users,email,' . $id,
-            'password' => 'nullable|string|min:8', // Password is optional during update
+            'password' => 'nullable|string|min:8|confirmed', // Password is optional during update
         ]);
 
         $user = tbl_user::findOrFail($id);

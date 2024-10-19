@@ -117,6 +117,17 @@
                 !! Data already in stock !! </br>
                 {{-- {{ dd($existingrecord); }} --}}
                 <a href="{{ route('inward.ndex') }}" class="sub-item">Show Inward</a>
+
+                <script>
+                    window.onload = function() {
+                        Swal.fire({
+                            title: 'Welcome!',
+                            text: 'This is a SweetAlert triggered on page load.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    };
+                </script>
             @endif
         </div>
     </x-slot>

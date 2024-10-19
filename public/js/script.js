@@ -147,23 +147,30 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             success: function (response) {
                 data = response.permissions;
-                admin = response.type
-                if (!admin) {
+                admin = response.type;
+                if (admin  !== 'admin') {
                     $('.sidebar').css('display', 'none');
                     $('.sub-item').css('display', 'none');
                     Object.entries(data).forEach(function ([key, value]) {
-                        var menuItems = $('.sidebar');
+                        var menuItems = $('.sidebar');                        
                         menuItems.each(function () {
                             var itemId = $(this).attr('id');
                             if (key === itemId) {
+                                // console.log(key , itemId);
                                 $(this).css('display', 'block');
                                 value.forEach(function (permission) {
-                                    // console.log(permission);
                                     var submenu = $('.sub-item');
                                     submenu.each(function () {
                                         var permission_id = $(this).attr('id');
-                                        if (value.includes(permission_id) || value === permission_id) {
+                                        /*if(key === 'Report' || key === 'Category'){
+                                            if(permission === permission_id || value.includes(permission_id)){
+                                                console.log(key,permission, permission_id);
+                                            }
+                                        }*/
+                                        if (value.includes(permission_id) || permission === permission_id) {
                                             $(this).css('display', 'block');
+                                        }else{
+                                            $(this).css('display', 'none');
                                         }
                                     });
                                 });
@@ -246,3 +253,4 @@ function filterOptions(event) {
         console.log("Other select element triggered the function");
     }
 }
+

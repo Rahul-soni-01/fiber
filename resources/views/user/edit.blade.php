@@ -3,25 +3,7 @@
     <x-slot name="main">
         <div class="main" id="main">
             <a href="{{ route('user.index') }}" class="btn btn-primary">Back to List</a>
-            @if ($errors->any())
-            <div style="color: red;">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-            @if ($errors->any())
-            <div style="color: red;">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-            
+        
             <form action="{{ route('user.update', $user->id) }}" method="post">
                 @csrf
                 @method('PUT') <!-- Simulate PUT method for updating -->
@@ -84,6 +66,10 @@
                         <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password">
                     </div>
             
+                    <div class="row m-2">
+                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password" >
+                    </div>
                     <!-- Submit Button -->
                     <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-dark">Update</button>

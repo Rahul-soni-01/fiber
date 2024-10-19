@@ -1,10 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PartynameController;
-use App\Http\Controllers\InwardController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\AddController;
 use App\Http\Controllers\TblPurchaseItemController;
 use App\Http\Controllers\TblUserController;
 use App\Http\Controllers\TblPartyController;
@@ -15,6 +11,7 @@ use App\Http\Controllers\TblStockController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ManagePermissionController;
+use App\Http\Controllers\ReportController;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -29,9 +26,10 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
 // Route::middleware(['auth', 'type:admin'])->group(function () {
     // });
     
-    Route::post('/check_permission', [TblUserController::class, 'permission'])->name('check_permission');
     
     Route::middleware('auth')->group(function () {
+        Route::post('/check_permission', [TblUserController::class, 'permission'])->name('check_permission');
+        Route::post('/check_stock', [TblStockController::class, 'check_stock'])->name('check_stock');
         // Home Blade
         Route::get('/home', [TblUserController::class, 'show'] )->name('home');
         
@@ -43,7 +41,7 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::put('/user/{id}', [TblUserController::class, 'update'])->name('user.update');
         Route::delete('/user-{user_id}', [TblUserController::class, 'destroy'])->name('user.destroy');
         
-
+        
         Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
         Route::get('/permissions-add', [PermissionController::class, 'create'])->name('permissions.add');
         
@@ -78,7 +76,7 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('edit-category-{category_id}', [TblCategoryController::class, 'edit'])->name(('category.edit'));
         Route::put('/category-{id}', [TblCategoryController::class, 'update'])->name('category.update');
         Route::delete('/category-{category_id}', [TblCategoryController::class, 'destroy'])->name('category.destroy');
-
+        
         //sub category Crud
         Route::get('subcategory', [TblSubCategoryController::class, 'index'])->name('subcategory.index');
         Route::get('subcategory-create', [TblSubCategoryController::class, 'create'])->name('subcategory.create');
@@ -86,7 +84,7 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('edit-subcategory-{subcategory_id}', [TblSubCategoryController::class, 'edit'])->name(('subcategory.edit'));
         Route::put('/subcategory-{id}', [TblSubCategoryController::class, 'update'])->name('subcategory.update');
         Route::delete('/subcategory-{subcategory_id}', [TblSubCategoryController::class, 'destroy'])->name('subcategory.destroy');
-
+        
         // inward crud
         Route::get('inward', [TblPurchaseController::class, 'index'])->name('inward.index');
         Route::get('good_inward', [TblPurchaseController::class, 'create'])->name('inward.good.view');
@@ -95,14 +93,18 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('show_item-{invoice_no}', [TblPurchaseItemController::class, 'show_item'])->name(('show_item.details'));;  //View Item By Sr No.
         
         // Route::view('add_report', 'add_report')->name('report.add');
-
+        
+        Route::get('report', [ReportController::class, 'index'])->name('report.index');
+        Route::get('report-create', [ReportController::class, 'create'])->name('report.create');
+        Route::post('/report-store', [ReportController::class, 'store'])->name('report.store');
+        
        // invoice to tbl stock 
         Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');
         Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
         
         // report crud
-        Route::get('report', [TblPurchaseController::class, 'index'])->name('report.index');
-        Route::get('report-create', [TblPurchaseController::class, 'create'])->name('report.create');
+        // Route::get('report', [TblPurchaseController::class, 'index'])->name('report.index');
+        // Route::get('report-create', [TblPurchaseController::class, 'create'])->name('report.create');
 
     });
 

@@ -171,21 +171,19 @@ div#DataTables_Table_0_paginate, .dataTables_filter{
     transition: margin-left .5s;
 }
 
-#fakeheader {
-    /* height: 15%; */
-    /* width: 100%; */
+.margin-btn{
+    margin-right: 80px;
+}
+.tbl_sr_no{
+    width: 100%;
+}
+.tbl_sub{
+    width: 75%;
 }
 #main1 input{
     border-radius: 2px;
-    /* outline: none; */
-    /* border-bottom: 1px solid black;
-    border-top: transparent;
-    border-left: transparent;
-    border-right: transparent; */
     height: 35px;
-    /* width: 270px; */
     padding: 10px;
-    /* box-shadow: 1px 1px 10px rgb(177, 177, 177); */
 }
 
 input::-webkit-outer-spin-button,

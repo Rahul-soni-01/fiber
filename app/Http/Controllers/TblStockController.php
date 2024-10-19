@@ -91,4 +91,11 @@ class TblStockController extends Controller
         return redirect()->route('inward.index')->with('success', 'Stock added successfully');
 
     }
+
+    public function check_stock(Request $request){
+        $subcategory_id = $request->subcategory_id;
+        $data = TblStock::where('scid', $subcategory_id)->get();
+        return response()->json(['data' => $data]);
+
+    }
 }
