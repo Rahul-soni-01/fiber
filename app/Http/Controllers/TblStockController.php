@@ -60,6 +60,7 @@ class TblStockController extends Controller
                     'qty' => 1,
                     'price' => $request->price,
                     'priceofUnit' => $price,
+                    'status' => 0,
                 ]);
             }else{
                 return redirect()->back()->withErrors("Invoice No or Serial No already exists")->withInput();
@@ -82,6 +83,7 @@ class TblStockController extends Controller
                     'qty' => $request->qty,
                     'price' => $request->price,
                     'priceofUnit' => $price,
+                    'status' => 0,
                 ]);
             }else{
                 return redirect()->back()->withErrors("Invoice No or Serial No already exists")->withInput();
@@ -94,8 +96,7 @@ class TblStockController extends Controller
 
     public function check_stock(Request $request){
         $subcategory_id = $request->subcategory_id;
-        $data = TblStock::where('scid', $subcategory_id)->get();
+        $data = TblStock::where('scid', $subcategory_id)->where('status','0')->get();
         return response()->json(['data' => $data]);
-
     }
 }

@@ -116,14 +116,15 @@
             @else
                 !! Data already in stock !! </br>
                 {{-- {{ dd($existingrecord); }} --}}
-                <a href="{{ route('inward.ndex') }}" class="sub-item">Show Inward</a>
+                <a href="{{ route('inward.index') }}" class="sub-item">Show Inward</a>
 
                 <script>
                     window.onload = function() {
                         Swal.fire({
-                            title: 'Welcome!',
-                            text: 'This is a SweetAlert triggered on page load.',
-                            icon: 'success',
+                            icon: "error",
+                            title: 'error!',
+                            text: 'Data Already In Stock',
+                            // icon: 'success',
                             confirmButtonText: 'OK'
                         });
                     };

@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tbl_leds', function (Blueprint $table) {
-            $table->id(); // Auto-incremented ID
-            $table->string('name'); // LED name (could store 'led_45', 'led_15', 'led_30')
-            $table->string('invoice_no'); // To link with report/invoice
-            $table->string('sr_led'); // SR for the LED
-            $table->string('amp_led'); // Amperage for the LED
-            $table->string('volt_led'); // Voltage for the LED
-            $table->string('watt_led'); // Wattage for the LED
+            $table->id(); 
+            $table->string('scid'); 
+            $table->string('report_id'); 
+            $table->string('sr_led');
+            $table->string('amp_led'); 
+            $table->string('volt_led'); 
+            $table->string('watt_led'); 
             $table->timestamps();
         });
     }

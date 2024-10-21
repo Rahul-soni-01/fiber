@@ -11,16 +11,7 @@
                 </ul>
             </div>
             @endif
-            @if ($errors->any())
-            <div style="color: red;">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
+        
             <a href="{{ route('category.create') }}" class="btn btn-primary">Add Category</a>
             <table class="table table-striped">
                 <thead class="table-dark">

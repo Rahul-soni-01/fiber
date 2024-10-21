@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('tbl_stock', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->string('invoice_no');
             $table->unsignedBigInteger('cid');
             $table->unsignedBigInteger('scid');
             $table->string('serial_no')->nullable();
             $table->integer('qty');
             $table->decimal('price', 10, 2);
             $table->decimal('priceofUnit', 10, 2);
+            $table->string('status')->nullable();
             $table->timestamps();
 
             $table->foreign('cid')->references('id')->on('tbl_categories')->onDelete('cascade');

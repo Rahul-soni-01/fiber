@@ -9,26 +9,50 @@ class Report extends Model
 {
     use HasFactory;
 
-    protected $table = 'tbl_report';
+    protected $table = 'tbl_reports';
     protected $fillable = [
-        'date',
-        'sr_no',
-        'item',
-        'card',
-        'led_45',
-        'led_15',
-        'led_30',
-        'isolator',
-        'aom_qswitch',
-        'cavity_nani',
-        'cavity_moti',
-        'combiner_3x1',
-        'couplar_2x2',
-        'hr',
-        'fiber_nano',
-        'fiber_moto',
-        'test',
+        'worker_name',
+        'sr_no_fiber',
+        'm_j',
+        'type',
+        'sr_card',
+        // 'sr_led',
+        'sr_isolator',
+        'sr_aom_qswitch',
+        'amp_aom_qswitch',
+        'volt_aom_qswitch',
+        'watt_aom_qswitch',
+        'sr_cavity_nani',
+        'sr_cavity_moti',
+        'sr_combiner_3_1',
+        'amp_combiner_3_1',
+        'volt_combiner_3_1',
+        'watt_combiner_3_1',
+        'sr_couplar_2_2',
+        'amp_couplar_2_2',
+        'volt_couplar_2_2',
+        'watt_couplar_2_2',
+        'sr_hr',
+        'sr_fiber_nano',
+        'sr_fiber_moto',
+        'output_amp',
+        'output_volt',
+        'output_watt',
         'nani_cavity',
-        'final_cavity'
+        'final_cavity',
+        'note1',
+        'note2',
+        'remark',
+        'status',
+        'part',
+        'temp',
+        'r_status',
+        'f_status',
+        'party_name',
     ];
+
+    public function tbl_leds()
+    {
+        return $this->hasMany(TblLed::class, 'report_id', 'id');
+    }
 }

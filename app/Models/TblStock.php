@@ -19,7 +19,8 @@ class TblStock extends Model
         'serial_no', 
         'qty', 
         'price', 
-        'priceofUnit'
+        'priceofUnit',
+        'status'
     ];
 
     public function category()

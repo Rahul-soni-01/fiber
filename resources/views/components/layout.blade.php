@@ -312,7 +312,7 @@
             <tr id="${row}">
                     <td>
                         <h5>LED
-                            <select required onchange="tbl_stock(${row});" id="subcategory_${row}" class="tbl_sub">
+                            <select required onchange="tbl_stock(${row});" id="subcategory_${row}" class="tbl_sub" name="sub_category[]">
                                 <option value="">Select</option>
                                 <option value="1">15</option>
                                 <option value="2">30</option>
@@ -341,8 +341,6 @@
         }
 
         function tbl_stock(row_id){
-            console.log(row_id);
-            
             var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
             if (!subcategory_id) {
                 console.error(`Element with ID subcategory_${row_id} not found!`);

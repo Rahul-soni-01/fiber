@@ -1,59 +1,168 @@
 <x-layout>
-    <x-slot name="title">Show Invoice Details</x-slot>
+    <x-slot name="title">Show Item</x-slot>
     <x-slot name="main">
-
         <div class="main" id="main">
-            <div class="invoice-container">
-                @foreach ($inwards as $inward)
-                <div class="invoice-section">
-                    <div class="invoice-item">
-                        <div class="invoice-label">Date:</div>
-                        <div class="invoice-value">{{ $inward['date'] }}</div>
-                        <div class="invoice-label">Invoice No:</div>
-                        <div class="invoice-value">{{ $inward['invoice_no'] }}</div>
+@foreach ($inwards as $item)
+            <div class="container">
+                <div class="row">
+                    <div class="col">Invoice No.</div>
+                    <div class="col">Date</div>
+                    <div class="col">Party Name</div>
+
+                </div>
+                {{--@foreach ($inwards as $item)--}}
+                <div class="row">
+                    <div class="col">
+                        <label class="form-control">{{$item['invoice_no']}}</label>
                     </div>
-                    <div class="invoice-item">
-                        <div class="invoice-label">Party </div>
-                        <div class="invoice-value">{{ $inward->party->party_name }}</div>
-                        <div class="invoice-label">Amount:</div>
-                        <div class="invoice-value">{{ $inward['amount'] }}</div>
+
+                    <div class="col">
+                        <label class="form-control">{{$item['date']}}</label>
                     </div>
-                    <div class="invoice-item">
-                        <div class="invoice-label">INR Rate:</div>
-                        <div class="invoice-value">{{ $inward['inr_rate'] }}</div>
-                        <div class="invoice-label">INR Amount:</div>
-                        <div class="invoice-value">{{ $inward['inr_amount'] }}</div>
+
+                    <div class="col">
+                        <label class="form-control">{{$item->party->party_name}}</label>
+                    </div>
+
+                </div>
+                {{--@endforeach--}}
+
+                <div class="container mt-50">
+                    <h1>Product Details</h1>
+                    <div class="row">
+                        <div class="col-sm-1"><label>Category Name</label></div>
+                        <div class="col-sm-1"><label>Sub Category Name</label></div>
+                        <div class="col-sm-1"><label>Unit</label></div>
+                        <div class="col-sm-1"><label>Qty</label></div>
+                        <div class="col-sm-2"><label>Rate</label></div>
+                        <div class="col-sm-2"><label>Total</label></div>
+                        <div class="col-sm-1"><label>Tax(%)</label></div>
+                        <div class="col-sm-2"><label>Total(T)</label></div>
+                        <div class="col-sm-1"><label>Action</label></div>
+                        </div>
+                    @foreach ($inwardsItems as $item1)
+                    <div class="row custom-row g-2 align-item1s-center">
+                        <div class="col-sm-1">
+                            <label class="form-control">{{$item1->category->category_name}}</label>
+                        </div>
+
+                        <div class="col-sm-1">
+                            <label class="form-control">{{$item1->subCategory->sub_category_name}}</label>
+                        </div>
+
+                        <div class="col-sm-1">
+                            <label class="form-control">{{$item1['unit']}}</label>
+                        </div>
+
+                        <div class="col-sm-1">
+                            <label class="form-control">{{$item1['qty']}}</label>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label class="form-control">{{$item1['price']}}</label>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label class="form-control">{{$item1['total']}}</label>
+                        </div>
+
+                        <div class="col-sm-1">
+                            <label class="form-control" style="padding:.375rem .4rem;">{{$item1['tax']}}</label>
+                        </div>
+                        
+                        <div class="col-sm-2">
+                            <label class="form-control">{{ $item1['total'] + ($item1['total'] * $item1['tax'] / 100) }}</label>
+
+
+                        </div>
+
+                        <div class="col-sm-1">
+                        <td><a href="{{ route('add_sr_no', ['invoice_no' => $item['invoice_no'],'category' => $item1->cid,'subcategory' => $item1->scid,'unit' =>$item1['unit'],'qty' =>$item1['qty'],'price'=>$item1['price']]) }}"><i
+                        class="ri-eye-fill"></i></a> </td>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
+                <div class="container">
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Amount ($/¥)</div>
+                        <div class="col-sm-2">
+                            <lael class="form-control">{{$item['amount']}}</lael>
+                        </div>
+                    </div>  
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Rate (₹)</div>
+                        <div class="col-sm-2">
+                            <label class="form-control">{{$item['inr_rate']}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Amount (₹)</div>
+                        <div class="col-sm-2">
+                            <label class="form-control">{{$item['inr_amount']}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Shipping Cost</div>
+                        <div class="col-sm-2">
+                            <label class="form-control">{{$item['shipping_cost']}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Total Amount</div>
+                        <div class="col-sm-2">
+                            <label class="form-control">{{$item['inr_amount'] + $item['shipping_cost']}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Round Amount</div>
+                        <div class="col-sm-2">
+                            <label class="form-control">{{$item['round_amount']}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Final Amount</div>
+                        <div class="col-sm-2">
+                            <label class="form-control">
+                            {{$item['inr_amount'] + $item['shipping_cost'] - $item['round_amount']}}</label></div>
                     </div>
                 </div>
-                @endforeach
             </div>
-            <table class="table table-striped" id="inwardTable">
+            @endforeach
+            
+
+            {{--<table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-
-                        <th>Category</th>
-                        <th>Sub Category</th>
-                        <th>Quantity</th>
-                        <th>Rate</th>
-                        <th>Unit</th>
-                        <th>Action</th>
+                        <th>Category Name</th>
+                        <th>Sub Category Name</th>
+                        <th>Qty</th>
+                        <th>POU</th>
+                        <th>Total</th>
+                        <th>Tax(%)</th>
+                        <th>Final Total</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    @foreach ($inwardsItems as $inwardsItem)
+
+                    @foreach ($items as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td> {{$inwardsItem->category->category_name}}</td>
-                        <td> {{$inwardsItem->subcategory->sub_category_name}}</td>
-                        <td>{{$inwardsItem['qty']}}</td>
-                        <td>{{$inwardsItem['price']}}</td>
-                        <td>{{$inwardsItem['unit']}}</td>
-                        <td><a href="{{ route('add_sr_no', ['invoice_no' => $inward['invoice_no'],'category' => $inwardsItem->cid,'subcategory' => $inwardsItem->scid,'qty' =>$inwardsItem['qty'],'price'=>$inwardsItem['price'],'unit' =>$inwardsItem['unit']]) }}"><i
-                                    class="ri-eye-fill"></i></a> </td>
+                        <td>{{$item['category_name']}}</td>
+                        <td>{{$item['subcategory_name']}}</td>
+                        <td>{{$item['qty']}}</td>
+                        <td>{{$item['price']}}</td>
+                        <td>{{$item['total']}}</td>
+                        <td>{{$item['tax']}}</td>
+                        <td>{{$item['final_price']}}</td>
                     </tr>
                     @endforeach
+
                 </tbody>
-            </table>
+            </table>--}}
+        </div>
     </x-slot>
 </x-layout>
