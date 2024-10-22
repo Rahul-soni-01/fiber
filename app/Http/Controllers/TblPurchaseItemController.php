@@ -23,6 +23,7 @@ class TblPurchaseItemController extends Controller
 
     public function create(Request $request)
     {
+        dd($request->all());
         // For Product
         $validator = Validator::make($request->all(), [
             'invoice_no' => 'required|unique:tbl_purchases,invoice_no',
@@ -66,18 +67,19 @@ class TblPurchaseItemController extends Controller
                 ]);
                 if (!$itemResult) {
                     $allItemsSaved = false;
-                    break; // Stop further item saving if one fails
+                    return redirect()->back()->with('error', 'Report cannot be deleted.');
+                    // break;
                 }
             }
 
             if ($allItemsSaved) {
                 return redirect('inward')->with('success', 'Purchase and items saved successfully!');
             } else {
-                return redirect('good_inward')->with('error', 'Some purchase items could not be saved.');
+                return redirect()->back()->with('error', 'Some purchase items could not be saved.');
             }
 
         } else {
-            return redirect('good_inward')->with('error', 'Failed to save purchase.');
+            return redirect()->back()->with('error', 'Failed to save purchase.');
         }
     }
 

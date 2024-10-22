@@ -2,19 +2,18 @@
     <x-slot name="title">Add Report</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-
+           
+          
             <form action="{{route('report.store')}}" method="post">
                 @csrf
-                @if ($errors->any())
+
+                @if (session('error'))
                 <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                    {{ session('error') }}
                 </div>
-                @endif
+            @endif
                 <table class="table table-bordered custom-border datatable-remove" id="tbl">
+                
                     <tbody id="Tbody">
                         <tr>
                             <td>
@@ -83,36 +82,25 @@
                         <tr>
                             <td>
                                 <h5>LED
-                                    <select required onchange="tbl_stock(0);" id="subcategory_0" class="tbl_sub"
-                                        name="sub_category[]">
+                                    <select required onchange="tbl_stock(0);" id="subcategory_0" class="tbl_sub" name="sub_category[]">
                                         <option value="">Select</option>
                                         @foreach($sub_categories as $sub_category)
-                                        <option value="{{ $sub_category->id }}">{{ $sub_category->sub_category_name }}
-                                        </option>
+                                        <option value="{{ $sub_category->id }}">{{ $sub_category->sub_category_name }}</option>
                                         @endforeach
                                     </select>
                                 </h5>
                             </td>
-                            {{-- <td><input type="text" id="srled120" name="srled120"> </td> --}}
                             <td>
-                                {{-- <select required id="srled_0" name="serial_no[]" class="tbl_sr_no">
-                                </select> --}}
-
-                                <input type="text" name="serial_no[]" list="srled_0" class="form-control"
-                                    placeholder="Select or enter a new sr no" required>
-                                <datalist id="srled_0">
-                                    <option value="">Select
-                                    <option value="">Select
-                                    <option value="">Select
-                                    <option value="">Select
-                                    <option value="">Select
-                                </datalist>
-
+                                <input type="text" name="srled[]" list="srled_0" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+    
+                                  <datalist id="srled_0">
+                                    
+                                  </datalist>
                             </td>
-                            <td><input type="text" id="ampled120" name="ampled[]"></td>
-                            <td><input type="text" id="voltled120" name="voltled[]"></td>
-                            <td><input type="text" id="wattled120" name="wattled[]">
-                                <button onclick="AddRow()" class="btn btn-dark margin-btn">Add</i></button>
+                            <td><input type="text" id="ampled[]" name="ampled[]"></td>
+                            <td><input type="text" id="voltled[]" name="voltled[]"></td>
+                            <td><input type="text" id="wattled[]" name="wattled[]">
+                                <button type="button" onclick="AddRow({{ json_encode($sub_categories)}})" class="btn btn-dark margin-btn">Add</i></button>
                             </td>
                         </tr>
                     <tbody id="TBody"></tbody>

@@ -49,6 +49,7 @@ class Report extends Model
         'r_status',
         'f_status',
         'party_name',
+        'final_amount',
     ];
 
     public function tbl_leds()

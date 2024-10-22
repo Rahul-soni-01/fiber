@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\tbl_party;
+use App\Models\tbl_purchase;
+use App\Models\tbl_purchase_item;
 use Illuminate\Http\Request;
 use App\Models\Report;
 use App\Models\TblLed;
@@ -17,25 +20,28 @@ class ReportController extends Controller
         return in_array($action, $permissions);
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         if ($this->checkPermission($request, 'view')) {
             $reports = Report::with('tbl_leds')->get();
             // dd($reports);            
-            return view("report.index",compact('reports'));
+            return view("report.index", compact('reports'));
         }
         return redirect('/unauthorized');
     }
 
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         if ($this->checkPermission($request, 'add')) {
-            $sub_categories = tbl_sub_category::where('cid',1 )->get();
-           
-            return view("report.create",compact('sub_categories'));
+            $sub_categories = tbl_sub_category::where('cid', 1)->get();
+
+            return view("report.create", compact('sub_categories'));
         }
         return redirect('/unauthorized');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         // dd($request->all());
         $validator = Validator::make($request->all(), [
             'part' => 'required|numeric',
@@ -44,7 +50,7 @@ class ReportController extends Controller
             'm_j' => 'required|string|max:255',
             'type' => 'required|numeric',
             'sr_card' => 'required|string|max:255',
-            'serial_no' => 'required|array',
+            'sub_category' => 'required|array',
             'ampled' => 'required|array',
             'voltled' => 'required|array',
             'wattled' => 'required|array',
@@ -111,41 +117,91 @@ class ReportController extends Controller
         $report->final_cavity = $request->input('final_cavity');
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
+        $report->part = $request->input('part');
         // $report->remark = $request->input('remark');
         // $report->status = $request->input('status');
-        // $report->part = $request->input('part');
         // $report->temp = $request->input('temp');
         // $report->r_status = $request->input('r_status');
         // $report->f_status = $request->input('f_status');
         // $report->party_name = $request->input('party_name');
-    
+
         $report->save();
         $report_id = $report->id;
-       
-        foreach ($request->serial_no as $index => $serial_no) {
-            
-            $existingRecord = TblStock::where('serial_no', $serial_no)->first();
-
-            if($existingRecord){
+        $amount = 0;
+        foreach ($request->srled as $index => $serial_no) {
+            $existingRecord = TblStock::where('serial_no', $serial_no)
+                                    ->where('status', 0)
+                                    ->first();
+            if ($existingRecord) {
+                $amount += $existingRecord->priceofUnit;
                 // $invoice_no =$existingRecord->invoice_no;
                 $existingRecord->status = 1;
                 $existingRecord->save();
             }
+            else{
+                $party = tbl_party::where('party_name', 'opening stock')->first();
+                $party_id = $party->id;
+                $invoice = tbl_purchase::where('pid', $party_id)->first();
+                $invoice_no = $invoice->invoice_no;
+                $date = $invoice->date;
+                $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
+                                ->where('scid', $request->sub_category[$index])
+                                ->first();
+                $cid = $invoice_data->cid;
+
+                $serial_no_exiting = TblStock::where('invoice_no', $invoice_no)
+                ->where('scid', $request->sub_category[$index])
+                ->where('cid', $cid)
+                ->where('serial_no', $serial_no)
+                ->first();
+               
+                if (!$serial_no_exiting) {
+                    // Create new record if the serial number does not exist
+                    TblStock::create([
+                        'date' => $date,
+                        'invoice_no' => $invoice_no,
+                        'cid' => $cid,
+                        'scid' => $request->sub_category[$index],
+                        'serial_no' => $serial_no,
+                        'qty' => 1,
+                        'price' => 1,
+                        'priceofUnit' => 1,
+                        'status' => 1,
+                    ]);
+                    $amount += 1; 
+                } else {
+                    $Record_delete = Report::where('id', $report_id)->first();
+                    if($Record_delete) {
+                        $Record_delete->delete(); 
+                    }else{
+                        return redirect()->back()->with('error', 'Report cannot be deleted.');
+                    }
+                    return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
+                }
+            }
 
             $tbl_led = new TblLed();
-            $tbl_led->scid = $request->sub_category[$index]; 
-            $tbl_led->report_id = $report_id; 
+            $tbl_led->scid = $request->sub_category[$index];
+            $tbl_led->report_id = $report_id;
             $tbl_led->sr_led = $serial_no;
-            $tbl_led->amp_led = $request->ampled[$index] ?? null; 
-            $tbl_led->volt_led = $request->voltled[$index] ?? null;  
+            $tbl_led->amp_led = $request->ampled[$index] ?? null;
+            $tbl_led->volt_led = $request->voltled[$index] ?? null;
             $tbl_led->watt_led = $request->wattled[$index] ?? null;
             $tbl_led->save();
         }
+        $Record_update_final_amount = Report::where('id', $report_id)->first();
+        $Record_update_final_amount->final_amount = $amount;
+        $Record_update_final_amount->save();
+
         if ($report->save()) {
             return redirect()->route('report.index')->with('success', 'Report added successfully.');
         } else {
             return redirect()->back()->with('error', 'Failed to store the report. Please try again.');
         }
-       
+    }
+
+    public function show($id){
+        $report = Report::with('tbl_leds','tbl_leds.tbl_sub_category')->find($id);
+        return view('report.show', compact('report'));
     }
 }

@@ -2,6 +2,7 @@
     <x-slot name="title">Show Report</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
+
             @if ($errors->any())
             <div style="color: red;">
                 <ul>
@@ -11,35 +12,54 @@
                 </ul>
             </div>
             @endif
+
+            <label class="switch">
+                <input type="checkbox" id="toggleSwitch">
+                <span class="slider"></span>
+            </label>
+
+
             @if ($reports->isEmpty())
             <p>No reports found.</p>
             @else
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Worker Name</th>
-                        <th>Type</th>
-                        <th>SR Card</th>
-                        <th>LEDs</th>
-                        <th>Nani Cavity</th>
-                        <th>Final Cavity</th>
-                        <th>Note 1</th>
-                        <th>Note 2</th>
-                        <th>Created At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($reports as $report)
-                    <tr>
-                        <td>{{ $report->id }}</td>
-                        <td>{{ $report->worker_name }}</td>
-                        <td>{{ $report->type }}</td>
-                        <td>{{ $report->sr_card }}</td>
-                        <td>
-                            <div class="row">
-                                @foreach($report->tbl_leds as $led)
-                                    <div class="col-md-6"> <!-- 3 columns for each item (4 items per row) -->
+            <div id="div1">
+                <table class="table  table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Part</th>
+                            <th>Worker Name</th>
+                            <th>Type</th>
+                            <th>SR Card</th>
+                            <th>LEDs</th>
+                            <th>Nani Cavity</th>
+                            <th>Final Cavity</th>
+                            <th>Note 1</th>
+                            <th>Final Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($reports as $report)
+                        <tr
+                            class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
+                            <td>{{ $report->id }}</td>
+                            <td>
+                                @if($report->part == 0)
+                                New
+                                @elseif($report->part == 1)
+                                Repair
+                                @else
+                                Unknown
+                                @endif
+                            </td>
+                            <td>{{ $report->worker_name }}</td>
+                            <td>{{ $report->type }}</td>
+                            <td>{{ $report->sr_card }}</td>
+                            <td>
+                                <div class="row">
+                                    @foreach($report->tbl_leds as $led)
+                                    <div class="col-md-6">
                                         <ul>
                                             <li>LED Serial: {{ $led->sr_led }}</li>
                                             <li>Amp: {{ $led->amp_led }}</li>
@@ -47,19 +67,43 @@
                                             <li>Watt: {{ $led->watt_led }}</li>
                                         </ul>
                                     </div>
-                                @endforeach
-                            </div>
-                        </td>
-                        <td>{{ $report->nani_cavity }}</td>
-                        <td>{{ $report->final_cavity }}</td>
-                        <td>{{ $report->note1 }}</td>
-                        <td>{{ $report->note2 }}</td>
-                        <td>{{ $report->created_at->format('Y-m-d H:i:s') }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                    @endforeach
+                                </div>
+                            </td>
+                            <td>{{ $report->nani_cavity }}</td>
+                            <td>{{ $report->final_cavity }}</td>
+                            <td>{{ $report->note1 }}</td>
+                            <td>{{ $report->final_amount }}</td>
+
+                            <td> <a href="{{ route('report.show', ['report_id' => $report->id]) }}"><i
+                                        class="ri-eye-fill"></i></a> </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div id="div2" style="display:none;">This is Col mode</div>
             @endif
+
         </div>
+
+        <script>
+            document.getElementById("toggleSwitch").addEventListener("change", function() {
+                const rows = document.querySelectorAll("table tbody tr");
+                if (this.checked) {
+                    rows.forEach(row => {
+                        if (row.classList.contains('new-part')) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                } else {
+                    rows.forEach(row => {
+                        row.style.display = "";
+                    });
+                }
+            });
+        </script>
     </x-slot>
 </x-layout>

@@ -135,8 +135,8 @@
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-file-chart-line"></i>Report <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report Inward</a></li>
-                    <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report Inward</a></li>
+                    <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
+                    <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
                 </ul>
             </li>
 
@@ -184,17 +184,17 @@
             $('#TBody').append(`
                 <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
                     <div class="col custom-col">
-                        <select id="data[${count}][cname]" name="data[${count}][cname]" class="form-control" onchange="filterOptions(event)">
+                        <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
                             <option value="" disabled selected class="0" >Choose a Category</option>
                         </select>
                     </div>
                     <div class="col custom-col">
-                        <select id="data[${count}][scname]" name="data[${count}][scname]" class="form-control" onchange="filterOptions(event)">
+                        <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
                             <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
                         </select>
                     </div>
                     <div class="col custom-col">
-                        <select id="data[${count}][unit]" name="data[${count}][unit]"
+                        <select id="data[${count}][unit]" name="unit[]"
                             class="form-control">
                             <option value="">Select</option>
                             <option value="Pic">Pic</option>
@@ -202,22 +202,22 @@
                         </select>
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][qty]" name="data[${count}][qty]" placeholder="Quantity"
+                        <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
                             class="form-control" onchange="total()">
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][rate]" name="data[${count}][rate]" placeholder="Rate"
+                        <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
                             class="form-control" onchange="total()">
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][p_tax]" name="data[${count}][p_tax]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
+                        <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][tax]" step="0.01" name="data[${count}][tax]"
+                        <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
                             class="form-control" disabled>
                     </div>
                     <div class="col custom-col">
-                        <input type="number" id="data[${count}][total]" name="data[${count}][total]" placeholder="Total"
+                        <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
                         step="0.01" class="form-control">
                     </div>
                     <div class="col custom-col">
@@ -245,23 +245,27 @@
         }
 
         function BtnDel(button) {
-            $(button).closest('.row').remove();
+            $(button).closest('.custom-row').remove();
             // count--;
             total();
         }
 
         function total() {
             for (var i = 0; i < count; i++) {
-                var qty = parseFloat(document.getElementById(`data[${i}][qty]`).value) || 0;
-                var rate = parseFloat(document.getElementById(`data[${i}][rate]`).value) || 0;
-                var p_tax = parseFloat(document.getElementById(`data[${i}][p_tax]`).value) || 0;
+                var qtyElement = document.getElementById(`data[${i}][qty]`);
+                if (qtyElement) {
+                    var qty = parseFloat(qtyElement.value) || 0;
+                    var rate = parseFloat(document.getElementById(`data[${i}][rate]`).value) || 0;
+                    var p_tax = parseFloat(document.getElementById(`data[${i}][p_tax]`).value) || 0;
+                    console.log(i, 'qty:', qty, 'rate:', rate, 'p_tax:', p_tax);
 
-                var total = qty * rate;
-                var taxAmount = (total * p_tax) / 100;
-                total += taxAmount;
+                    var total = qty * rate;
+                    var taxAmount = (total * p_tax) / 100;
+                    total += taxAmount;
 
-                document.getElementById(`data[${i}][tax]`).value = taxAmount.toFixed(2);
-                document.getElementById(`data[${i}][total]`).value = total.toFixed(2);
+                    document.getElementById(`data[${i}][tax]`).value = taxAmount.toFixed(2);
+                    document.getElementById(`data[${i}][total]`).value = total.toFixed(2);
+                }
             }
             sub_total();
         }
@@ -290,8 +294,11 @@
         function sub_total() {
             var subtotal = 0;
             for (var i = 0; i < count; i++) {
-                var total = parseFloat(document.getElementById(`data[${i}][total]`).value) || 0;
-                subtotal += total;
+                var totalElement = document.getElementById(`data[${i}][total]`);
+                if (totalElement) {
+                    var total = parseFloat(document.getElementById(`data[${i}][total]`).value) || 0;
+                    subtotal += total;
+                }
             }
             document.getElementById("sub_total").value = subtotal.toFixed(2);
             document.getElementById("amount_r").value = subtotal.toFixed(2);
@@ -307,32 +314,34 @@
         }
 
         var row = 1;
-        function AddRow() {
+        function AddRow(subcategories) {
             $('#TBody').append(`
-            <tr id="${row}">
+                <tr>
                     <td>
                         <h5>LED
-                            <select required onchange="tbl_stock(${row});" id="subcategory_${row}" class="tbl_sub" name="sub_category[]">
-                                <option value="">Select</option>
-                                <option value="1">15</option>
-                                <option value="2">30</option>
-                                <option value="3">45</option>
-                            </select>
+                            <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub">
+                                    <option value="">Select</option>
+                                </select>
                         </h5>
                     </td>
                     <td>
-                        <select required  id="srled_${row}" name="serial_no[]" class="tbl_sr_no">
-                                <option value="">Select</option>
-                            </select>
-                        </td>
+                        <input type="text" name="srled[]" list="srled_${row}" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                        <datalist id="srled_${row}">
+                            <option value=""></option>
+                        </datalist>
+                    </td>
                     <td><input type="text" id="ampled_${row}" name="ampled[]"></td>
                     <td><input type="text" id="voltled_${row}" name="voltled[]"></td>
                     <td><input type="text" id="wattled_${row}" name="wattled[]">
-                        <button onclick="AddRow()" class="btn btn-dark">Add</i></button>
-                        <button onclick="removeRow(this)" id="${row}" class="btn btn-danger">Delete</i></button>
+                        <button type="button" onclick="removeRow(this)" class="btn btn-danger" id="${row}">Delete</i></button>
                     </td>
                 </tr>
             `);
+            if (subcategories && Array.isArray(subcategories)) {
+                subcategories.forEach(sub_category => {
+                    $(`#subcategory_${row}`).append(`<option value="${sub_category.id}">${sub_category.sub_category_name}</option>`);
+                });
+            }
             row++;
         }
 
@@ -344,7 +353,7 @@
             var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
             if (!subcategory_id) {
                 console.error(`Element with ID subcategory_${row_id} not found!`);
-                return;  // Exit the function if the element is not found
+                return; 
             }
             
             csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

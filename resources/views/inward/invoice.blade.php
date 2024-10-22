@@ -30,23 +30,23 @@
                 <div class="container mt-50">
                     <h1>Product Details</h1>
                     <div class="row">
-                        <div class="col-sm-1"><label>Category Name</label></div>
-                        <div class="col-sm-1"><label>Sub Category Name</label></div>
+                        <div class="col-sm-2"><label>Category Name</label></div>
+                        <div class="col-sm-2"><label>Sub Category Name</label></div>
                         <div class="col-sm-1"><label>Unit</label></div>
                         <div class="col-sm-1"><label>Qty</label></div>
-                        <div class="col-sm-2"><label>Rate</label></div>
-                        <div class="col-sm-2"><label>Total</label></div>
+                        <div class="col-sm-1"><label>Rate</label></div>
+                        <div class="col-sm-1"><label>Total</label></div>
                         <div class="col-sm-1"><label>Tax(%)</label></div>
                         <div class="col-sm-2"><label>Total(T)</label></div>
                         <div class="col-sm-1"><label>Action</label></div>
                         </div>
                     @foreach ($inwardsItems as $item1)
                     <div class="row custom-row g-2 align-item1s-center">
-                        <div class="col-sm-1">
+                        <div class="col-sm-2">
                             <label class="form-control">{{$item1->category->category_name}}</label>
                         </div>
 
-                        <div class="col-sm-1">
+                        <div class="col-sm-2">
                             <label class="form-control">{{$item1->subCategory->sub_category_name}}</label>
                         </div>
 
@@ -58,11 +58,11 @@
                             <label class="form-control">{{$item1['qty']}}</label>
                         </div>
 
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <label class="form-control">{{$item1['price']}}</label>
                         </div>
 
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <label class="form-control">{{$item1['total']}}</label>
                         </div>
 

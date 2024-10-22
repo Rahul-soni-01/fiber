@@ -2,7 +2,7 @@
     <x-slot name="title">Good Inwards</x-slot>
     <x-slot name="main">
 
-        <form action="good_inward" method="post">
+        <form action="{{route('inward.good')}}" method="post">
             @csrf
 
             @if ($errors->any())
@@ -27,7 +27,9 @@
                             placeholder="Enter Invoice no." required>
                     </div>
                     <div class="col-md-4">
-                        <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date" required>
+                        {{-- <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date" required> --}}
+                        <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date" value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+
                     </div>
                     <div class="col-md-4">
                         <select id="party_name" name="party_name" class="form-control" placeholder="Enter Party Name"
@@ -48,7 +50,7 @@
                         <!-- Category Name -->
                         <div class="col custom-col">
                             <label for="data[0][cname]" class="form-label"  style="white-space:nowrap;">Category Name</label>
-                            <select id="data[0][cname]" name="data[0][cname]" class="form-control" onchange="filterOptions(event)">
+                            <select id="data[0][cname]" name="cname[]" class="form-control" onchange="filterOptions(event)">
                                 <option value="" disabled selected>Choose a Category</option>
                                 @foreach($inwards as $inward)
                                     <option value="{{ $inward->id }}">{{ $inward->category_name }}</option>
@@ -59,7 +61,7 @@
                         <!-- Sub Category Name -->
                         <div class="col custom-col">
                             <label for="data[0][scname]" class="form-label" style="white-space:nowrap;" >Sub Category </label>
-                            <select id="data[0][scname]" name="data[0][scname]" class="form-control" onchange="filterOptions(event)">
+                            <select id="data[0][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
                                 <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
                                 @foreach($items as $item)
                                     <option value="{{ $item->id }}" class="{{ $item->cid }}" data-unit="{{ $item->unit }}" >{{ $item->sub_category_name }}</option>
@@ -70,7 +72,7 @@
                         <!-- Unit -->
                         <div class="col custom-col">
                             <label for="data[0][unit]" class="form-label">Unit</label>
-                            <select id="data[0][unit]" name="data[0][unit]" class="form-control">
+                            <select id="data[0][unit]" name="unit[]" class="form-control">
                                 <option value="">Select</option>
                                 <option value="Pic">Pic</option>
                                 <option value="Mtr">Mtr</option>
@@ -80,35 +82,35 @@
                         <!-- Quantity -->
                         <div class="col custom-col">
                             <label for="data[0][qty]" class="form-label">Qty</label>
-                            <input type="number" id="data[0][qty]" name="data[0][qty]" class="form-control" placeholder="Quantity"
+                            <input type="number" id="data[0][qty]" name="qty[]" class="form-control" placeholder="Quantity"
                                 onchange="total()">
                         </div>
 
                         <!-- Rate -->
                         <div class="col custom-col">
                             <label for="data[0][rate]" class="form-label">Rate</label>
-                            <input type="number" id="data[0][rate]" name="data[0][rate]" class="form-control" placeholder="Rate"
+                            <input type="number" id="data[0][rate]" name="rate[]" class="form-control" placeholder="Rate"
                                 onchange="total()">
                         </div>
 
                         <!-- Tax Percentage -->
                         <div class="col custom-col">
                             <label for="data[0][p_tax]" class="form-label">Tax(%)</label>
-                            <input type="number" id="data[0][p_tax]" name="data[0][p_tax]" step="0.01" placeholder="Tax"
-                                class="form-control" onchange="total()">
+                            <input type="number" id="data[0][p_tax]" name="p_tax[]" step="0.01" placeholder="Tax"
+                                class="form-control" onchange="total()" value="0">
                         </div>
 
                         <!-- Tax Amount -->
                         <div class="col custom-col">
                             <label for="data[0][tax]" class="form-label">Tax</label>
-                            <input type="number" id="data[0][tax]" name="data[0][tax]" step="0.01"
+                            <input type="number" id="data[0][tax]" name="tax[]" step="0.01"
                                 class="form-control" disabled>
                         </div>
 
                         <!-- Total Amount -->
                         <div class="col custom-col">
                             <label for="data[0][total]" class="form-label">Total</label> 
-                            <input type="number" id="data[0][total]" name="data[0][total]" step="0.01" placeholder="Total"
+                            <input type="number" id="data[0][total]" name="total[]" step="0.01" placeholder="Total"
                                 class="form-control">
                         </div>
 
@@ -149,7 +151,7 @@
                     <div class="row mt-3">
                         <div class="col-sm-2 offset-sm-8">Shipping Cost </div>
                         <div class="col-sm-2">
-                            <input type="number" id="shipping_cost" step="0.01"  name="shipping_cost" class="form-control" oninput="calculateshipping()">
+                            <input type="number" id="shipping_cost" step="0.01" value="0" name="shipping_cost" class="form-control" oninput="calculateshipping()">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -159,7 +161,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-sm-2 offset-sm-8">Round Amount</div>
-                        <div class="col-sm-2"><input type="number" id="round_total" step="0.01" name="round_total"
+                        <div class="col-sm-2"><input type="number" id="round_total" step="0.01" value="0" name="round_total"
                                 class="form-control" oninput="calculateAmount()"></div>
                     </div>
                     <div class="row mt-3">

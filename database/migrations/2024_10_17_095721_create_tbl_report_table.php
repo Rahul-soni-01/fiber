@@ -51,6 +51,7 @@ return new class extends Migration
             $table->integer('r_status')->nullable();        
             $table->integer('f_status')->nullable();        
             $table->integer('party_name')->nullable();
+            $table->integer('final_amount')->nullable();
             $table->timestamps();
         });
     }

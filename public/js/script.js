@@ -156,17 +156,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         menuItems.each(function () {
                             var itemId = $(this).attr('id');
                             if (key === itemId) {
-                                // console.log(key , itemId);
                                 $(this).css('display', 'block');
                                 value.forEach(function (permission) {
                                     var submenu = $('.sub-item');
                                     submenu.each(function () {
                                         var permission_id = $(this).attr('id');
-                                        /*if(key === 'Report' || key === 'Category'){
-                                            if(permission === permission_id || value.includes(permission_id)){
-                                                console.log(key,permission, permission_id);
-                                            }
-                                        }*/
                                         if (value.includes(permission_id) || permission === permission_id) {
                                             $(this).css('display', 'block');
                                         }else{
@@ -189,8 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function filterOptions(event) {
-    let selectName = event.target.name;
-
+    let selectName = event.target.id;
     let cnamePattern = /^data\[(\d+)\]\[cname\]$/;
     let scnamePattern = /^data\[\d+\]\[scname\]$/;
 
@@ -253,4 +246,5 @@ function filterOptions(event) {
         console.log("Other select element triggered the function");
     }
 }
+
 
