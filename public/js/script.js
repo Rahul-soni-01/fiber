@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function append_fields() {
         var qty = document.getElementById("qty").value;
         for (var i = 0; i < qty; i++) {
-            $('.append_fields').append('<div class="col-sm-1">' + (i + 1) + '</div> <div class="col-sm-11 mt-2"> <input type="text" class="form-control" required name="serial_no[]"  id="sr_' + i + '" /></div>');
+            $('.append_fields').append('<div class="col-sm-1">' + (i + 1) + '</div> <div class="col-sm-11 mt-2"> <input type="number" class="form-control" required name="serial_no[]"  id="sr_' + i + '" /></div>');
         }
     }
 
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     });
                 }else{
-                    console.log("798");
+                    // console.log("798");
                 }
             }
         });

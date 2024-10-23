@@ -18,7 +18,6 @@ class TblStockController extends Controller
             $validator = Validator::make($request->all(), [
                 'cid' => 'required',
                 'scid' => 'required',
-                'serial_no' => 'required|unique:tbl_stock',
                 'qty' => 'required|integer',
                 'price' => 'required|numeric',
             ]);

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('tbl_reports', function (Blueprint $table) {
             $table->id();
+            $table->integer('part')->nullable(); 
+            $table->integer('f_status')->nullable();        
+            // $table->integer('warranty')->nullable(); 
             $table->string('worker_name')->nullable();
             $table->string('sr_no_fiber')->nullable();
             $table->string('m_j')->nullable();
@@ -45,11 +48,9 @@ return new class extends Migration
             $table->text('note1')->nullable();        //Any note for fiber
             $table->text('note2')->nullable();        //Any note for fiber
             $table->text('remark')->nullable();        //Any remark for fiber at reject time
-            $table->integer('status')->nullable();        
-            $table->integer('part')->nullable();        
+            $table->integer('status')->nullable();               
             $table->integer('temp')->nullable();        
             $table->integer('r_status')->nullable();        
-            $table->integer('f_status')->nullable();        
             $table->integer('party_name')->nullable();
             $table->integer('final_amount')->nullable();
             $table->timestamps();

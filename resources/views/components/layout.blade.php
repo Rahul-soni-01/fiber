@@ -165,10 +165,10 @@
                 if (sidebar.style.display === 'none') {
                     sidebar.style.display = 'block';
                     mainContent.style.marginLeft = '15%';
-                    mainContent.style.width = '84%';
+                    mainContent.style.width = '85%';
                 } else {
                     sidebar.style.display = 'none';
-                    mainContent.style.width = '99%';
+                    mainContent.style.width = '100%';
                     mainContent.style.marginLeft = '0';
                 }
             });
@@ -317,23 +317,23 @@
         function AddRow(subcategories) {
             $('#TBody').append(`
                 <tr>
-                    <td>
-                        <h5>LED
-                            <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub">
+                    <td class="d-flex">
+                        <h5>LED  </h5>
+                            <select required onchange="tbl_stock(${row});" id="subcategory_${row}"  name="sub_category[]" class="tbl_sub ml-2 form-control">
                                     <option value="">Select</option>
                                 </select>
-                        </h5>
+                      
                     </td>
                     <td>
-                        <input type="text" name="srled[]" list="srled_${row}" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                        <input type="text" name="srled[]" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
                         <datalist id="srled_${row}">
                             <option value=""></option>
                         </datalist>
                     </td>
-                    <td><input type="text" id="ampled_${row}" name="ampled[]"></td>
-                    <td><input type="text" id="voltled_${row}" name="voltled[]"></td>
-                    <td><input type="text" id="wattled_${row}" name="wattled[]">
-                        <button type="button" onclick="removeRow(this)" class="btn btn-danger" id="${row}">Delete</i></button>
+                    <td><input type="text" id="ampled_${row}" name="ampled[]" class="form-control"></td>
+                    <td><input type="text" id="voltled_${row}" name="voltled[]" class="form-control"></td>
+                    <td class="d-flex"><input type="text" id="wattled_${row}" name="wattled[]" class="form-control">
+                        <button type="button" onclick="removeRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</i></button>
                     </td>
                 </tr>
             `);
@@ -367,6 +367,37 @@
                 success: function (response) {
                     var data = response.data;
                     var srled = document.getElementById(`srled_${row_id}`);
+                    
+                    srled.innerHTML = '<option value="">Select</option>';
+                    
+                    data.forEach(function(item) {
+                        var option = document.createElement("option");
+                        option.value = item.serial_no;
+                        option.text = item.serial_no;
+                        srled.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function tbl_card (row_id){
+            var card_id = document.getElementById(`card_${row_id}`).value;
+            if (!card_id) {
+                console.error(`Element with ID subcategory_${row_id} not found!`);
+                return; 
+            }
+            
+            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            $.ajax({
+                type: "POST",
+                url: "/check_stock",
+                data: {
+                    _token: csrfToken,
+                    subcategory_id: card_id,
+                },
+                success: function (response) {
+                    var data = response.data;
+                    var srled = document.getElementById(`srcard_${row_id}`);
                     
                     srled.innerHTML = '<option value="">Select</option>';
                     

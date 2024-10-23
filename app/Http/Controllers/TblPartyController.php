@@ -29,12 +29,13 @@ class TblPartyController extends Controller
 
     public function search(Request $request)
     {
-        $PartyData = tbl_party::where('party_name', 'like', "%$request->party_name%")
+        $parties = tbl_party::where('party_name', 'like', "%$request->party_name%")
             ->where('address', 'like', "%$request->address%")
             ->where('telephone_no', 'like', "%$request->telephone_no%")
             ->where('sender_name', 'like', "%$request->cont_name%")
             ->get();
-        return view('show_party', ['users' => $PartyData]);
+            // $parties = tbl_party::all();
+        return view('party.index',compact('parties'));
         // return $PartyData;
     }
     public function create(Request $request)

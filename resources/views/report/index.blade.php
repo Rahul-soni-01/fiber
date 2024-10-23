@@ -27,14 +27,11 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Part</th>
-                            <th>Worker Name</th>
+                            <th>Date</th>
+                            <th>Serial No.</th>
                             <th>Type</th>
-                            <th>SR Card</th>
-                            <th>LEDs</th>
-                            <th>Nani Cavity</th>
-                            <th>Final Cavity</th>
-                            <th>Note 1</th>
+                            <th>Worker Name</th>
+                            <th>Part</th>
                             <th>Final Amount</th>
                             <th>Action</th>
                         </tr>
@@ -44,6 +41,11 @@
                         <tr
                             class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
                             <td>{{ $report->id }}</td>
+                            <td>{{ $report->created_at->format('d-m-Y') }}</td>
+                            <td>{{ $report->sr_no_fiber }}</td>
+                            <td>{{ $report->type }}</td>
+                           
+                            <td>{{ $report->worker_name }}</td>
                             <td>
                                 @if($report->part == 0)
                                 New
@@ -53,10 +55,7 @@
                                 Unknown
                                 @endif
                             </td>
-                            <td>{{ $report->worker_name }}</td>
-                            <td>{{ $report->type }}</td>
-                            <td>{{ $report->sr_card }}</td>
-                            <td>
+                            {{-- <td>
                                 <div class="row">
                                     @foreach($report->tbl_leds as $led)
                                     <div class="col-md-6">
@@ -69,10 +68,7 @@
                                     </div>
                                     @endforeach
                                 </div>
-                            </td>
-                            <td>{{ $report->nani_cavity }}</td>
-                            <td>{{ $report->final_cavity }}</td>
-                            <td>{{ $report->note1 }}</td>
+                            </td> --}}
                             <td>{{ $report->final_amount }}</td>
 
                             <td> <a href="{{ route('report.show', ['report_id' => $report->id]) }}"><i

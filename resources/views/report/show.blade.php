@@ -17,7 +17,16 @@
                                 Unknown
                                 @endif</span> 
                         </td>
-                        <td></td>
+                        <td>
+                            <span> @if($report->r_status == 0)
+                                No warranty
+                                @elseif($report->r_status == 1)
+                                In Warranty 
+                                @else
+                                Unknown
+                                @endif</span> 
+
+                        </td>
                         <td>
                             <h5>WORKER NAME</h5>
                         </td>

@@ -23,24 +23,26 @@ class TblPurchaseItemController extends Controller
 
     public function create(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         // For Product
         $validator = Validator::make($request->all(), [
             'invoice_no' => 'required|unique:tbl_purchases,invoice_no',
-            'data.*.cname' => 'required',
-            'data.*.scname' => 'required',
-            'data.*.unit' => 'required',
-            'data.*.qty' => 'required',
-            'data.*.rate' => 'required',
-            'data.*.total' => 'required',
+            'cname' => 'required|array',
+            'scname' => 'required|array',
+            'unit' => 'required|array',
+            'qty' => 'required|array',
+            'rate' => 'required|array',
+            'total' => 'required|array',
+            'amount_d' => 'required',
+            'rate_r' => 'required',
+            'amount_r' => 'required',
+            'shipping_cost' => 'required',
+            'round_total' => 'required',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
-        } else {
-            $validatedData = $validator->validated();
         }
-
         // For Invoice 
         $inward = new tbl_purchase();
         $inward->date = $request->date;
@@ -50,25 +52,29 @@ class TblPurchaseItemController extends Controller
         $inward->inr_rate = $request->rate_r;
         $inward->inr_amount = $request->amount_r;
         $inward->shipping_cost = $request->shipping_cost;
+        $inward->round_amount = $request->round_total ??  0;
         $result = $inward->save();
 
         // dd($result);
         if ($result) {
             $allItemsSaved = true;
-            foreach ($validatedData['data'] as $item) {
+            $count = count($request->cname); // Count of the items based on the cname array length
+
+            for ($i = 0; $i < $count; $i++) {
                 $itemResult = tbl_purchase_item::create([
                     'invoice_no' => $request->invoice_no,
-                    'cid' => $item['cname'],
-                    'scid' => $item['scname'],
-                    'qty' => $item['qty'],
-                    'unit' => $item['unit'],
-                    'price' => $item['rate'],
-                    'total' => $item['total'],
+                    'cid' => $request->cname[$i],
+                    'scid' => $request->scname[$i],
+                    'qty' => $request->qty[$i],
+                    'unit' => $request->unit[$i],
+                    'price' => $request->rate[$i],
+                    'total' => $request->total[$i],
                 ]);
+        
                 if (!$itemResult) {
                     $allItemsSaved = false;
-                    return redirect()->back()->with('error', 'Report cannot be deleted.');
-                    // break;
+                    // You can handle the error differently if you need
+                    break; // Exit the loop on first failure
                 }
             }
 
