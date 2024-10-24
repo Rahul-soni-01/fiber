@@ -410,6 +410,37 @@
                 }
             });
         }
+        function Add_Cards(cards){
+            $('#TCards').append(`
+                <tr>
+                    <td class="d-flex">
+                        <h5>CARD</h5>
+                        <select required onchange="tbl_card(${row});" id="card_${row}" class="tbl_sub ml-2 form-control" name="card[]">
+                            <option value="">Select</option>
+                            
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="sr_card[]" list="srcard_${row}" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                        <datalist id="srcard_${row}">
+                            <!-- options can be dynamically inserted here if needed -->
+                        </datalist>
+                    </td>
+                    <td><input type="text" id="ampled_${row}" name="sr_cardamp[]" class="form-control"></td>
+                    <td><input type="text" id="voltled_${row}" name="sr_cardvolt[]" class="form-control"></td>
+                    <td class="d-flex">
+                        <input type="text" id="wattled_${row}" name="sr_cardwatt[]" class="form-control">
+                        <button type="button" onclick="removeRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
+                    </td>
+                </tr>
+            `);
+            if (cards && Array.isArray(cards)) {
+                cards.forEach(card => {
+                    $(`#card_${row}`).append(`<option value="${card.id}">${card.sub_category_name}</option>`);
+                });
+            }
+            row++;
+        }
     </script>
 </body>
 
