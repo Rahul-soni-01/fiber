@@ -98,6 +98,8 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('report-create', [ReportController::class, 'create'])->name('report.create');
         Route::post('/report-store', [ReportController::class, 'store'])->name('report.store');
         Route::get('report-show-{report_id}', [ReportController::class, 'show'])->name(('report.show'));
+        Route::get('report-edit-{report_id}', [ReportController::class, 'edit'])->name(('report.edit'));
+        Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
         
        // invoice to tbl stock 
         Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');

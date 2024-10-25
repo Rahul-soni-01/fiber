@@ -50,24 +50,26 @@
                         </td>
                         <td></td>
                     </tr>
-                    
+                    @foreach($report->tbl_cards as $index => $card)
                     <tr>
-                        <td>
-                            <h5>CARD</h5>
-                        </td>
-                        <td>    <span>{{ $report->sr_card }}</span>
-                        </td>
-                        <td>
-                            <h5>AMP.</h5>
-                        </td>
-                        <td>
-                            <h5>VOLT</h5>
-                        </td>
-                        <td>
-                            <h5>WATT</h5>
-                        </td>
-                    </tr>
-                    <tr>
+                    <td>
+                        <h5>Card</h5>
+                        <span><strong>Card Name :- {{ $card->tbl_sub_category->sub_category_name }} </strong></span>
+                    </td>
+                    <td>
+                        <span>{{ $card->sr_card }}</span> 
+                    </td>
+                    <td>
+                        <span>{{ $card->amp_card }}</span>
+                    </td>
+                    <td>
+                        <span>{{ $card->volt_card }}</span> 
+                    </td>
+                    <td>
+                        <span>{{ $card->watt_card }}</span>
+                    </td>
+                </tr>
+                @endforeach
                        
                     </tr>
                 <tbody id="TBody"></tbody>

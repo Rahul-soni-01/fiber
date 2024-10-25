@@ -56,4 +56,10 @@ class Report extends Model
     {
         return $this->hasMany(TblLed::class, 'report_id', 'id');
     }
+
+    public function tbl_cards()
+    {
+        return $this->hasMany(TblCard::class, 'report_id', 'id');
+    }
+
 }

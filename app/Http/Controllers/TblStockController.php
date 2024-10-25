@@ -34,8 +34,8 @@ class TblStockController extends Controller
 
         $price = $request->price / $request->qty;
         $serial_no_list = $request->serial_no ?? ['0'];
-
         foreach ($serial_no_list as $item) {
+            
             $existingRecord = TblStock::where('invoice_no', $invoice_no)
                 ->where('cid', $request->cid)
                 ->where('scid', $request->scid)
@@ -49,7 +49,7 @@ class TblStockController extends Controller
                     'cid' => $request->cid,
                     'scid' => $request->scid,
                     'serial_no' => $item,
-                    'qty' => ($request->unit === 'Mtr' && $serial_no === '0') ? $request->qty : 1,
+                    'qty' => $item === 0 ? 1 : $request->qty,
                     'price' => $request->price,
                     'priceofUnit' => $price,
                     'status' => 0,
