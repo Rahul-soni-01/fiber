@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 23, 2024 at 08:13 AM
+-- Generation Time: Oct 26, 2024 at 03:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -146,7 +146,9 @@ INSERT INTO `manage_permission` (`id`, `uid`, `d_id`, `p_id`, `created_at`, `upd
 (7, 5, '[\"1\",\"3\",\"4\",\"5\",\"6\"]', '{\"1\":[\"1\",\"3\"],\"3\":[\"1\",\"2\",\"3\"],\"4\":[\"1\",\"4\"],\"5\":[\"3\",\"4\"],\"6\":[\"2\",\"4\"]}', '2024-10-16 05:21:56', '2024-10-16 05:21:52'),
 (8, 6, '[\"1\",\"5\"]', '{\"1\":[\"2\"],\"5\":[\"1\"]}', '2024-10-16 05:22:00', '2024-10-16 05:21:58'),
 (9, 9, '[\"1\",\"3\",\"5\",\"6\"]', '{\"1\":[\"1\"],\"3\":[\"1\",\"2\"],\"5\":[\"1\"],\"6\":[\"1\"]}', '2024-10-16 05:21:39', '2024-10-16 05:22:02'),
-(15, 14, '[\"4\",\"5\",\"6\",\"8\",\"9\"]', '{\"4\":[\"1\"],\"5\":[\"1\",\"2\",\"3\",\"4\"],\"6\":[\"1\"],\"8\":[\"1\",\"2\",\"3\"],\"9\":[\"1\",\"2\"]}', '2024-10-16 04:40:00', '2024-10-16 04:40:00');
+(15, 14, '[\"4\",\"5\",\"6\",\"8\",\"9\"]', '{\"4\":[\"1\"],\"5\":[\"1\",\"2\",\"3\",\"4\"],\"6\":[\"1\"],\"8\":[\"1\",\"2\",\"3\"],\"9\":[\"1\",\"2\"]}', '2024-10-16 04:40:00', '2024-10-16 04:40:00'),
+(16, 17, '[\"9\"]', '{\"9\":[\"1\",\"2\",\"3\",\"4\"]}', '2024-10-24 07:12:23', '2024-10-24 07:12:23'),
+(17, 18, '[\"9\"]', '{\"9\":[\"1\",\"3\",\"4\"]}', '2024-10-25 05:18:04', '2024-10-25 05:18:04');
 
 -- --------------------------------------------------------
 
@@ -183,7 +185,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (26, '2024_10_15_070534_add_tax_to_tbl_purchase_items_table', 10),
 (32, '2024_10_05_120730_create_tbl_stock_table', 14),
 (35, '2024_10_19_092629_create_tbl_leds_table', 16),
-(38, '2024_10_17_095721_create_tbl_report_table', 17);
+(38, '2024_10_17_095721_create_tbl_report_table', 17),
+(40, '2024_10_24_115103_create_tbl_cards_table', 18);
 
 -- --------------------------------------------------------
 
@@ -238,6 +241,32 @@ CREATE TABLE `sessions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_cards`
+--
+
+CREATE TABLE `tbl_cards` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `scid` varchar(255) DEFAULT NULL,
+  `report_id` varchar(255) DEFAULT NULL,
+  `sr_card` varchar(255) DEFAULT NULL,
+  `amp_card` varchar(255) DEFAULT NULL,
+  `volt_card` varchar(255) DEFAULT NULL,
+  `watt_card` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tbl_cards`
+--
+
+INSERT INTO `tbl_cards` (`id`, `scid`, `report_id`, `sr_card`, `amp_card`, `volt_card`, `watt_card`, `created_at`, `updated_at`) VALUES
+(1, '20', '23', '0', 'Dolorum veniam plac', 'Maxime suscipit vero', 'Veniam aute deserun', '2024-10-26 07:33:30', '2024-10-26 07:33:30'),
+(2, '20', '24', '0', 'amp 0', 'VOLT 0', 'WATT 0', '2024-10-26 10:09:35', '2024-10-26 10:09:35');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_categories`
 --
 
@@ -279,6 +308,14 @@ CREATE TABLE `tbl_leds` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tbl_leds`
+--
+
+INSERT INTO `tbl_leds` (`id`, `scid`, `report_id`, `sr_led`, `amp_led`, `volt_led`, `watt_led`, `created_at`, `updated_at`) VALUES
+(1, '2', '23', 'Ut est rerum dolore', 'Dignissimos anim opt', 'Voluptates ut et adi', 'Quibusdam qui nulla', '2024-10-26 07:33:30', '2024-10-26 07:33:30'),
+(2, '1', '24', '100', '1', '1', 'watt 1', '2024-10-26 10:09:36', '2024-10-26 10:09:36');
 
 -- --------------------------------------------------------
 
@@ -332,7 +369,8 @@ CREATE TABLE `tbl_purchases` (
 
 INSERT INTO `tbl_purchases` (`id`, `date`, `invoice_no`, `pid`, `amount`, `inr_rate`, `inr_amount`, `shipping_cost`, `round_amount`, `created_at`, `updated_at`) VALUES
 (18, '2024-10-22', 103, 5, 11000, 1.00, '11000.00', '0', NULL, '2024-10-22 06:32:14', '2024-10-22 06:32:14'),
-(19, '2024-10-22', 33, 3, 190, 80.00, '15228.80', '0', NULL, '2024-10-22 13:41:37', '2024-10-22 13:41:37');
+(19, '2024-10-22', 33, 3, 190, 80.00, '15228.80', '0', NULL, '2024-10-22 13:41:37', '2024-10-22 13:41:37'),
+(20, '2024-10-23', 104, 5, 200, 8.00, '1600.00', '0', '0', '2024-10-23 09:07:05', '2024-10-23 09:07:05');
 
 -- --------------------------------------------------------
 
@@ -372,7 +410,8 @@ INSERT INTO `tbl_purchase_items` (`id`, `invoice_no`, `cid`, `scid`, `qty`, `uni
 (30, 103, '12', '23', 1000, 'Pic', 1.00, NULL, 1000.00, '2024-10-22 06:32:14', '2024-10-22 06:32:14'),
 (31, 33, '1', '1', 11, 'Pic', 11.00, NULL, 121.00, '2024-10-22 13:41:37', '2024-10-22 13:41:37'),
 (32, 33, '7', '21', 22, 'Pic', 2.00, NULL, 44.88, '2024-10-22 13:41:37', '2024-10-22 13:41:37'),
-(33, 33, '11', '18', 12, 'Mtr', 2.00, NULL, 24.48, '2024-10-22 13:41:37', '2024-10-22 13:41:37');
+(33, 33, '11', '18', 12, 'Mtr', 2.00, NULL, 24.48, '2024-10-22 13:41:37', '2024-10-22 13:41:37'),
+(34, 104, '10', '16', 200, 'Mtr', 1.00, NULL, 200.00, '2024-10-23 09:07:05', '2024-10-23 09:07:05');
 
 -- --------------------------------------------------------
 
@@ -429,15 +468,8 @@ CREATE TABLE `tbl_reports` (
 --
 
 INSERT INTO `tbl_reports` (`id`, `part`, `f_status`, `worker_name`, `sr_no_fiber`, `m_j`, `type`, `sr_card`, `sr_isolator`, `sr_aom_qswitch`, `amp_aom_qswitch`, `volt_aom_qswitch`, `watt_aom_qswitch`, `sr_cavity_nani`, `sr_cavity_moti`, `sr_combiner_3_1`, `amp_combiner_3_1`, `volt_combiner_3_1`, `watt_combiner_3_1`, `sr_couplar_2_2`, `amp_couplar_2_2`, `volt_couplar_2_2`, `watt_couplar_2_2`, `sr_hr`, `sr_fiber_nano`, `sr_fiber_moto`, `output_amp`, `output_volt`, `output_watt`, `nani_cavity`, `final_cavity`, `note1`, `note2`, `remark`, `status`, `temp`, `r_status`, `party_name`, `final_amount`, `created_at`, `updated_at`) VALUES
-(2, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:27:11', '2024-10-23 06:27:11'),
-(3, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:28:51', '2024-10-23 06:28:51'),
-(4, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:29:23', '2024-10-23 06:29:23'),
-(5, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:37:33', '2024-10-23 06:37:33'),
-(6, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:38:13', '2024-10-23 06:38:13'),
-(7, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:39:02', '2024-10-23 06:39:02'),
-(8, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:39:40', '2024-10-23 06:39:40'),
-(9, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:39:42', '2024-10-23 06:39:42'),
-(10, 0, NULL, 'Jael Hancock', 'Ducimus labore ut i', 'Est veniam et fugit', '26', 'Harum asperiores err', 'Eiusmod voluptate au', 'Aut repellendus Lab', 'Quis nihil nulla vel', 'Natus quo quae dolor', 'Quas eveniet dolore', 'Deleniti dolor volup', 'Voluptatem at tempo', 'Cupiditate enim ad a', 'Qui id quis quis vel', 'Quis aut exercitatio', 'Et veritatis sed vol', 'Unde ducimus eum mo', 'Aut fuga Recusandae', 'Sit aut quia qui al', 'Rem voluptas volupta', 'Duis doloribus facer', 'Alias do voluptatem', 'Provident magnam be', 'Architecto illo ex e', 'Adipisci omnis tempo', NULL, 'Sint qui minim in d', 'Quis nisi sint est h', 'Eius sit eum natus a', 'Nihil sunt odit nem', NULL, NULL, NULL, 1, NULL, NULL, '2024-10-23 06:42:04', '2024-10-23 06:42:04');
+(23, 0, 1, 'Mara Buckner', 'Nihil dicta non lore', 'Impedit commodi eiu', '15', NULL, NULL, '49', 'Harum adipisicing te', 'Ut commodo eligendi', 'Qui perspiciatis co', 'Dolore dolor tempori', 'Incidunt ullam in m', 'Fugiat sed ut repre', 'Adipisci nostrum vel', 'Ipsum dolores digni', 'Blanditiis ut aut re', 'Amet qui sunt in p', 'Qui vitae voluptatum', 'Rerum tempor sint s', 'Nulla nostrum sunt', '50', '2', '1', 'Ipsam incidunt quae', 'Ex praesentium nostr', NULL, 'Nobis et sunt esse', 'Quia aliquam exercit', 'Admin Ok', NULL, NULL, NULL, 111, 1, NULL, 7, '2024-10-26 07:33:30', '2024-10-26 07:33:30'),
+(24, 0, NULL, 'Oprah Chavez', NULL, NULL, NULL, NULL, NULL, '47', 'aom amp', 'aom volt', 'aom watt', 'Nulla officiis eu es', 'Exercitationem incid', 'Sint adipisci disti', 'Irure dolor earum di', 'Lorem non provident', 'Nisi labore alias es', 'Anim dolor voluptate', 'Maiores anim nihil s', 'Neque sunt maxime ra', 'Quis et aut rerum ev', 'Rerum praesentium pa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Sed saepe nisi accus', 'Est cupiditate lorem', NULL, NULL, 112, 0, NULL, 3, '2024-10-26 10:09:35', '2024-10-26 12:10:40');
 
 -- --------------------------------------------------------
 
@@ -459,6 +491,47 @@ CREATE TABLE `tbl_stock` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tbl_stock`
+--
+
+INSERT INTO `tbl_stock` (`id`, `date`, `invoice_no`, `cid`, `scid`, `serial_no`, `qty`, `price`, `priceofUnit`, `status`, `created_at`, `updated_at`) VALUES
+(14, '2024-10-22', '33', 1, 1, '74', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-24 11:19:45'),
+(15, '2024-10-22', '33', 1, 1, '15', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-24 11:19:45'),
+(16, '2024-10-22', '33', 1, 1, '93', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-24 12:05:57'),
+(17, '2024-10-22', '33', 1, 1, '27', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-24 12:05:57'),
+(18, '2024-10-22', '33', 1, 1, '100', 1, 716.00, 1.51, '1', '2024-10-23 07:56:52', '2024-10-26 10:09:35'),
+(19, '2024-10-22', '33', 1, 1, '67', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-24 12:43:51'),
+(20, '2024-10-22', '33', 1, 1, '60', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-24 12:43:51'),
+(21, '2024-10-22', '33', 1, 1, '45', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-25 05:07:49'),
+(22, '2024-10-22', '33', 1, 1, '30', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-23 07:56:52'),
+(23, '2024-10-22', '33', 1, 1, '80', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-23 07:56:52'),
+(24, '2024-10-22', '33', 1, 1, '57', 1, 716.00, 1.51, '0', '2024-10-23 07:56:52', '2024-10-23 07:56:52'),
+(25, '2024-10-22', '103', 10, 16, '0', 1000, 1000.00, 1.00, '0', '2024-10-23 09:05:19', '2024-10-23 09:57:16'),
+(26, '2024-10-23', '104', 10, 16, '0', 200, 200.00, 1.00, '0', '2024-10-23 09:07:14', '2024-10-23 09:07:14'),
+(27, '2024-10-22', '103', 1, 3, 'Fugiat incididunt de', 1, 1.00, 1.00, '0', '2024-10-23 09:55:23', '2024-10-23 09:55:23'),
+(33, '2024-10-22', '103', 7, 20, '0', 1000, 1000.00, 1.00, '0', '2024-10-24 12:03:27', '2024-10-24 12:03:27'),
+(34, '2024-10-22', '103', 1, 3, '74', 1, 1.00, 1.00, '0', '2024-10-24 12:05:57', '2024-10-24 12:05:57'),
+(35, '2024-10-22', '103', 7, 1, '0', 1, 1.00, 1.00, '0', '2024-10-24 12:43:51', '2024-10-24 12:43:51'),
+(36, '2024-10-22', '103', 7, 21, '1', 1, 1.00, 1.00, '0', '2024-10-24 13:14:44', '2024-10-24 13:14:44'),
+(37, '2024-10-22', '103', 1, 3, '21312', 1, 1.00, 1.00, '0', '2024-10-24 13:14:44', '2024-10-24 13:14:44'),
+(38, '2024-10-22', '103', 1, 2, 'Perferendis unde mol', 1, 1.00, 1.00, '0', '2024-10-25 09:24:13', '2024-10-25 09:24:13'),
+(39, '2024-10-22', '103', 1, 2, '74', 1, 1.00, 1.00, '0', '2024-10-25 12:03:15', '2024-10-25 12:03:15'),
+(40, '2024-10-22', '103', 8, 22, '2201', 7, 7.00, 1.00, '0', '2024-10-26 05:45:14', '2024-10-26 05:45:14'),
+(41, '2024-10-22', '103', 8, 22, '2202', 7, 7.00, 1.00, '1', '2024-10-26 05:45:14', '2024-10-26 07:33:30'),
+(42, '2024-10-22', '103', 8, 22, '2203', 7, 7.00, 1.00, '0', '2024-10-26 05:45:14', '2024-10-26 05:45:14'),
+(43, '2024-10-22', '103', 8, 22, '2204', 7, 7.00, 1.00, '0', '2024-10-26 05:45:14', '2024-10-26 05:45:14'),
+(44, '2024-10-22', '103', 8, 22, '2205', 7, 7.00, 1.00, '0', '2024-10-26 05:45:14', '2024-10-26 05:45:14'),
+(45, '2024-10-22', '103', 8, 22, '2206', 7, 7.00, 1.00, '0', '2024-10-26 05:45:14', '2024-10-26 05:45:14'),
+(46, '2024-10-22', '103', 8, 22, '2207', 7, 7.00, 1.00, '0', '2024-10-26 05:45:14', '2024-10-26 05:45:14'),
+(47, '2024-10-22', '103', 9, 15, '150901', 3, 3.00, 1.00, '0', '2024-10-26 06:21:00', '2024-10-26 06:21:00'),
+(48, '2024-10-22', '103', 9, 15, '150902', 3, 3.00, 1.00, '0', '2024-10-26 06:21:00', '2024-10-26 06:21:00'),
+(49, '2024-10-22', '103', 9, 15, '150903', 3, 3.00, 1.00, '0', '2024-10-26 06:21:00', '2024-10-26 06:21:00'),
+(50, '2024-10-22', '103', 6, 19, '190601', 3, 3.00, 1.00, '1', '2024-10-26 06:53:56', '2024-10-26 07:33:30'),
+(51, '2024-10-22', '103', 6, 19, '190602', 3, 3.00, 1.00, '0', '2024-10-26 06:53:56', '2024-10-26 06:53:56'),
+(52, '2024-10-22', '103', 6, 19, '190603', 3, 3.00, 1.00, '0', '2024-10-26 06:53:56', '2024-10-26 06:53:56'),
+(53, '2024-10-22', '103', 1, 2, 'Ut est rerum dolore', 1, 1.00, 1.00, '1', '2024-10-26 07:33:30', '2024-10-26 07:33:30');
 
 -- --------------------------------------------------------
 
@@ -520,7 +593,9 @@ INSERT INTO `tbl_users` (`id`, `name`, `type`, `email`, `password`, `d_id`, `cre
 (6, 'Alice Johnson', 'moderator', 'alice@example.com', '$2y$12$fbic1t01sswnXm9H1bw7H.kr6AYMPL3BEQg0tCQ8CC3g7nexq9fXK', 1, '2024-10-08 07:11:21', '2024-10-08 07:11:21'),
 (9, 'Eve White', 'user', 'eve@example.com', '$2y$12$fbic1t01sswnXm9H1bw7H.kr6AYMPL3BEQg0tCQ8CC3g7nexq9fXK', 4, '2024-10-08 07:11:21', '2024-10-08 07:11:21'),
 (14, 'Dawood', 'user', 'dawood@example.com', '$2y$12$fbic1t01sswnXm9H1bw7H.kr6AYMPL3BEQg0tCQ8CC3g7nexq9fXK', 3, NULL, '2024-10-18 05:21:16'),
-(15, 'Kasaab123', 'user', 'kasaab@example.com', '$2y$12$fbic1t01sswnXm9H1bw7H.kr6AYMPL3BEQg0tCQ8CC3g7nexq9fXK', 4, NULL, '2024-10-18 23:54:56');
+(15, 'Kasaab123', 'user', 'kasaab@example.com', '$2y$12$fbic1t01sswnXm9H1bw7H.kr6AYMPL3BEQg0tCQ8CC3g7nexq9fXK', 4, NULL, '2024-10-18 23:54:56'),
+(17, 'Electric', 'electric', 'electric@gmail.com', '$2y$12$imvlRnbr7ToA0OU2L1bliu3/JjYKEbm5QzUPz9jhbA2yvOxblv4D2', 8, '2024-10-24 07:11:37', '2024-10-24 07:11:37'),
+(18, 'Cavity', 'cavity', 'cavity@gmail.com', '$2y$12$usznGZs.L0oJpNKZdvxICezM4WQF39I5StNGmS.rh5KygfEmGPDC6', 9, '2024-10-25 05:17:15', '2024-10-25 05:17:15');
 
 -- --------------------------------------------------------
 
@@ -617,6 +692,12 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
+-- Indexes for table `tbl_cards`
+--
+ALTER TABLE `tbl_cards`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_categories`
 --
 ALTER TABLE `tbl_categories`
@@ -706,13 +787,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `manage_permission`
 --
 ALTER TABLE `manage_permission`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -721,16 +802,22 @@ ALTER TABLE `permissions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `tbl_cards`
+--
+ALTER TABLE `tbl_cards`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tbl_categories`
 --
 ALTER TABLE `tbl_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_leds`
 --
 ALTER TABLE `tbl_leds`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_parties`
@@ -742,25 +829,25 @@ ALTER TABLE `tbl_parties`
 -- AUTO_INCREMENT for table `tbl_purchases`
 --
 ALTER TABLE `tbl_purchases`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `tbl_purchase_items`
 --
 ALTER TABLE `tbl_purchase_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `tbl_reports`
 --
 ALTER TABLE `tbl_reports`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `tbl_stock`
 --
 ALTER TABLE `tbl_stock`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `tbl_sub_categories`
@@ -772,7 +859,7 @@ ALTER TABLE `tbl_sub_categories`
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`
