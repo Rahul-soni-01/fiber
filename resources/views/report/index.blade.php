@@ -47,11 +47,11 @@
                             <th>amp_aom_qswitch</th>
                             <th>volt_aom_qswitch</th>
                             <th>watt_aom_qswitch</th>
-                            <th>Action</th>
+                            {{-- <th>Action</th> --}}
 
                             @endif
-                            @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'user')
-                            <th>TYpe</th>
+                            @if(auth()->user()->type === 'cavity')
+                            <th>Type</th>
                             <th>SR Cavity Nani</th>
                             <th>SR Cavity Moti</th>
                             <th>SR Combiner 3.1</th>
@@ -62,6 +62,18 @@
                             {{-- <th>AMP Couplar 2.2</th>
                             <th>Volt Couplar 2.2</th> --}}
                             <th>Watt Couplar 2.2</th>
+                            <th>Action</th>
+                            @endif
+
+                            @if(auth()->user()->type === 'user')
+                            <th>SR(FIBER)</th>
+                            <th>M.J</th>
+                            <th>Type</th>
+                            <th>ISOLATOR</th>
+                            <th>FIBER NANO</th>
+                            <th>FIBER MOTO</th>
+                            <th>CAVITY NANI </th>
+                            <th>CAVITY FINAL</th>
                             <th>Action</th>
                             @endif
                     </thead>
@@ -77,11 +89,8 @@
                                 }
                             @endphp
                                 
-                                <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}"
-                                    style="color:white;background-color: {{ $report->r_status == 1 ? 'green' : ($report->r_status == 0 ? 'red' : 'inherit') }}">
-                                   
-
-                                    <td>{{ $report->id }}</td>
+                                <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
+                                    <td style="color:white;background-color: {{ $report->r_status == 1 ? 'green' : ($report->r_status == 0 ? 'red' : 'inherit') }}">{{ $report->id }}</td>
                                     <td>{{ $report->created_at->format('d-m-Y') }}</td>
                     
                                 @if ($type === 'electric')
@@ -106,14 +115,14 @@
                                     <td>{{ $report->amp_aom_qswitch }}</td>
                                     <td>{{ $report->volt_aom_qswitch }}</td>
                                     <td>{{ $report->watt_aom_qswitch }}</td>
-                                    <td>
+                                    {{-- <td>
                                         @if ($type === 'electric')
                                             <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                                         @endif
-                                    </td>
+                                    </td> --}}
                     
-                                    @endif 
-                                    @if ($type === 'cavity'|| $type === 'user' )
+                                @endif 
+                                @if ($type === 'cavity')
                                     <td>{{ $report->temp }}</td>
                                     <td>{{ $report->sr_cavity_nani }}</td>
                                     <td>{{ $report->sr_cavity_moti }}</td>
@@ -129,8 +138,21 @@
                                         <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                                     </td>
                     
-                                    @endif
-                                    @if ($type === 'admin' )
+                                @endif
+                                @if($type === 'user')
+                                <td>{{ $report->sr_no_fiber }}</td>
+                                <td>{{ $report->m_j }}</td>
+                                <td>{{ $report->Type }}</td>
+                                <td>{{ $report->sr_isolator }}</td>
+                                <td>{{ $report->sr_fiber_nano }}</td>
+                                <td>{{ $report->sr_fiber_moto }}</td>
+                                <td>{{ $report->nani_cavity }}</td>
+                                <td>{{ $report->final_cavity }}</td>
+                                <td>
+                                    <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                                </td>
+                                @endif
+                                @if ($type === 'admin' )
                                     <td>{{ $report->sr_no_fiber }}</td>
                                     <td>{{ $report->type }}</td>
                                     <td>{{ $report->worker_name }}</td>
@@ -145,7 +167,7 @@
                                     </td>
                                     <td>{{ $report->final_amount }}</td>
                                     <td>
-                                        <a href="{{ route('report.show', ['report_id' => $report->id]) }}"><i class="ri-eye-fill"></i></a>
+                                        <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i class="ri-eye-fill"></i></a>
                                     </td>
                                 @endif
                             </tr>

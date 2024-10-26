@@ -73,8 +73,7 @@ class TblPurchaseItemController extends Controller
         
                 if (!$itemResult) {
                     $allItemsSaved = false;
-                    // You can handle the error differently if you need
-                    break; // Exit the loop on first failure
+                    break;
                 }
             }
 

@@ -94,6 +94,9 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         
         // Route::view('add_report', 'add_report')->name('report.add');
         
+        Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
+        Route::get('report-layout', [ReportController::class, 'layout'])->name('report.layout');
+        Route::post('/layout-store', [ReportController::class, 'layout_store'])->name('layout.store');
         Route::get('report', [ReportController::class, 'index'])->name('report.index');
         Route::get('report-create', [ReportController::class, 'create'])->name('report.create');
         Route::post('/report-store', [ReportController::class, 'store'])->name('report.store');

@@ -43,7 +43,8 @@
                             </td>
                             <td>
                                 @if( auth()->user()->type == 'admin' || auth()->user()->type == 'cavity')
-                                <input type="text" id="wn" name="worker_name" class="form-control">
+                                <input type="text" id="wn" name="worker_name" class="form-control"
+                                placeholder="Enter Worker Name">
                                 @endif
                             </td>
                           
@@ -58,12 +59,14 @@
                             </td>
                             <td>
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type === 'user' )
-                                <input type="text" id="srfiber" name="sr_no_fiber" class="form-control">
-                            @endif</td>
+                                <input type="text" id="srfiber" name="sr_no_fiber" class="form-control"
+                                placeholder="Enter SR No Fiber">
+                                                     @endif</td>
                             <td>
                                 @if(auth()->user()->type == 'admin'  || auth()->user()->type == 'electric')
-                                <input type="text" id="temp" name="temp" class="form-control">
-                                @endif
+                                <input type="text" id="temp" name="temp" class="form-control"
+                                placeholder="Enter Temperature">
+                                                         @endif
                             </td>
                             <td>
                                 @if(auth()->user()->type == 'admin'|| auth()->user()->type === 'user')
@@ -72,8 +75,9 @@
                             </td>
                             <td>
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type === 'user')
-                                <input type="text" id="mj" name="m_j" class="form-control">
-                                @endif
+                                <input type="text" id="mj" name="m_j" class="form-control"
+                                placeholder="Enter M/J Value">
+                                                         @endif
                             </td>
                         </tr>
                         @endif
@@ -113,7 +117,7 @@
                             </td>
                         </tr>
                         @endif
-                        @if( auth()->user()->type === 'admin') 
+                        @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric') 
                         <tr>
                             <td>
                                 <h5>ITEM</h5>
@@ -172,10 +176,9 @@
                             </td>
                             <td>
                                 <input type="text" class="form-control" name="srled[]" list="srled_0" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-    
-                                  <datalist id="srled_0">
+                                <datalist id="srled_0">
                                     
-                                  </datalist>
+                                </datalist>
                             </td>
                             <td><input type="text" id="ampled[]" class="form-control" name="ampled[]"></td>
                             <td><input type="text" id="voltled[]" class="form-control" name="voltled[]"></td>
@@ -194,7 +197,13 @@
                             </td>
                             <td> 
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'user' )
-                                <input type="text" id="srisolator" name="sr_isolator" class="form-control">
+                                {{-- <input type="text" id="srisolator" name="sr_isolator" class="form-control"> --}}
+                                <select required id="srisolator" class="form-control select2" name="srisolator">
+                                    <option value="">Select</option>
+                                    @foreach($isolators as $isolator)
+                                    <option value="{{ $isolator->id }}">{{ $isolator->serial_no }}</option>
+                                    @endforeach
+                                </select>
                                 @endif
                             </td>
                             <td></td>
@@ -207,7 +216,15 @@
                             <td>
                                 <h5>AOM(QSWITCH)</h5>
                             </td>
-                            <td><input type="text" id="sraomqswitch" name="sr_aom_qswitch" class="form-control"></td>
+                            <td>
+                                {{-- <input type="text" id="sraomqswitch" name="sr_aom_qswitch" class="form-control"> --}}
+                                <select required id="qsswitch" class="form-control select2" name="sr_aom_qswitch">
+                                    <option value="">Select</option>
+                                    @foreach($qsswitches as $qsswitch)
+                                    <option value="{{ $qsswitch->id }}">{{ $qsswitch->serial_no }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
                             <td><input type="text" id="ampaomqswitch" name="amp_aom_qswitch" class="form-control"></td>
                             <td><input type="text" id="voltaomqswitch" name="volt_aom_qswitch" class="form-control"></td>
                             <td><input type="text" id="wattaomqswitch" name="watt_aom_qswitch" class="form-control"></td>
@@ -251,7 +268,15 @@
                             <td>
                                 <h5>COUPLAR(2*2)</h5>
                             </td>
-                            <td><input type="text" id="srcouplar2" name="sr_couplar_2_2" class="form-control"></td>
+                            <td>
+                                <input type="text" id="srcouplar2" name="sr_couplar_2_2" class="form-control">
+                                {{-- <select required id="couplars" class="form-control select2" name="sr_couplar_2_2">
+                                    <option value="">Select</option>
+                                    @foreach($couplars as $couplar)
+                                    <option value="{{ $couplar->id }}">{{ $couplar->serial_no }}</option>
+                                    @endforeach
+                                </select> --}}
+                            </td>
                             <td><input type="text" id="ampcouplar2" name="amp_couplar_2_2" class="form-control"></td>
                             <td><input type="text" id="voltcouplar2" name="volt_couplar_2_2" class="form-control"></td>
                             <td><input type="text" id="wattcouplar2" name="watt_couplar_2_2" class="form-control"></td>
@@ -262,7 +287,15 @@
                             <td>
                                 <h5>HR</h5>
                             </td>
-                            <td><input type="text" id="srhr" name="sr_hr" class="form-control"></td>
+                            <td>
+                                {{-- <input type="text" id="srhr" name="sr_hr" class="form-control"> --}}
+                                <select required id="srhr" class="form-control select2" name="sr_hr">
+                                    <option value="">Select</option>
+                                    @foreach($hrs as $hr)
+                                    <option value="{{ $hr->id }}">{{ $hr->serial_no }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -316,7 +349,7 @@
                         @endif
                         @if( auth()->user()->type === 'admin' || auth()->user()->type === 'user') 
                         <tr>
-                            <th>CAVITY FINAL </th>
+                            <td><h5> FINAL </h5></td>
                             <td><input type="text" id="cavityfinal" name="final_cavity" class="form-control"></td>
                             <td></td>
                             <td></td>

@@ -13,6 +13,8 @@ use App\Models\TblCard;
 use App\Models\TblStock;
 use Illuminate\Support\Facades\Validator;
 use App\Models\tbl_sub_category;
+use App\Models\tbl_category;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -25,7 +27,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_leds','tbl_cards')->get();       
+            $reports = Report::with('tbl_leds', 'tbl_cards')->get();
             return view("report.index", compact('reports'));
         }
         return redirect('/unauthorized');
@@ -36,15 +38,41 @@ class ReportController extends Controller
         if ($this->checkPermission($request, 'add')) {
             $sub_categories = tbl_sub_category::where('cid', 1)->get();
             $cards = tbl_sub_category::where('cid', 7)->get();
+            $party = tbl_party::where('party_name', 'opening stock')->first();
+            $party_id = $party->id;
+            $invoice = tbl_purchase::where('pid', $party_id)->first();
 
-            return view("report.create", compact('sub_categories', 'cards'));
+            $invoice_no = $invoice->invoice_no;
+            $isolators = TblStock::where('cid', 8)
+                ->where('scid', 22)
+                ->where('invoice_no', $invoice_no)
+                ->where('status', 0)
+                ->get();
+
+            $qsswitches = TblStock::where('cid', 9)
+                ->where('scid', 15)
+                ->where('invoice_no', $invoice_no)
+                ->where('status', 0)
+                ->get();
+
+            $couplars = TblStock::where('cid', 12)
+                ->where('scid', 23)
+                ->where('invoice_no', $invoice_no)
+                ->where('status', 0)
+                ->get();
+            $hrs = TblStock::where('cid', 6)
+                ->where('scid', 19)
+                ->where('invoice_no', $invoice_no)
+                ->where('status', 0)
+                ->get();
+            // dd($isolators);
+            return view("report.create", compact('sub_categories', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
         }
         return redirect('/unauthorized');
     }
 
     public function store(Request $request)
     {
-
 
         $validator = Validator::make(
             $request->all(),
@@ -131,8 +159,10 @@ class ReportController extends Controller
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
-        if(Auth()->user()->type === 'electric'){
+        if (Auth()->user()->type === 'electric') {
             $report->r_status = 0;
+        } elseif (Auth()->user()->type === 'admin') {
+            $report->r_status = 1;
         }
 
         try {
@@ -144,6 +174,41 @@ class ReportController extends Controller
         $report_id = $report->id;
 
         $amount = 0;
+
+        // srisolator and tblstock status 1
+
+        $isolators = $request->input('srisolator');
+        if ($isolators) {
+            $TblStockisolators = TblStock::where('id', $isolators)->first();
+            if ($TblStockisolators) {
+                $amount += $TblStockisolators->priceofUnit;
+                $TblStockisolators->status = 1;
+                $TblStockisolators->save();
+            }
+        }
+
+        // qsswitch and tblstock status 1
+        $srqsswitch = $request->input('srqsswitch');
+        if ($srqsswitch) {
+            $TblStocksrqsswitch = TblStock::where('id', $srqsswitch)->first();
+            if ($TblStocksrqsswitch) {
+                $amount += $TblStocksrqsswitch->priceofUnit;
+                $TblStocksrqsswitch->status = 1;
+                $TblStocksrqsswitch->save();
+            }
+        }
+
+        // hr and tblstock status 1
+        $sr_hr = $request->input('sr_hr');
+        if ($sr_hr) {
+            $TblStocksr_hr = TblStock::where('id', $sr_hr)->first();
+            if ($TblStocksr_hr) {
+                $amount += $TblStocksr_hr->priceofUnit;
+                $TblStocksr_hr->status = 1;
+                $TblStocksr_hr->save();
+            }
+        }
+
         // fiber in mate update tbl_stoke qty and upadte final amount as well...
         $sr_fiber_nano = $request->input('sr_fiber_nano');
         $sr_fiber_moto = $request->input('sr_fiber_moto');
@@ -166,6 +231,7 @@ class ReportController extends Controller
                 }
             }
         }
+
 
         // sr_card in mate update tbl_stoke qty and upadte final amount and insert in tbl_cards if any serial number repeat then delete all insert id and delete report as well and redirct back as well...
 
@@ -199,7 +265,7 @@ class ReportController extends Controller
             $TblStock = TblStock::where('scid', $sub_category_id)
                 ->where('cid', $category_id)
                 ->first();
-            
+
             if ($TblStock) {
                 $amount += $TblStock->priceofUnit;
             } else {
@@ -348,13 +414,39 @@ class ReportController extends Controller
     }
     public function edit($id)
     {
-        $report = Report::with('tbl_leds', 'tbl_cards','tbl_leds.tbl_sub_category')->find($id);
+        $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->find($id);
         $cards = tbl_sub_category::where('cid', 7)->get();
         $sub_categories = tbl_sub_category::where('cid', 1)->get();
-        return view('report.edit', compact('report','cards','sub_categories'));
+        $party = tbl_party::where('party_name', 'opening stock')->first();
+        $party_id = $party->id;
+        $invoice = tbl_purchase::where('pid', $party_id)->first();
+
+        $invoice_no = $invoice->invoice_no;
+        $isolators = TblStock::where('cid', 8)
+            ->where('scid', 22)
+            ->where('invoice_no', $invoice_no)
+            ->get();
+
+        $qsswitches = TblStock::where('cid', 9)
+            ->where('scid', 15)
+            ->where('invoice_no', $invoice_no)
+            ->get();
+
+        $couplars = TblStock::where('cid', 12)
+            ->where('scid', 23)
+            ->where('invoice_no', $invoice_no)
+            ->get();
+        $hrs = TblStock::where('cid', 6)
+            ->where('scid', 19)
+            ->where('invoice_no', $invoice_no)
+            ->get();
+
+
+        return view('report.edit', compact('sub_categories', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs', 'report'));
     }
-    public function update(Request $request, $id){
-        if(Auth()->user()->type === 'cavity'){
+    public function update(Request $request, $id)
+    {
+        if (Auth()->user()->type === 'cavity') {
             $validator = Validator::make(
                 $request->all(),
                 [
@@ -369,11 +461,12 @@ class ReportController extends Controller
                     'amp_couplar_2_2' => 'required|string|max:255',
                     'volt_couplar_2_2' => 'required|string|max:255',
                     'watt_couplar_2_2' => 'required|string|max:255',
-                    'sr_hr' => 'required|string|max:255',                  
+                    'sr_hr' => 'required|string|max:255',
                     'note1' => 'nullable|string|max:255',
                     'note2' => 'nullable|string|max:255',
-                ]);
-    
+                ]
+            );
+
             if ($validator->fails()) {
                 $firstErrorMessage = $validator->errors()->first();
                 return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
@@ -399,25 +492,25 @@ class ReportController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Failed to Update the report. Please try again.');
             }
-        }
-        elseif(Auth()->user()->type === 'user'){
+        } elseif (Auth()->user()->type === 'user') {
             $validator = Validator::make(
                 $request->all(),
                 [
-                    'sr_no_fiber' => 'required|string|max:255',  
-                    'm_j' => 'required|string|max:255',          
-                    'type' => 'required|integer',                 
-                    'sr_isolator' => 'required|string|max:255',  
-                    'sr_fiber_nano' => 'required|numeric|min:0', 
-                    'sr_fiber_moto' => 'required|numeric|min:0',  
-                    'output_amp' => 'required|string|max:255',   
-                    'output_volt' => 'required|string|max:255',  
-                    'nani_cavity' => 'required|string|max:255',  
+                    'sr_no_fiber' => 'required|string|max:255',
+                    'm_j' => 'required|string|max:255',
+                    'type' => 'required|integer',
+                    'sr_isolator' => 'required|string|max:255',
+                    'sr_fiber_nano' => 'required|numeric|min:0',
+                    'sr_fiber_moto' => 'required|numeric|min:0',
+                    'output_amp' => 'required|string|max:255',
+                    'output_volt' => 'required|string|max:255',
+                    'nani_cavity' => 'required|string|max:255',
                     'final_cavity' => 'required|string|max:255',
-                    'note1' => 'nullable|string|max:255',         
+                    'note1' => 'nullable|string|max:255',
                     'note2' => 'nullable|string|max:255',
-                ]);
-    
+                ]
+            );
+
             if ($validator->fails()) {
                 $firstErrorMessage = $validator->errors()->first();
                 return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
@@ -443,5 +536,40 @@ class ReportController extends Controller
                 return redirect()->back()->with('error', 'Failed to Update the report. Please try again.');
             }
         }
+    }
+
+    public function layout()
+    {
+        $categories = tbl_category::all();
+        $subcategories = tbl_sub_category::all();
+        return view('report.layout', compact('categories', 'subcategories'));
+    }
+    public function layout_store(Request $request)
+    {
+        dd($request->all());
+    }
+    public function stock()
+    {
+        $categories = tbl_category::all();
+        $subcategories = tbl_sub_category::all();
+        $stockResults = TblStock::select(
+            'scid',
+            DB::raw('SUM(qty) as total_qty'),
+            DB::raw('SUM(CASE WHEN status = 0 THEN qty ELSE 0 END) as qty_status_0'),
+            DB::raw('SUM(CASE WHEN status = 1 THEN qty ELSE 0 END) as qty_status_1')
+        )
+            ->groupBy('scid')
+            ->get();
+
+        $purchaseResults = tbl_purchase_item::select(
+            'scid',
+            DB::raw('SUM(qty) as total_purchase_qty')
+        )
+            ->groupBy('scid')
+            ->get();
+            
+        
+        // dd($results);
+        return view('report.stock', compact('categories', 'subcategories', 'stockResults','purchaseResults'));
     }
 }

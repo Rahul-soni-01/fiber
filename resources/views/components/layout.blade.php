@@ -16,7 +16,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
 
-    
+
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -29,15 +29,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
         integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 
     <script>
-        $(document).ready(function () {
-            // $('.table').DataTable();
-            $('.table').not('.datatable-remove').DataTable();
-
-        });
-
         /*$('#select-type').selectize({
             create: function(input) {
                 return {
@@ -137,6 +136,15 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
                     <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
+                    <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">stock Report</a></li>
+                </ul>
+            </li>
+
+            <li id="Report" class="sidebar">
+                <a class="sub-btn" id="sub-btn-show"><i class="ri-layout-line"></i>Report layout <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('report.layout') }}" id="view" class="sub-item">layout Report</a></li>
                 </ul>
             </li>
 
@@ -155,6 +163,11 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $(document).ready(function () {
+            // $('.table').DataTable();
+                $('.table').not('.datatable-remove').DataTable();
+            });
 
             const menuButton = document.getElementById('menu');
             const sidebar = document.getElementById('slidebar');
@@ -175,6 +188,16 @@
 
             $(".sub-btn").on("click", function (e) {
                 $(this).next('.sub-menu').slideToggle();
+            });
+
+            $('.toggle-icon').click(function() {
+                $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
+            });
+
+            $('.select2').select2({
+                maximumInputLength: 20,
+                placeholder: "Select an option",
+                allowClear: true
             });
         });
 
