@@ -67,6 +67,7 @@
 
                             @if(auth()->user()->type === 'user')
                             <th>SR(FIBER)</th>
+                            <th>Temp No.</th>
                             <th>M.J</th>
                             <th>Type</th>
                             <th>ISOLATOR</th>
@@ -77,103 +78,112 @@
                             <th>Action</th>
                             @endif
                     </thead>
-                  
+
                     <tbody>
                         @foreach ($reports as $report)
-                            @php
-                                $type = auth()->user()->type;
-                                $status = $report->r_status;
-                                
-                                if ($type === 'electric' && $status != '0' || $type === 'admin' && $status == '0' || $type === 'cavity' && $status != '0' || $type === 'user' && $status != '0') {
-                                    continue;
-                                }
-                            @endphp
-                                
-                                <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
-                                    <td style="color:white;background-color: {{ $report->r_status == 1 ? 'green' : ($report->r_status == 0 ? 'red' : 'inherit') }}">{{ $report->id }}</td>
-                                    <td>{{ $report->created_at->format('d-m-Y') }}</td>
-                    
+                        @php
+                        $type = auth()->user()->type;
+                        $temp = $report->temp;
+                        $status = $report->status;
+
+                        if (in_array($type, ['electric', 'cavity', 'user']) && $temp == '0') {
+                            continue;
+                        }
+                        if ($status != '0' && $type == 'account') {
+                            continue;
+                        }
+                        @endphp
+
+                        <tr
+                            class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
+                            <td
+                                style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}">
+                                {{ $report->id }}</td>
+                            <td>{{ $report->created_at->format('d-m-Y') }}</td>
+
+                            @if ($type === 'electric')
+
+                            <td>{{ $report->part == 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
+                            <td>{{ $report->temp }}</td>
+                            <td>
+                                <div class="row">
+                                    @foreach ($report->tbl_cards as $card)
+                                    <div class="col-md">
+                                        <ul>
+                                            <li>Card Serial: {{ $card->sr_card }}</li>
+                                            <li>Amp: {{ $card->amp_card }}</li>
+                                            <li>Volt: {{ $card->volt_card }}</li>
+                                            <li>Watt: {{ $card->watt_card }}</li>
+                                        </ul>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </td>
+                            <td>{{ $report->sr_aom_qswitch }}</td>
+                            <td>{{ $report->amp_aom_qswitch }}</td>
+                            <td>{{ $report->volt_aom_qswitch }}</td>
+                            <td>{{ $report->watt_aom_qswitch }}</td>
+                            {{-- <td>
                                 @if ($type === 'electric')
-                                
-                                    <td>{{ $report->part == 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
-                                    <td>{{ $report->temp }}</td>
-                                    <td>
-                                        <div class="row">
-                                            @foreach ($report->tbl_cards as $card)
-                                                <div class="col-md">
-                                                    <ul>
-                                                        <li>Card Serial: {{ $card->sr_card }}</li>
-                                                        <li>Amp: {{ $card->amp_card }}</li>
-                                                        <li>Volt: {{ $card->volt_card }}</li>
-                                                        <li>Watt: {{ $card->watt_card }}</li>
-                                                    </ul>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </td>
-                                    <td>{{ $report->sr_aom_qswitch }}</td>
-                                    <td>{{ $report->amp_aom_qswitch }}</td>
-                                    <td>{{ $report->volt_aom_qswitch }}</td>
-                                    <td>{{ $report->watt_aom_qswitch }}</td>
-                                    {{-- <td>
-                                        @if ($type === 'electric')
-                                            <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
-                                        @endif
-                                    </td> --}}
-                    
-                                @endif 
-                                @if ($type === 'cavity')
-                                    <td>{{ $report->temp }}</td>
-                                    <td>{{ $report->sr_cavity_nani }}</td>
-                                    <td>{{ $report->sr_cavity_moti }}</td>
-                                    <td>{{ $report->sr_combiner_3_1 }}</td>
-                                    <td>{{ $report->amp_combiner_3_1 }}</td>
-                                    <td>{{ $report->volt_combiner_3_1 }}</td>
-                                    <td>{{ $report->watt_combiner_3_1 }}</td>
-                                    <td>{{ $report->sr_couplar_2_2 }}</td>
-                                    {{-- <td>{{ $report->amp_couplar_2_2 }}</td>
-                                    <td>{{ $report->volt_couplar_2_2 }}</td> --}}
-                                    <td>{{ $report->watt_couplar_2_2 }}</td>
-                                    <td>
-                                        <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
-                                    </td>
-                    
+                                <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                                 @endif
-                                @if($type === 'user')
-                                <td>{{ $report->sr_no_fiber }}</td>
-                                <td>{{ $report->m_j }}</td>
-                                <td>{{ $report->Type }}</td>
-                                <td>{{ $report->sr_isolator }}</td>
-                                <td>{{ $report->sr_fiber_nano }}</td>
-                                <td>{{ $report->sr_fiber_moto }}</td>
-                                <td>{{ $report->nani_cavity }}</td>
-                                <td>{{ $report->final_cavity }}</td>
-                                <td>
-                                    <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
-                                </td>
+                            </td> --}}
+
+                            @endif
+                            @if ($type === 'cavity')
+                            <td>{{ $report->temp }}</td>
+                            <td>{{ $report->sr_cavity_nani }}</td>
+                            <td>{{ $report->sr_cavity_moti }}</td>
+                            <td>{{ $report->sr_combiner_3_1 }}</td>
+                            <td>{{ $report->amp_combiner_3_1 }}</td>
+                            <td>{{ $report->volt_combiner_3_1 }}</td>
+                            <td>{{ $report->watt_combiner_3_1 }}</td>
+                            <td>{{ $report->sr_couplar_2_2 }}</td>
+                            {{-- <td>{{ $report->amp_couplar_2_2 }}</td>
+                            <td>{{ $report->volt_couplar_2_2 }}</td> --}}
+                            <td>{{ $report->watt_couplar_2_2 }}</td>
+                            <td>
+                                <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                            </td>
+
+                            @endif
+                            @if($type === 'user')
+                            <td>{{ $report->sr_no_fiber }}</td>
+                            <td>{{ $report->temp }}</td>
+                            <td>{{ $report->m_j }}</td>
+                            <td>{{ $report->Type }}</td>
+                            <td>{{ $report->sr_isolator }}</td>
+                            <td>{{ $report->sr_fiber_nano }}</td>
+                            <td>{{ $report->sr_fiber_moto }}</td>
+                            <td>{{ $report->nani_cavity }}</td>
+                            <td>{{ $report->final_cavity }}</td>
+                            <td>
+                                <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                            </td>
+                            @endif
+                            @if ($type === 'admin' )
+                            <td>{{ $report->sr_no_fiber }}</td>
+                            <td>{{ $report->type }}</td>
+                            <td>{{ $report->worker_name }}</td>
+                            <td>
+                                @if ($report->part == 0)
+                                New
+                                @elseif ($report->part == 1)
+                                Repair
+                                @else
+                                Unknown
                                 @endif
-                                @if ($type === 'admin' )
-                                    <td>{{ $report->sr_no_fiber }}</td>
-                                    <td>{{ $report->type }}</td>
-                                    <td>{{ $report->worker_name }}</td>
-                                    <td>
-                                        @if ($report->part == 0)
-                                            New
-                                        @elseif ($report->part == 1)
-                                            Repair
-                                        @else
-                                            Unknown
-                                        @endif
-                                    </td>
-                                    <td>{{ $report->final_amount }}</td>
-                                    <td>
-                                        <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i class="ri-eye-fill"></i></a>
-                                    </td>
-                                @endif
-                            </tr>
+                            </td>
+                            <td>{{ $report->final_amount }}</td>
+                            <td>
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
+                                        class="ri-eye-fill"></i></a>
+                            </td>
+                            @endif
+                        </tr>
                         @endforeach
                     </tbody>
-                                        
+
                 </table>
             </div>
             {{-- <div id="div2" style="display:none;">This is Col mode</div> --}}

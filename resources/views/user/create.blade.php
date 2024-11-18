@@ -63,7 +63,7 @@
                     </div>
                     <div class="row m-2">
                         <label for="password" class="form-label">Password</label>
-                        <input type="text" name="password" id="password" class="form-control"
+                        <input type="password" name="password" id="password" class="form-control"
                             placeholder="Enter Password" required>
                     </div>
                     <div class="row m-2">

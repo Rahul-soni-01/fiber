@@ -28,6 +28,7 @@ class ReportController extends Controller
     {
         if ($this->checkPermission($request, 'view')) {
             $reports = Report::with('tbl_leds', 'tbl_cards')->get();
+            // dd($reports);
             return view("report.index", compact('reports'));
         }
         return redirect('/unauthorized');
@@ -78,25 +79,26 @@ class ReportController extends Controller
             $request->all(),
             [
                 'part' => 'required|numeric',
+                'temp' => 'required|numeric',
                 /*'warranty' => 'required|numeric',
                 'worker_name' => 'required|string|max:255',
                 'sr_no_fiber' => 'required|string|max:255',
                 'm_j' => 'required|string|max:255',
                 'type' => 'required|numeric',*/
-                'card' => 'required|array',
-                'sr_card' => 'required|array',
-                'sr_cardamp' => 'required|array',
-                'sr_cardvolt' => 'required|array',
-                'sr_cardwatt' => 'required|array',
-                'srled.*' => 'nullable|distinct',
-                'ampled' => 'required|array',
-                'voltled' => 'required|array',
-                'wattled' => 'required|array',
+                // 'card' => 'required|array',
+                // 'sr_card' => 'required|array',
+                // 'sr_cardamp' => 'required|array',
+                // 'sr_cardvolt' => 'required|array',
+                // 'sr_cardwatt' => 'required|array',
+                // 'srled.*' => 'nullable|distinct',
+                // 'ampled' => 'required|array',
+                // 'voltled' => 'required|array',
+                // 'wattled' => 'required|array',
                 // 'sr_isolator' => 'required|string|max:255',
-                'sr_aom_qswitch' => 'required|string|max:255',
-                'amp_aom_qswitch' => 'required|string|max:255',
-                'volt_aom_qswitch' => 'required|string|max:255',
-                'watt_aom_qswitch' => 'required|string|max:255',
+                // 'sr_aom_qswitch' => 'required|string|max:255',
+                // 'amp_aom_qswitch' => 'required|string|max:255',
+                // 'volt_aom_qswitch' => 'required|string|max:255',
+                // 'watt_aom_qswitch' => 'required|string|max:255',
                 /*'sr_cavity_nani' => 'required|string|max:255',
                 'sr_cavity_moti' => 'required|string|max:255',
                 'sr_combiner_3_1' => 'required|string|max:255',
@@ -114,11 +116,11 @@ class ReportController extends Controller
                 'output_volt' => 'required|string|max:255',
                 'nani_cavity' => 'required|string|max:255',
                 'final_cavity' => 'required|string|max:255',*/
-                'note1' => 'nullable|string|max:255',
-                'note2' => 'nullable|string|max:255',
+                // 'note1' => 'nullable|string|max:255',
+                // 'note2' => 'nullable|string|max:255',
             ],
             [
-                'srled.*.distinct' => 'Duplicate serial number found.',
+                // 'srled.*.distinct' => 'Duplicate serial number found.',
             ]
         );
 
@@ -159,11 +161,12 @@ class ReportController extends Controller
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
-        if (Auth()->user()->type === 'electric') {
+        
+        /*if (Auth()->user()->type === 'electric') {
             $report->r_status = 0;
         } elseif (Auth()->user()->type === 'admin') {
             $report->r_status = 1;
-        }
+        }*/
 
         try {
             $report->save();
@@ -412,6 +415,14 @@ class ReportController extends Controller
         $report = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category')->find($id);
         return view('report.show', compact('report'));
     }
+    public function search(Request $request)
+    {
+        if($request->temp_no){
+            $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category')->where('temp',$request->temp_no)->get();
+            return view('report.search', compact('reports'));
+        }
+        return view('report.search');
+    }
     public function edit($id)
     {
         $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->find($id);
@@ -451,19 +462,19 @@ class ReportController extends Controller
                 $request->all(),
                 [
                     'worker_name' => 'required|string|max:255',
-                    'sr_cavity_nani' => 'required|string|max:255',
-                    'sr_cavity_moti' => 'required|string|max:255',
-                    'sr_combiner_3_1' => 'required|string|max:255',
-                    'amp_combiner_3_1' => 'required|string|max:255',
-                    'volt_combiner_3_1' => 'required|string|max:255',
-                    'watt_combiner_3_1' => 'required|string|max:255',
-                    'sr_couplar_2_2' => 'required|string|max:255',
-                    'amp_couplar_2_2' => 'required|string|max:255',
-                    'volt_couplar_2_2' => 'required|string|max:255',
-                    'watt_couplar_2_2' => 'required|string|max:255',
-                    'sr_hr' => 'required|string|max:255',
-                    'note1' => 'nullable|string|max:255',
-                    'note2' => 'nullable|string|max:255',
+                    // 'sr_cavity_nani' => 'required|string|max:255',
+                    // 'sr_cavity_moti' => 'required|string|max:255',
+                    // 'sr_combiner_3_1' => 'required|string|max:255',
+                    // 'amp_combiner_3_1' => 'required|string|max:255',
+                    // 'volt_combiner_3_1' => 'required|string|max:255',
+                    // 'watt_combiner_3_1' => 'required|string|max:255',
+                    // 'sr_couplar_2_2' => 'required|string|max:255',
+                    // 'amp_couplar_2_2' => 'required|string|max:255',
+                    // 'volt_couplar_2_2' => 'required|string|max:255',
+                    // 'watt_couplar_2_2' => 'required|string|max:255',
+                    // 'sr_hr' => 'required|string|max:255',
+                    // 'note1' => 'nullable|string|max:255',
+                    // 'note2' => 'nullable|string|max:255',
                 ]
             );
 
@@ -486,6 +497,7 @@ class ReportController extends Controller
             $report->sr_hr = $request->sr_hr;
             $report->note1 = $request->note1;
             $report->note2 = $request->note2;
+            // $report->status = null;
             $report->save();
             if ($report->save()) {
                 return redirect()->route('report.index')->with('success', 'Report added successfully.');
@@ -497,17 +509,17 @@ class ReportController extends Controller
                 $request->all(),
                 [
                     'sr_no_fiber' => 'required|string|max:255',
-                    'm_j' => 'required|string|max:255',
+                    // 'm_j' => 'required|string|max:255',
                     'type' => 'required|integer',
-                    'sr_isolator' => 'required|string|max:255',
-                    'sr_fiber_nano' => 'required|numeric|min:0',
-                    'sr_fiber_moto' => 'required|numeric|min:0',
-                    'output_amp' => 'required|string|max:255',
-                    'output_volt' => 'required|string|max:255',
-                    'nani_cavity' => 'required|string|max:255',
-                    'final_cavity' => 'required|string|max:255',
-                    'note1' => 'nullable|string|max:255',
-                    'note2' => 'nullable|string|max:255',
+                    // 'sr_isolator' => 'required|string|max:255',
+                    // 'sr_fiber_nano' => 'required|numeric|min:0',
+                    // 'sr_fiber_moto' => 'required|numeric|min:0',
+                    // 'output_amp' => 'required|string|max:255',
+                    // 'output_volt' => 'required|string|max:255',
+                    // 'nani_cavity' => 'required|string|max:255',
+                    // 'final_cavity' => 'required|string|max:255',
+                    // 'note1' => 'nullable|string|max:255',
+                    // 'note2' => 'nullable|string|max:255',
                 ]
             );
 
@@ -528,7 +540,8 @@ class ReportController extends Controller
             $report->final_cavity = $request->final_cavity;
             $report->note1 = $request->note1;
             $report->note2 = $request->note2;
-            $report->r_status = 1;
+            $report->temp = 0;
+            $report->status = 0;
             $report->save();
             if ($report->save()) {
                 return redirect()->route('report.index')->with('success', 'Report updated successfully.');

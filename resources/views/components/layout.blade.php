@@ -134,8 +134,13 @@
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-file-chart-line"></i>Report <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
+                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user'  || auth()->user()->type === 'account'  || auth()->user()->type === 'cavity')
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
+                    @endif
+                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' )   
                     <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
+                    @endif
+                    <li><a href="{{ route('report.search') }}" id="add" class="sub-item">Search Report</a></li>
                     <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">stock Report</a></li>
                 </ul>
             </li>

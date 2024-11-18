@@ -18,15 +18,17 @@
                 <table class="table table-bordered custom-border datatable-remove" id="tbl">
                     <tbody id="Tbody">
                         @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin' ||
-                        auth()->user()->type === 'cavity')
+                        auth()->user()->type === 'cavity' || auth()->user()->type === 'user')
                         <tr>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' )
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' ||
+                                auth()->user()->type === 'user' )
                                 <h5>Part</h5>
                                 @endif
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' )
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' ||
+                                auth()->user()->type === 'user')
 
                                 <select id="part" name="part" class="form-control">
                                     <option value="" disabled {{ old('part', $report->part ?? '') === '' ? 'selected' :
@@ -40,17 +42,20 @@
 
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' )
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' ||
+                                auth()->user()->type === 'user' )
                                 <h5>Temp no.</h5>
                                 @endif
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'cavity' )
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'cavity' ||
+                                auth()->user()->type === 'user' )
                                 <h5>WORKER NAME</h5>
                                 @endif
                             </td>
                             <td>
-                                @if( auth()->user()->type == 'admin' || auth()->user()->type == 'cavity')
+                                @if( auth()->user()->type == 'admin' || auth()->user()->type == 'cavity' ||
+                                auth()->user()->type === 'user')
                                 <input type="text" id="wn" name="worker_name" class="form-control"
                                     placeholder="Enter Worker Name"
                                     value="{{ old('worker_name', $report->worker_name) }}">
@@ -77,11 +82,11 @@
                                 @endif
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' ||
+                                auth()->user()->type === 'user')
                                 <input type="text" id="temp" name="temp" class="form-control"
-                                placeholder="Enter Temperature"
-                                value="{{ old('temp', $report->temp) }}">
-                         
+                                    placeholder="Enter Temperature" value="{{ old('temp', $report->temp) }}">
+
                                 @endif
                             </td>
                             <td>
@@ -91,10 +96,9 @@
                             </td>
                             <td>
                                 @if(auth()->user()->type == 'admin'|| auth()->user()->type === 'user')
-                                <input type="text" id="mj" name="m_j" class="form-control"
-                                placeholder="Enter M/J Value"
-                                value="{{ old('m_j', $report->m_j) }}">
-                         
+                                <input type="text" id="mj" name="m_j" class="form-control" placeholder="Enter M/J Value"
+                                    value="{{ old('m_j', $report->m_j) }}">
+
                                 @endif
                             </td>
                         </tr>
@@ -155,8 +159,10 @@
                             </td>
                         </tr>
                         {{-- @endif --}}
-                        @if( auth()->user()->type === 'electric' || auth()->user()->type === 'admin' )
+                        @if( auth()->user()->type === 'electric' || auth()->user()->type === 'admin' ||
+                        auth()->user()->type === 'user' )
                         @foreach($report->tbl_cards as $index => $tbl_card)
+                      
                         <tr>
                             <td class="d-flex">
                                 <h5>CARD</h5>
@@ -171,11 +177,17 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control" name="sr_card[]" list="srcard_0"
+                               
+                                <select type="text" class="form-control" name="sr_card[]" list="srcard_0"
                                     placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                <datalist id="srcard_0">
-
-                                </datalist>
+                                {{-- <datalist id="srcard_0"> --}}
+                                    <option value="" disabled>Select</option>
+                                    @foreach($cards as $card)
+                                    <option value="{{ $card->id }}" @if($tbl_card->scid == $card->id) selected @endif>
+                                        {{ $tbl_card->sr_card }}</option>
+                                    @endforeach
+                                {{-- </datalist> --}}
+                                </select>
                             </td>
                             <td><input type="text" id="ampled" name="sr_cardamp[]" placeholder="Enter AMP "
                                     class="form-control" value="{{$tbl_card->amp_card}}"></td>
@@ -189,7 +201,8 @@
                         </tr>
                         @endforeach
                         @endif
-                        @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
+                        @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin' ||
+                        auth()->user()->type === 'user')
                     <tbody id="TCards"></tbody>
                     @foreach($report->tbl_leds as $index => $led)
 
@@ -208,14 +221,15 @@
                             </select>
                         </td>
                         <td>
-                            <input type="text" class="form-control" name="srled[]" list="srled_0"
+                            <select type="text" class="form-control" name="srled[]" list="srled_0"
                                 placeholder="Select or enter a new sr no, Small Alpha Plz" required>
 
-                            <datalist id="srled_0">
+                            {{-- <datalist id="srled_0"> --}}
                                 <option value="" disabled>Select</option>
                                 <option value="{{ $led->scid }}" @if($led->sr_led) selected @endif>
                                     {{ $led->sr_led }}</option>
-                            </datalist>
+                            {{-- </datalist> --}}
+                            </select>
                         </td>
                         <td><input type="text" id="ampled[]" placeholder="Enter AMP" class="form-control"
                                 name="ampled[]" value="{{$led->amp_led}}"></td>
@@ -239,13 +253,13 @@
                             <h5>ISOLATOR</h5>
                         </td>
                         <td><input type="text" id="srisolator" name="sr_isolator" class="form-control"
-                            placeholder="Enter SR Isolator"></td>
+                                placeholder="Enter SR Isolator"></td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     @endif
-                    @if( auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
+                    @if( auth()->user()->type === 'electric' || auth()->user()->type === 'admin' || auth()->user()->type === 'user')
                     <tr>
                         <td>
                             <h5>AOM(QSWITCH)</h5>
@@ -260,7 +274,7 @@
                                 value="{{$report->watt_aom_qswitch}}" class="form-control"></td>
                     </tr>
                     @endif
-                    @if( auth()->user()->type === 'cavity' || auth()->user()->type === 'admin')
+                    @if( auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' || auth()->user()->type === 'user')
                     <tr>
                         <td>
                             <h5>CAVITY NANI</h5>
@@ -274,7 +288,7 @@
                         <td></td>
                     </tr>
                     @endif
-                    @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' )
+                    @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' || auth()->user()->type === 'user' )
                     <tr>
                         <td>
                             <h5>CAVITY MOTI</h5>
@@ -287,7 +301,7 @@
                         <td></td>
                     </tr>
                     @endif
-                    @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'admin')
+                    @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' || auth()->user()->type === 'user')
                     <tr>
                         <td>
                             <h5>COMBINER(3*1)</h5>
@@ -309,7 +323,7 @@
 
                     </tr>
                     @endif
-                    @if( auth()->user()->type === 'cavity' || auth()->user()->type === 'admin')
+                    @if( auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' || auth()->user()->type === 'user')
                     <tr>
                         <td>
                             <h5>COUPLAR(2*2)</h5>
@@ -330,7 +344,7 @@
 
                     </tr>
                     @endif
-                    @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' )
+                    @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' || auth()->user()->type === 'user' )
                     <tr>
                         <td>
                             <h5>HR</h5>
@@ -343,7 +357,7 @@
                         <td></td>
                     </tr>
                     @endif
-                    @if( auth()->user()->type === 'admin' || auth()->user()->type === 'user')
+                    @if( auth()->user()->type === 'admin' || auth()->user()->type === 'user' )
                     <tr>
                         <td>
                             <h5>FIBER NANO</h5>

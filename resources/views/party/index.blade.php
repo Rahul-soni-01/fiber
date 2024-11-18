@@ -63,7 +63,7 @@
                                 <form action="{{ route('party.destroy', $party->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this department?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this party?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
                             </form> </td>
                         </tr>
                     @endforeach

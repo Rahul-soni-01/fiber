@@ -65,7 +65,7 @@
                             <td>
                                 @if(auth()->user()->type == 'admin'  || auth()->user()->type == 'electric')
                                 <input type="text" id="temp" name="temp" class="form-control"
-                                placeholder="Enter Temperature">
+                                placeholder="Enter Temporary No">
                                                          @endif
                             </td>
                             <td>
@@ -77,7 +77,7 @@
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type === 'user')
                                 <input type="text" id="mj" name="m_j" class="form-control"
                                 placeholder="Enter M/J Value">
-                                                         @endif
+                                @endif
                             </td>
                         </tr>
                         @endif
