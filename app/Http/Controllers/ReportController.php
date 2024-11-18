@@ -536,10 +536,12 @@ class ReportController extends Controller
             $report->sr_fiber_moto = $request->sr_fiber_moto;
             $report->output_amp = $request->output_amp;
             $report->output_volt = $request->output_volt;
+            $report->output_watt = $request->output_watt;
             $report->nani_cavity = $request->nani_cavity;
             $report->final_cavity = $request->final_cavity;
             $report->note1 = $request->note1;
             $report->note2 = $request->note2;
+            $report->remark = $request->remark;
             $report->temp = 0;
             $report->status = 0;
             $report->save();
@@ -548,7 +550,27 @@ class ReportController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Failed to Update the report. Please try again.');
             }
+        } elseif (Auth()->user()->type === 'account'){
+            $status = $request->status;
+            $report = Report::find($id);
+            $report->status = $status;
+            $report->remark = $request->remark;
+            $report->save();
+
+            if ($report->save()) {
+                return redirect()->route('report.index')->with('success', 'Report updated successfully.');
+            } else {
+                return redirect()->back()->with('error', 'Failed to Update the report. Please try again.');
+            }
         }
+        
+    }
+    public function reject(Request $request){
+        if ($this->checkPermission($request, 'view')) {
+            $reports = Report::with('tbl_leds', 'tbl_cards')->where('status', 2)->get();
+            return view("report.reject", compact('reports'));
+        }
+        return redirect('/unauthorized');
     }
 
     public function layout()

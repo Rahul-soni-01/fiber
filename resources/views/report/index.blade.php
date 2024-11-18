@@ -77,6 +77,13 @@
                             <th>CAVITY FINAL</th>
                             <th>Action</th>
                             @endif
+
+                            @if(auth()->user()->type === 'account')
+                            <th>SR(FIBER)</th>
+                            <th>Type</th>
+                            
+                            <th>Action</th>
+                            @endif
                     </thead>
 
                     <tbody>
@@ -94,8 +101,7 @@
                         }
                         @endphp
 
-                        <tr
-                            class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
+                        <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
                             <td
                                 style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}">
                                 {{ $report->id }}</td>
@@ -175,6 +181,15 @@
                                 @endif
                             </td>
                             <td>{{ $report->final_amount }}</td>
+                            <td>
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
+                                        class="ri-eye-fill"></i></a>
+                            </td>
+                            @endif
+
+                            @if(auth()->user()->type === 'account')
+                            <td>{{ $report->sr_no_fiber }}</td>
+                            <td>{{ $report->type }}</td>                            
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
                                         class="ri-eye-fill"></i></a>

@@ -140,6 +140,10 @@
                     @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' )   
                     <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
                     @endif
+
+                    @if(auth()->user()->type === 'user' )   
+                    <li><a href="{{ route('report.reject') }}" id="view" class="sub-item">Rejected Report</a></li>
+                    @endif
                     <li><a href="{{ route('report.search') }}" id="add" class="sub-item">Search Report</a></li>
                     <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">stock Report</a></li>
                 </ul>

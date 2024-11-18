@@ -103,6 +103,7 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('report-show-{report_id}', [ReportController::class, 'show'])->name(('report.show'));
         Route::get('report-edit-{report_id}', [ReportController::class, 'edit'])->name(('report.edit'));
         Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
+        Route::get('report-reject', [ReportController::class, 'reject'])->name(('report.reject'));
         
         Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
        // invoice to tbl stock 

@@ -131,11 +131,12 @@
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'user' )
                                 <select id="type" name="type" required class="form-control">
                                     <option value="">Select Type</option>
-                                    <option value="15">15</option>
-                                    <option value="18">18</option>
-                                    <option value="21">21</option>
-                                    <option value="26">26</option>
+                                    <option value="15" {{ old('type', $report->type) == '15' ? 'selected' : '' }}>15</option>
+                                    <option value="18" {{ old('type', $report->type) == '18' ? 'selected' : '' }}>18</option>
+                                    <option value="21" {{ old('type', $report->type) == '21' ? 'selected' : '' }}>21</option>
+                                    <option value="26" {{ old('type', $report->type) == '26' ? 'selected' : '' }}>26</option>
                                 </select>
+                                
                                 @endif
                             </td>
                         </tr>
@@ -252,7 +253,7 @@
                         <td>
                             <h5>ISOLATOR</h5>
                         </td>
-                        <td><input type="text" id="srisolator" name="sr_isolator" class="form-control"
+                        <td><input type="text" id="srisolator" name="sr_isolator" value="{{ old('sr_isolator', $report->sr_isolator) }}" class="form-control"
                                 placeholder="Enter SR Isolator"></td>
                         <td></td>
                         <td></td>
@@ -362,7 +363,7 @@
                         <td>
                             <h5>FIBER NANO</h5>
                         </td>
-                        <td><input type="number" step="0.01" id="srfibernano" name="sr_fiber_nano" class="form-control"
+                        <td><input type="number" step="0.01" id="srfibernano"    value="{{ old('sr_hr', $report->sr_fiber_nano) }}" name="sr_fiber_nano" class="form-control"
                                 placeholder="Enter SR Fiber Nano">
                         </td>
 
@@ -376,7 +377,7 @@
                         <td>
                             <h5>FIBER MOTO</h5>
                         </td>
-                        <td><input type="number" id="srfibermoto" step="0.01" name="sr_fiber_moto" class="form-control"
+                        <td><input type="number" id="srfibermoto" step="0.01" name="sr_fiber_moto"    value="{{ old('sr_hr', $report->sr_fiber_moto) }}" class="form-control"
                                 placeholder="Enter SR Fiber Moto"> </td>
                         <td></td>
                         <td></td>
@@ -392,11 +393,11 @@
                             <h5>OUTPUT POWER</h5>
                         </td>
                         <td><input type="text" id="ampoutputpower" name="output_amp" class="form-control"
-                                placeholder="Enter Output Amp"></td>
+                                placeholder="Enter Output Amp" value="{{ old('output_amp', $report->output_amp) }}"></td>
                         <td><input type="text" id="voltoutputpower" name="output_volt" class="form-control"
-                                placeholder="Enter Output Volt"></td>
+                                placeholder="Enter Output Volt" value="{{ old('output_volt', $report->output_volt) }}"></td>
                         <td><input type="text" id="wattoutputpower" name="output_watt" class="form-control"
-                                placeholder="Enter Output Watt"></td>
+                                placeholder="Enter Output Watt" value="{{ old('output_watt', $report->output_watt) }}"></td>
 
                     </tr>
                     @endif
@@ -406,7 +407,7 @@
                             <h5>CAVITY NANI</h5>
                         </td>
                         <td><input type="text" id="cavitynani" name="nani_cavity" class="form-control"
-                                placeholder="Enter Nani Cavity"></td>
+                                placeholder="Enter Nani Cavity" value="{{ old('nani_cavity', $report->nani_cavity) }}"></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -416,7 +417,7 @@
                     <tr>
                         <th>CAVITY FINAL </th>
                         <td><input type="text" id="cavityfinal" name="final_cavity" class="form-control"
-                                placeholder="Enter Final Cavity"></td>
+                                placeholder="Enter Final Cavity" value="{{ old('final_cavity', $report->final_cavity) }}"></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -435,7 +436,15 @@
                                 class="form-control">{{ old('note2', $report->note2) }}</textarea>
                         </td>
                     </tr>
-
+                    @if( auth()->user()->type === 'admin' || auth()->user()->type === 'user')
+                    <tr>
+                        <th rowspan="2">Remark</th>
+                        <td colspan="4">
+                            <textarea id="remark" name="remark"
+                                class="form-control">{{ old('remark', $report->remark) }}</textarea>
+                        </td>
+                    </tr>
+                    @endif
                     </tbody>
                 </table>
                 <button type="submit" class="btn btn-success">SUBMIT</button>
