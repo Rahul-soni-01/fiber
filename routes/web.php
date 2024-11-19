@@ -12,6 +12,8 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ManagePermissionController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SaleItemController;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -104,12 +106,21 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('report-edit-{report_id}', [ReportController::class, 'edit'])->name(('report.edit'));
         Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
         Route::get('report-reject', [ReportController::class, 'reject'])->name(('report.reject'));
-        
         Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
-       // invoice to tbl stock 
+        
+        // Sale Crud
+        Route::get('sale', [SaleController::class, 'index'])->name('sale.index');
+        Route::get('sale-create', [SaleController::class, 'create'])->name('sale.create');
+        Route::post('sale-store', [SaleController::class, 'store'])->name('sale.store');
+        Route::get('edit-sale-{sale_id}', [SaleController::class, 'edit'])->name(('sale.edit'));
+        Route::put('/sale-{id}', [SaleController::class, 'update'])->name('sale.update');
+        Route::delete('/sale-{sale_id}', [SaleController::class, 'destroy'])->name('sale.destroy');
+
+        // invoice to tbl stock 
         Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');
         Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
         
+
         // report crud
         // Route::get('report', [TblPurchaseController::class, 'index'])->name('report.index');
         // Route::get('report-create', [TblPurchaseController::class, 'create'])->name('report.create');

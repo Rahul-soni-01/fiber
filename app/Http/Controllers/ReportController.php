@@ -38,9 +38,12 @@ class ReportController extends Controller
     {
         if ($this->checkPermission($request, 'add')) {
             $sub_categories = tbl_sub_category::where('cid', 1)->get();
-            $cards = tbl_sub_category::where('cid', 7)->get();
-            $party = tbl_party::where('party_name', 'opening stock')->first();
-            $party_id = $party->id;
+            $categoryId = tbl_category::whereRaw('LOWER(category_name) = ?', ['card'])->value('id');
+            $cards = tbl_sub_category::where('cid', $categoryId)->get();
+
+            $party_id = tbl_party::where('party_name', 'opening stock')->value('id');
+            // dd($party_id);
+
             $invoice = tbl_purchase::where('pid', $party_id)->first();
 
             $invoice_no = $invoice->invoice_no;
@@ -413,6 +416,7 @@ class ReportController extends Controller
     public function show($id)
     {
         $report = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category')->find($id);
+        // dd($report);
         return view('report.show', compact('report'));
     }
     public function search(Request $request)

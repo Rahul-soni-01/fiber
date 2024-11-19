@@ -247,4 +247,14 @@ function filterOptions(event) {
     }
 }
 
+function serial_no_append(){
+    const serialNoDropdown = document.getElementById('serial_no');
+
+        const selectedId = serialNoDropdown.value;
+
+        if (selectedId) {
+            alert('Selected ID: ' + selectedId);
+        }
+}
+
 

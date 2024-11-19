@@ -70,7 +70,6 @@
                                 <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                             </td>
                             @endif
-                          
                         </tr>
                         @endforeach
                     </tbody>
@@ -79,7 +78,6 @@
             </div>
             {{-- <div id="div2" style="display:none;">This is Col mode</div> --}}
             @endif
-
         </div>
 
         <script>

@@ -156,7 +156,14 @@
                     <li><a href="{{ route('report.layout') }}" id="view" class="sub-item">layout Report</a></li>
                 </ul>
             </li>
-
+            <li id="Sale" class="sidebar">
+                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Sale <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('sale.create') }}" id="add" class="sub-item">Add Sale</a></li>
+                    <li><a href="{{ route('sale.index') }}" id="view" class="sub-item">Show Sale</a></li>
+                </ul>
+            </li>
         </ul>
 
     </div>

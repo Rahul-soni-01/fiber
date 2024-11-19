@@ -54,6 +54,7 @@
                     <tr>
                         <td>
                             <h5>Card</h5>
+                            {{-- {{dd($card->tbl_sub_category->sub_category_name);}} --}}
                             <span><strong>Card Name :- {{ $card->tbl_sub_category->sub_category_name }} </strong></span>
                         </td>
                         <td>
