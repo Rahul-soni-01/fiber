@@ -9,6 +9,8 @@ use App\Models\tbl_party;
 use App\Models\tbl_category;
 use App\Models\tbl_sub_category;
 use App\Models\Report;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class SaleController extends Controller
@@ -21,9 +23,9 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $categories = Sale::all();
+            $sales = Sale::all();
             // dd($categories);
-            return view('category.index', compact('categories'));
+            return view('sale.index', compact('sales'));
         }
         return redirect('/unauthorized');
     }
@@ -36,14 +38,71 @@ class SaleController extends Controller
             $partyname = tbl_party::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
-            $serial_nos = Report::where('status','1')
+            $serial_nos = Report::where('status','1') ->where('sale_status', null)
                           ->where('part','0')->get()->sortBy('sr_no_fiber');
             
             return view('sale.create', compact('partyname', 'inwards', 'items','serial_nos'));
-            
-
         }
         return redirect('/unauthorized');
 
     }
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'invoice_no' => 'required|unique:tbl_sales,sale_id',
+            'total_amount' => 'required|numeric',
+            'date' => 'required|date',
+            
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        
+ 
+        $sale = new Sale();
+        $sale->sale_id = $request->invoice_no;
+        $sale->customer_id = $request->cid; 
+        $sale->total_amount = $request->total_amount;
+        $sale->sale_date = $request->date;
+        $sale->notes = $request->note;
+    
+        try {
+            $sale->save();
+            $count = count($request->serial_no);
+         
+            for ($i = 0; $i < $count; $i++) {
+                $report_id = $request->serial_no[$i];
+                $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->find($report_id);
+                
+                if ($report) {
+                    // Update sale_status to 1
+                    $report->sale_status = 1;
+                    $report->save();
+                    
+                    $serial_no = $report->sr_no_fiber;
+                    $final_amount = $report->final_amount;
+            
+                    $itemResult = SaleItem::create([
+                        'sale_id' => $sale->id, 
+                        'serial_no' => $serial_no,
+                        'report_id' => $report_id,
+                        'quantity' => 1, 
+                        'price' => $final_amount, 
+                        'total' => $final_amount,
+                    ]);
+            
+                    if (!$itemResult) {
+                        return redirect()->back()->with('error', 'Failed to insert sale');
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Failed to insert sale');                 
+                }
+            }
+          
+            return redirect()->route('sale.index')->with('success', 'Sale created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to insert sale: ' . $e->getMessage());
+        }
+    }
+
 }

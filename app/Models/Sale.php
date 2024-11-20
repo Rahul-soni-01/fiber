@@ -14,7 +14,8 @@ class Sale extends Model
 
     // Specify the fillable fields
     protected $fillable = [
-        'cid',
+        'sale_id',
+        'customer_id',
         'total_amount',
         'sale_date',
         'notes',

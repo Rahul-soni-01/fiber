@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sales', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('tbl_reports', function (Blueprint $table) {
+            $table->string('sale_status')->nullable()->after('final_amount');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sales');
+        Schema::table('tbl_reports', function (Blueprint $table) {
+            $table->dropColumn('sale_status');
+        });
     }
 };

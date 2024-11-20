@@ -221,13 +221,8 @@ function filterOptions(event) {
 
                 if (subCategorySelect) {
                     let selectedSubCategory = subCategorySelect.value;
-                    // console.log('selectedSubCategory', selectedSubCategory);
-
                     let selectedOption = subCategorySelect.options[subCategorySelect.selectedIndex];
-                    // console.log('selectedOption', selectedOption);
-
                     let dataUnit = selectedOption.getAttribute('data-unit');
-                    // console.log(dataUnit);
                     if (dataUnit) {
                         for (let i = 0; i < unitSelect.options.length; i++) {
                             if (unitSelect.options[i].value === dataUnit) {
@@ -247,14 +242,5 @@ function filterOptions(event) {
     }
 }
 
-function serial_no_append(){
-    const serialNoDropdown = document.getElementById('serial_no');
-
-        const selectedId = serialNoDropdown.value;
-
-        if (selectedId) {
-            alert('Selected ID: ' + selectedId);
-        }
-}
 
 

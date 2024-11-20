@@ -2,17 +2,17 @@
     <x-slot name="title">Add Sale</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <form action="{{route('inward.good')}}" method="post">
+            <form action="{{route('sale.store')}}" method="post">
                 @csrf
-    
+
                 @if ($errors->any())
-                    <div style="color: red;">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                <div style="color: red;">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
                 @endif
                 <div class="container">
                     <div class="row">
@@ -26,16 +26,18 @@
                                 placeholder="Enter Invoice no." required>
                         </div>
                         <div class="col-md-4">
-                            {{-- <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date" required> --}}
-                            <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date" value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
-    
+                            {{-- <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
+                                required> --}}
+                            <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
+                                value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+
                         </div>
                         <div class="col-md-4">
-                            <select id="party_name" name="party_name" class="form-control" placeholder="Enter Party Name"
-                                required>
+                            <select id="party_name" name="cid" class="form-control"
+                                placeholder="Enter Party Name" required>
                                 <option value="" disabled selected>Choose a Party</option>
                                 @foreach($partyname as $party)
-                                    <option value="{{ $party->id }}">{{ $party->party_name }}</option>
+                                <option value="{{ $party->id }}">{{ $party->party_name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -45,26 +47,58 @@
                         <div class="row">
                             <div class="col">Serial No.</div>
                             <div class="col">Price</div>
-                            <div class="col"><button class="btn btn-info"> Add</button></div>
+                            <div class="col"><button class="btn btn-info" type="button" onclick="SaleRowadd({{$serial_nos}})">
+                                    Add</button></div>
                         </div>
-                        <div class="row custom-row g-2 align-items-center">
-                            <div class="col">
-                                <select required id="serial_no" class="form-control select2" name="product_name" onchange="serial_no_append()">
-                                    <option value="">Select</option>
+                        <div id="row-container">
+                            <div class="row custom-row mt-2 g-2 align-items-center">
+                                <div class="col">
+                                    <select required id="serial_no" class="form-control select2" name="serial_no[]"
+                                        onchange="serial_no_append(0,event)">
+                                        <option value="">Select</option>
+                                        @foreach($serial_nos as $serial_no)
+                                            <option value="{{ $serial_no->id }}">{{ $serial_no->sr_no_fiber }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col">
                                     @foreach($serial_nos as $serial_no)
-                                    <option value="{{ $serial_no->id }}">{{ $serial_no->sr_no_fiber }}</option>
+                                    <span id="{{ $serial_no->id }}" class="final_amount cstmspan_0" style="display: none">{{
+                                        $serial_no->final_amount}}</span>
                                     @endforeach
-                                </select>
+                                </div>
+                                <div class="col">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-5 g-2 align-items-center">
+                            <div class="col">
+                                <h5> Final Price</h5>
                             </div>
                             <div class="col">
-                               
+                                <input type="text" id="final_price" name="total_amount" class="form-control" readonly>
                             </div>
                             <div class="col">
 
                             </div>
+                            
+                        </div>
+                        <div class="row mt-5 g-2 align-items-center">
+                            <div class="col">
+                                <h5> Note</h5>
+                            </div>
+                            <div class="col">
+                                <textarea id="note" name="note" class="form-control"></textarea>
+                            </div>
+                            <div class="col">
+                            </div>
+                        </div>
+                        <div class="d-flex m-5 justify-content-center">
+                            <button type="submit" class="btn btn-success">Submit</button>
                         </div>
                     </div>
-                    
+
                 </div>
             </form>
         </div>

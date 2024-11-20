@@ -134,14 +134,15 @@
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-file-chart-line"></i>Report <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user'  || auth()->user()->type === 'account'  || auth()->user()->type === 'cavity')
+                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user' || auth()->user()->type ===
+                    'account' || auth()->user()->type === 'cavity')
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
                     @endif
-                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' )   
+                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' )
                     <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
                     @endif
 
-                    @if(auth()->user()->type === 'user' )   
+                    @if(auth()->user()->type === 'user' )
                     <li><a href="{{ route('report.reject') }}" id="view" class="sub-item">Rejected Report</a></li>
                     @endif
                     <li><a href="{{ route('report.search') }}" id="add" class="sub-item">Search Report</a></li>
@@ -282,12 +283,77 @@
 
             count++;
         }
+        countserial_no = 0;
+        function SaleRowadd(serial_nos){
+            countserial_no++;
+            let rowHtml = `
+                        <div class="row custom-row mt-2 g-2 align-items-center">
+                            <div class="col">
+                                <select required id="serial_no" class="form-control select2" name="serial_no[]" onchange="serial_no_append(${countserial_no},event)">
+                                    <option value="">Select</option>`;
+
+                            serial_nos.forEach(serial_no => {
+                                rowHtml += `<option value="${serial_no.id}">${serial_no.sr_no_fiber}</option>`;
+                            });
+            rowHtml += `</select> </div> <div class="col">`;
+
+                        serial_nos.forEach(serial_no => {
+                            rowHtml += `<span id="${serial_no.id}" class="final_amount cstmspan_${countserial_no}" style="display: none" >${serial_no.final_amount}</span>`;
+                        });
+                      
+                  rowHtml += `</div>
+                    <div class="col">
+                        <button type="button" onclick="SaleremoveRow(this)" class="btn btn-danger margin-btn">Delete</button>
+                    </div>
+                </div>
+            `;
+            $('#row-container').append(rowHtml);
+            SaleFinalAmount();
+        }
+
+        function SaleremoveRow(button) {
+            $(button).closest('.custom-row').remove();
+            SaleFinalAmount();
+        }
+
+        function serial_no_append(countserial_no,event){
+            const serialNoDropdown = event.target;
+            const selectedId = serialNoDropdown.value;
+            
+            const spanElements = document.querySelectorAll(`.cstmspan_${countserial_no}`);
+
+            spanElements.forEach(span => {
+                if (span.id === selectedId) {
+                    span.style.display = 'block';
+                } else {
+                    span.style.display = 'none'; 
+                }
+            });
+            SaleFinalAmount();
+        }
+
+        function SaleFinalAmount(){
+            let final_amount = 0;
+            const spanElements = document.querySelectorAll(`.final_amount`);
+        
+            spanElements.forEach(span => {
+                if (span.style.display === 'block') {
+                    final_amount += parseFloat(span.textContent) || 0; 
+                }
+            });
+
+            const finalPriceInput = document.getElementById('final_price');
+            if (finalPriceInput) {
+                finalPriceInput.value = final_amount.toFixed(2);
+            }
+        }
 
         function BtnDel(button) {
             $(button).closest('.custom-row').remove();
             // count--;
             total();
         }
+
 
         function total() {
             for (var i = 0; i < count; i++) {

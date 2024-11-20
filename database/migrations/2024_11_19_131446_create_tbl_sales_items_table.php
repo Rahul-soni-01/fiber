@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tbl_sales_items', function (Blueprint $table) {
             $table->id(); 
             $table->foreignId('sale_id')->constrained('tbl_sales'); 
-            $table->foreignId('product_id')->nullable()->constrained('products');
+            $table->foreignId('report_id')->nullable();
             $table->integer('quantity')->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->decimal('total', 12, 2)->nullable();

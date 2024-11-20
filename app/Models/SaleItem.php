@@ -13,7 +13,7 @@ class SaleItem extends Model
     // Specify the fillable fields
     protected $fillable = [
         'sale_id',
-        'product_id',
+        'report_id',
         'quantity',
         'price',
         'total',
