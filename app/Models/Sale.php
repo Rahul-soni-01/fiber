@@ -28,4 +28,9 @@ class Sale extends Model
     {
         return $this->hasMany(SaleItem::class, 'sale_id', 'id');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(TBlCustomer::class, 'customer_id', 'id'); // 'customer_id' is the foreign key in tbl_sales, and 'id' is the primary key in tbl_customers
+    }
 }

@@ -22,4 +22,9 @@ class SaleItem extends Model
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
     }
+
+    public function report()
+    {
+        return $this->belongsTo(Report::class, 'report_id', 'id'); 
+    }
 }

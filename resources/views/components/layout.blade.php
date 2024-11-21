@@ -165,6 +165,15 @@
                     <li><a href="{{ route('sale.index') }}" id="view" class="sub-item">Show Sale</a></li>
                 </ul>
             </li>
+            <li id="Customer" class="sidebar">
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Customer<i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('customer.create') }}" id="add" class="sub-item">Add Customer</a></li>
+                    <li><a href="{{ route('customer.index') }}" id="view" class="sub-item">Show Customer</a></li>
+                </ul>
+            </li>
+            
         </ul>
 
     </div>
@@ -308,7 +317,7 @@
                 </div>
             `;
             $('#row-container').append(rowHtml);
-            SaleFinalAmount();
+            // SaleFinalAmount();
         }
 
         function SaleremoveRow(button) {

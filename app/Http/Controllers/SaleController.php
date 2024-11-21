@@ -9,6 +9,7 @@ use App\Models\tbl_party;
 use App\Models\tbl_category;
 use App\Models\tbl_sub_category;
 use App\Models\Report;
+use App\Models\TblCustomer;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -23,8 +24,7 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $sales = Sale::all();
-            // dd($categories);
+            $sales = Sale::with('customer')->get();
             return view('sale.index', compact('sales'));
         }
         return redirect('/unauthorized');
@@ -33,15 +33,13 @@ class SaleController extends Controller
     public function create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
-            // $categories = tbl_category::all();
-
-            $partyname = tbl_party::all();
+            $customers = TblCustomer::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
             $serial_nos = Report::where('status','1') ->where('sale_status', null)
                           ->where('part','0')->get()->sortBy('sr_no_fiber');
             
-            return view('sale.create', compact('partyname', 'inwards', 'items','serial_nos'));
+            return view('sale.create', compact('customers', 'inwards', 'items','serial_nos'));
         }
         return redirect('/unauthorized');
 
@@ -52,13 +50,11 @@ class SaleController extends Controller
             'invoice_no' => 'required|unique:tbl_sales,sale_id',
             'total_amount' => 'required|numeric',
             'date' => 'required|date',
-            
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
         
- 
         $sale = new Sale();
         $sale->sale_id = $request->invoice_no;
         $sale->customer_id = $request->cid; 
@@ -103,6 +99,34 @@ class SaleController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to insert sale: ' . $e->getMessage());
         }
+    }
+
+    public function show(TblCustomer $tblCustomer, $id, Request $request)
+    {
+        if ($this->checkPermission($request, 'view')) {
+    
+            $sale = Sale::with(['items', 'customer','items.report'])->findOrFail($id);
+            // dd($sale);
+            return view('sale.show', compact('sale'));
+        }
+        return redirect('/unauthorized');
+    }
+
+    public function edit(TblCustomer $tblCustomer, $id, Request $request)
+    {
+        if ($this->checkPermission($request, 'view')) {
+    
+            $sale = Sale::with(['items', 'customer','items.report'])->findOrFail($id);
+            $customers = TblCustomer::all();
+            $inwards = tbl_category::all();
+            $items = tbl_sub_category::all();
+            $serial_nos = Report::where('status','1')
+                          ->where('part','0')->get()->sortBy('sr_no_fiber');
+            
+            // dd($sale);
+            return view('sale.edit', compact('sale','customers', 'inwards', 'items','serial_nos'));
+        }
+        return redirect('/unauthorized');
     }
 
 }

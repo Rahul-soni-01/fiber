@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col">Invoice No.</div>
                         <div class="col">Date</div>
-                        <div class="col">Party Name</div>
+                        <div class="col">Customer Name</div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -26,18 +26,15 @@
                                 placeholder="Enter Invoice no." required>
                         </div>
                         <div class="col-md-4">
-                            {{-- <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
-                                required> --}}
                             <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
                                 value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
-
                         </div>
                         <div class="col-md-4">
                             <select id="party_name" name="cid" class="form-control"
                                 placeholder="Enter Party Name" required>
-                                <option value="" disabled selected>Choose a Party</option>
-                                @foreach($partyname as $party)
-                                <option value="{{ $party->id }}">{{ $party->party_name }}</option>
+                                <option value="" disabled selected>Choose a Customer</option>
+                                @foreach($customers as $customer)
+                                <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -14,6 +14,7 @@ use App\Http\Controllers\ManagePermissionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleItemController;
+use App\Http\Controllers\TblCustomerController;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -112,6 +113,7 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         Route::get('sale', [SaleController::class, 'index'])->name('sale.index');
         Route::get('sale-create', [SaleController::class, 'create'])->name('sale.create');
         Route::post('sale-store', [SaleController::class, 'store'])->name('sale.store');
+        Route::get('show-sale-{sale_id}', [SaleController::class, 'show'])->name(('sale.show'));
         Route::get('edit-sale-{sale_id}', [SaleController::class, 'edit'])->name(('sale.edit'));
         Route::put('/sale-{id}', [SaleController::class, 'update'])->name('sale.update');
         Route::delete('/sale-{sale_id}', [SaleController::class, 'destroy'])->name('sale.destroy');
@@ -119,6 +121,16 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         // invoice to tbl stock 
         Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');
         Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
+
+          // Customer Crud
+          Route::get('customer-create', [TblCustomerController::class, 'create'])->name('customer.create');
+          Route::get('customer', [TblCustomerController::class, 'index'])->name('customer.index');
+          Route::post('customer-store', [TblCustomerController::class, 'store'])->name('customer.store');
+          Route::get('edit-customer-{customer_id}', [TblCustomerController::class, 'edit'])->name('customer.edit');
+          Route::put('/customer-{id}', [TblCustomerController::class, 'update'])->name('customer.update');
+          Route::delete('/customer-{customer_id}', [TblCustomerController::class, 'destroy'])->name('customer.destroy');
+          
+  
         
 
         // report crud
