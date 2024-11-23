@@ -30,7 +30,6 @@
                             <th>Date</th>
 
                             @if(auth()->user()->type === 'admin' )
-
                             <th>Serial No.</th>
                             <th>Type</th>
                             <th>Worker Name</th>
@@ -41,14 +40,7 @@
 
                             @if(auth()->user()->type === 'electric')
                             <th>Part</th>
-                            <th>Temp</th>
-                            <th>Cards</th>
-                            <th>sr_aom_qswitch</th>
-                            <th>amp_aom_qswitch</th>
-                            <th>volt_aom_qswitch</th>
-                            <th>watt_aom_qswitch</th>
-                            {{-- <th>Action</th> --}}
-
+                            <th>Action</th>
                             @endif
                             @if(auth()->user()->type === 'cavity')
                             <th>Type</th>
@@ -109,31 +101,13 @@
 
                             @if ($type === 'electric')
 
-                            <td>{{ $report->part == 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
-                            <td>{{ $report->temp }}</td>
+                            <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
+                            
                             <td>
-                                <div class="row">
-                                    @foreach ($report->tbl_cards as $card)
-                                    <div class="col-md">
-                                        <ul>
-                                            <li>Card Serial: {{ $card->sr_card }}</li>
-                                            <li>Amp: {{ $card->amp_card }}</li>
-                                            <li>Volt: {{ $card->volt_card }}</li>
-                                            <li>Watt: {{ $card->watt_card }}</li>
-                                        </ul>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </td>
-                            <td>{{ $report->sr_aom_qswitch }}</td>
-                            <td>{{ $report->amp_aom_qswitch }}</td>
-                            <td>{{ $report->volt_aom_qswitch }}</td>
-                            <td>{{ $report->watt_aom_qswitch }}</td>
-                            {{-- <td>
                                 @if ($type === 'electric')
                                 <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                                 @endif
-                            </td> --}}
+                            </td>
 
                             @endif
                             @if ($type === 'cavity')

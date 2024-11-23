@@ -25,11 +25,27 @@ class SaleController extends Controller
     {
         if ($this->checkPermission($request, 'view')) {
             $sales = Sale::with('customer')->get();
+            
             return view('sale.index', compact('sales'));
         }
         return redirect('/unauthorized');
     }
 
+    public function return(Request $request){
+        if ($this->checkPermission($request, 'view')) {
+            $sales = Sale::with('customer')->get();
+
+            $customers = TblCustomer::all();
+            $inwards = tbl_category::all();
+            $items = tbl_sub_category::all();
+            $serial_nos = Report::where('status','1') ->where('sale_status', null)
+                          ->where('part','0')->get()->sortBy('sr_no_fiber');
+            
+            return view('sale.return', compact('sales','customers', 'inwards', 'items','serial_nos'));
+            // return view('sale.return', compact('sales'));
+        }
+        return redirect('/unauthorized');
+    }
     public function create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
@@ -120,9 +136,15 @@ class SaleController extends Controller
             $customers = TblCustomer::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
-            $serial_nos = Report::where('status','1')
-                          ->where('part','0')->get()->sortBy('sr_no_fiber');
-            
+
+            $serial_nos = Report::where(function ($query) use ($sale) {
+                $query->where('status', '1')
+                      ->where('part', '0')
+                      ->where(function ($q) use ($sale) {
+                          $q->where('sale_status', 0) // Include unsold serial numbers
+                            ->orWhereIn('id', $sale->items->pluck('report.id')); 
+                      });
+            })->get()->sortBy('sr_no_fiber');
             // dd($sale);
             return view('sale.edit', compact('sale','customers', 'inwards', 'items','serial_nos'));
         }

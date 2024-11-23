@@ -21,7 +21,8 @@
                     </div>
                     <div class="col-md-4">
                         <span id="party_name" class="form-control">
-                            {{ $sale->customer_id->customer_name ?? 'N/A' }}
+                            {{-- {{ dd($sale)}} --}}
+                            {{ $sale->customer->customer_name ?? 'N/A' }}
                         </span>
                     </div>
                 </div>

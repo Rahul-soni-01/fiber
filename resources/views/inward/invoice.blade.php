@@ -2,7 +2,7 @@
     <x-slot name="title">Show Item</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-@foreach ($inwards as $item)
+            @foreach ($inwards as $item)
             <div class="container">
                 <div class="row">
                     <div class="col">Invoice No.</div>
@@ -39,7 +39,7 @@
                         <div class="col-sm-1"><label>Tax(%)</label></div>
                         <div class="col-sm-2"><label>Total(T)</label></div>
                         <div class="col-sm-1"><label>Action</label></div>
-                        </div>
+                    </div>
                     @foreach ($inwardsItems as $item1)
                     <div class="row custom-row g-2 align-item1s-center">
                         <div class="col-sm-2">
@@ -69,16 +69,18 @@
                         <div class="col-sm-1">
                             <label class="form-control" style="padding:.375rem .4rem;">{{$item1['tax']}}</label>
                         </div>
-                        
+
                         <div class="col-sm-2">
-                            <label class="form-control">{{ $item1['total'] + ($item1['total'] * $item1['tax'] / 100) }}</label>
+                            <label class="form-control">{{ $item1['total'] + ($item1['total'] * $item1['tax'] / 100)
+                                }}</label>
 
 
                         </div>
 
                         <div class="col-sm-1">
-                        <td><a href="{{ route('add_sr_no', ['invoice_no' => $item['invoice_no'],'category' => $item1->cid,'subcategory' => $item1->scid,'unit' =>$item1['unit'],'qty' =>$item1['qty'],'price'=>$item1['price']]) }}"><i
-                        class="ri-eye-fill"></i></a> </td>
+                            <td><a
+                                    href="{{ route('add_sr_no', ['invoice_no' => $item['invoice_no'],'category' => $item1->cid,'subcategory' => $item1->scid,'unit' =>$item1['unit'],'qty' =>$item1['qty'],'price'=>$item1['price']]) }}"><i
+                                        class="ri-eye-fill"></i></a> </td>
                         </div>
                     </div>
                     @endforeach
@@ -90,7 +92,7 @@
                         <div class="col-sm-2">
                             <lael class="form-control">{{$item['amount']}}</lael>
                         </div>
-                    </div>  
+                    </div>
                     <div class="row mt-3">
                         <div class="col-sm-2 offset-sm-8">Rate (₹)</div>
                         <div class="col-sm-2">
@@ -125,12 +127,13 @@
                         <div class="col-sm-2 offset-sm-8">Final Amount</div>
                         <div class="col-sm-2">
                             <label class="form-control">
-                            {{$item['inr_amount'] + $item['shipping_cost'] - $item['round_amount']}}</label></div>
+                                {{$item['inr_amount'] + $item['shipping_cost'] - $item['round_amount']}}</label>
+                        </div>
                     </div>
                 </div>
             </div>
             @endforeach
-            
+
 
             {{--<table class="table table-striped">
                 <thead class="table-dark">

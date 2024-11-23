@@ -16,7 +16,6 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
 
-
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -34,7 +33,6 @@
 
     <!-- Select2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
 
     <script>
         /*$('#select-type').selectize({
@@ -135,10 +133,10 @@
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user' || auth()->user()->type ===
-                    'account' || auth()->user()->type === 'cavity')
+                    'account' || auth()->user()->type === 'cavity' || auth()->user()->type === 'electric' )
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
                     @endif
-                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' )
+                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric'  || auth()->user()->type === 'godown')
                     <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
                     @endif
 
@@ -163,6 +161,7 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('sale.create') }}" id="add" class="sub-item">Add Sale</a></li>
                     <li><a href="{{ route('sale.index') }}" id="view" class="sub-item">Show Sale</a></li>
+                    <li><a href="{{ route('sale.return') }}" id="view" class="sub-item">Sale Return</a></li>
                 </ul>
             </li>
             <li id="Customer" class="sidebar">

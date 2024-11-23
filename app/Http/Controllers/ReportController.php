@@ -14,6 +14,7 @@ use App\Models\TblStock;
 use Illuminate\Support\Facades\Validator;
 use App\Models\tbl_sub_category;
 use App\Models\tbl_category;
+use App\Models\TblCustomer;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -70,7 +71,9 @@ class ReportController extends Controller
                 ->where('status', 0)
                 ->get();
             // dd($isolators);
-            return view("report.create", compact('sub_categories', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
+
+            $customers = TblCustomer::all();
+            return view("report.create", compact('sub_categories','customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
         }
         return redirect('/unauthorized');
     }
@@ -81,8 +84,8 @@ class ReportController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'part' => 'required|numeric',
-                'temp' => 'required|numeric',
+                // 'part' => 'required|numeric',
+                // 'temp' => 'required|numeric',
                 /*'warranty' => 'required|numeric',
                 'worker_name' => 'required|string|max:255',
                 'sr_no_fiber' => 'required|string|max:255',
@@ -133,6 +136,12 @@ class ReportController extends Controller
         }
         $report = new Report();
         $report->part = $request->input('part');
+
+        if (Auth()->user()->type === 'godown') {
+            $report->r_status = 0;
+            $report->part = 1;
+            $report->status = 0;
+        }
         $report->f_status = $request->input('warranty');
         $report->worker_name = $request->input('worker_name');
         $report->sr_no_fiber = $request->input('sr_no_fiber');
@@ -244,6 +253,7 @@ class ReportController extends Controller
         $avalabile = 0;
         $TblStockinsertedIds = [];
         $TblcardinsertedIds = [];
+        if (!empty($request->sr_card)) {
         foreach ($request->sr_card as $index => $serial_no_card) {
 
             $sub_category_name = tbl_sub_category::where('id', $request->card[$index])
@@ -324,12 +334,14 @@ class ReportController extends Controller
                 }
             }
         }
-
+        }
         // sr_led in mate update tbl_stock qty and upadte final amount and insert in tbl_leds if any serial number repeat then delete all insert id and delete report as well and redirct back as well...
 
         $avalabile = 0;
         $TblStockinsertedIds = [];
         $TblLedinsertedIds = [];
+        if (!empty($request->srled)) {
+
         foreach ($request->srled as $index => $serial_no) {
             $existingRecord = TblStock::where('serial_no', $serial_no)
                 ->where('status', 0)
@@ -401,7 +413,7 @@ class ReportController extends Controller
                 $TblLedinsertedIds[] = $tbl_led->id;
             }
         }
-
+    }
         $Record_update_final_amount = Report::where('id', $report_id)->first();
         $Record_update_final_amount->final_amount = $amount;
         $Record_update_final_amount->save();
@@ -558,6 +570,7 @@ class ReportController extends Controller
             $status = $request->status;
             $report = Report::find($id);
             $report->status = $status;
+            $report->sale_status  = 0;
             $report->remark = $request->remark;
             $report->save();
 

@@ -25,7 +25,6 @@
                                 @else
                                 Unknown
                                 @endif</span>
-
                         </td>
                         <td>
                             <h5>WORKER NAME</h5>
@@ -34,7 +33,37 @@
                             <span>{{ $report->worker_name }}</span>
                         </td>
                     </tr>
-
+                    @if(auth()->user()->type === 'account' || auth()->user()->type === 'electric' || auth()->user()->type === 'admin' || auth()->user()->type === 'user') 
+                    <tr>
+                        <td>
+                            @if(auth()->user()->type === 'account' ||auth()->user()->type == 'admin' || auth()->user()->type === 'user' )
+                            <h5>SR(FIBER)</h5>
+                            @endif
+                        </td>
+                        <td>
+                            @if(auth()->user()->type === 'account' || auth()->user()->type == 'admin' || auth()->user()->type === 'user' )
+                            
+                            <span>{{ $report->sr_no_fiber }}</span>
+                                                 @endif</td>
+                        <td>
+                            @if(auth()->user()->type == 'admin'  || auth()->user()->type == 'electric')
+                            <input type="text" id="temp" name="temp" class="form-control"
+                            placeholder="Enter Temporary No">
+                            @endif
+                        </td>
+                        <td>
+                            @if(auth()->user()->type === 'account' || auth()->user()->type == 'admin'|| auth()->user()->type === 'user')
+                            <h5>M.J</h5>
+                            @endif
+                        </td>
+                        <td>
+                            @if( auth()->user()->type === 'account' || auth()->user()->type == 'admin' || auth()->user()->type === 'user')
+                            
+                            <span>{{ $report->m_j }}</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
                     <tr>
                         <td>
                             <h5>ITEM</h5>

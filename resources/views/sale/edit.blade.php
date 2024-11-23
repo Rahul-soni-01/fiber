@@ -1,6 +1,7 @@
 <x-layout>
     <x-slot name="title">Edit Sale</x-slot>
     <x-slot name="main">
+        <a href="{{ route('sale.index') }}" class="btn btn-primary">Back to Sale</a>
         <div class="main" id="main">
             <form action="{{ route('sale.update', $sale->id) }}" method="POST">
                 @csrf

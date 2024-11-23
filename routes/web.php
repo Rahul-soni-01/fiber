@@ -111,6 +111,7 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
         
         // Sale Crud
         Route::get('sale', [SaleController::class, 'index'])->name('sale.index');
+        Route::get('sale-return', [SaleController::class, 'return'])->name('sale.return');
         Route::get('sale-create', [SaleController::class, 'create'])->name('sale.create');
         Route::post('sale-store', [SaleController::class, 'store'])->name('sale.store');
         Route::get('show-sale-{sale_id}', [SaleController::class, 'show'])->name(('sale.show'));
@@ -130,9 +131,6 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
           Route::put('/customer-{id}', [TblCustomerController::class, 'update'])->name('customer.update');
           Route::delete('/customer-{customer_id}', [TblCustomerController::class, 'destroy'])->name('customer.destroy');
           
-  
-        
-
         // report crud
         // Route::get('report', [TblPurchaseController::class, 'index'])->name('report.index');
         // Route::get('report-create', [TblPurchaseController::class, 'create'])->name('report.create');

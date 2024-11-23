@@ -29,20 +29,25 @@
                             <td>
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' ||
                                 auth()->user()->type === 'user')
-
+                                {{-- {{dd( $report->part);}} --}}
                                 <select id="part" name="part" class="form-control">
-                                    <option value="" disabled {{ old('part', $report->part ?? '') === '' ? 'selected' :
-                                        '' }}>Select Part</option>
-                                    <option value="0" {{ old('part', $report->part ?? '') == '0' ? 'selected' : ''
-                                        }}>New</option>
-                                    <option value="1" {{ old('part', $report->part ?? '') == '1' ? 'selected' : ''
-                                        }}>Repairing</option>
+                                    <option value="" disabled {{ old('part', isset($report) ? $report->part : null) === null ? 'selected' : '' }}>
+                                        Select Part
+                                    </option>
+                                    <option value="0" {{ old('part', $report->part ?? null) === 0 ? 'selected' : '' }}>
+                                        New
+                                    </option>
+                                    <option value="1" {{ old('part', $report->part ?? null) === 1 ? 'selected' : '' }}>
+                                        Repairing
+                                    </option>
                                 </select>
+                                
+                                
                                 @endif
 
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' ||
+                                @if(auth()->user()->type == 'admin' ||
                                 auth()->user()->type === 'user' )
                                 <h5>Temp no.</h5>
                                 @endif
@@ -65,7 +70,7 @@
 
                         </tr>
                         @endif
-                        @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin' ||
+                        @if(auth()->user()->type === 'admin' ||
                         auth()->user()->type === 'user')
                         <tr>
                             <td>
@@ -82,7 +87,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric' ||
+                                @if(auth()->user()->type == 'admin' ||
                                 auth()->user()->type === 'user')
                                 <input type="text" id="temp" name="temp" class="form-control"
                                     placeholder="Enter Temperature" value="{{ old('temp', $report->temp) }}">
@@ -170,23 +175,25 @@
 
                                 <select required onchange="tbl_card(0);" id="card_0" class="tbl_sub ml-2 form-control"
                                     name="card[]">
-                                    <option value="">Select</option>
+                                    <option value="" disabled>Select</option>
                                     @foreach($cards as $card)
-                                    <option value="{{ $card->id }}" @if($tbl_card->scid) selected @endif>{{
+                                    <option value="{{ $card->id }}" @if($tbl_card->scid ===  $card->id ) selected @endif>{{
                                         $card->sub_category_name }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td>
-                               
+                                {{-- {{ dd($card, $tbl_card);}} --}}
                                 <select type="text" class="form-control" name="sr_card[]" list="srcard_0"
-                                    placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                                placeholder="Select or enter a new sr no, Small Alpha Plz" required>
                                 {{-- <datalist id="srcard_0"> --}}
                                     <option value="" disabled>Select</option>
                                     @foreach($cards as $card)
-                                    <option value="{{ $card->id }}" @if($tbl_card->scid == $card->id) selected @endif>
+                                    <option value="{{ $card->id }}" @if($tbl_card->scid === $card->id){
+                                        selected }  @endif>
                                         {{ $tbl_card->sr_card }}</option>
                                     @endforeach
+                                    
                                 {{-- </datalist> --}}
                                 </select>
                             </td>
@@ -377,7 +384,7 @@
                         <td>
                             <h5>FIBER MOTO</h5>
                         </td>
-                        <td><input type="number" id="srfibermoto" step="0.01" name="sr_fiber_moto"    value="{{ old('sr_hr', $report->sr_fiber_moto) }}" class="form-control"
+                        <td><input type="number" id="srfibermoto" step="0.01" name="sr_fiber_moto" value="{{ old('sr_hr', $report->sr_fiber_moto) }}" class="form-control"
                                 placeholder="Enter SR Fiber Moto"> </td>
                         <td></td>
                         <td></td>
