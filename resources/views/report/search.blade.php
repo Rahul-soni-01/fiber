@@ -4,8 +4,8 @@
         <div class="main" id="main">
 
             <form method="GET" action="{{route('report.search')}}" class="row">
-                <input type="number" name="temp_no" placeholder="Enter Temp No."
-                    class="input-number form-control col-md-6" value="{{ request('temp_no') }}" required />
+                <input type="number" name="sr_no" placeholder="Enter SR No."
+                    class="input-number form-control col-md-6" value="{{ request('sr_no') }}" required />
                 <button type="submit" class="col-md-1 btn btn-grey">Search</button>
             </form>
 

@@ -9,6 +9,7 @@ use App\Models\tbl_category;
 use App\Models\tbl_sub_category;
 use App\Models\tbl_purchase_item;
 use App\Models\TblStock;
+use App\Models\TblPurchaseReturn;
 
 class TblPurchaseController extends Controller
 {
@@ -166,28 +167,25 @@ class TblPurchaseController extends Controller
         return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories'));
     }
 
+    public function ReturnIndex(Request $request){
+        if ($this->checkPermission($request, 'view')) {
+            $SubCategories = tbl_sub_category::all();
+            $Categories = tbl_category::all();
+            $tbl_parties = tbl_party::all();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(tbl_purchase $tbl_purchase)
-    {
-        //
+            return view('inward.return', ['Categories' => $Categories, 'tbl_parties' => $tbl_parties, 'SubCategories' => $SubCategories]);
+        }
+        return redirect('/unauthorized');
     }
+    public function Return_Create(Request $request){
+        if ($this->checkPermission($request, 'add')) {
+            $purchaseReturn = TblPurchaseReturn::all();
+            $SubCategories = tbl_sub_category::all();
+            $Categories = tbl_category::all();
+            $tbl_parties = tbl_party::all();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, tbl_purchase $tbl_purchase)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(tbl_purchase $tbl_purchase)
-    {
-        //
+            return view('inward.returnCreate', ['purchaseReturn' => $purchaseReturn, 'Categories' => $Categories, 'tbl_parties' => $tbl_parties, 'SubCategories' => $SubCategories]);
+        }
+        return redirect('/unauthorized');
     }
 }

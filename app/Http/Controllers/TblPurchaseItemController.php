@@ -11,7 +11,7 @@ class TblPurchaseItemController extends Controller
 {
     public function view()
     {
-        
+
         $inwards = tbl_purchase_item::all();
         return view('show_srno', compact('inwards'));
     }
@@ -52,7 +52,7 @@ class TblPurchaseItemController extends Controller
         $inward->inr_rate = $request->rate_r;
         $inward->inr_amount = $request->amount_r;
         $inward->shipping_cost = $request->shipping_cost;
-        $inward->round_amount = $request->round_total ??  0;
+        $inward->round_amount = $request->round_total ?? 0;
         $result = $inward->save();
 
         // dd($result);
@@ -70,7 +70,7 @@ class TblPurchaseItemController extends Controller
                     'price' => $request->rate[$i],
                     'total' => $request->total[$i],
                 ]);
-        
+
                 if (!$itemResult) {
                     $allItemsSaved = false;
                     break;
@@ -90,7 +90,31 @@ class TblPurchaseItemController extends Controller
 
     public function getInvoiceDetails(Request $request)
     {
+        if ($request->filled('status')) {
+            $data = tbl_purchase::with('party')->where('pid', $request->party)->where('invoice_no', $request->invoice_no)->get();
+
+            if (count($data) > 0) {
+                
+                $inwardsItems = tbl_purchase_item::with(['category', 'subCategory'])
+                    ->where('invoice_no', $request->invoice_no)
+                    ->get();
+
+                $response = [
+                    'status' => 'success',
+                    'data' => $data,
+                    'inwardsItems' => $inwardsItems,
+                ];
+            } else {
+                $response = [
+                    'status' => 'error',
+                    'message' => 'No data found',
+                ];
+            }
+            return response()->json($response, 200);
+        }
+
         $query = tbl_purchase_item::with(['category', 'subCategory']);
+
         if ($request->filled('invoice_no')) {
             $query->where('invoice_no', $request->invoice_no);
         }
@@ -100,9 +124,10 @@ class TblPurchaseItemController extends Controller
         if ($request->filled('subcategory_id')) {
             $query->where('scid', $request->subcategory_id);
         }
+
         $data = $query->get();
         // dd($data);
-       
+
         $response = [
             'status' => 'success',
             'data' => $data
@@ -117,18 +142,18 @@ class TblPurchaseItemController extends Controller
         return response()->json($response, 200);
     }
 
-    
+
     public function store(Request $request)
     {
         //
     }
 
-    
+
     public function show_item($invoice_no)
     {
         $inwardsItems = tbl_purchase_item::with(['category', 'subCategory'])
-        ->where('invoice_no', $invoice_no)
-        ->get();
+            ->where('invoice_no', $invoice_no)
+            ->get();
 
         $inwards = tbl_purchase::with('party')
             ->where('invoice_no', $invoice_no)
@@ -136,22 +161,22 @@ class TblPurchaseItemController extends Controller
             ->get();
 
         // Combine the two collections
-        return view('inward.invoice', compact('inwards','inwardsItems'));
+        return view('inward.invoice', compact('inwards', 'inwardsItems'));
     }
 
-  
+
     public function edit(tbl_purchase_item $tbl_purchase_item)
     {
         //
     }
 
-    
+
     public function update(Request $request, tbl_purchase_item $tbl_purchase_item)
     {
         //
     }
 
-   
+
     public function destroy(tbl_purchase_item $tbl_purchase_item)
     {
         //

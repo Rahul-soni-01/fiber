@@ -40,20 +40,23 @@
 
                             @if(auth()->user()->type === 'electric')
                             <th>Part</th>
+                            <th>Note</th>
                             <th>Action</th>
                             @endif
                             @if(auth()->user()->type === 'cavity')
-                            <th>Type</th>
-                            <th>SR Cavity Nani</th>
+                            <th>Part</th>
+                            {{-- <th>SR Cavity Nani</th>
                             <th>SR Cavity Moti</th>
                             <th>SR Combiner 3.1</th>
                             <th>AMP Combiner 3.1</th>
                             <th>Volt Combiner 3.1</th>
                             <th>Watt Combiner 3.1</th>
-                            <th>SR Couplar 2.2</th>
+                            <th>SR Couplar 2.2</th> --}}
                             {{-- <th>AMP Couplar 2.2</th>
                             <th>Volt Couplar 2.2</th> --}}
-                            <th>Watt Couplar 2.2</th>
+                            {{-- <th>Watt Couplar 2.2</th> --}}
+                            <th>SR(FIBER)</th>
+                            <th>Note</th>
                             <th>Action</th>
                             @endif
 
@@ -102,7 +105,7 @@
                             @if ($type === 'electric')
 
                             <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
-                            
+                            <td>{{ $report->note1 }}</td>
                             <td>
                                 @if ($type === 'electric')
                                 <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
@@ -111,17 +114,19 @@
 
                             @endif
                             @if ($type === 'cavity')
-                            <td>{{ $report->temp }}</td>
-                            <td>{{ $report->sr_cavity_nani }}</td>
+                            <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
+                            {{-- <td>{{ $report->sr_cavity_nani }}</td>
                             <td>{{ $report->sr_cavity_moti }}</td>
                             <td>{{ $report->sr_combiner_3_1 }}</td>
                             <td>{{ $report->amp_combiner_3_1 }}</td>
                             <td>{{ $report->volt_combiner_3_1 }}</td>
                             <td>{{ $report->watt_combiner_3_1 }}</td>
-                            <td>{{ $report->sr_couplar_2_2 }}</td>
+                            <td>{{ $report->sr_couplar_2_2 }}</td> --}}
                             {{-- <td>{{ $report->amp_couplar_2_2 }}</td>
                             <td>{{ $report->volt_couplar_2_2 }}</td> --}}
-                            <td>{{ $report->watt_couplar_2_2 }}</td>
+                            {{-- <td>{{ $report->watt_couplar_2_2 }}</td> --}}
+                            <td>{{ $report->sr_no_fiber }}</td>
+                            <td>{{ $report->note1 }}</td>
                             <td>
                                 <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                             </td>

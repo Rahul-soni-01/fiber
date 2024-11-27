@@ -148,11 +148,11 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (response) {
                 data = response.permissions;
                 admin = response.type;
-                if (admin  !== 'admin') {
+                if (admin !== 'admin') {
                     $('.sidebar').css('display', 'none');
                     $('.sub-item').css('display', 'none');
                     Object.entries(data).forEach(function ([key, value]) {
-                        var menuItems = $('.sidebar');                        
+                        var menuItems = $('.sidebar');
                         menuItems.each(function () {
                             var itemId = $(this).attr('id');
                             if (key === itemId) {
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         var permission_id = $(this).attr('id');
                                         if (value.includes(permission_id) || permission === permission_id) {
                                             $(this).css('display', 'block');
-                                        }else{
+                                        } else {
                                             $(this).css('display', 'none');
                                         }
                                     });
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         });
                     });
-                }else{
+                } else {
                     // console.log("798");
                 }
             }
@@ -236,11 +236,130 @@ function filterOptions(event) {
         } else {
             alert('Pattern did not match');
         }
-
+        /*const currentPath = window.location.pathname;
+        const targetPath = "/inward-return-create";
+    
+        if (currentPath === targetPath) {
+            getDataForReturn(event);
+        }*/
     } else {
         console.log("Other select element triggered the function");
     }
 }
+
+// function getDataForReturn(subcategory,category,event){
+function getDataForReturn(event) {
+
+    const party = document.getElementById('party_name').value;
+    const invoice_no = document.getElementById('invoice_no').value;
+
+    if (!party || !invoice_no) {
+        Swal.fire("Please Enter Party Or Invoice !");
+    } else {
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var data = {
+            _token: csrfToken,
+            party: party,
+            invoice_no: invoice_no,
+            status: 1,
+        };
+        $.ajax({
+            url: "/get-invoice-details",
+            type: "POST",
+            data: data,
+            success: function (response) {
+                if (response && response.status === 'success' && response.data && response.data.length > 0) {
+                    data = response.data[0];
+                    // i want append html on id InvoiceData
+                    document.getElementById('InvoiceData').innerHTML = '';
+                 
+                    var html = '';
+
+                    html += '<div class="row">';
+                    html += '<div class="col">Invoice No.</div>';
+                    html += '<div class="col">Date</div>';
+                    html += '<div class="col">Party Name</div>';
+                    html += '</div>';
+
+                    // Add invoice details row
+                    html += '<div class="row">';
+                    html += '<div class="col"><h5 class="form-control">' + data.invoice_no + '</h5></div>';
+                    html += '<div class="col"><h5 class="form-control">' + data.date + '</h5></div>';
+                    html += '<div class="col"><h5 class="form-control">' + data.party.party_name + '</h5></div>';
+                    html += '</div>';
+
+
+                    html += '<div class="row">';
+                    html += '<div class="col"><b>Category</b></div>';
+                    html += '<div class="col"><b>Subcategory</b></div>';
+                    html += '<div class="col"><b>Unit</b></div>';
+                    html += '<div class="col"><b>Qty</b></div>';
+                    html += '<div class="col"><b>Price</b></div>';
+                    html += '<div class="col"><b>TOtal</b></div>';
+                    html += '</div>';
+                    response.inwardsItems.forEach(function (item) {
+                        html += '<div class="row mt-2">';
+                        html += '<div class="col">' + item.category.category_name + '</div>'; // Example property
+                        html += '<div class="col">' + item.sub_category.sub_category_name + '</div>'; // Example property
+                        html += '<div class="col">' + item.unit + '</div>'; // Example property
+                        html += '<div class="col">' + item.qty + '</div>'; // Example property
+                        html += '<div class="col">' + item.price + '</div>'; // Example property
+                        html += '<div class="col">' + item.total + '</div>'; // Example property
+                        html += '</div>';
+
+                    });
+                    document.getElementById('InvoiceData').innerHTML += html;
+                    html += '';
+
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "No Data Found",
+                        text: "Please check the Invoice Number or Party and try again.",
+                    });
+                }
+            }
+        });
+    }
+}
+
+
+// document.getElementById('AddReturnRow').addEventListener('click', function () {
+    // const returnRow = `
+    //     <div class="row return-item mt-2">
+    //         <div class="col">
+    //             <select class="form-control return-item-select">
+    //                 <option value="">Select Item</option>
+    //                 ${response.inwardsItems.map(item => 
+    //                     `<option value="${item.id}" data-category="${item.category.category_name}" 
+    //                         data-subcategory="${item.sub_category.sub_category_name}" 
+    //                         data-unit="${item.unit}" 
+    //                         data-price="${item.price}">
+    //                         ${item.category.category_name} - ${item.sub_category.sub_category_name}
+    //                     </option>`
+    //                 ).join('')}
+    //             </select>
+    //         </div>
+    //         <div class="col">
+    //             <input type="number" class="form-control return-qty" placeholder="Qty" min="1">
+    //         </div>
+    //         <div class="col">
+    //             <textarea class="form-control return-reason" placeholder="Reason"></textarea>
+    //         </div>
+    //         <div class="col">
+    //             <button type="button" class="btn btn-danger remove-return-row">Remove</button>
+    //         </div>
+    //     </div>
+    // `;
+    // document.getElementById('ReturnItems').innerHTML += returnRow;
+// }
+
+// Event delegation for removing rows
+/*document.getElementById('ReturnItems').addEventListener('click', function (e) {
+    if (e.target && e.target.classList.contains('remove-return-row')) {
+        e.target.closest('.return-item').remove();
+    }
+});*/
 
 
 

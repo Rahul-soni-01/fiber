@@ -124,8 +124,9 @@
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('inward.good.view') }}" id="add" class="sub-item">Add Good Inward</a></li>
-                    {{-- <li><a href="{{ route('inward.show') }}" id="view" class="sub-item">Show Inward</a></li> --}}
                     <li><a href="{{ route('inward.index') }}" id="view" class="sub-item">Show Inward</a></li>
+                    <li><a href="{{ route('inward.return.index') }}" id="view" class="sub-item">Show Return Purchase</a>
+                    </li>
                 </ul>
             </li>
             <li id="Report" class="sidebar">
@@ -136,7 +137,8 @@
                     'account' || auth()->user()->type === 'cavity' || auth()->user()->type === 'electric' )
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
                     @endif
-                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric'  || auth()->user()->type === 'godown')
+                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' || auth()->user()->type
+                    === 'godown')
                     <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
                     @endif
 
@@ -161,7 +163,7 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('sale.create') }}" id="add" class="sub-item">Add Sale</a></li>
                     <li><a href="{{ route('sale.index') }}" id="view" class="sub-item">Show Sale</a></li>
-                    <li><a href="{{ route('sale.return') }}" id="view" class="sub-item">Sale Return</a></li>
+                    <li><a href="{{ route('sale.return.index') }}" id="view" class="sub-item">Sale Return</a></li>
                 </ul>
             </li>
             <li id="Customer" class="sidebar">
@@ -172,7 +174,7 @@
                     <li><a href="{{ route('customer.index') }}" id="view" class="sub-item">Show Customer</a></li>
                 </ul>
             </li>
-            
+
         </ul>
 
     </div>
@@ -298,15 +300,15 @@
                         <div class="row custom-row mt-2 g-2 align-items-center">
                             <div class="col">
                                 <select required id="serial_no" class="form-control select2" name="serial_no[]" onchange="serial_no_append(${countserial_no},event)">
-                                    <option value="">Select</option>`;
+                                    <option value="" disabled selected>Select</option>`;
 
                             serial_nos.forEach(serial_no => {
-                                rowHtml += `<option value="${serial_no.id}">${serial_no.sr_no_fiber}</option>`;
+                                rowHtml += `<option value="${serial_no.sr_no_fiber}">${serial_no.sr_no_fiber}</option>`;
                             });
             rowHtml += `</select> </div> <div class="col">`;
 
                         serial_nos.forEach(serial_no => {
-                            rowHtml += `<span id="${serial_no.id}" class="final_amount cstmspan_${countserial_no}" style="display: none" >${serial_no.final_amount}</span>`;
+                            rowHtml += `<span id="${serial_no.sr_no_fiber}" class="final_amount cstmspan_${countserial_no}" style="display: none" >${serial_no.final_amount}</span>`;
                         });
                       
                   rowHtml += `</div>
@@ -326,12 +328,12 @@
 
         function serial_no_append(countserial_no,event){
             const serialNoDropdown = event.target;
-            const selectedId = serialNoDropdown.value;
-            
+            const selectedId = serialNoDropdown.value;            
             const spanElements = document.querySelectorAll(`.cstmspan_${countserial_no}`);
+            // console.log(spanElements,selectedId);
 
             spanElements.forEach(span => {
-                if (span.id === selectedId) {
+                if (span.id == selectedId) {
                     span.style.display = 'block';
                 } else {
                     span.style.display = 'none'; 
@@ -433,7 +435,7 @@
                     <td class="d-flex">
                         <h5>LED  </h5>
                             <select required onchange="tbl_stock(${row});" id="subcategory_${row}"  name="sub_category[]" class="tbl_sub ml-2 form-control">
-                                    <option value="">Select</option>
+                                    <option value="" disabled selected>Select</option>
                                 </select>
                       
                     </td>
@@ -443,9 +445,9 @@
                             <option value=""></option>
                         </datalist>
                     </td>
-                    <td><input type="text" id="ampled_${row}" name="ampled[]" class="form-control"></td>
-                    <td><input type="text" id="voltled_${row}" name="voltled[]" class="form-control"></td>
-                    <td class="d-flex"><input type="text" id="wattled_${row}" name="wattled[]" class="form-control">
+                    <td><input type="text" id="ampled_${row}" name="ampled[]" class="form-control"  placeholder="Enter AMP"></td>
+                    <td><input type="text" id="voltled_${row}" name="voltled[]" class="form-control" placeholder="Enter VOLY"> </td>
+                    <td class="d-flex"><input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT" >
                         <button type="button" onclick="removeRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</i></button>
                     </td>
                 </tr>
@@ -529,7 +531,7 @@
                     <td class="d-flex">
                         <h5>CARD</h5>
                         <select required onchange="tbl_card(${row});" id="card_${row}" class="tbl_sub ml-2 form-control" name="card[]">
-                            <option value="">Select</option>
+                            <option value="" disabled selected>Select</option>
                             
                         </select>
                     </td>
@@ -539,10 +541,10 @@
                             <!-- options can be dynamically inserted here if needed -->
                         </datalist>
                     </td>
-                    <td><input type="text" id="ampled_${row}" name="sr_cardamp[]" class="form-control"></td>
-                    <td><input type="text" id="voltled_${row}" name="sr_cardvolt[]" class="form-control"></td>
+                    <td><input type="text" id="ampled_${row}" name="sr_cardamp[]" class="form-control" placeholder="Enter AMP"></td>
+                    <td><input type="text" id="voltled_${row}" name="sr_cardvolt[]" class="form-control" placeholder="Enter VOLT"></td>
                     <td class="d-flex">
-                        <input type="text" id="wattled_${row}" name="sr_cardwatt[]" class="form-control">
+                        <input type="text" id="wattled_${row}" name="sr_cardwatt[]" class="form-control" placeholder="Enter WATT">
                         <button type="button" onclick="removeRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
                     </td>
                 </tr>
@@ -553,6 +555,69 @@
                 });
             }
             row++;
+        }
+
+        function BtnReturnAdd(categories, subCategories) {
+
+            $('#TBody').append(`
+                <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
+                    <div class="col custom-col">
+                        <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
+                            <option value="" disabled selected class="0" >Choose a Category</option>
+                        </select>
+                    </div>
+                    <div class="col custom-col">
+                        <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
+                            <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
+                        </select>
+                    </div>
+                    <div class="col custom-col">
+                        <select id="data[${count}][unit]" name="unit[]"
+                            class="form-control">
+                            <option value="">Select</option>
+                            <option value="Pic">Pic</option>
+                            <option value="Mtr">Mtr</option>
+                        </select>
+                    </div>
+                    <div class="col custom-col">
+                        <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
+                            class="form-control" onchange="total()">
+                    </div>
+                    <div class="col custom-col">
+                        <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
+                            class="form-control" onchange="total()">
+                    </div>
+                  
+                    <div class="col custom-col">
+                        <button type="button" class="btn btn-grey" onclick="BtnReturnDel(this)">Delete</button>
+                    </div>
+                </div>
+            `);
+
+            // Append categories
+            if (categories && Array.isArray(categories)) {
+                categories.forEach(category => {
+                    $(`#data\\[${count}\\]\\[cname\\]`).append(`
+                <option value="${category.id}">${category.category_name}</option>`);
+                });
+            }
+
+            // Append subcategories
+            if (subCategories && Array.isArray(subCategories)) {
+                subCategories.forEach(subCategory => {
+                    $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.cid}" data-unit="${subCategory.unit}" >${subCategory.sub_category_name}</option>`);
+                });
+            }
+
+            count++;
+        }
+
+        function BtnReturnDel(button){
+            $(button).closest('.custom-row').remove();
+        }
+
+        function AddReturnRow(event){
+            alert("5454");
         }
     </script>
 </body>

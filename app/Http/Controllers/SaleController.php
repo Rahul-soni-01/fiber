@@ -10,7 +10,11 @@ use App\Models\tbl_category;
 use App\Models\tbl_sub_category;
 use App\Models\Report;
 use App\Models\TblCustomer;
+use App\Models\TblSaleReturn;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+
 
 
 
@@ -30,7 +34,14 @@ class SaleController extends Controller
         }
         return redirect('/unauthorized');
     }
-
+    public function return_index(Request $request){
+        if ($this->checkPermission($request, 'view')) {
+            $salereturns = TblSaleReturn::with('customer')->get();
+            // dd($salereturns);
+            return view('sale.ReturnIndex', compact('salereturns'));
+        }
+        return redirect('/unauthorized');
+    }
     public function return(Request $request){
         if ($this->checkPermission($request, 'view')) {
             $sales = Sale::with('customer')->get();
@@ -38,7 +49,7 @@ class SaleController extends Controller
             $customers = TblCustomer::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
-            $serial_nos = Report::where('status','1') ->where('sale_status', null)
+            $serial_nos = Report::where('status','1') ->where('sale_status', 1)
                           ->where('part','0')->get()->sortBy('sr_no_fiber');
             
             return view('sale.return', compact('sales','customers', 'inwards', 'items','serial_nos'));
@@ -46,14 +57,61 @@ class SaleController extends Controller
         }
         return redirect('/unauthorized');
     }
+
+    public function return_store(Request $request){
+        
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'date' => 'required|date',
+                'cid' => 'required|integer|exists:tbl_customers,id',
+                'serial_no.*' => [
+                    'required',
+                    'distinct',
+                    function ($attribute, $value, $fail) {
+                        if (!DB::table('tbl_reports')->where('sr_no_fiber', $value)->exists()) {
+                            $fail("The serial number {$value} does not exist in the reports.");
+                        }
+                    },
+                ],
+            ],
+            [
+                'serial_no.*.distinct' => 'The serial numbers must not have duplicates within the input.',
+            ]
+        );
+        
+        if ($validator->fails()) {
+            $firstErrorMessage = $validator->errors()->first();
+            return redirect()->back()->withErrors($validator)->withInput() ->with('error', $firstErrorMessage);
+        }
+        else{
+            $count = count($request->serial_no);
+            for ($i = 0; $i < $count; $i++) {
+                // Data Store in tbl_sale_returns 
+                $sale_return = new TblSaleReturn();
+                $sale_return->date = $request->date;
+                $sale_return->c_id = $request->cid;
+                $sale_return->sr_no = $request->serial_no[$i];
+                $sale_return->save();
+
+                 // Eloquent way to update tbl_reports where sr_no_fiber matches
+                $report = Report::where('sr_no_fiber', $request->serial_no[$i])->where('part', 0)->where('sale_status', 1)->first();
+                if ($report) {
+                    $report->sale_status = 0;
+                    $report->save();
+                }
+            }
+
+            return redirect()->route('sale.index')->with('success', 'Sale Return successfully.');
+        }
+    }
     public function create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
             $customers = TblCustomer::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
-            $serial_nos = Report::where('status','1') ->where('sale_status', null)
-                          ->where('part','0')->get()->sortBy('sr_no_fiber');
+            $serial_nos = Report::where('status','1')->where('sale_status', '!=', '1')->where('part','0')->get()->sortBy('sr_no_fiber');
             
             return view('sale.create', compact('customers', 'inwards', 'items','serial_nos'));
         }
@@ -66,6 +124,15 @@ class SaleController extends Controller
             'invoice_no' => 'required|unique:tbl_sales,sale_id',
             'total_amount' => 'required|numeric',
             'date' => 'required|date',
+            'serial_no.*' => [
+                    'required',
+                    'distinct',
+                    function ($attribute, $value, $fail) {
+                        if (!DB::table('tbl_reports')->where('sr_no_fiber', $value)->exists()) {
+                            $fail("The serial number {$value} does not exist in the reports.");
+                        }
+                    },
+                ],
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();

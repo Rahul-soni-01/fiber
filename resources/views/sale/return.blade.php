@@ -1,9 +1,10 @@
 <x-layout>
     <x-slot name="title">Sale Return</x-slot>
     <x-slot name="main">
-        <a href="{{ route('sale.index') }}" class="btn btn-primary">Back to Sale</a>
+        <a href="{{ route('sale.return.index') }}" class="btn btn-primary">Back to Sale Return</a>
+        
         <div class="main" id="main">
-
+{{-- 
             <form action="search" method="get">
                 <div class="container">
                     <div class="row">
@@ -32,9 +33,9 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form> --}}
 
-            <form action="{{route('sale.store')}}" method="post">
+            <form action="{{route('sale.return.store')}}" method="post">
                 @csrf
 
                 @if ($errors->any())
@@ -48,20 +49,20 @@
                 @endif
                 <div class="container">
                     <div class="row">
-                        <div class="col">Invoice No.</div>
+                        {{-- <div class="col">Invoice No.</div> --}}
                         <div class="col">Date</div>
                         <div class="col">Customer Name</div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <input type="number" id="invoice_no" name="invoice_no" class="form-control"
                                 placeholder="Enter Invoice no." required>
-                        </div>
-                        <div class="col-md-4">
+                        </div> --}}
+                        <div class="col-md-6">
                             <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
                                 value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <select id="party_name" name="cid" class="form-control" placeholder="Enter Party Name"
                                 required>
                                 <option value="" disabled selected>Choose a Customer</option>
@@ -72,7 +73,7 @@
                         </div>
                     </div>
                     <div class="cus-container mt-2">
-                        <h1>Product Details</h1>
+                        <h1>Serial Details</h1>
                         <div class="row">
                             <div class="col">Serial No.</div>
                             <div class="col">Price</div>
@@ -85,15 +86,15 @@
                                 <div class="col">
                                     <select required id="serial_no" class="form-control select2" name="serial_no[]"
                                         onchange="serial_no_append(0,event)">
-                                        <option value="">Select</option>
+                                        <option value="" disabled selected>Select</option>
                                         @foreach($serial_nos as $serial_no)
-                                        <option value="{{ $serial_no->id }}">{{ $serial_no->sr_no_fiber }}</option>
+                                        <option value="{{ $serial_no->sr_no_fiber }}">{{ $serial_no->sr_no_fiber }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col">
                                     @foreach($serial_nos as $serial_no)
-                                    <span id="{{ $serial_no->id }}" class="final_amount cstmspan_0"
+                                    <span id="{{ $serial_no->sr_no_fiber }}" class="final_amount cstmspan_0"
                                         style="display: none">{{
                                         $serial_no->final_amount}}</span>
                                     @endforeach
@@ -103,7 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-5 g-2 align-items-center">
+                        {{-- <div class="row mt-5 g-2 align-items-center">
                             <div class="col">
                                 <h5> Final Price</h5>
                             </div>
@@ -114,8 +115,8 @@
 
                             </div>
 
-                        </div>
-                        <div class="row mt-5 g-2 align-items-center">
+                        </div> --}}
+                        {{-- <div class="row mt-5 g-2 align-items-center">
                             <div class="col">
                                 <h5> Note</h5>
                             </div>
@@ -124,7 +125,7 @@
                             </div>
                             <div class="col">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="d-flex m-5 justify-content-center">
                             <button type="submit" class="btn btn-success">Submit</button>
                         </div>
