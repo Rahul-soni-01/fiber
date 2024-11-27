@@ -49,7 +49,8 @@
                     <div id="InvoiceData">
 
                     </div>
-                    <form id="PurchaseReturnForm">
+                    <form id="PurchaseReturnForm" action="{{ route('purchase.return.store')}}" method="post">
+                        @csrf
                         <div id="ReturnItems">
                             <h5>Items to Return</h5>
                             <!-- Dynamic rows for return items will be appended here -->
@@ -57,85 +58,13 @@
                     
                         <div class="row mt-4">
                             <div class="col">
-                                <button type="button" id="AddReturnRow" onclick="AddReturnRow(event)" class="btn btn-primary">Add Return Row</button>
+                                <button type="button" id="AddReturnRow" class="btn btn-primary">Add Return Row</button>
                             </div>
                             <div class="col text-right">
                                 <button type="submit" class="btn btn-success">Submit Return</button>
                             </div>
                         </div>
                     </form>
-                    {{-- <div class="row custom-row g-2 align-items-center">
-                        <!-- Category Name -->
-                        <div class="col custom-col">
-                            <label for="data[0][cname]" class="form-label"  style="white-space:nowrap;">Category Name</label>
-                            <select id="data[0][cname]" name="cname[]" class="form-control" onchange="filterOptions(event)">
-                                <option value="" disabled selected>Choose a Category</option>
-                                @foreach($Categories as $inward)
-                                    <option value="{{ $inward->id }}">{{ $inward->category_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Sub Category Name -->
-                        <div class="col custom-col">
-                            <label for="data[0][scname]" class="form-label" style="white-space:nowrap;" >Sub Category </label>
-                            <select id="data[0][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
-                                <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
-                                @foreach($SubCategories as $item)
-                                    <option value="{{ $item->id }}" class="{{ $item->cid }}" data-unit="{{ $item->unit }}" >{{ $item->sub_category_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Unit -->
-                        <div class="col custom-col">
-                            <label for="data[0][unit]" class="form-label">Unit</label>
-                            <select id="data[0][unit]" name="unit[]" class="form-control" readonly>
-                                <option value="" disabled selected>Select</option>
-                                <option value="Pic">Pic</option>
-                                <option value="Mtr">Mtr</option>
-                            </select>
-                        </div>
-
-                        <!-- Quantity -->
-                        {{-- <div class="col custom-col">
-                            <label for="data[0][qty]" class="form-label">Return Quantity</label>
-                            <input type="number" id="data[0][qty]" name="qty[]" class="form-control" placeholder="Quantity">
-                        </div> --}}
-
-                        <!-- Rate -->
-                        {{-- <div class="col custom-col">
-                            <label for="data[0][rate]" class="form-label">Rate</label>
-                            <input type="number" id="data[0][rate]" name="rate[]" class="form-control" placeholder="Rate" readonly>
-                        </div> --}}
-
-                        <!-- Tax Percentage -->
-                        {{-- <div class="col custom-col">
-                            <label for="data[0][p_tax]" class="form-label">Tax(%)</label>
-                            <input type="number" id="data[0][p_tax]" name="p_tax[]" step="0.01" placeholder="Tax"
-                                class="form-control" onchange="total()" value="0">
-                        </div> --}}
-
-                        <!-- Tax Amount -->
-                        {{-- <div class="col custom-col">
-                            <label for="data[0][tax]" class="form-label">Tax</label>
-                            <input type="number" id="data[0][tax]" name="tax[]" step="0.01"
-                                class="form-control" disabled>
-                        </div> --}}
-
-                        <!-- Total Amount -->
-                        {{-- <div class="col custom-col">
-                            <label for="data[0][total]" class="form-label">Total</label> 
-                            <input type="number" id="data[0][total]" name="total[]" step="0.01" placeholder="Total"
-                                class="form-control">
-                        </div> --}}
-
-                        {{-- <div class="col custom-col">
-                        <label for="" class="form-label"></label>
-                            <button type="button" class="btn btn-primary"
-                            onclick="BtnReturnAdd({{ json_encode($Categories)}},{{ json_encode($SubCategories)}})">Add</button>
-                        </div>
-                    </div> --}} 
                     
                     <div class="" id="TBody"></div>
                 </div>
@@ -186,11 +115,11 @@
                                 class="form-control" disabled></div>
                     </div>
                    
-                </div> --}}
-                <div class="row mt-3">
+                      <div class="row mt-3">
                     <div class="col-sm-2 offset-sm-5">
                         <button class="btn btn-success">Save</button>
                     </div>
+                </div> --}}
                 </div>
             </div>
         

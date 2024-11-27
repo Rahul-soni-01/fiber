@@ -18,8 +18,16 @@ class TblPurchaseReturn extends Model
     ];
 
     // Define any relationships (if needed)
-    public function purchase()
+    public function party()
     {
-        return $this->belongsTo(tbl_purchase::class, 'p_id');
+        return $this->belongsTo(tbl_party::class, 'p_id', 'id');
+    }
+
+    public function purchaseReturnDetails()
+    {
+        // return $this->hasMany(TblPurchaseReturnItem::class, 'invoice_no');
+        return $this->hasMany(TblPurchaseReturnItem::class, 'invoice_no', 'invoice_no');
+
+        // return $this->belongsTo(TblPurchaseReturnItem::class, 'invoice_no', 'invoice_no');
     }
 }

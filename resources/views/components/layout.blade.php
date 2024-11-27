@@ -616,9 +616,7 @@
             $(button).closest('.custom-row').remove();
         }
 
-        function AddReturnRow(event){
-            alert("5454");
-        }
+        
     </script>
 </body>
 

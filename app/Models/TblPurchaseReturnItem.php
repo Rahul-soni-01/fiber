@@ -18,11 +18,21 @@ class TblPurchaseReturnItem extends Model
         'qty',
         'unit',
         'price',
+        'reason',
     ];
 
     // Define relationships (if applicable)
     public function purchaseReturn()
     {
         return $this->belongsTo(TblPurchaseReturn::class, 'invoice_no', 'invoice_no');
+    }
+    public function category()
+    {
+        return $this->belongsTo(tbl_category::class, 'cid', 'id');
+    }
+
+    public function subCategory()
+    {
+        return $this->belongsTo(tbl_sub_category::class, 'scid', 'id');
     }
 }

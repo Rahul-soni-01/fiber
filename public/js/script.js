@@ -180,6 +180,57 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     window.onload = checkQueryParams(), check_permission();
+
+    document.getElementById('AddReturnRow').addEventListener('click', function () {
+        if (!invoiceResponse || !invoiceResponse.inwardsItems) {
+            Swal.fire({
+                icon: "error",
+                title: "No Items Available",
+                text: "Please fetch invoice details first.",
+            });
+            return;
+        }
+
+        // Create a new row element
+        const returnRow = document.createElement('div');
+        returnRow.classList.add('row', 'return-item', 'mt-2');
+
+        returnRow.innerHTML = `
+            <div class="col">
+             <input type="hidden" class="form-control" name="pid" value="${invoiceResponse.data[0].pid}" placeholder="Qty" min="1">
+             <input type="hidden" class="form-control" name="invoice_no" value="${invoiceResponse.inwardsItems[0].invoice_no}" placeholder="Qty" min="1">
+                <select class="form-control return-item-select" name="purchaseitems[]">
+                    <option value="" disabled selected>Select Item</option>
+                    ${invoiceResponse.inwardsItems.map(item =>
+            `<option value="${item.id}" 
+                            data-category="${item.category.category_name}" 
+                            data-subcategory="${item.sub_category.sub_category_name}" 
+                            data-unit="${item.unit}" 
+                            data-price="${item.price}">
+                            ${item.category.category_name} - ${item.sub_category.sub_category_name}
+                        </option>`).join('')}
+                </select>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control return-qty" name="qty[]" placeholder="Qty" min="1">
+            </div>
+            <div class="col">
+                <textarea class="form-control return-reason" name="reason[]"placeholder="Reason"></textarea>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-danger remove-return-row">Remove</button>
+            </div>
+        `;
+
+        // Append the new row to the container
+        document.getElementById('ReturnItems').appendChild(returnRow);
+
+        // Attach event listener to the "Remove" button of the new row
+        returnRow.querySelector('.remove-return-row').addEventListener('click', function () {
+            returnRow.remove();
+        });
+    });
+
 });
 
 function filterOptions(event) {
@@ -247,6 +298,8 @@ function filterOptions(event) {
     }
 }
 
+let invoiceResponse = null;
+
 // function getDataForReturn(subcategory,category,event){
 function getDataForReturn(event) {
 
@@ -269,10 +322,11 @@ function getDataForReturn(event) {
             data: data,
             success: function (response) {
                 if (response && response.status === 'success' && response.data && response.data.length > 0) {
+                    invoiceResponse = response;
                     data = response.data[0];
                     // i want append html on id InvoiceData
                     document.getElementById('InvoiceData').innerHTML = '';
-                 
+
                     var html = '';
 
                     html += '<div class="row">';
@@ -294,6 +348,7 @@ function getDataForReturn(event) {
                     html += '<div class="col"><b>Subcategory</b></div>';
                     html += '<div class="col"><b>Unit</b></div>';
                     html += '<div class="col"><b>Qty</b></div>';
+                    html += '<div class="col"><b>Alraedy Return</b></div>';
                     html += '<div class="col"><b>Price</b></div>';
                     html += '<div class="col"><b>TOtal</b></div>';
                     html += '</div>';
@@ -303,6 +358,7 @@ function getDataForReturn(event) {
                         html += '<div class="col">' + item.sub_category.sub_category_name + '</div>'; // Example property
                         html += '<div class="col">' + item.unit + '</div>'; // Example property
                         html += '<div class="col">' + item.qty + '</div>'; // Example property
+                        html += '<div class="col">' + item.return + '</div>'; // Example property
                         html += '<div class="col">' + item.price + '</div>'; // Example property
                         html += '<div class="col">' + item.total + '</div>'; // Example property
                         html += '</div>';
@@ -324,42 +380,10 @@ function getDataForReturn(event) {
 }
 
 
-// document.getElementById('AddReturnRow').addEventListener('click', function () {
-    // const returnRow = `
-    //     <div class="row return-item mt-2">
-    //         <div class="col">
-    //             <select class="form-control return-item-select">
-    //                 <option value="">Select Item</option>
-    //                 ${response.inwardsItems.map(item => 
-    //                     `<option value="${item.id}" data-category="${item.category.category_name}" 
-    //                         data-subcategory="${item.sub_category.sub_category_name}" 
-    //                         data-unit="${item.unit}" 
-    //                         data-price="${item.price}">
-    //                         ${item.category.category_name} - ${item.sub_category.sub_category_name}
-    //                     </option>`
-    //                 ).join('')}
-    //             </select>
-    //         </div>
-    //         <div class="col">
-    //             <input type="number" class="form-control return-qty" placeholder="Qty" min="1">
-    //         </div>
-    //         <div class="col">
-    //             <textarea class="form-control return-reason" placeholder="Reason"></textarea>
-    //         </div>
-    //         <div class="col">
-    //             <button type="button" class="btn btn-danger remove-return-row">Remove</button>
-    //         </div>
-    //     </div>
-    // `;
-    // document.getElementById('ReturnItems').innerHTML += returnRow;
-// }
+
 
 // Event delegation for removing rows
-/*document.getElementById('ReturnItems').addEventListener('click', function (e) {
-    if (e.target && e.target.classList.contains('remove-return-row')) {
-        e.target.closest('.return-item').remove();
-    }
-});*/
+
 
 
 

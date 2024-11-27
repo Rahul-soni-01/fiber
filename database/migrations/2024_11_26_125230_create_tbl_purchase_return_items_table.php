@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('qty')->nullable();
             $table->string('unit')->nullable();
             $table->decimal('price', 10, 2)->nullable();
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

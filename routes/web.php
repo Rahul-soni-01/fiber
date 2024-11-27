@@ -91,6 +91,7 @@ Route::middleware('auth')->group(function () {
     // inward crud
     Route::get('inward-return', [TblPurchaseController::class, 'ReturnIndex'])->name('inward.return.index');
     Route::get('inward-return-create', [TblPurchaseController::class, 'Return_Create'])->name('purchase.return.create');
+    Route::post('inward-return-store', [TblPurchaseController::class, 'Return_Store'])->name('purchase.return.store');
     Route::get('inward', [TblPurchaseController::class, 'index'])->name('inward.index');
     Route::get('good_inward', [TblPurchaseController::class, 'create'])->name('inward.good.view');
     Route::post('good_inward', [TblPurchaseItemController::class, 'create'])->name('inward.good');

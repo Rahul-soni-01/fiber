@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\tbl_purchase_item;
 use App\Models\tbl_purchase;
+use App\Models\TblPurchaseReturnItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -99,6 +100,18 @@ class TblPurchaseItemController extends Controller
                     ->where('invoice_no', $request->invoice_no)
                     ->get();
 
+                    foreach($inwardsItems as $inwardsItem){
+                        $cid = $inwardsItem->cid;
+                        $scid = $inwardsItem->scid;
+                        $invoice_no = $inwardsItem->invoice_no;
+                
+                        $returns = TblPurchaseReturnItem::where('cid',$cid)->where('scid', $scid)->where('invoice_no', $invoice_no)->get();
+                        $qty = 0;
+                        foreach($returns as $return){
+                            $qty += $return->qty;
+                        }
+                        $inwardsItem['return'] = $qty;
+                    }
                 $response = [
                     'status' => 'success',
                     'data' => $data,
