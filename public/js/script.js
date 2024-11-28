@@ -180,8 +180,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     window.onload = checkQueryParams(), check_permission();
-
-    document.getElementById('AddReturnRow').addEventListener('click', function () {
+    
+    // this is for only purchase rerun create time
+    const currentPath = window.location.pathname;
+    const targetPath = "/inward-return-create";
+       
+    if(currentPath === targetPath){
+        document.getElementById('AddReturnRow').addEventListener('click', function () {
         if (!invoiceResponse || !invoiceResponse.inwardsItems) {
             Swal.fire({
                 icon: "error",
@@ -230,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
             returnRow.remove();
         });
     });
+    }
 
 });
 
@@ -287,12 +293,7 @@ function filterOptions(event) {
         } else {
             alert('Pattern did not match');
         }
-        /*const currentPath = window.location.pathname;
-        const targetPath = "/inward-return-create";
-    
-        if (currentPath === targetPath) {
-            getDataForReturn(event);
-        }*/
+      
     } else {
         console.log("Other select element triggered the function");
     }
@@ -354,13 +355,13 @@ function getDataForReturn(event) {
                     html += '</div>';
                     response.inwardsItems.forEach(function (item) {
                         html += '<div class="row mt-2">';
-                        html += '<div class="col">' + item.category.category_name + '</div>'; // Example property
-                        html += '<div class="col">' + item.sub_category.sub_category_name + '</div>'; // Example property
-                        html += '<div class="col">' + item.unit + '</div>'; // Example property
-                        html += '<div class="col">' + item.qty + '</div>'; // Example property
-                        html += '<div class="col">' + item.return + '</div>'; // Example property
-                        html += '<div class="col">' + item.price + '</div>'; // Example property
-                        html += '<div class="col">' + item.total + '</div>'; // Example property
+                        html += '<div class="col">' + item.category.category_name + '</div>'; // category_name property
+                        html += '<div class="col">' + item.sub_category.sub_category_name + '</div>'; // sub_category_name property
+                        html += '<div class="col">' + item.unit + '</div>'; // unit property
+                        html += '<div class="col">' + item.qty + '</div>'; // qty property
+                        html += '<div class="col">' + item.return + '</div>'; // return property
+                        html += '<div class="col">' + item.price + '</div>'; // price property
+                        html += '<div class="col">' + item.total + '</div>'; // total property
                         html += '</div>';
 
                     });

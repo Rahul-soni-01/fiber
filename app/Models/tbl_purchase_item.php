@@ -16,6 +16,7 @@ class tbl_purchase_item extends Model
         'scid',
         'qty',
         'unit',
+        'tax',
         'price',
         'total',
     ];

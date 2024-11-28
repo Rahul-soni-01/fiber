@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\tbl_sub_category;
 use App\Models\tbl_category;
 use App\Models\TblCustomer;
+use App\Models\SaleItem;
+use App\Models\Sale;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -142,7 +144,7 @@ class ReportController extends Controller
             $report->part = 1;
             $report->status = 0;
         }
-        $report->f_status = $request->input('warranty');
+        // $report->f_status = $request->input('warranty');
         $report->worker_name = $request->input('worker_name');
         $report->sr_no_fiber = $request->input('sr_no_fiber');
         $report->m_j = $request->input('m_j');
@@ -174,11 +176,12 @@ class ReportController extends Controller
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
 
-        /*if (Auth()->user()->type === 'electric') {
-            $report->r_status = 0;
+        if (Auth()->user()->type === 'electric') {
+            // $report->r_status = 0;
+            $report->f_status = 0;
         } elseif (Auth()->user()->type === 'admin') {
             $report->r_status = 1;
-        }*/
+        }
 
         try {
             $report->save();
@@ -1058,15 +1061,19 @@ class ReportController extends Controller
             ->groupBy('scid')
             ->get();
 
-        $purchaseResults = tbl_purchase_item::select(
-            'scid',
-            DB::raw('SUM(qty) as total_purchase_qty')
-        )
+        $purchaseResults = tbl_purchase_item::select('scid',DB::raw('SUM(qty) as total_purchase_qty'))
             ->groupBy('scid')
             ->get();
 
-
-        // dd($results);
+        $sr_combiner_3_1 = Report::select(DB::raw('SUM(sr_combiner_3_1) as total_report'))->get();
+        $fiberData = Report::select(
+            DB::raw('SUM(sr_fiber_nano) as total_nano'),
+            DB::raw('SUM(sr_fiber_moto) as total_moto')
+        )->first();
+        
+        $fiber = $fiberData->total_nano + $fiberData->total_moto;
+        // dd($fiber);
+        
         return view('report.stock', compact('categories', 'subcategories', 'stockResults', 'purchaseResults'));
     }
 }

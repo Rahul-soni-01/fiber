@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="col-sm-1">
-                            <label class="form-control" style="padding:.375rem .4rem;">{{$item1['tax']}}</label>
+                            <label class="form-control" style="padding:.375rem .4rem;">{{$item1['tax'] ?? 0}}</label>
                         </div>
 
                         <div class="col-sm-2">

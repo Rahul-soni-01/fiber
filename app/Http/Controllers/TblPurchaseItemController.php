@@ -68,6 +68,7 @@ class TblPurchaseItemController extends Controller
                     'scid' => $request->scname[$i],
                     'qty' => $request->qty[$i],
                     'unit' => $request->unit[$i],
+                    'tax' => $request->p_tax[$i],
                     'price' => $request->rate[$i],
                     'total' => $request->total[$i],
                 ]);

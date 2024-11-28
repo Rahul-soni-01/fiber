@@ -10,8 +10,8 @@
                         <th>Subcategory Name</th> 
                         <th>Total Purchase Qty</th> 
                         <th>Total in Stock Qty</th> 
-                        <th>Not Used(Status 0 Qty)</th> 
                         <th>Used(Status 1 Qty)</th> 
+                        <th>Not Used(Status 0 Qty)</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -40,8 +40,8 @@
                             @endphp
             
                             <td>{{ $stock_qty }}</td> <!-- Total in Stock Qty -->
-                            <td>{{ $status_0_qty }}</td> <!-- Status 0 Qty -->
                             <td>{{ $status_1_qty }}</td> <!-- Status 1 Qty -->
+                            <td>{{ $status_0_qty }}</td> <!-- Status 0 Qty -->
                         </tr>
                     @endforeach
                 </tbody>

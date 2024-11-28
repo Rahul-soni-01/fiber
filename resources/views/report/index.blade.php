@@ -61,15 +61,16 @@
                             @endif
 
                             @if(auth()->user()->type === 'user')
+                            <th>Part</th>
                             <th>SR(FIBER)</th>
                             <th>Temp No.</th>
                             <th>M.J</th>
                             <th>Type</th>
-                            <th>ISOLATOR</th>
+                            {{-- <th>ISOLATOR</th>
                             <th>FIBER NANO</th>
                             <th>FIBER MOTO</th>
                             <th>CAVITY NANI </th>
-                            <th>CAVITY FINAL</th>
+                            <th>CAVITY FINAL</th> --}}
                             <th>Action</th>
                             @endif
 
@@ -87,11 +88,16 @@
                         $type = auth()->user()->type;
                         $temp = $report->temp;
                         $status = $report->status;
+                        $part = $report->part;
 
                         if (in_array($type, ['electric', 'cavity', 'user']) && $temp == '0') {
                             continue;
                         }
                         if ($status != '0' && $type == 'account') {
+                            continue;
+                        }
+
+                        if ($type == 'electric' && $part == '0') {
                             continue;
                         }
                         @endphp
@@ -133,15 +139,16 @@
 
                             @endif
                             @if($type === 'user')
+                            <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
                             <td>{{ $report->sr_no_fiber }}</td>
                             <td>{{ $report->temp }}</td>
                             <td>{{ $report->m_j }}</td>
                             <td>{{ $report->Type }}</td>
-                            <td>{{ $report->sr_isolator }}</td>
+                            {{-- <td>{{ $report->sr_isolator }}</td>
                             <td>{{ $report->sr_fiber_nano }}</td>
                             <td>{{ $report->sr_fiber_moto }}</td>
                             <td>{{ $report->nani_cavity }}</td>
-                            <td>{{ $report->final_cavity }}</td>
+                            <td>{{ $report->final_cavity }}</td> --}}
                             <td>
                                 <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                             </td>

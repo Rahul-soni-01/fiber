@@ -372,7 +372,8 @@
                     var qty = parseFloat(qtyElement.value) || 0;
                     var rate = parseFloat(document.getElementById(`data[${i}][rate]`).value) || 0;
                     var p_tax = parseFloat(document.getElementById(`data[${i}][p_tax]`).value) || 0;
-                    console.log(i, 'qty:', qty, 'rate:', rate, 'p_tax:', p_tax);
+                    // console.log(i, 'qty:', qty, 'rate:', rate, 'p_tax:', p_tax);
+                    var amount_d = parseFloat(document.getElementById(`amount_d`).value) || 0;
 
                     var total = qty * rate;
                     var taxAmount = (total * p_tax) / 100;
@@ -383,6 +384,7 @@
                 }
             }
             sub_total();
+            // calculateshipping();
         }
 
         function rate() {
@@ -394,15 +396,20 @@
             document.getElementById(`sub_total`).value = amount.toFixed(2);
             document.getElementById(`amount_r`).value = amount.toFixed(2);
             document.getElementById(`amount`).value = amount.toFixed(2);
+            sub_total();
         }
 
         function calculateshipping() {
             var amount = parseFloat(document.getElementById(`amount_r`).value) || 0;
             var shipping_cost = parseFloat(document.getElementById(`shipping_cost`).value) || 0;
+            var round_total = parseFloat(document.getElementById(`round_total`).value) || 0;
 
             var total = shipping_cost + amount;
+            
             document.getElementById(`sub_total`).value = total.toFixed(2);
-            document.getElementById(`amount`).value = total.toFixed(2);
+            var aftertotal = total - round_total;
+
+            document.getElementById(`amount`).value = aftertotal.toFixed(2);
 
         }
 
@@ -415,9 +422,19 @@
                     subtotal += total;
                 }
             }
-            document.getElementById("sub_total").value = subtotal.toFixed(2);
-            document.getElementById("amount_r").value = subtotal.toFixed(2);
             document.getElementById("amount_d").value = subtotal.toFixed(2);
+            // var rate_r = document.getElementById(`rate_r`).value;
+            var rate_r = parseFloat(document.getElementById(`rate_r`).value) || 0;
+            if (isNaN(rate_r) || isNaN(subtotal)) {
+                console.error("Invalid input: rate_r or subtotal is not a number.");
+            } else {
+                let rate = rate_r * subtotal;
+                console.log("Rate:", rate);
+
+                document.getElementById("amount_r").value = rate.toFixed(2);
+                document.getElementById("sub_total").value = rate.toFixed(2);
+            }
+            
             calculateAmount();
         }
 
@@ -426,6 +443,8 @@
             var roundAmount = parseFloat(document.getElementById("round_total").value) || 0;
             var amount = subtotal - roundAmount;
             document.getElementById("amount").value = amount.toFixed(2);
+
+            calculateshipping();
         }
 
         var row = 1;
@@ -482,7 +501,10 @@
                 success: function (response) {
                     var data = response.data;
                     var srled = document.getElementById(`srled_${row_id}`);
-                    
+
+                    var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
+                    inputField.removeAttribute('value');
+
                     srled.innerHTML = '<option value="">Select</option>';
                     
                     data.forEach(function(item) {
@@ -513,7 +535,21 @@
                 success: function (response) {
                     var data = response.data;
                     var srled = document.getElementById(`srcard_${row_id}`);
-                    
+
+                    var inputField = document.querySelector(`input[list="srcard_${row_id}"]`);
+                    inputField.removeAttribute('value');
+                    console.log(inputField);
+                    /*const element12 = document.querySelector(`.sr_card_${row_id}`);
+
+                    document.querySelector(`.sr_card_${row_id}`).textContent = ""; 
+                    document.querySelector(`.sr_card_${row_id}`).innerHTML = "";   
+                
+                    if (element12) {
+                        element12.value = ""; // Clear the value
+                    } else {
+                        console.error(`Element with class 'srled_${row_id}' not found.`);
+                    }*/
+
                     srled.innerHTML = '<option value="">Select</option>';
                     
                     data.forEach(function(item) {

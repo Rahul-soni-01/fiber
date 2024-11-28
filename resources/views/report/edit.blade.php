@@ -48,7 +48,8 @@
                             </td>
                             <td>
                                 @if(auth()->user()->type == 'admin' ||
-                                auth()->user()->type === 'user' )
+                                auth()->user()->type === 'user' || auth()->user()->type == 'electric' ||
+                                auth()->user()->type === 'cavity')
                                 <h5>Temp no.</h5>
                                 @endif
                             </td>
@@ -60,7 +61,7 @@
                             </td>
                             <td>
                                 @if( auth()->user()->type == 'admin' || auth()->user()->type == 'cavity' ||
-                                auth()->user()->type === 'user')
+                                auth()->user()->type === 'user' )
                                 <input type="text" id="wn" name="worker_name" class="form-control"
                                     placeholder="Enter Worker Name"
                                     value="{{ old('worker_name', $report->worker_name) }}">
@@ -71,7 +72,7 @@
                         </tr>
                         @endif
                         @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user' || auth()->user()->type
-                        === 'electric')
+                        === 'electric' || auth()->user()->type == 'cavity')
                         <tr>
                             <td>
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type === 'user' ||
@@ -89,10 +90,12 @@
                                 @endif
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' ||
-                                auth()->user()->type === 'user')
+                                {{-- {{ dd(auth()->user()->type);}} --}}
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type === 'user' ||
+                                auth()->user()->type == 'electric'|| auth()->user()->type == 'cavity')
                                 <input type="text" id="temp" name="temp" class="form-control"
-                                    placeholder="Enter Temperature" value="{{ old('temp', $report->temp) }}">
+                                    placeholder="Enter Temperature" value="{{ old('temp', $report->temp) }}"
+                                    @if(auth()->user()->type ==='cavity'){ readonly } @endif>
 
                                 @endif
                             </td>
@@ -114,12 +117,14 @@
                         === 'cavity')
                         <tr>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type === 'cavity')
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type === 'cavity' ||
+                                auth()->user()->type === 'user')
                                 <h5>Warranty</h5>
                                 @endif
                             </td>
                             <td>
-                                @if(auth()->user()->type == 'admin' || auth()->user()->type === 'cavity')
+                                @if(auth()->user()->type == 'admin' || auth()->user()->type === 'cavity' ||
+                                auth()->user()->type === 'user')
                                 <select id="warranty" name="warranty" required class="form-control"
                                     @if(auth()->user()->type == 'electric' ||
                                     auth()->user()->type === 'cavity' ) disabled @endif>
@@ -181,6 +186,7 @@
                         @endphp
 
                         @foreach($tbl_cards as $index => $tbl_card)
+                        {{-- {{dd($tbl_card);}} --}}
                         <tr>
                             <td class="d-flex">
                                 <h5>CARD</h5>
@@ -196,10 +202,11 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control" name="sr_card[]" list="srcard_{{ $index }}"
-                                    placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                                <input type="text" class="form-control sr_card_{{ $index }}" name="sr_card[]" list="srcard_{{ $index }}"
+                                    placeholder="Select or enter a new sr no, Small Alpha Plz" required
+                                    value="{{ $tbl_card ? $tbl_card->sr_card : '' }}">
                                 <datalist id="srcard_{{ $index }}">
-                                    <!-- Dynamic options can be added here -->
+                                    <option value="{{ $tbl_card->sr_card }}" selected>{{ $tbl_card->sr_card }}</option>
                                 </datalist>
                             </td>
                             <td>
@@ -239,6 +246,7 @@
                     @endphp
 
                     @foreach($tbl_leds as $index => $led)
+                    {{-- {{ dd($led);}} --}}
                     <tr>
                         <td class="d-flex ">
                             <h5>LED</h5>
@@ -264,10 +272,10 @@
                                 @endif
                             </select> --}}
 
-                            <input type="text" class="form-control" name="srled[]" list="srled_0"
-                                placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                            <datalist id="srled_0">
-
+                            <input type="text" class="form-control srled_{{ $index }}" name="srled[]" list="srled_{{ $index }}"
+                                placeholder="Select or enter a new sr no, Small Alpha Plz" required value="{{ $led ? $led->sr_led : '' }}" >
+                            <datalist id="srled_{{ $index }}">
+                                <option value="{{ $led->sr_led }}" selected>{{ $led->sr_led }}</option>
                             </datalist>
                         </td>
                         <td>
@@ -325,6 +333,7 @@
                                 value="{{$report->sr_aom_qswitch}}" class="form-control"> --}}
                             <select required id="qsswitch" class="form-control select2" name="sr_aom_qswitch">
                                 <option value="">Select</option>
+                                <option value="{{ $report->sr_aom_qswitch}}" selected>{{$report->sr_aom_qswitch }}</option>
                                 @foreach($qsswitches as $qsswitch)
                                 <option value="{{ $qsswitch->id }}">{{ $qsswitch->serial_no }}</option>
                                 @endforeach
@@ -346,6 +355,7 @@
                     @endif
                     @if( auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' || auth()->user()->type
                     === 'user')
+                    {{-- {{dds($report)}} --}}
                     <tr>
                         <td>
                             <h5>CAVITY NANI</h5>
