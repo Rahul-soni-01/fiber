@@ -47,8 +47,7 @@
                                                  @endif</td>
                         <td>
                             @if(auth()->user()->type == 'admin'  || auth()->user()->type == 'electric')
-                            <input type="text" id="temp" name="temp" class="form-control"
-                            placeholder="Enter Temporary No">
+                            <span>{{ $report->temp }}</span>
                             @endif
                         </td>
                         <td>

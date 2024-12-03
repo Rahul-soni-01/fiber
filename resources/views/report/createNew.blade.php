@@ -4,7 +4,7 @@
         <div class="main" id="main">
 
 
-            <form action="{{route('report.store')}}" method="post">
+            <form action="{{route('report.stockReport')}}" method="post">
                 @csrf
 
                 @if (session('error'))
@@ -12,7 +12,7 @@
                     {{ session('error') }}
                 </div>
                 @endif
-                {{-- <div class="table table-bordered custom-border datatable-remove" id="tbl"> --}}
+                
                     <div class="container-fluid">
                         <div class="row mb-3">
 
@@ -35,7 +35,7 @@
                         <div class="container-fluid">
                             <div class="row mb-3">
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')
-                                <!-- Part Label -->
+                                
                                 <div class="col-12 col-md-2">
                                     <h5>Part</h5>
                                 </div>
@@ -47,18 +47,18 @@
                                         <option value="1">Repairing</option>
                                     </select>
                                 </div>
-                                <!-- Temp No. Label -->
+                                
                                 <div class="col-12 col-md-2">
                                     <h5>Temp no.</h5>
                                 </div>
                                 @endif
 
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'cavity')
-                                <!-- Worker Name Label -->
+                                
                                 <div class="col-12 col-md-2">
                                     <h5>WORKER NAME</h5>
                                 </div>
-                                <!-- Worker Name Input -->
+                                
                                 <div class="col-12 col-md-3">
                                     <input type="text" id="wn" name="worker_name" class="form-control"
                                         placeholder="Enter Worker Name">
@@ -67,6 +67,7 @@
                             </div>
                         </div>
                         @endif
+
                         @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' ||
                         auth()->user()->type === 'admin' || auth()->user()->type === 'user')
                         <div class="container-fluid">
@@ -83,7 +84,11 @@
                                         placeholder="Enter SR No Fiber">
                                 </div>
                                 @endif
-
+                                
+                                @if(auth()->user()->type === 'electric')
+                                <div class="col-12 col-md-2"></div>
+                                <div class="col-12 col-md-3"></div>
+                                @endif
                                 @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
                                 <!-- Temporary No Input -->
                                 <div class="col-12 col-md-2">
@@ -202,7 +207,7 @@
 
                         @endif
                         <div id="TBody"></div>
-                        <div class="row mb-3">
+                        <div class="row mt-3">
                             <div class="col-12 col-md-2">
                                 <strong>NOTE</strong>
                             </div>
@@ -212,13 +217,13 @@
                         </div>
 
                         <!-- Second Note Row -->
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-12 offset-md-2 col-md-10">
                                 <textarea id="note2" name="note2" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
-                {{-- </div> --}}
+                
                 <button type="submit" class="btn btn-success">SUBMIT</button>
             </form>
         </div>

@@ -74,8 +74,8 @@ class TblStockController extends Controller
         
         $invoice_no = 103;
         $price = 1000;
-        $cid = 1;  // 1,1,1
-        $scid = 2; // 1,2,3
+        $cid = 14;  // 1,1,1
+        $scid = 27; // 1,2,3
     
         for ($i = -1; $i <= 101; $i++) {
             if($i === 99){

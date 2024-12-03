@@ -81,7 +81,7 @@
                             <th>Action</th>
                             @endif
                     </thead>
-
+{{-- E:\fiber (2)\fiber\routes\web.php --}}
                     <tbody>
                         @foreach ($reports as $report)
                         @php
@@ -90,7 +90,7 @@
                         $status = $report->status;
                         $part = $report->part;
 
-                        if (in_array($type, ['electric', 'cavity', 'user']) && $temp == '0') {
+                        if (in_array($type, ['electric', 'cavity', 'user']) && $status == '1') {
                             continue;
                         }
                         if ($status != '0' && $type == 'account') {

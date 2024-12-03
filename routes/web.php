@@ -104,16 +104,19 @@ Route::middleware('auth')->group(function () {
     ;  //View Item By Sr No.
 
     // Route::view('add_report', 'add_report')->name('report.add');
+    Route::post('/stockReport', [ReportController::class, 'stockReport'])->name('report.stockReport');
 
     Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
     Route::get('report-layout', [ReportController::class, 'layout'])->name('report.layout');
     Route::post('/layout-store', [ReportController::class, 'layout_store'])->name('layout.store');
+
     Route::get('report', [ReportController::class, 'index'])->name('report.index');
     Route::get('report-create', [ReportController::class, 'create'])->name('report.create');
     Route::post('/report-store', [ReportController::class, 'store'])->name('report.store');
     Route::get('report-show-{report_id}', [ReportController::class, 'show'])->name(('report.show'));
     Route::get('report-edit-{report_id}', [ReportController::class, 'edit'])->name(('report.edit'));
-    Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
+    // Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
+    Route::put('report-update-{report_id}', [ReportController::class, 'Newupdate'])->name(('report.update'));
     Route::get('report-reject', [ReportController::class, 'reject'])->name(('report.reject'));
     Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
 

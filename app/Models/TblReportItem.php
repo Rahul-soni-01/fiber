@@ -12,15 +12,22 @@ class TblReportItem extends Model
 
     protected $fillable = [
         'scid',
+        'unit',
         'report_id',
-        'sr_card',
-        'amp_card',
-        'volt_card',
-        'watt_card',
+        'dead_status',
+        'tblstock_id',
+        'sr_no',
+        'amp',
+        'volt',
+        'watt',
     ];
     public function tbl_sub_category()
     {
         return $this->belongsTo(tbl_sub_category::class, 'scid', 'id'); 
+    }
+    public function tbl_stocks()
+    {
+        return $this->belongsTo(TblStock::class, 'tblstock_id', 'id'); 
     }
     public function report()
     {

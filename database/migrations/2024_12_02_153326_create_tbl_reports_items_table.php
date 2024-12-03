@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('tbl_reports_items', function (Blueprint $table) {
             $table->id();
             $table->string('scid')->nullable();
+            $table->string('unit')->nullable();
             $table->string('report_id')->nullable();
-            $table->string('sr_card')->nullable();
-            $table->string('amp_card')->nullable();
-            $table->string('volt_card')->nullable();
-            $table->string('watt_card')->nullable();
+            $table->string('tblstock_id')->nullable();
+            $table->string('sr_no')->nullable();
+            $table->string('amp')->nullable();
+            $table->string('volt')->nullable();
+            $table->string('watt')->nullable();
             $table->timestamps();
         });
     }
