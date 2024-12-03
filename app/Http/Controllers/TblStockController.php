@@ -58,7 +58,7 @@ class TblStockController extends Controller
                 return redirect()->back()->withErrors("Invoice No or Serial No already exists")->withInput();
             }
         }
-        return redirect()->route('inward.index')->with('success', 'Stock added successfully');
+        return redirect()->route('report.stock');
 
     }
 
@@ -68,4 +68,34 @@ class TblStockController extends Controller
         $data = TblStock::where('scid', $subcategory_id)->where('status', '0')->get();
         return response()->json(['data' => $data]);
     }
+
+    public function datainsert()
+    {
+        
+        $invoice_no = 103;
+        $price = 1000;
+        $cid = 1;  // 1,1,1
+        $scid = 2; // 1,2,3
+    
+        for ($i = -1; $i <= 101; $i++) {
+            if($i === 99){
+                return redirect()->route('home');
+            }
+            
+            TblStock::create([
+                'date' => now()->format('Y-m-d'),
+                'invoice_no' => $invoice_no,
+                'cid' => $cid,
+                'scid' => $scid,
+                'serial_no' =>3001 + $i,
+                'qty' => 1,
+                'price' => $price,
+                'priceofUnit' => $price/100,
+                'status' => 0,
+                'dead_status' => 0,
+            ]);
+        }
+       
+    }
+    
 }

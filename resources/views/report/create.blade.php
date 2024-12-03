@@ -164,7 +164,7 @@
 
                                 <select required onchange="tbl_card(0);" id="card_0" class="tbl_sub ml-2 form-control"
                                     name="card[]">
-                                    <option value="">Select</option>
+                                    <option value="" selected disabled>Select</option>
                                     @foreach($cards as $card)
                                     <option value="{{ $card->id }}">{{ $card->sub_category_name }}</option>
                                     @endforeach
@@ -323,6 +323,14 @@
                                 <option value="{{ $hr->id }}">{{ $hr->serial_no }}</option>
                                 @endforeach
                             </select>
+
+                            {{-- <select required id="sr_hr" class="form-control select2" name="sr_hr">
+                                <option value="" disabled selected>Select</option>
+                                <option value="{{ $report->sr_hr}}" selected>{{$report->sr_hr }}</option>
+                                @foreach($hrs as $hr)
+                                    <option value="{{ $hr->id }}">{{ $hr->serial_no }}</option>
+                                @endforeach
+                            </select> --}}
                         </td>
                         <td></td>
                         <td></td>
@@ -336,7 +344,14 @@
                         </td>
                         <td><input type="number" step="0.01" id="srfibernano" name="sr_fiber_nano" class="form-control">
                         </td>
-                        <td></td>
+                        <td>
+                            <select required id="sr_fiber_nano" class="form-control " name="sr_fiber_nano">
+                                <option value="" selected disabled>Select</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                               
+                            </select>
+                        </td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -348,7 +363,13 @@
                         </td>
                         <td><input type="number" id="srfibermoto" step="0.01" name="sr_fiber_moto" class="form-control">
                         </td>
-                        <td></td>
+                        <td> 
+                            <select required id="sr_fiber_moto" class="form-control " name="sr_fiber_moto">
+                                <option value="" selected disabled>Select</option>
+                                <option value="5">5 </option>
+                                <option value="6">6 </option>
+                            </select>
+                        </td>
                         <td></td>
                         <td></td>
                     </tr>

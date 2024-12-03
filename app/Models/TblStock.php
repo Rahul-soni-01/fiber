@@ -20,7 +20,8 @@ class TblStock extends Model
         'qty', 
         'price', 
         'priceofUnit',
-        'status'
+        'status',
+        'dead_status'
     ];
 
     public function category()

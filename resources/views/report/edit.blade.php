@@ -313,9 +313,17 @@
                             <h5>ISOLATOR</h5>
                         </td>
                         <td>
-                            <input type="text" id="srisolator" name="sr_isolator"
+                            {{-- <input type="text" id="srisolator" name="sr_isolator"
                                 value="{{ old('sr_isolator', $report->sr_isolator) }}" class="form-control"
-                                placeholder="Enter SR Isolator">
+                                placeholder="Enter SR Isolator"> --}}
+
+                                <select required id="sr_isolator" class="form-control select2" name="sr_isolator">
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="{{ $report->sr_isolator}}" selected>{{$report->sr_isolator }}</option>
+                                    @foreach($isolators as $isolator)
+                                    <option value="{{ $isolator->serial_no }}">{{ $isolator->serial_no }}</option>
+                                    @endforeach
+                                </select>
                         </td>
                         <td></td>
                         <td></td>
@@ -389,9 +397,12 @@
                         <td>
                             <h5>COMBINER(3*1)</h5>
                         </td>
-                        <td><input type="text" id="srcombiner3" name="sr_combiner_3_1" class="form-control"
+                        <td>
+                            <input type="text" id="srcombiner3" name="sr_combiner_3_1" class="form-control"
                                 placeholder="Enter SR Combiner 3-1"
                                 value="{{ old('sr_combiner_3_1', $report->sr_combiner_3_1) }}">
+
+                               
                         </td>
                         <td><input type="text" id="ampcombiner3" name="amp_combiner_3_1" class="form-control"
                                 placeholder="Enter Amp Combiner 3-1"
@@ -412,9 +423,20 @@
                         <td>
                             <h5>COUPLAR(2*2)</h5>
                         </td>
-                        <td><input type="text" id="srcouplar2" name="sr_couplar_2_2" class="form-control"
-                                placeholder="Enter SR Couplar 2-2"
-                                value="{{ old('sr_couplar_2_2', $report->sr_couplar_2_2) }}"></td>
+                        <td>
+                            <input type="text" id="srcouplar2" name="sr_couplar_2_2" class="form-control"
+                                placeholder="Enter Couplar 2-2"
+                                value="{{ old('sr_couplar_2_2', $report->sr_couplar_2_2) }}">
+                            
+                                {{-- <select required id="qsswitch" class="form-control select2" name="sr_aom_qswitch">
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="{{ $report->sr_couplar_2_2}}" selected>{{$report->sr_couplar_2_2 }}</option>
+                                    @foreach($couplars as $couplar)
+                                    <option value="{{ $couplar->id }}">{{ $couplar->serial_no }}</option>
+                                    @endforeach
+                                    adajanvesu@@1234
+                                </select> --}}  
+                        </td>
                         <td><input type="text" id="ampcouplar2" name="amp_couplar_2_2" class="form-control"
                                 placeholder="Enter Amp Couplar 2-2"
                                 value="{{ old('amp_couplar_2_2', $report->amp_couplar_2_2) }}"></td>
@@ -424,8 +446,6 @@
                         <td><input type="text" id="wattcouplar2" name="watt_couplar_2_2" class="form-control"
                                 placeholder="Enter Watt Couplar 2-2"
                                 value="{{ old('watt_couplar_2_2', $report->watt_couplar_2_2) }}"></td>
-
-
                     </tr>
                     @endif
                     @if(auth()->user()->type === 'cavity' || auth()->user()->type === 'admin' || auth()->user()->type
@@ -434,9 +454,18 @@
                         <td>
                             <h5>HR</h5>
                         </td>
-                        <td><input type="text" id="srhr" name="sr_hr" class="form-control" placeholder="Enter SR HR"
-                                value="{{ old('sr_hr', $report->sr_hr) }}"></td>
-
+                        <td>
+                            {{-- <input type="text" id="srhr" name="sr_hr" class="form-control" placeholder="Enter SR HR"
+                                value="{{ old('sr_hr', $report->sr_hr) }}"> --}}
+                            
+                            <select required id="sr_hr" class="form-control select2" name="sr_hr">
+                                <option value="" disabled selected>Select</option>
+                                <option value="{{ $report->sr_hr}}" selected>{{$report->sr_hr }}</option>
+                                @foreach($hrs as $hr)
+                                    <option value="{{ $hr->id }}">{{ $hr->serial_no }}</option>
+                                @endforeach
+                            </select>
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>

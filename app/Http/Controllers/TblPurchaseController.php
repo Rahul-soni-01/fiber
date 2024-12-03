@@ -164,9 +164,13 @@ class TblPurchaseController extends Controller
                 ->where('cid', $req_category)
                 ->where('scid', $req_subcategory)
                 ->count();
+            $getsr_nos = TblStock::where('invoice_no', $invoice_no)
+                ->where('cid', $req_category)
+                ->where('scid', $req_subcategory)
+                ->get();
 
             // dd($existingrecord);
-            return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories', 'invoice_no', 'req_category', 'req_subcategory', 'req_qty', 'req_price', 'req_unit', 'sr_no', 'existingrecord'));
+            return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories', 'invoice_no', 'req_category', 'req_subcategory', 'req_qty', 'req_price', 'req_unit', 'sr_no', 'existingrecord','getsr_nos'));
         }
         return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories'));
     }

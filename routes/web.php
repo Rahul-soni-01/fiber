@@ -16,6 +16,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleItemController;
 use App\Http\Controllers\TblCustomerController;
 
+
 use Illuminate\Support\Facades\Hash;
 
 
@@ -35,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/check_stock', [TblStockController::class, 'check_stock'])->name('check_stock');
     // Home Blade
     Route::get('/home', [TblUserController::class, 'show'])->name('home');
+    
+    Route::get('/datainsert', [TblStockController::class, 'datainsert'])->name('datainsert');
+
 
     // User Crud
     Route::get('/user', [TblUserController::class, 'index'])->name('user.index');

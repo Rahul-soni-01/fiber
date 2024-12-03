@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('priceofUnit', 10, 2);
             $table->string('status')->nullable();
+            $table->string('dead_status')->nullable();
             $table->timestamps();
 
             $table->foreign('cid')->references('id')->on('tbl_categories')->onDelete('cascade');

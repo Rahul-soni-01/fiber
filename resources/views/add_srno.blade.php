@@ -93,7 +93,8 @@
                             <input type="text" class="form-control" id="price" name="price" placeholder="Add Price">
                         </div>
 
-                        <input type="hidden" class="form-control" id="unit" name="unit" placeholder="Add unit" value="{{ $req_unit }}">
+                        <input type="hidden" class="form-control" id="unit" name="unit" placeholder="Add unit"
+                            value="{{ $req_unit }}">
 
                         <!-- Submit Button -->
                         <div class="col-md">
@@ -103,7 +104,7 @@
                     <div class="row">
                         <div class="col-md-5 mt-3 offset-md-2">
                             @if($sr_no === '1'){
-                                Add Serial No
+                            Add Serial No
                             }
                             @endif
                             <div class="row append_fields"></div>
@@ -114,12 +115,12 @@
 
             </form>
             @else
-                !! Data already in stock !! </br>
-                {{-- {{ dd($existingrecord); }} --}}
-                <a href="{{ route('inward.index') }}" class="sub-item">Show Inward</a>
+            !! Data already in stock !! </br>
+            {{-- {{ dd($existingrecord); }} --}}
+            <a href="{{ route('inward.index') }}" class="sub-item">Show Inward</a>
 
-                <script>
-                    window.onload = function() {
+            <script>
+                window.onload = function() {
                         Swal.fire({
                             icon: "error",
                             title: 'error!',
@@ -128,7 +129,19 @@
                             confirmButtonText: 'OK'
                         });
                     };
-                </script>
+            </script>
+
+            @foreach($getsr_nos as $getsr_no)
+            <div class="row">
+                <div class="col-md-3 mt-3 offset-md-2">
+                     Serial No    
+                </div>
+                <div class="col mt-3">
+                    {{ $getsr_no->serial_no}}
+                </div>
+            </div>
+            @endforeach
+
             @endif
         </div>
     </x-slot>

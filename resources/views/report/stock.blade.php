@@ -19,7 +19,7 @@
                     @foreach ($purchaseResults as $purchaseResult)
                         <tr>
                             <td>{{ $index++ }}</td>
-                            <td>{{ $purchaseResult->subCategory->sub_category_name }}</td>
+                            <td>{{ $purchaseResult->subCategory->sub_category_name ?? 'N/A'}}</td>
                             <td>{{ $purchaseResult->total_purchase_qty }}</td>
             
                             @php

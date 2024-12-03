@@ -17,6 +17,7 @@ use App\Models\tbl_category;
 use App\Models\TblCustomer;
 use App\Models\SaleItem;
 use App\Models\Sale;
+use App\Models\TblReportItem;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -41,6 +42,9 @@ class ReportController extends Controller
     {
         if ($this->checkPermission($request, 'add')) {
             $sub_categories = tbl_sub_category::where('cid', 1)->get();
+            $all_sub_categories = tbl_sub_category::with('category')
+                ->orderBy('cid')
+                ->get();
             $categoryId = tbl_category::whereRaw('LOWER(category_name) = ?', ['card'])->value('id');
             $cards = tbl_sub_category::where('cid', $categoryId)->get();
 
@@ -72,16 +76,18 @@ class ReportController extends Controller
                 ->where('invoice_no', $invoice_no)
                 ->where('status', 0)
                 ->get();
-            // dd($isolators);
+            // dd($hrs);
 
             $customers = TblCustomer::all();
-            return view("report.create", compact('sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
+            // return view("report.create", compact('sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
+            return view("report.createNew", compact('all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
         }
         return redirect('/unauthorized');
     }
 
     public function store(Request $request)
     {
+        dd($request->all());
 
         $validator = Validator::make(
             $request->all(),
@@ -192,9 +198,92 @@ class ReportController extends Controller
         $report_id = $report->id;
 
         $amount = 0;
+        $sub_category = $request->input('sub_category');
+        if ($sub_category) {
+            foreach ($request->srled as $index => $serial_no) {
+                $sr_no_or_not = $request->sr_no_or_not[$index];
+                $dead = $request->dead[$index];
+                if ($sr_no_or_not == 1) {
+                    $existingRecord = TblStock::where('serial_no', $serial_no)
+                        ->where('status', 0)
+                        ->first();
+                    if ($existingRecord) {
+                        $amount += $existingRecord->priceofUnit;
+                        // $invoice_no =$existingRecord->invoice_no;
+                        $existingRecord->status = 1;
+                        if($dead == 1){
+                            $existingRecord->dead_status = 1;
+                        }
+                        $existingRecord->save();
+                    }else{
+
+                    $party = tbl_party::where('party_name', 'opening stock')->first();
+                    $party_id = $party->id;
+                    $invoice = tbl_purchase::where('pid', $party_id)->first();
+                    $invoice_no = $invoice->invoice_no;
+                    $date = $invoice->date;
+                    $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
+                        ->where('scid', $request->sub_category[$index])
+                        ->first();
+                    $cid = $invoice_data->cid;
+
+                    $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
+                        ->where('scid', $request->sub_category[$index])
+                        ->where('cid', $cid)
+                        ->where('serial_no', $serial_no_card)
+                        ->count();
+
+                    if ($serial_no_card_count === 0) {
+                        $newStock = TblStock::create([
+                            'date' => $date,
+                            'invoice_no' => $invoice_no,
+                            'cid' => $cid,
+                            'scid' => $request->card[$index],
+                            'serial_no' => $serial_no_card,
+                            'qty' => 1,
+                            'price' => 1,
+                            'priceofUnit' => 1,
+                            'status' => 1,
+                        ]);
+                        $amount += 1;
+
+                        $TblStockinsertedIds[] = $newStock->id;
+                    } else {
+                        $avalabile = 1;
+                        try {
+                            TblStock::whereIn('id', $TblStockinsertedIds)->delete();
+                        } catch (\Exception $e) {
+                            return redirect()->back()->with('error', 'Failed to delete inserted records: ' . $e->getMessage());
+                        }
+                        if ($TblcardinsertedIds) {
+                            TblCard::whereIn('id', $TblcardinsertedIds)->delete();
+                        }
+                        $Record_delete = Report::where('id', $report_id)->first();
+                        if ($Record_delete) {
+                            $Record_delete->delete();
+                        }
+                        return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
+                    }
+                }elseif($sr_no_or_not == 0){
+
+                }
+
+                $tbl_card = new TblReportItem();
+                $tbl_card->scid = $request->card[$index];
+                $tbl_card->report_id = $report_id;
+                $tbl_card->sr_card = 0;
+                $tbl_card->amp_card = $request->sr_cardamp[$index] ?? null;
+                $tbl_card->volt_card = $request->sr_cardvolt[$index] ?? null;
+                $tbl_card->watt_card = $request->sr_cardwatt[$index] ?? null;
+                try {
+                    $tbl_card->save();
+                } catch (\Exception $e) {
+                    return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
+                }
+            }
+        }
 
         // srisolator and tblstock status 1
-
         $isolators = $request->input('srisolator');
         if ($isolators) {
             $TblStockisolators = TblStock::where('id', $isolators)->first();
@@ -258,7 +347,7 @@ class ReportController extends Controller
         if (!empty($request->sr_card)) {
             foreach ($request->sr_card as $index => $serial_no_card) {
 
-                $sub_category_name = tbl_sub_category::where('id', $request->card[$index])
+                $sub_category_name = tbl_sub_category::where('id', operator: $request->card[$index])
                     ->first();
                 $sub_category_id = $sub_category_name->id;
                 $category_id = $sub_category_name->cid;
@@ -504,6 +593,7 @@ class ReportController extends Controller
                 $firstErrorMessage = $validator->errors()->first();
                 return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
             }
+
             $report = Report::find($id);
             $report->worker_name = $request->worker_name;
             $report->sr_cavity_nani = $request->sr_cavity_nani;
@@ -521,6 +611,18 @@ class ReportController extends Controller
             $report->note2 = $request->note2;
             // $report->status = null;
             $report->save();
+            $report_id = $id;
+            $amount = 0;
+
+            $sr_hr = $request->input('sr_hr');
+            if ($sr_hr) {
+                $TblStocksr_hr = TblStock::where('serial_no', $sr_hr)->first();
+                if ($TblStocksr_hr) {
+                    $amount += $TblStocksr_hr->priceofUnit;
+                    $TblStocksr_hr->status = 1;
+                    $TblStocksr_hr->save();
+                }
+            }
             if ($report->save()) {
                 return redirect()->route('report.index')->with('success', 'Report added successfully.');
             } else {
@@ -567,7 +669,7 @@ class ReportController extends Controller
             $report->temp = 0;
             $report->status = 0;
             $report->sale_status = 0;
-            if($request->part == 1){
+            if ($request->part == 1) {
                 $report->r_status = 0;
             }
             $report->save();
@@ -575,9 +677,9 @@ class ReportController extends Controller
             $report_id = $id;
 
             $amount = 0;
-    
+
             // srisolator and tblstock status 1
-    
+
             $isolators = $request->input('srisolator');
             if ($isolators) {
                 $TblStockisolators = TblStock::where('id', $isolators)->first();
@@ -587,7 +689,7 @@ class ReportController extends Controller
                     $TblStockisolators->save();
                 }
             }
-    
+
             // qsswitch and tblstock status 1
             $srqsswitch = $request->input('sr_aom_qswitch');
             if ($srqsswitch) {
@@ -598,7 +700,7 @@ class ReportController extends Controller
                     $TblStocksrqsswitch->save();
                 }
             }
-    
+
             // hr and tblstock status 1
             $sr_hr = $request->input('sr_hr');
             if ($sr_hr) {
@@ -609,7 +711,7 @@ class ReportController extends Controller
                     $TblStocksr_hr->save();
                 }
             }
-    
+
             // fiber in mate update tbl_stoke qty and upadte final amount as well...
             $sr_fiber_nano = $request->input('sr_fiber_nano');
             $sr_fiber_moto = $request->input('sr_fiber_moto');
@@ -618,23 +720,23 @@ class ReportController extends Controller
                 if ($final_fiber) {
                     $sub_category_name = tbl_sub_category::where('sub_category_name', 'Fiber')
                         ->first();
-    
+
                     $sub_category_id = $sub_category_name->id;
                     $category_id = $sub_category_name->cid;
-    
+
                     $TblStock = TblStock::where('scid', $sub_category_id)
                         ->where('cid', $category_id)
                         ->where('qty', '!=', value: 0)
                         ->first();
-    
+
                     if ($TblStock) {
                         $amount += $final_fiber * $TblStock->priceofUnit;
                     }
                 }
             }
-    
+
             // sr_card in mate update tbl_stoke qty and upadte final amount and insert in tbl_cards if any serial number repeat then delete all insert id and delete report as well and redirct back as well...
-    
+
             $avalabile = 0;
             $TblStockinsertedIds = [];
             $TblcardinsertedIds = [];
@@ -647,7 +749,7 @@ class ReportController extends Controller
                         ->first();
                     $sub_category_id = $sub_category_name->id;
                     $category_id = $sub_category_name->cid;
-    
+
                     if ($avalabile == 0) {
                         $tbl_card = new TblCard();
                         $tbl_card->scid = $request->card[$index];
@@ -661,14 +763,14 @@ class ReportController extends Controller
                         } catch (\Exception $e) {
                             return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
                         }
-    
+
                         $TblcardinsertedIds[] = $tbl_card->id;
                     }
-    
+
                     $TblStock = TblStock::where('scid', $sub_category_id)
                         ->where('cid', $category_id)
                         ->first();
-    
+
                     if ($TblStock) {
                         $amount += $TblStock->priceofUnit;
                     } else {
@@ -681,13 +783,13 @@ class ReportController extends Controller
                             ->where('scid', $request->card[$index])
                             ->first();
                         $cid = $invoice_data->cid;
-    
+
                         $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
                             ->where('scid', $request->card[$index])
                             ->where('cid', $cid)
                             ->where('serial_no', $serial_no_card)
                             ->count();
-    
+
                         if ($serial_no_card_count === 0) {
                             $newStock = TblStock::create([
                                 'date' => $date,
@@ -701,7 +803,7 @@ class ReportController extends Controller
                                 'status' => 1,
                             ]);
                             $amount += 1;
-    
+
                             $TblStockinsertedIds[] = $newStock->id;
                         } else {
                             $avalabile = 1;
@@ -723,7 +825,7 @@ class ReportController extends Controller
                 }
             }
             // sr_led in mate update tbl_stock qty and upadte final amount and insert in tbl_leds if any serial number repeat then delete all insert id and delete report as well and redirct back as well...
-    
+
             $avalabile = 0;
             $TblStockinsertedIds = [];
             $TblLedinsertedIds = [];
@@ -748,13 +850,13 @@ class ReportController extends Controller
                             ->where('scid', $request->sub_category[$index])
                             ->first();
                         $cid = $invoice_data->cid;
-    
+
                         $serial_no_count = TblStock::where('invoice_no', $invoice_no)
                             ->where('scid', $request->sub_category[$index])
                             ->where('cid', $cid)
                             ->where('serial_no', $serial_no)
                             ->count();
-    
+
                         if ($serial_no_count === 0) {
                             $newStock = TblStock::create([
                                 'date' => $date,
@@ -768,7 +870,7 @@ class ReportController extends Controller
                                 'status' => 1,
                             ]);
                             $amount += 1;
-    
+
                             $TblStockinsertedIds[] = $newStock->id;
                         } else {
                             $avalabile = 1;
@@ -796,7 +898,7 @@ class ReportController extends Controller
                         $tbl_led->volt_led = $request->voltled[$index] ?? null;
                         $tbl_led->watt_led = $request->wattled[$index] ?? null;
                         $tbl_led->save();
-    
+
                         $TblLedinsertedIds[] = $tbl_led->id;
                     }
                 }
@@ -804,7 +906,7 @@ class ReportController extends Controller
             $Record_update_final_amount = Report::where('id', $report_id)->first();
             $Record_update_final_amount->final_amount = $amount;
             $Record_update_final_amount->save();
-    
+
             if ($report->save()) {
                 return redirect()->route('report.index')->with('success', 'Report updated successfully.');
             } else {
@@ -846,7 +948,7 @@ class ReportController extends Controller
             $srqsswitch = $request->input('sr_aom_qswitch');
             if ($srqsswitch) {
                 $TblStocksrqsswitch = TblStock::where('id', $srqsswitch)->first();
-               
+
                 if ($TblStocksrqsswitch) {
                     $amount += $TblStocksrqsswitch->priceofUnit;
                     $TblStocksrqsswitch->status = 1;
@@ -860,12 +962,12 @@ class ReportController extends Controller
             if (!empty($request->sr_card)) {
                 $report_id = $id;
                 foreach ($request->sr_card as $index => $serial_no_card) {
-    
+
                     $sub_category_name = tbl_sub_category::where('id', $request->card[$index])
                         ->first();
                     $sub_category_id = $sub_category_name->id;
                     $category_id = $sub_category_name->cid;
-    
+
                     if ($avalabile == 0) {
                         $tbl_card = new TblCard();
                         $tbl_card->scid = $request->card[$index];
@@ -879,14 +981,14 @@ class ReportController extends Controller
                         } catch (\Exception $e) {
                             return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
                         }
-    
+
                         $TblcardinsertedIds[] = $tbl_card->id;
                     }
-    
+
                     $TblStock = TblStock::where('scid', $sub_category_id)
                         ->where('cid', $category_id)
                         ->first();
-    
+
                     if ($TblStock) {
                         $amount += $TblStock->priceofUnit;
                     } else {
@@ -899,13 +1001,13 @@ class ReportController extends Controller
                             ->where('scid', $request->card[$index])
                             ->first();
                         $cid = $invoice_data->cid;
-    
+
                         $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
                             ->where('scid', $request->card[$index])
                             ->where('cid', $cid)
                             ->where('serial_no', $serial_no_card)
                             ->count();
-    
+
                         if ($serial_no_card_count === 0) {
                             $newStock = TblStock::create([
                                 'date' => $date,
@@ -919,7 +1021,7 @@ class ReportController extends Controller
                                 'status' => 1,
                             ]);
                             $amount += 1;
-    
+
                             $TblStockinsertedIds[] = $newStock->id;
                         } else {
                             $avalabile = 1;
@@ -945,7 +1047,7 @@ class ReportController extends Controller
             $TblStockinsertedIds = [];
             $TblLedinsertedIds = [];
             if (!empty($request->srled)) {
-    
+
                 foreach ($request->srled as $index => $serial_no) {
                     $existingRecord = TblStock::where('serial_no', $serial_no)
                         ->where('status', 0)
@@ -965,13 +1067,13 @@ class ReportController extends Controller
                             ->where('scid', $request->sub_category[$index])
                             ->first();
                         $cid = $invoice_data->cid;
-    
+
                         $serial_no_count = TblStock::where('invoice_no', $invoice_no)
                             ->where('scid', $request->sub_category[$index])
                             ->where('cid', $cid)
                             ->where('serial_no', $serial_no)
                             ->count();
-    
+
                         if ($serial_no_count === 0) {
                             $newStock = TblStock::create([
                                 'date' => $date,
@@ -985,7 +1087,7 @@ class ReportController extends Controller
                                 'status' => 1,
                             ]);
                             $amount += 1;
-    
+
                             $TblStockinsertedIds[] = $newStock->id;
                         } else {
                             $avalabile = 1;
@@ -1020,7 +1122,7 @@ class ReportController extends Controller
             $Record_update_final_amount = Report::where('id', $report_id)->first();
             $Record_update_final_amount->final_amount = $amount;
             $Record_update_final_amount->save();
-    
+
             if ($report->save()) {
                 return redirect()->route('report.index')->with('success', 'Report added successfully.');
             } else {
@@ -1058,22 +1160,76 @@ class ReportController extends Controller
             DB::raw('SUM(CASE WHEN status = 0 THEN qty ELSE 0 END) as qty_status_0'),
             DB::raw('SUM(CASE WHEN status = 1 THEN qty ELSE 0 END) as qty_status_1')
         )
+            ->with('subCategory')
             ->groupBy('scid')
             ->get();
 
-        $purchaseResults = tbl_purchase_item::select('scid',DB::raw('SUM(qty) as total_purchase_qty'))
+        $purchaseResults = tbl_purchase_item::select('scid', DB::raw('SUM(qty) as total_purchase_qty'))
+            ->with('subCategory')
             ->groupBy('scid')
             ->get();
 
-        $sr_combiner_3_1 = Report::select(DB::raw('SUM(sr_combiner_3_1) as total_report'))->get();
+        $sr_combiner_3_1 = Report::select(DB::raw('SUM(sr_combiner_3_1) as total_report'))->first();
+
+        $usedCards = TblCard::select('scid', DB::raw('COUNT(*) as count'))
+            ->groupBy('scid')
+            ->get();
+
         $fiberData = Report::select(
             DB::raw('SUM(sr_fiber_nano) as total_nano'),
             DB::raw('SUM(sr_fiber_moto) as total_moto')
         )->first();
-        
         $fiber = $fiberData->total_nano + $fiberData->total_moto;
-        // dd($fiber);
-        
+
+        $sr_cavity = Report::select(
+            DB::raw('SUM(sr_cavity_nani) as total_cav_nano'),
+            DB::raw('SUM(sr_cavity_moti) as total_cav_moto')
+        )->first();
+        $sr_cavity_total = $sr_cavity->total_cav_nano + $sr_cavity->total_cav_moto;
+
+        $usedsr_hr = Report::select(DB::raw('SUM(sr_hr) as total_report_sr_hr'))->first();
+        // $counter = 0;
+        foreach ($purchaseResults as $purchaseResult) {
+            foreach ($stockResults as $stockResult) {
+                // $counter++;
+
+                // if(empty($purchaseResult->subCategory->sub_category_name)){
+                //     dd($purchaseResult);
+                // }
+
+                if ($purchaseResult->subCategory->sub_category_name == 'Fiber' && $stockResult->subCategory->sub_category_name == 'Fiber') {
+                    $stockResult['qty_status_1'] = $fiber;
+                    $stockResult['qty_status_0'] = $stockResult['total_qty'] - $fiber;
+                }
+
+                if ($purchaseResult->subCategory->sub_category_name == '3*1' && $stockResult->subCategory->sub_category_name == '3*1') {
+                    $stockResult['qty_status_1'] = $sr_combiner_3_1->total_report;
+                    $stockResult['qty_status_0'] = $stockResult['total_qty'] - $sr_combiner_3_1->total_report;
+                }
+
+                if ($purchaseResult->subCategory->sub_category_name == 'HR' && $stockResult->subCategory->sub_category_name == 'HR') {
+                    $stockResult['qty_status_1'] = $usedsr_hr->total_report_sr_hr;
+                    $stockResult['qty_status_0'] = $stockResult['total_qty'] - $usedsr_hr->total_report_sr_hr;
+                }
+
+                if ($purchaseResult->subCategory->sub_category_name == 'Power PCB' && $stockResult->subCategory->sub_category_name == 'Power PCB') {
+                    foreach ($usedCards as $usedCard) {
+                        if ($usedCard->scid == $stockResult->scid) {
+                            $stockResult['qty_status_1'] = $usedCard->count;
+                            $stockResult['qty_status_0'] = $stockResult['total_qty'] - $usedCard->count;
+                        }
+                    }
+                }
+
+                if ($purchaseResult->subCategory->sub_category_name == 'Control card' && $stockResult->subCategory->sub_category_name == 'Control card') {
+                    $stockResult['qty_status_1'] = $sr_combiner_3_1->total_report;
+                    $stockResult['qty_status_0'] = $stockResult['total_qty'] - $sr_combiner_3_1->total_report;
+                }
+
+            }
+
+        }
+
         return view('report.stock', compact('categories', 'subcategories', 'stockResults', 'purchaseResults'));
     }
 }

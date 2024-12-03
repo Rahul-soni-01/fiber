@@ -483,13 +483,124 @@
             $(buttonId).closest('tr').remove();
         }
 
+        function NewremoveRow(buttonId){
+            $(buttonId).closest('.align-items-center').remove();
+        }
+
+        function updateHiddenInput(checkbox) {
+            console.log(checkbox);
+            if (checkbox.checked) {
+                checkbox.previousElementSibling.value = "1";
+            } else {
+                checkbox.previousElementSibling.value = "0";
+            }
+        }
+
+        function syncHiddenInput(checkbox, rowId) {
+            const hiddenInput = document.querySelector(`.hidden-dead-${rowId}`);
+            if (checkbox.checked) {
+                hiddenInput.disabled = true; // Disable the hidden input if the checkbox is checked
+            } else {
+                hiddenInput.disabled = false; // Enable the hidden input if the checkbox is unchecked
+            }
+        }
+
         function tbl_stock(row_id){
+            // alert(row_id);
             var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
+
+            var subcategoryElement = document.getElementById(`subcategory_${row_id}`);
+            var Tdhtml = document.getElementById(`col_${row_id}`);
+            if (Tdhtml && Tdhtml.innerHTML.trim() !== '') {
+                Tdhtml.innerHTML= '';
+            }
+
+            var selectedOption = subcategoryElement.options[subcategoryElement.selectedIndex];
+
+            if (selectedOption && selectedOption.dataset.unit) {
+                var Datasr_no = selectedOption.dataset.sr_no;
+              if(Datasr_no === "0"){
+                Tdhtml.innerHTML += `
+                
+                </div> <!-- End previous col div -->
+                <div class="row mt-1" id="row_${row_id}">
+                    <input type="hidden" name="sr_no_or_not[]" value="0">
+
+                    <div class="col-12 col-md-4">
+                        <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                        <datalist id="srled_${row_id}">
+                            <option value=""></option>
+                        </datalist>
+                    </div>
+
+                    <div class="col-12 col-md-2">                     
+                        <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row_id}">
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <input type="hidden" id="ampled_${row_id}" name="ampled[]" value="">
+
+                        <input type="hidden" id="voltled_${row_id}" name="voltled[]" value="">
+
+                        <input type="hidden" id="wattled_${row_id}" name="wattled[]" value="">
+                    </div>
+                    <div class="col-12 col-md-2">
+                            <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row_id})">
+
+                        <lable class="m-2">Dead</lable>
+                    </div>
+                    
+                    <div class="col-12 col-md-2 text-right">
+                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
+                    </div>
+                </div>`;
+                
+              }
+              else if(Datasr_no === "1"){
+                    Tdhtml.innerHTML += `
+                        </div> <!-- End previous col div -->
+                        <div class="row" id="row_${row_id}">
+                            <input type="hidden" name="sr_no_or_not[]" value="1">
+                            <div class="col-12 col-md-3">
+                                <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                                <datalist id="srled_${row_id}">
+                                    <option value=""></option>
+                                </datalist>
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <input type="text" id="ampled_${row_id}" name="ampled[]" class="form-control" placeholder="Enter AMP">
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <input type="text" id="voltled_${row_id}" name="voltled[]" class="form-control" placeholder="Enter VOLT">
+                            </div>
+                            <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row_id}">
+
+                            <div class="col-12 col-md-5 d-flex justify-content-between">
+                                
+                                <input type="text" id="wattled_${row_id}" name="wattled[]" class="form-control" placeholder="Enter WATT">
+                            
+                                <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row_id})">
+                                
+                                <lable class="m-2">Dead</lable>
+                                <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                } 
+               
+            }
+            
             if (!subcategory_id) {
                 console.error(`Element with ID subcategory_${row_id} not found!`);
                 return; 
             }
             
+            if(!row_id){
+                console.error(`Element with ID subcategory_${row_id} not found!`);
+                return; 
+            }
+           
             csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             $.ajax({
                 type: "POST",
@@ -501,11 +612,16 @@
                 success: function (response) {
                     var data = response.data;
                     var srled = document.getElementById(`srled_${row_id}`);
+                    // console.log(srled);
+                    
+                    // var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
+                    // console.log(inputField);
+                    // inputField.removeAttribute('value');
+                    // if (inputField) {
+                        // inputField.value = '';
+                    // }
 
-                    var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
-                    inputField.removeAttribute('value');
-
-                    srled.innerHTML = '<option value="">Select</option>';
+                    srled.innerHTML = '<option value="" selected disable>Select</option>';
                     
                     data.forEach(function(item) {
                         var option = document.createElement("option");
@@ -513,6 +629,7 @@
                         option.text = item.serial_no;
                         srled.appendChild(option);
                     });
+                    // console.log(srled);
                 }
             });
         }
@@ -543,7 +660,7 @@
 
                     document.querySelector(`.sr_card_${row_id}`).textContent = ""; 
                     document.querySelector(`.sr_card_${row_id}`).innerHTML = "";   
-                
+
                     if (element12) {
                         element12.value = ""; // Clear the value
                     } else {
@@ -561,6 +678,7 @@
                 }
             });
         }
+
         function Add_Cards(cards){
             $('#TCards').append(`
                 <tr>
@@ -652,7 +770,31 @@
             $(button).closest('.custom-row').remove();
         }
 
+        function NewReportCreateRow(subcategories){
+            $('#TBody').append(`
+              <div class="row mb-3 align-items-center" id="row_${row}">
+                    <!-- Select Dropdown -->
+                    <div class="col-12 col-md-2 d-flex">
+                        <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub ml-2 form-control">
+                            <option value="" selected disabled>Select</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Dynamic Content -->
+                    <div class="col-12 col-md-10" id="col_${row}"></div>
+                </div>
+            `);
+            if (subcategories && Array.isArray(subcategories)) {
+                subcategories.forEach(sub_category => {
+                    $(`#subcategory_${row}`).append(`<option value="${sub_category.id}" data-unit="${sub_category.unit}" data-sr_no="${sub_category.sr_no}">${sub_category.category.category_name} - ${sub_category.sub_category_name}</option>`);
+                });
+            }
+            row++;
+        }
         
+        // <td class="d-flex"><input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT" >
+        //                 <button type="button" onclick="removeRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</i></button>
+        //             </td>
     </script>
 </body>
 
