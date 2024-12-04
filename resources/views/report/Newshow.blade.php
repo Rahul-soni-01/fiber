@@ -107,9 +107,10 @@
                 </div>
 
                 @foreach($reportitems as $reportitem)
+                {{-- {{dd($reportitem)}} --}}
                 <div class="row mt-4 ">
                     <div class="col-md-3">
-                        <strong>Sub Category Name :- {{ $reportitem->tbl_sub_category->sub_category_name }}</strong>
+                        <strong>{{ $reportitem->tbl_sub_category->category->category_name}} - {{ $reportitem->tbl_sub_category->sub_category_name }}</strong>
                     </div>
                     <div class="col-md-2">
                         <span>{{ $reportitem->sr_no }}</span>
@@ -123,9 +124,9 @@
                     <div class="col-md-2">
                         <span>{{ $reportitem->watt }}</span>
                         <span class="float-right">
-                            @if($reportitem->tbl_stocks->dead_status == 0)
+                            @if($reportitem->dead_status == 0)
                             <span class="badge badge-success">Active</span>
-                            @elseif($reportitem->tbl_stocks->dead_status == 1)
+                            @elseif($reportitem->dead_status == 1)
                             <span class="badge badge-danger">Dead</span>
                             {{-- Dead Stock --}}
                             @else

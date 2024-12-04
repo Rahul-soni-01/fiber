@@ -34,21 +34,7 @@
     <!-- Select2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-    <script>
-        /*$('#select-type').selectize({
-            create: function(input) {
-                return {
-                    value: input,
-                    text: input
-                };
-            },
-            onChange: function(value) {
-                if (!value) {
-                    this.clear();
-                }
-            }
-        });*/
-    </script>
+   
 </head>
 
 <body>
@@ -150,13 +136,6 @@
                 </ul>
             </li>
 
-            <li id="Report" class="sidebar">
-                <a class="sub-btn" id="sub-btn-show"><i class="ri-layout-line"></i>Report layout <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('report.layout') }}" id="view" class="sub-item">layout Report</a></li>
-                </ul>
-            </li>
             <li id="Sale" class="sidebar">
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Sale <i
                         class="ri-arrow-down-s-line"></i></a>
@@ -193,7 +172,10 @@
 
             $(document).ready(function () {
             // $('.table').DataTable();
-                $('.table').not('.datatable-remove').DataTable();
+                $('.table').not('.datatable-remove').DataTable({
+                    pageLength: 25 
+                });
+                
             });
 
             const menuButton = document.getElementById('menu');
@@ -525,14 +507,12 @@
                 </div> <!-- End previous col div -->
                 <div class="row mt-1" id="row_${row_id}">
                     <input type="hidden" name="sr_no_or_not[]" value="0">
-
                     <div class="col-12 col-md-4">
                         <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
                         <datalist id="srled_${row_id}">
                             <option value=""></option>
                         </datalist>
                     </div>
-
                     <div class="col-12 col-md-2">                     
                         <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row_id}">
                     </div>
@@ -548,12 +528,10 @@
 
                         <lable class="m-2">Dead</lable>
                     </div>
-                    
                     <div class="col-12 col-md-2 text-right">
                         <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
                     </div>
                 </div>`;
-                
               }
               else if(Datasr_no === "1"){
                     Tdhtml.innerHTML += `

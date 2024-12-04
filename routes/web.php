@@ -107,8 +107,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/stockReport', [ReportController::class, 'stockReport'])->name('report.stockReport');
 
     Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
-    Route::get('report-layout', [ReportController::class, 'layout'])->name('report.layout');
-    Route::post('/layout-store', [ReportController::class, 'layout_store'])->name('layout.store');
+
 
     Route::get('report', [ReportController::class, 'index'])->name('report.index');
     Route::get('report-create', [ReportController::class, 'create'])->name('report.create');

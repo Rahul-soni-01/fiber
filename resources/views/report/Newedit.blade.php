@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-md-3">
                             <select id="part" name="part" class="form-control" @if(in_array(auth()->user()->type,
-                                ['electric', 'cavity'])) disabled @endif>
+                                ['electric', 'cavity'])) readonly @endif>
                                 <option value="" disabled {{ old('part', $report->part ?? null) === null ? 'selected' :
                                     '' }}>
                                     Select Part
@@ -38,41 +38,56 @@
                             <h5>Temp no.</h5>
                         </div>
                         <div class="col-md-2">
+                            @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
                             <h5>WORKER NAME</h5>
+                            @endif
                         </div>
                         <div class="col-md-3">
+                            @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
                             <input type="text" id="wn" name="worker_name" class="form-control"
-                                placeholder="Enter Worker Name" value="{{ old('worker_name', $report->worker_name) }}">
-                        </div>
+                                placeholder="Enter Worker Name" value="{{ old('worker_name', $report->worker_name) }}"
+                                @if($report->part == 1 && in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif
+                                >
+                                @endif
+                            </div>
                     </div>
                     @endif
 
                     @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                     <div class="row mt-3">
                         <div class="col-md-2">
+                            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                             <h5>SR(FIBER)</h5>
+                            @endif
                         </div>
                         <div class="col-md-3">
+                            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                             <input type="text" id="srfiber" name="sr_no_fiber" class="form-control"
                                 placeholder="Enter SR No Fiber" value="{{ old('sr_no_fiber', $report->sr_no_fiber) }}"
-                                @if(auth()->user()->type === 'electric') readonly @endif>
+                                @if(in_array(auth()->user()->type,
+                                ['electric', 'cavity'])) readonly @endif>
+                                @endif
                         </div>
                         <div class="col-md-2">
                             <input type="text" id="temp" name="temp" class="form-control"
                                 placeholder="Enter Temperature" value="{{ old('temp', $report->temp) }}"
-                                @if(auth()->user()->type === 'cavity') readonly @endif>
+                                @if(in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif>
                         </div>
                         <div class="col-md-2">
+                            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                             <h5>M.J</h5>
+                            @endif
                         </div>
                         <div class="col-md-3">
+                            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                             <input type="text" id="mj" name="m_j" class="form-control" placeholder="Enter M/J Value"
-                                value="{{ old('m_j', $report->m_j) }}">
+                                value="{{ old('m_j', $report->m_j) }}" @if(in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif>
+                            @endif
                         </div>
                     </div>
                     @endif
 
-                    @if(in_array(auth()->user()->type, ['admin', 'user', 'cavity']))
+                    @if(in_array(auth()->user()->type, ['admin', 'user', 'cavity','electric']))
                     <div class="row mt-3">
                         <div class="col-md-2">
                             <h5>Warranty</h5>
@@ -87,10 +102,13 @@
                         </div>
                         <div class="col-md-2"></div>
                         <div class="col-md-2">
+                            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                             <h5>Type</h5>
+                            @endif
                         </div>
                         <div class="col-md-3">
-                            <select id="type" name="type" class="form-control" required>
+                            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
+                            <select id="type" name="type" class="form-control" required @if(in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif>
                                 <option value="">Select Type</option>
                                 <option value="15" {{ old('type', $report->type) == '15' ? 'selected' : '' }}>15
                                 </option>
@@ -101,6 +119,7 @@
                                 <option value="26" {{ old('type', $report->type) == '26' ? 'selected' : '' }}>26
                                 </option>
                             </select>
+                            @endif
                         </div>
                     </div>
                     @endif
@@ -145,9 +164,10 @@
                         </div>
                     </div>
                     @foreach($reportitems as $reportitem)
+                    
                     <div class="row mt-4 ">
                         <div class="col-md-3">
-                            <strong>Sub Category Name :- {{ $reportitem->tbl_sub_category->sub_category_name }}</strong>
+                            <strong>{{ $reportitem->tbl_sub_category->category->category_name}}:- {{ $reportitem->tbl_sub_category->sub_category_name }}</strong>
                         </div>
                         <div class="row col-md-9">
                             <div class="col-md-3">
@@ -165,9 +185,9 @@
                             </div>
                             <div class="col-md-2">
                                 <span >
-                                    @if($reportitem->tbl_stocks->dead_status == 0)
+                                    @if($reportitem->dead_status == 0)
                                     <span class="badge badge-success">Active</span>
-                                    @elseif($reportitem->tbl_stocks->dead_status == 1)
+                                    @elseif($reportitem->dead_status == 1)
                                     <span class="badge badge-danger">Dead</span>
                                     {{-- Dead Stock --}}
 

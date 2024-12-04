@@ -81,22 +81,22 @@
                             <th>Action</th>
                             @endif
                     </thead>
-{{-- E:\fiber (2)\fiber\routes\web.php --}}
+
                     <tbody>
-                        @foreach ($reports as $report)
+                        @foreach ($reports as $index => $report)
                         @php
                         $type = auth()->user()->type;
                         $temp = $report->temp;
                         $status = $report->status;
                         $part = $report->part;
-
+                        
                         if (in_array($type, ['electric', 'cavity', 'user']) && $status == '1') {
                             continue;
                         }
-                        if ($status != '0' && $type == 'account') {
+                        if ($status != 0 && $type == 'account') {               
                             continue;
                         }
-
+                        
                         if ($type == 'electric' && $part == '0') {
                             continue;
                         }

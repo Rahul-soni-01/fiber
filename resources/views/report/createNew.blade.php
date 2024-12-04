@@ -17,10 +17,10 @@
                         <div class="row mb-3">
 
                             @if( auth()->user()->type === 'godown')
-                            <div class="col-12 col-md-3">
-                                <label for="pname" class="form-label font-weight-bold">PARTY NAME</label>
+                            <div class="col-12 col-md-2">
+                                <h5>Supplier Name</h5>
                             </div>
-                            <div class="col-12 col-md-9">
+                            <div class="col-12 col-md-3">
                                 <select class="form-control" id="pname" name="party_name" required>
                                     <option value="" disabled selected>Select</option>
                                     @foreach($customers as $customer)
@@ -30,9 +30,10 @@
                             </div>
                             @endif
                         </div>
+                        
 
                         @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
-                        <div class="container-fluid">
+                        
                             <div class="row mb-3">
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')
                                 
@@ -65,12 +66,12 @@
                                 </div>
                                 @endif
                             </div>
-                        </div>
+                        
                         @endif
 
                         @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' ||
                         auth()->user()->type === 'admin' || auth()->user()->type === 'user')
-                        <div class="container-fluid">
+                        
                             <div class="row mb-3">
                                 @if(auth()->user()->type === 'godown' || auth()->user()->type === 'admin' ||
                                 auth()->user()->type === 'user')
@@ -109,11 +110,11 @@
                                 </div>
                                 @endif
                             </div>
-                        </div>
+                        
                         @endif
                         @if( auth()->user()->type === 'admin' || auth()->user()->type === 'user' || auth()->user()->type
                         === 'godown')
-                        <div class="container-fluid">
+                        
                             <div class="row mb-3">
                                 @if(auth()->user()->type == 'admin' || auth()->user()->type === 'godown')
                                 <!-- Warranty Label -->
@@ -152,11 +153,11 @@
                                     </select>
                                 </div>
                                 @endif
-                            </div>
+                            
                         </div>
 
                         @endif
-                        <div class="container-fluid">
+                        
                             <div class="row mb-3">
                                 <!-- Empty Columns -->
                                 <div class="col-12 col-md-2"></div>
@@ -173,9 +174,9 @@
                             </div>
                             <div class="col-12 col-md-2"></div>
                             </div>
-                        </div>
+                        
                         @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
-                        <div class="container-fluid">
+                        
                             <div class="row ">
                                 <!-- ITEM -->
                                 <div class="col-12 col-md-3">
@@ -203,7 +204,7 @@
                                     <h5>Action</h5>
                                 </div>
                             </div>
-                        </div>
+                        
 
                         @endif
                         <div id="TBody"></div>
@@ -223,8 +224,9 @@
                             </div>
                         </div>
                     </div>
-                
-                <button type="submit" class="btn btn-success">SUBMIT</button>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button type="submit" class="btn btn-success mt-4">SUBMIT</button>
+                    </div>
             </form>
         </div>
     </x-slot>
