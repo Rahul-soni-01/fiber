@@ -13,11 +13,11 @@
             </div>
             @endif
 
+            <p>New reports Fillter.</p>
             <label class="switch">
                 <input type="checkbox" id="toggleSwitch">
                 <span class="slider"></span>
             </label>
-
 
             @if ($reports->isEmpty())
             <p>No reports found.</p>
@@ -30,55 +30,40 @@
                             <th>Date</th>
 
                             @if(auth()->user()->type === 'admin' )
-                            <th>Serial No.</th>
-                            <th>Type</th>
-                            <th>Worker Name</th>
-                            <th>Part</th>
-                            <th>Final Amount</th>
-                            <th>Action</th>
+                                <th>Serial No.</th>
+                                <th>Type</th>
+                                <th>Worker Name</th>
+                                <th>Part</th>
+                                <th>Final Amount</th>
+                                <th>Action</th>
                             @endif
 
                             @if(auth()->user()->type === 'electric')
-                            <th>Part</th>
-                            <th>Note</th>
-                            <th>Action</th>
+                                <th>Part</th>
+                                <th>Note</th>
+                                <th>Action</th>
                             @endif
+                            
                             @if(auth()->user()->type === 'cavity')
-                            <th>Part</th>
-                            {{-- <th>SR Cavity Nani</th>
-                            <th>SR Cavity Moti</th>
-                            <th>SR Combiner 3.1</th>
-                            <th>AMP Combiner 3.1</th>
-                            <th>Volt Combiner 3.1</th>
-                            <th>Watt Combiner 3.1</th>
-                            <th>SR Couplar 2.2</th> --}}
-                            {{-- <th>AMP Couplar 2.2</th>
-                            <th>Volt Couplar 2.2</th> --}}
-                            {{-- <th>Watt Couplar 2.2</th> --}}
-                            <th>SR(FIBER)</th>
-                            <th>Note</th>
-                            <th>Action</th>
+                                <th>Part</th>
+                                <th>SR(FIBER)</th>
+                                <th>Note</th>
+                                <th>Action</th>
                             @endif
 
                             @if(auth()->user()->type === 'user')
-                            <th>Part</th>
-                            <th>SR(FIBER)</th>
-                            <th>Temp No.</th>
-                            <th>M.J</th>
-                            <th>Type</th>
-                            {{-- <th>ISOLATOR</th>
-                            <th>FIBER NANO</th>
-                            <th>FIBER MOTO</th>
-                            <th>CAVITY NANI </th>
-                            <th>CAVITY FINAL</th> --}}
-                            <th>Action</th>
+                                <th>Part</th>
+                                <th>SR(FIBER)</th>
+                                <th>Temp No.</th>
+                                <th>M.J</th>
+                                <th>Type</th>
+                                <th>Action</th>
                             @endif
 
                             @if(auth()->user()->type === 'account')
-                            <th>SR(FIBER)</th>
-                            <th>Type</th>
-                            
-                            <th>Action</th>
+                                <th>SR(FIBER)</th>
+                                <th>Type</th>
+                                <th>Action</th>
                             @endif
                     </thead>
 
@@ -143,7 +128,7 @@
                             <td>{{ $report->sr_no_fiber }}</td>
                             <td>{{ $report->temp }}</td>
                             <td>{{ $report->m_j }}</td>
-                            <td>{{ $report->Type }}</td>
+                            <td>{{ $report->tbl_type->name }}</td>
                             {{-- <td>{{ $report->sr_isolator }}</td>
                             <td>{{ $report->sr_fiber_nano }}</td>
                             <td>{{ $report->sr_fiber_moto }}</td>
@@ -175,7 +160,7 @@
 
                             @if(auth()->user()->type === 'account')
                             <td>{{ $report->sr_no_fiber }}</td>
-                            <td>{{ $report->type }}</td>                            
+                            <td>{{ $report->tbl_type->name }}</td>                            
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
                                         class="ri-eye-fill"></i></a>

@@ -62,5 +62,9 @@ class Report extends Model
     {
         return $this->hasMany(TblCard::class, 'report_id', 'id');
     }
+    public function tbl_type() // Singular, since it's a belongsTo relationship
+    {
+        return $this->belongsTo(TblType::class, 'type', 'id');
+    }
 
 }

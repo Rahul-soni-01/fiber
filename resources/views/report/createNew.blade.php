@@ -146,10 +146,9 @@
                                 <div class="col-12 col-md-3">
                                     <select id="type" name="type" required class="form-control">
                                         <option value="">Select Type</option>
-                                        <option value="15">15</option>
-                                        <option value="18">18</option>
-                                        <option value="21">21</option>
-                                        <option value="26">26</option>
+                                        @foreach($types as $type)
+                                        <option value="{{$type->id}}">{{$type->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 @endif
@@ -157,7 +156,7 @@
                         </div>
 
                         @endif
-                        
+                        @if( auth()->user()->type !== 'godown')
                             <div class="row mb-3">
                                 <!-- Empty Columns -->
                                 <div class="col-12 col-md-2"></div>
@@ -173,7 +172,8 @@
                                 </button>
                             </div>
                             <div class="col-12 col-md-2"></div>
-                            </div>
+                        </div>
+                        @endif
                         
                         @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
                         
@@ -204,10 +204,12 @@
                                     <h5>Action</h5>
                                 </div>
                             </div>
+                        </div>
                         
 
                         @endif
                         <div id="TBody"></div>
+                            
                         <div class="row mt-3">
                             <div class="col-12 col-md-2">
                                 <strong>NOTE</strong>

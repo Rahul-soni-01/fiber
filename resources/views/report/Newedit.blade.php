@@ -217,6 +217,8 @@
                         </div>
                     </div>
 
+                    
+
                     @if(in_array(auth()->user()->type, ['admin', 'user']))
                     <div class="row mt-3">
                         <div class="col-md-3">

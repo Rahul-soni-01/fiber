@@ -15,6 +15,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleItemController;
 use App\Http\Controllers\TblCustomerController;
+use App\Http\Controllers\TbltypeController;
 
 
 use Illuminate\Support\Facades\Hash;
@@ -75,6 +76,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/party-{id}', [TblPartyController::class, 'update'])->name('party.update');
     Route::delete('/party-{party_id}', [TblPartyController::class, 'destroy'])->name('party.destroy');
     Route::get('search', [TblPartyController::class, 'search'])->name('party.search');
+    
+    // Type Crud
+    Route::get('type-create', [TbltypeController::class, 'create'])->name('type.create');
+    Route::get('type', [TbltypeController::class, 'index'])->name('type.index');
+    Route::post('type-store', [TbltypeController::class, 'store'])->name('type.store');
+    Route::get('edit-type-{type_id}', [TbltypeController::class, 'edit'])->name(('type.edit'));
+    Route::put('/type-{id}', [TbltypeController::class, 'update'])->name('type.update');
+    Route::delete('/type-{type_id}', [TbltypeController::class, 'destroy'])->name('type.destroy');
+    // Route::get('search', [TbltypeController::class, 'search'])->name('type.search');
 
     // category crud
     Route::get('category', [TblCategoryController::class, 'index'])->name('category.index');

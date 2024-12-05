@@ -79,6 +79,15 @@
                 </ul>
 
             </li>
+            <li id="Type" class="sidebar">
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-line"></i>Types<i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('type.index') }}" id="view" class="sub-item">Show Types</a></li>
+                    <li><a href="{{ route('type.create') }}" id="add" class="sub-item">Add Types</a></li>
+                </ul>
+
+            </li>
             {{-- @if('admin' === auth()->user()->type) --}}
 
             <li id="Permission" class="sidebar">

@@ -18,6 +18,7 @@ use App\Models\TblCustomer;
 use App\Models\SaleItem;
 use App\Models\Sale;
 use App\Models\TblReportItem;
+use App\Models\Tbltype;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -31,8 +32,12 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_leds', 'tbl_cards')->get();
+            $reports = Report::with('tbl_leds', 'tbl_cards','tbl_type')->get();
             // dd($reports);
+            if(auth()->user()->type === 'godown'){
+                // dd("de");
+                return view("report.godownindex", compact('reports'));
+            }
             return view("report.index", compact('reports'));
         }
         return redirect('/unauthorized');
@@ -47,13 +52,13 @@ class ReportController extends Controller
                 ->get();
             $categoryId = tbl_category::whereRaw('LOWER(category_name) = ?', ['card'])->value('id');
             $cards = tbl_sub_category::where('cid', $categoryId)->get();
+            $types = Tbltype::orderBy('id', 'asc')->get();
 
             $party_id = tbl_party::where('party_name', 'opening stock')->value('id');
-            // dd($party_id);
-
+            
             $invoice = tbl_purchase::where('pid', $party_id)->first();
-
             $invoice_no = $invoice->invoice_no;
+
             $isolators = TblStock::where('cid', 8)
                 ->where('scid', 22)
                 ->where('invoice_no', $invoice_no)
@@ -80,7 +85,7 @@ class ReportController extends Controller
 
             $customers = TblCustomer::all();
             // return view("report.create", compact('sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
+            return view("report.createNew", compact('types','all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
         }
         return redirect('/unauthorized');
     }
@@ -444,7 +449,12 @@ class ReportController extends Controller
     {
         if ($request->sr_no) {
             $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber', $request->sr_no)->get();
-            return view('report.search', compact('reports'));
+            $reportIds = $reports->pluck('id');
+
+            $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')
+            ->whereIn('report_id', $reportIds)
+            ->get();
+            return view('report.search', compact('reports','reportitems'));
         }
         return view('report.search');
     }
@@ -1062,7 +1072,6 @@ class ReportController extends Controller
         }
         return redirect('/unauthorized');
     }
-
     public function stock()
     {
         $categories = tbl_category::all();
@@ -1358,7 +1367,6 @@ class ReportController extends Controller
                 }
             }
 
-
             $Record_update_final_amount = Report::where('id', $report_id)->first();
             $Record_update_final_amount->final_amount = $amount;
             $Record_update_final_amount->save();
@@ -1375,10 +1383,11 @@ class ReportController extends Controller
     public function Newupdate(Request $request, $id)
     {
         if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
+
             $validator = Validator::make(
                 $request->all(),
                 [
-                    'worker_name' => 'required|string|max:255',
+                    // 'worker_name' => 'required|string|max:255',
                 ]
             );
             if ($validator->fails()) {
