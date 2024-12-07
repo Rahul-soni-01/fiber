@@ -32,9 +32,9 @@
 
                     </div>
                     <div class="col-md-4">
-                        <select id="party_name" name="party_name" class="form-control" placeholder="Enter Party Name"
+                        <select id="party_name" name="party_name" class="form-control" placeholder="Select Supplier Name"
                             required>
-                            <option value="" disabled selected>Choose a Party</option>
+                            <option value="" disabled selected>Choose a Supplier</option>
                             @foreach($partyname as $party)
                                 <option value="{{ $party->id }}">{{ $party->party_name }}</option>
                             @endforeach

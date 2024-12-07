@@ -93,7 +93,9 @@ class TblUserController extends Controller
     {
         $permissionsData = $this->permission(request())->getData()->permissions->User ?? [];
         if (in_array('view', $permissionsData)) {
-            $users = tbl_user::where('id', '!=', auth()->id())->get();
+            $users = tbl_user::all();
+            // $users = tbl_user::where('id', '!=', auth()->id())->get(); // exclude current user
+            // dd($users);
             return view('user.index', compact('users'));
         }
         return redirect('/unauthorized');

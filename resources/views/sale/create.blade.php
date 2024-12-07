@@ -75,7 +75,7 @@
                                 <h5> Final Price</h5>
                             </div>
                             <div class="col">
-                                <input type="text" id="final_price" name="total_amount" class="form-control" readonly>
+                                <input type="text" id="final_price" name="total_amount" class="form-control" >
                             </div>
                             <div class="col">
 

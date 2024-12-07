@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TblCustomer;
+use App\Models\Sale;
+use App\Models\TblSaleReturn;
+
 
 class TblCustomerController extends Controller
 {
@@ -100,5 +103,20 @@ class TblCustomerController extends Controller
             return redirect()->route('customer.index')->with('error', 'Customer not found.');
         }
         return redirect('/unauthorized');
+    }
+
+    public function Sale_details(TblCustomer $tblCustomer, $id, Request $request){
+        
+        $sales = Sale::with('customer')
+        ->where('customer_id',$id)
+        ->get();
+        
+        $salereturns = TblSaleReturn::with('customer')
+        ->where('c_id',$id)
+        ->get();
+        // dd($salereturns);
+        
+ 
+        return view('customer.SellDetails', ['sales' => $sales,'salereturns'=>$salereturns]);
     }
 }

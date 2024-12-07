@@ -31,6 +31,6 @@ class Sale extends Model
 
     public function customer()
     {
-        return $this->belongsTo(TBlCustomer::class, 'customer_id', 'id'); // 'customer_id' is the foreign key in tbl_sales, and 'id' is the primary key in tbl_customers
+        return $this->belongsTo(TblCustomer::class, 'customer_id', 'id'); // 'customer_id' is the foreign key in tbl_sales, and 'id' is the primary key in tbl_customers
     }
 }

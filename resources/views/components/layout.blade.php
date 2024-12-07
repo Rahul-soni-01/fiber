@@ -43,7 +43,7 @@
     <div id="header" class="row">
         <div class="col-md-1 header-first"><label id="menu" class="button" for="check"><i
                     class="ri-menu-line"></i></label></div>
-        <div class="col-md-2 logo"><img src="{{asset('storage/logo.jpg') }}" alt=""></div>
+        <div class="col-md-2 logo"> <a href="/"><img src="{{asset('storage/logo.jpg') }}" alt=""></a></div>
         <div class="col-md-3 offset-md-6 d-flex align-items-center justify-content-center">
             <strong>{{ auth()->user()->type }}</strong> &nbsp; || &nbsp; <strong>{{ auth()->user()->name }}</strong>
             <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
@@ -62,11 +62,11 @@
             </li>
 
             <li id="Party" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Party<i
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Supplier<i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('party.create') }}" id="add" class="sub-item">Add Party</a></li>
-                    <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Party</a></li>
+                    <li><a href="{{ route('party.create') }}" id="add" class="sub-item">Add Supplier</a></li>
+                    <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Supplier</a></li>
                 </ul>
             </li>
 
@@ -141,6 +141,7 @@
                     <li><a href="{{ route('report.reject') }}" id="view" class="sub-item">Rejected Report</a></li>
                     @endif
                     <li><a href="{{ route('report.search') }}" id="add" class="sub-item">Search Report</a></li>
+                    <li><a href="{{ route('report.new') }}" id="add" class="sub-item">Report New Stock</a></li>
                     <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">stock Report</a></li>
                 </ul>
             </li>

@@ -39,8 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [TblUserController::class, 'show'])->name('home');
     
     Route::get('/datainsert', [TblStockController::class, 'datainsert'])->name('datainsert');
-
-
+    
     // User Crud
     Route::get('/user', [TblUserController::class, 'index'])->name('user.index');
     Route::get('/user-create', [TblUserController::class, 'create'])->name('user.create');
@@ -48,7 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::get('edit-user-{user_id}', [TblUserController::class, 'edit'])->name(('user.edit')); //View deparment By id.
     Route::put('/user/{id}', [TblUserController::class, 'update'])->name('user.update');
     Route::delete('/user-{user_id}', [TblUserController::class, 'destroy'])->name('user.destroy');
-
 
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions-add', [PermissionController::class, 'create'])->name('permissions.add');
@@ -69,6 +67,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/departments{department_id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
 
     // Party Crud
+    Route::get('party-purchase-details-{party_id}', [TblPartyController::class, 'Purchase_details'])->name(('party.purchase.details'));
+
+    Route::get('customer-sell-details-{customer_id}', [TblCustomerController::class, 'Sale_details'])->name(('customer.sell.details'));
+
     Route::get('party-create', [TblPartyController::class, 'create'])->name('party.create');
     Route::get('party', [TblPartyController::class, 'index'])->name('party.show');
     Route::post('party-store', [TblPartyController::class, 'store'])->name('party.store');
@@ -118,11 +120,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
 
-
-    Route::get('report', [ReportController::class, 'index'])->name('report.index');
+    // Route::get('report', [ReportController::class, 'index'])->name('report.index');
+    Route::get('report', [ReportController::class, 'indexNew'])->name('report.index');
+    Route::get('report-new', [ReportController::class, 'ReportNew'])->name('report.new');
     Route::get('report-create', [ReportController::class, 'create'])->name('report.create');
     Route::post('/report-store', [ReportController::class, 'store'])->name('report.store');
     Route::get('report-show-{report_id}', [ReportController::class, 'show'])->name(('report.show'));
+    Route::get('report-type-show-{report_id}', [ReportController::class, 'typeshow'])->name(('report.type.show'));
     Route::get('report-edit-{report_id}', [ReportController::class, 'edit'])->name(('report.edit'));
     // Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
     Route::put('report-update-{report_id}', [ReportController::class, 'Newupdate'])->name(('report.update'));
@@ -146,6 +150,9 @@ Route::middleware('auth')->group(function () {
     Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
 
     // Customer Crud
+
+   
+
     Route::get('customer-create', [TblCustomerController::class, 'create'])->name('customer.create');
     Route::get('customer', [TblCustomerController::class, 'index'])->name('customer.index');
     Route::post('customer-store', [TblCustomerController::class, 'store'])->name('customer.store');

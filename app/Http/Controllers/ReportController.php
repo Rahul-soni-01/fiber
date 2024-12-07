@@ -19,6 +19,7 @@ use App\Models\SaleItem;
 use App\Models\Sale;
 use App\Models\TblReportItem;
 use App\Models\Tbltype;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -32,15 +33,58 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_leds', 'tbl_cards','tbl_type')->get();
+            $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')->get();
+
             // dd($reports);
-            if(auth()->user()->type === 'godown'){
+            if (auth()->user()->type === 'godown') {
                 // dd("de");
                 return view("report.godownindex", compact('reports'));
             }
             return view("report.index", compact('reports'));
         }
         return redirect('/unauthorized');
+    }
+    public function indexNew(Request $request)
+    {
+        if ($this->checkPermission($request, 'view')) {
+
+            $types = Tbltype::with('reports')->get(); // Use 'tbl_type' (singular) as defined in the model
+
+            if (auth()->user()->type === 'godown') {
+                // dd("de");
+                $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')->get();
+                return view("report.godownindex", compact('reports'));
+            }
+            return view("report.indexNew", compact('types'));
+        }
+        return redirect('/unauthorized');
+    }
+
+    public function ReportNew(Request $request)
+    {
+        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+            ->where('part', 0);
+
+        // Apply filters conditionally
+        if ($request->query('s_date') !== null && $request->query('e_date') !== null) {
+            $startDate = Carbon::parse($request->query('s_date'))->startOfDay(); 
+            $endDate = Carbon::parse($request->query('e_date'))->endOfDay(); 
+            $reports->whereBetween('created_at', [$startDate, $endDate]);
+           
+        }
+
+        if ($request->query('sr_no') !== null) {
+            $reports->where('sr_no_fiber', $request->query('sr_no'));
+        }
+        
+        if ($request->query('worker_name') !== null) {
+            $reports->where('worker_name', 'like', '%' . $request->query('worker_name') . '%');
+        }
+
+        $reports = $reports->get();
+       
+        $tbl_parties = tbl_party::all();
+        return view("report.index", compact('reports', 'tbl_parties'));
     }
 
     public function create(Request $request)
@@ -55,7 +99,7 @@ class ReportController extends Controller
             $types = Tbltype::orderBy('id', 'asc')->get();
 
             $party_id = tbl_party::where('party_name', 'opening stock')->value('id');
-            
+
             $invoice = tbl_purchase::where('pid', $party_id)->first();
             $invoice_no = $invoice->invoice_no;
 
@@ -84,8 +128,9 @@ class ReportController extends Controller
             // dd($hrs);
 
             $customers = TblCustomer::all();
+            
             // return view("report.create", compact('sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('types','all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
+            return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
         }
         return redirect('/unauthorized');
     }
@@ -437,7 +482,7 @@ class ReportController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $report = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category')->find($id);
         $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')->where('report_id', $id)->get();
@@ -445,16 +490,46 @@ class ReportController extends Controller
         // return view('report.show', compact('report'));
         return view('report.Newshow', compact('report', 'reportitems'));
     }
+    public function typeshow(Request $request, $id)
+    {
+        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+            ->where('type', $id);
+        // Apply filters conditionally
+        if ($request->query('s_date') !== null && $request->query('e_date') !== null) {
+            $startDate = Carbon::parse($request->query('s_date'))->startOfDay(); 
+            $endDate = Carbon::parse($request->query('e_date'))->endOfDay(); 
+            $reports->whereBetween('created_at', [$startDate, $endDate]);
+           
+        }
+
+        if ($request->query('sr_no') !== null) {
+            $reports->where('sr_no_fiber', $request->query('sr_no'));
+        }
+        
+        if ($request->query('worker_name') !== null) {
+            $reports->where('worker_name', 'like', '%' . $request->query('worker_name') . '%');
+        }
+
+        $reports = $reports->get();
+        // dd($reports);
+        $tbl_parties = tbl_party::all();
+
+        // $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')
+        // ->where('report_id', $id)->get();
+        // return view('report.show', compact('report'));
+        return view('report.index', compact('reports', 'tbl_parties'));
+    }
     public function search(Request $request)
     {
         if ($request->sr_no) {
+
             $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber', $request->sr_no)->get();
             $reportIds = $reports->pluck('id');
 
             $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')
-            ->whereIn('report_id', $reportIds)
-            ->get();
-            return view('report.search', compact('reports','reportitems'));
+                ->whereIn('report_id', $reportIds)
+                ->get();
+            return view('report.search', compact('reports', 'reportitems'));
         }
         return view('report.search');
     }
@@ -1100,12 +1175,12 @@ class ReportController extends Controller
             DB::raw('COUNT(*) as total_count'),
             DB::raw('SUM(dead_status) as total_dead_stock')
 
-            )
+        )
             ->groupBy('scid')
             ->get()
             ->keyBy('scid'); // Group by scid for easy lookup
 
-            
+
         // Combine all data with subcategories
         $subcategoryData = $subcategories->map(function ($subcategory) use ($purchaseResults, $stockResults, $reportResults) {
             $scid = $subcategory->id;
@@ -1121,7 +1196,7 @@ class ReportController extends Controller
             ];
         });
 
-        return view('report.stock', compact('subcategoryData','categories', 'subcategories'));
+        return view('report.stock', compact('subcategoryData', 'categories', 'subcategories'));
     }
 
     public function stockReport(Request $request)
@@ -1411,10 +1486,8 @@ class ReportController extends Controller
                 $report->m_j = $request->m_j;
             if ($request->filled('type'))
                 $report->type = $request->type;
-            ;
             if ($request->filled('remark'))
                 $report->remark = $request->remark;
-
             if (Auth()->user()->type === 'user') {
                 $report->temp = 0;
             }

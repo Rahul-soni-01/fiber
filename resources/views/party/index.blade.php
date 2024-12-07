@@ -1,12 +1,12 @@
 <x-layout>
-    <x-slot name="title">Show Party</x-slot>
+    <x-slot name="title">Show Supplier</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
             <form action="search" method="get">
                 <div class="container">
                     <div class="row">
                         <div class="col-12 col-sm-6 col-md-3 mb-3">
-                            <input type="text" id="party_name" name="party_name" class="form-control" placeholder="Party Name" value="{{ request('party_name') }}">
+                            <input type="text" id="party_name" name="party_name" class="form-control" placeholder="Supplier Name" value="{{ request('party_name') }}">
                         </div>
                         <div class="col-12 col-sm-6 col-md-3 mb-3">
                             <input type="text" id="address" name="address" class="form-control" placeholder="Address" value="{{ request('address') }}">
@@ -27,7 +27,7 @@
                 </div>
             </form> 
 
-            <h1>Party Details </h1>
+            <h1>Supplier Details </h1>
             @if ($errors->any())
             <div style="color: red;">
                 <ul>
@@ -41,7 +41,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>party name</th>
+                        <th>Supplier name</th>
                         <th>Address</th>
                         <th>telephone no </th>
                         <th>contact person name </th>
@@ -61,10 +61,12 @@
                             <td>
                                 <a href="{{ route('party.edit', ['party_id' => $party->id]) }}"><i class="ri-eye-fill"></i></a>  
                                 <form action="{{ route('party.destroy', $party->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this party?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
-                            </form> </td>
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this Supplier?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
+                                </form> 
+                                <button class="btn"> <a href="{{ route('party.purchase.details', ['party_id' => $party->id]) }}"> Supplier History </a></button>  
+                            </td>
                         </tr>
                     @endforeach
 

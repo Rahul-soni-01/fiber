@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\tbl_party;
 use App\Models\tbl_category;
 use App\Models\tbl_sub_category;
+use App\Models\tbl_purchase;
+use App\Models\TblPurchaseReturn;
 use Illuminate\Http\Request;
 
 class TblPartyController extends Controller
@@ -84,7 +86,6 @@ class TblPartyController extends Controller
 
     }
 
-    
     public function edit(tbl_party $tbl_party,$id,Request $request)
     {
         if ($this->checkPermission($request, 'edit')) {
@@ -95,7 +96,6 @@ class TblPartyController extends Controller
         return redirect('/unauthorized');
     }
 
-   
     public function update(Request $request, tbl_party $tbl_party, $id)
     {
         $request->validate([
@@ -130,5 +130,18 @@ class TblPartyController extends Controller
         }
         return redirect('/unauthorized');
 
+    }
+
+    public function Purchase_details(tbl_party $tbl_party,$id,Request $request){
+       $inwards = tbl_purchase::where('pid',$id)->get();
+
+       $SubCategories = tbl_sub_category::all();
+            $Categories = tbl_category::all();
+            // $tbl_parties = tbl_party::all();
+        $PurchaseReturns = TblPurchaseReturn::with('purchaseReturnDetails','party','purchaseReturnDetails.category','purchaseReturnDetails.subCategory')
+            ->where('pid',$id)
+            ->get();
+
+       return view('party.PurchaseDetails', ['inwards' => $inwards,'SubCategories'=>$SubCategories,'Categories'=>$Categories,'PurchaseReturns'=>$PurchaseReturns]);
     }
 }

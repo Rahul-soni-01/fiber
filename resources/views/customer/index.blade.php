@@ -47,6 +47,7 @@
                                     <i class="ri-delete-bin-fill"></i>
                                 </button>
                             </form>
+                            <button class="btn"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $customer->id ]) }}"> Customer History </a></button>  
                         </td>
                     </tr>
                     @endforeach

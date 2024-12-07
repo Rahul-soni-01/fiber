@@ -1,10 +1,8 @@
 <x-layout>
     <x-slot name="title">Show Inward </x-slot>
     <x-slot name="main">
-
-
         <div class="main" id="main">
-            {{-- <form action="search" method="get">
+            <form action="search" method="get">
                 <div class="row">
                     <div class="col">
                         <input type="date" id="s_date" name="s_date" class="form-control"
@@ -38,7 +36,7 @@
                                 name="search">Search</button></form>
                     </div>
                 </div>
-            </form> --}}
+            </form>
 
             <table class="table table-striped" id="inwardTable">
                 <thead class="table-dark">
