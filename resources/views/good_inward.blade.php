@@ -165,9 +165,34 @@
                                 class="form-control" oninput="calculateAmount()"></div>
                     </div>
                     <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Paid Amount</div>
+                        <div class="col-sm-2">
+                            <input type="number" id="paid_total" step="0.01" value="0" name="paid_total"
+                            class="form-control" onchange="calculateAmount()"></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-sm-2 offset-sm-8">
+                                <label for="data[0][unit]" class="form-label ">Payment Method</label>
+                            </div>
+                            <div class="col-sm-2">
+                            <select id="payment_method" name="payment_method" class="form-control">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Bank">Bank</option>
+                            </select>
+                        </div>
+                    </div>
+                        
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-2 offset-sm-8">Due/Reamining Amount</div>
+                        <div class="col-sm-2"><input type="number" id="remaining_amount" step="0.01" value="0" name="remaining_amount"
+                                class="form-control" onchange="calculateAmount()" readonly ></div>
+                    </div>
+                    <div class="row mt-3">
                         <div class="col-sm-2 offset-sm-8">Amount</div>
                         <div class="col-sm-2"><input type="number" id="amount" step="0.01" name="amount"
-                                class="form-control" disabled></div>
+                                class="form-control" readonly></div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-sm-2 offset-sm-11">

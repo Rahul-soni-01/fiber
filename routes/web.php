@@ -104,6 +104,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/subcategory-{id}', [TblSubCategoryController::class, 'update'])->name('subcategory.update');
     Route::delete('/subcategory-{subcategory_id}', [TblSubCategoryController::class, 'destroy'])->name('subcategory.destroy');
 
+    Route::get('inward-payment', [TblPurchaseController::class, 'paymentindex'])->name('inward.payment.index');
+
     // inward crud
     Route::get('inward-return', [TblPurchaseController::class, 'ReturnIndex'])->name('inward.return.index');
     Route::get('inward-return-create', [TblPurchaseController::class, 'Return_Create'])->name('purchase.return.create');
@@ -117,7 +119,6 @@ Route::middleware('auth')->group(function () {
 
     // Route::view('add_report', 'add_report')->name('report.add');
     Route::post('/stockReport', [ReportController::class, 'stockReport'])->name('report.stockReport');
-
     Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
 
     // Route::get('report', [ReportController::class, 'index'])->name('report.index');
@@ -126,13 +127,14 @@ Route::middleware('auth')->group(function () {
     Route::get('report-create', [ReportController::class, 'create'])->name('report.create');
     Route::post('/report-store', [ReportController::class, 'store'])->name('report.store');
     Route::get('report-show-{report_id}', [ReportController::class, 'show'])->name(('report.show'));
-    Route::get('report-type-show-{report_id}', [ReportController::class, 'typeshow'])->name(('report.type.show'));
+    Route::get('report-type-show-{report_id}', [ReportController::class, 'typeshow'])->name(('report.type.show')); // type 15,18,21,26 wise record display
     Route::get('report-edit-{report_id}', [ReportController::class, 'edit'])->name(('report.edit'));
     // Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
     Route::put('report-update-{report_id}', [ReportController::class, 'Newupdate'])->name(('report.update'));
     Route::get('report-reject', [ReportController::class, 'reject'])->name(('report.reject'));
     Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
-
+    
+    Route::get('/serial-history', [SaleController::class, 'history'])->name('serial.history');
     // Sale Crud
     Route::get('sale-return-index', [SaleController::class, 'return_index'])->name('sale.return.index');
     Route::get('sale-return', [SaleController::class, 'return'])->name('sale.return');

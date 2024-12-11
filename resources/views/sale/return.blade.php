@@ -76,7 +76,7 @@
                         <h1>Serial Details</h1>
                         <div class="row">
                             <div class="col">Serial No.</div>
-                            <div class="col">Price</div>
+                            <div class="col"></div>
                             <div class="col"><button class="btn btn-info" type="button"
                                     onclick="SaleRowadd({{$serial_nos}})">
                                     Add</button></div>
@@ -93,11 +93,11 @@
                                     </select>
                                 </div>
                                 <div class="col">
-                                    @foreach($serial_nos as $serial_no)
+                                    {{-- @foreach($serial_nos as $serial_no)
                                     <span id="{{ $serial_no->sr_no_fiber }}" class="final_amount cstmspan_0"
                                         style="display: none">{{
                                         $serial_no->final_amount}}</span>
-                                    @endforeach
+                                    @endforeach --}}
                                 </div>
                                 <div class="col">
 

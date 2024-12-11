@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Supplier Purchase Details</x-slot>
+    <x-slot name="title">Customer Sell Details</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
             {{-- <form action="search" method="get" class="mb-5">

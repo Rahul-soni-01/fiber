@@ -13,6 +13,7 @@
                         <th>Qty Status 1</th>
                         <th>Total Reports</th>
                         <th>Total Dead Stock</th>
+                        <th>Total Purchase Price</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,10 +28,24 @@
                         <td>{{ $data['qty_status_1'] }}</td>
                         <td>{{ $data['total_count'] }}</td>
                         <td>{{ $data['total_dead_stock'] }}</td>
+                        <td>{{ $data['total_purchase'] }}</td>
                     </tr>
                 @endforeach
         
                 </tbody>
+                <tfoot class="table-dark">
+                    <tr>
+                        <td><strong>Totals</strong></td>
+                        <td></td>   
+                        <td></td>   
+                        <td></td>   
+                        <td></td>   
+                        <td></td>   
+                        <td></td>   
+                        
+                        <td>{{$totalPurchase }}</td>
+                    </tr>
+                </tfoot>
             </table>
             
         </div>

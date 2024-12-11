@@ -66,7 +66,7 @@
                 <span class="logout-text">Log out</span>
             </a>
         </div>
-    </div>
+            </div>
     {{-- <div id="fakeheader"></div> --}}
     {{-- <input type="checkbox" id="check" checked hidden> --}}
     {{-- {{$permissions}} --}}
@@ -136,6 +136,7 @@
                     <li><a href="{{ route('inward.good.view') }}" id="add" class="sub-item">Add Good Inward</a></li>
                     <li><a href="{{ route('inward.index') }}" id="view" class="sub-item">Show Inward</a></li>
                     <li><a href="{{ route('inward.return.index') }}" id="view" class="sub-item">Show Return Purchase</a>
+                    <li><a href="{{ route('inward.payment.index') }}" id="view" class="sub-item">Show Payment</a>
                     </li>
                 </ul>
             </li>
@@ -436,7 +437,7 @@
                 console.error("Invalid input: rate_r or subtotal is not a number.");
             } else {
                 let rate = rate_r * subtotal;
-                console.log("Rate:", rate);
+                // console.log("Rate:", rate);
 
                 document.getElementById("amount_r").value = rate.toFixed(2);
                 document.getElementById("sub_total").value = rate.toFixed(2);
@@ -450,7 +451,18 @@
             var roundAmount = parseFloat(document.getElementById("round_total").value) || 0;
             var amount = subtotal - roundAmount;
             document.getElementById("amount").value = amount.toFixed(2);
-
+            
+            var paid_total = parseFloat(document.getElementById("paid_total").value) || 0;
+            if (paid_total > 0 && amount >= paid_total) {
+                var remaining_amount = amount - paid_total;
+                // console.log(amount,paid_total,remaining_amount);
+                if(remaining_amount > 0 || remaining_amount == 0){
+                    document.getElementById("remaining_amount").value = remaining_amount.toFixed(2);
+                }else{
+                    alert("!! You Can't Paid More Amount, Please Change your Paid Amount !!");
+                    // document.getElementById("paid_total").value = 0.toFixed(2);
+                }
+            }
             calculateshipping();
         }
 

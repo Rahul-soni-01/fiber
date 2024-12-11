@@ -62,7 +62,11 @@ class TblPurchaseItemController extends Controller
 
         dd($purchaseid);
         $payment = new TblPayment();
-        $payment->
+        $payment->purchase_id = $purchaseid;
+        $payment->amount_paid = $request->amount_paid;
+        $payment->remaining_amount = $request->remaining_amount;
+        $payment->payment_date = $request->date;
+        $payment->payment_method = $request->payment_method;
         $data = $payment->save();
 
         if ($result) {
