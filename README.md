@@ -20,14 +20,14 @@ This is a Laravel project for managing fiber-related operations. It includes fea
    cd fiber
 
 2. Install the dependencies:
-   ``bash Copy code
-   composer install
+   ```bash
+    composer install
 
-3. Configure your environment by copying .env.example to .env and updating the database credentials.
+4. Configure your environment by copying .env.example to .env and updating the database credentials.
 
-4. Import the database using the fiber.sql file.
+5. Import the database using the fiber.sql file.
 
-5. Start the Laravel development server:
+6. Start the Laravel development server:
     php artisan serve
 
 
