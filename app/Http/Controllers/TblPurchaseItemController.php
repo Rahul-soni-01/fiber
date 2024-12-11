@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\tbl_purchase_item;
 use App\Models\tbl_purchase;
 use App\Models\TblPurchaseReturnItem;
+use App\Models\TblPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -56,10 +57,17 @@ class TblPurchaseItemController extends Controller
         $inward->round_amount = $request->round_total ?? 0;
         $result = $inward->save();
 
-        // dd($result);
+        $purchaseid = $result->id;
+
+
+        dd($purchaseid);
+        $payment = new TblPayment();
+        $payment->
+        $data = $payment->save();
+
         if ($result) {
             $allItemsSaved = true;
-            $count = count($request->cname); // Count of the items based on the cname array length
+            $count = count($request->cname);
 
             for ($i = 0; $i < $count; $i++) {
                 $itemResult = tbl_purchase_item::create([

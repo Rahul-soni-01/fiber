@@ -1154,11 +1154,15 @@ class ReportController extends Controller
 
         $purchaseResults = tbl_purchase_item::select(
             'scid',
-            DB::raw('SUM(qty) as total_purchase_qty')
+            DB::raw('SUM(qty) as total_purchase_qty'),
+            DB::raw('SUM(total) as total_purchase')
         )
             ->groupBy('scid')
             ->get()
             ->keyBy('scid'); // Group by scid for easy lookup
+
+        $totalPurchase = tbl_purchase_item::sum('total');
+
 
         $stockResults = TblStock::select(
             'scid',
@@ -1196,7 +1200,7 @@ class ReportController extends Controller
             ];
         });
 
-        return view('report.stock', compact('subcategoryData', 'categories', 'subcategories'));
+        return view('report.stock', compact('subcategoryData', 'categories', 'subcategories','totalPurchase'));
     }
 
     public function stockReport(Request $request)

@@ -266,4 +266,9 @@ class TblPurchaseController extends Controller
         }
         return redirect('/unauthorized');
     }
+
+    public function paymentindex(Request $request){
+        $inwards = tbl_purchase::with('party')->get();
+        dd($inwards);
+    }
 }
