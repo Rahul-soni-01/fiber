@@ -16,6 +16,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleItemController;
 use App\Http\Controllers\TblCustomerController;
 use App\Http\Controllers\TbltypeController;
+use App\Http\Controllers\PaymentController;
 
 
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +66,14 @@ Route::middleware('auth')->group(function () {
     Route::get('edit-department{department_id}', [DepartmentController::class, 'edit'])->name(('departments.edit')); //View deparment By id.
     Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
     Route::delete('/departments{department_id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+   
+    // payment crud
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+    Route::get('/payment-create', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/payment-store', [PaymentController::class, 'store'])->name('payment.store');
+    Route::get('edit-payment{payment_id}', [PaymentController::class, 'edit'])->name(('payment.edit')); //View deparment By id.
+    Route::put('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');
+    Route::delete('/payment{department_id}', [PaymentController::class, 'destroy'])->name('payment.destroy');
 
     // Party Crud
     Route::get('party-purchase-details-{party_id}', [TblPartyController::class, 'Purchase_details'])->name(('party.purchase.details'));

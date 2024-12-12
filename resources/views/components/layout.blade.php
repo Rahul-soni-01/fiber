@@ -171,6 +171,15 @@
                     <li><a href="{{ route('sale.return.index') }}" id="view" class="sub-item">Sale Return</a></li>
                 </ul>
             </li>
+            <li id="Sale" class="sidebar">
+                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Payment <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('payment.create') }}" id="add" class="sub-item">Add Payment</a></li>
+                    <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Show Payment</a></li>
+                    {{-- <li><a href="{{ route('payment.return.index') }}" id="view" class="sub-item">Payment Return</a></li> --}}
+                </ul>
+            </li>
             <li id="Customer" class="sidebar">
                 <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Customer<i
                         class="ri-arrow-down-s-line"></i></a>
@@ -179,7 +188,6 @@
                     <li><a href="{{ route('customer.index') }}" id="view" class="sub-item">Show Customer</a></li>
                 </ul>
             </li>
-
         </ul>
 
     </div>
@@ -452,7 +460,7 @@
             var amount = subtotal - roundAmount;
             document.getElementById("amount").value = amount.toFixed(2);
             
-            var paid_total = parseFloat(document.getElementById("paid_total").value) || 0;
+           /* var paid_total = parseFloat(document.getElementById("paid_total").value) || 0;
             if (paid_total > 0 && amount >= paid_total) {
                 var remaining_amount = amount - paid_total;
                 // console.log(amount,paid_total,remaining_amount);
@@ -462,7 +470,7 @@
                     alert("!! You Can't Paid More Amount, Please Change your Paid Amount !!");
                     // document.getElementById("paid_total").value = 0.toFixed(2);
                 }
-            }
+            }*/
             calculateshipping();
         }
 

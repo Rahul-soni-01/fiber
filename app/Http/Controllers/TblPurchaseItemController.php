@@ -57,17 +57,18 @@ class TblPurchaseItemController extends Controller
         $inward->round_amount = $request->round_total ?? 0;
         $result = $inward->save();
 
-        $purchaseid = $result->id;
-
+        /*$purchaseid = $result->id;
 
         dd($purchaseid);
-        $payment = new TblPayment();
-        $payment->purchase_id = $purchaseid;
-        $payment->amount_paid = $request->amount_paid;
-        $payment->remaining_amount = $request->remaining_amount;
-        $payment->payment_date = $request->date;
-        $payment->payment_method = $request->payment_method;
-        $data = $payment->save();
+        if($request->amount_paid > 0){
+            $payment = new TblPayment();
+            $payment->purchase_id = $purchaseid;
+            $payment->amount_paid = $request->amount_paid;
+            $payment->remaining_amount = $request->remaining_amount;
+            $payment->payment_date = $request->date;
+            $payment->payment_method = $request->payment_method;
+            $data = $payment->save();
+        }*/
 
         if ($result) {
             $allItemsSaved = true;
