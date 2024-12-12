@@ -116,6 +116,9 @@ body {
     display: flex;
     align-items: center;
 }
+.chosen-container-multi{
+    width: 100% !important;
+}
 
 #special-main {
     /* transition: margin-left .5s;

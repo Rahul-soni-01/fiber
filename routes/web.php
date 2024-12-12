@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::get('edit-party-{party_id}', [TblPartyController::class, 'edit'])->name(('party.edit'));
     Route::put('/party-{id}', [TblPartyController::class, 'update'])->name('party.update');
     Route::delete('/party-{party_id}', [TblPartyController::class, 'destroy'])->name('party.destroy');
-    Route::get('search', [TblPartyController::class, 'search'])->name('party.search');
+    Route::get('party-search', [TblPartyController::class, 'search'])->name('party.search');
     
     // Type Crud
     Route::get('type-create', [TbltypeController::class, 'create'])->name('type.create');
@@ -155,6 +155,8 @@ Route::middleware('auth')->group(function () {
     Route::get('edit-sale-{sale_id}', [SaleController::class, 'edit'])->name(('sale.edit'));
     Route::put('/sale-{id}', [SaleController::class, 'update'])->name('sale.update');
     Route::delete('/sale-{sale_id}', [SaleController::class, 'destroy'])->name('sale.destroy');
+
+    Route::post('/get-invoice-sell-details', [SaleController::class, 'getInvoiceDetails'])->name('invoice.sell.details');
 
     // invoice to tbl stock 
     Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');

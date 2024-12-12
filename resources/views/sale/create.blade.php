@@ -2,11 +2,7 @@
     <x-slot name="title">Add Sale</x-slot>
     <x-slot name="main">
         <a href="{{ route('sale.index') }}" class="btn btn-primary">Back to Sale</a>
-        <div class="main" id="main">
-            <form action="{{route('sale.store')}}" method="post">
-                @csrf
-
-                @if ($errors->any())
+        @if ($errors->any())
                 <div style="color: red;">
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -15,6 +11,9 @@
                     </ul>
                 </div>
                 @endif
+        <div class="main" id="main">
+            <form action="{{route('sale.store')}}" method="post">
+                @csrf
                 <div class="container">
                     <div class="row">
                         <div class="col">Invoice No.</div>
@@ -55,7 +54,7 @@
                                         onchange="serial_no_append(0,event)">
                                         <option value="">Select</option>
                                         @foreach($serial_nos as $serial_no)
-                                            <option value="{{ $serial_no->id }}">{{ $serial_no->sr_no_fiber }}</option>
+                                            <option value="{{ $serial_no->sr_no_fiber }}">{{ $serial_no->sr_no_fiber }}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -237,11 +237,11 @@
                 $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
             });
 
-            $('.select2').select2({
+            /*$('.select2').select2({
                 maximumInputLength: 20,
                 placeholder: "Select an option",
                 allowClear: true
-            });
+            });*/
         });
 
         var count = 1;
@@ -321,13 +321,7 @@
                             serial_nos.forEach(serial_no => {
                                 rowHtml += `<option value="${serial_no.sr_no_fiber}">${serial_no.sr_no_fiber}</option>`;
                             });
-            rowHtml += `</select> </div> <div class="col">`;
-
-                        serial_nos.forEach(serial_no => {
-                            rowHtml += `<span id="${serial_no.sr_no_fiber}" class="final_amount cstmspan_${countserial_no}" style="display: none" >${serial_no.final_amount}</span>`;
-                        });
-                      
-                  rowHtml += `</div>
+            rowHtml += `</select> </div> <div class="col"> </div>
                     <div class="col">
                         <button type="button" onclick="SaleremoveRow(this)" class="btn btn-danger margin-btn">Delete</button>
                     </div>
@@ -335,6 +329,7 @@
             `;
             $('#row-container').append(rowHtml);
             // SaleFinalAmount();
+            $('.select2').select2();
         }
 
         function SaleremoveRow(button) {

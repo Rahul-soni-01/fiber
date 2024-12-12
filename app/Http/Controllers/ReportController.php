@@ -1196,6 +1196,7 @@ class ReportController extends Controller
                 'qty_status_1' => $stockResults->get($scid)->qty_status_1 ?? 0,
                 'total_count' => $reportResults->get($scid)->total_count ?? 0,
                 'total_dead_stock' => $reportResults->get($scid)->total_dead_stock ?? 0,
+                'total_purchase' => $purchaseResults->get($scid)->total_purchase ?? 0,
 
             ];
         });

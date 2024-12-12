@@ -2,7 +2,7 @@
     <x-slot name="title">Show Supplier</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <form action="search" method="get">
+            <form action="{{ route('party.search')}}" method="get">
                 <div class="container">
                     <div class="row">
                         <div class="col-12 col-sm-6 col-md-3 mb-3">

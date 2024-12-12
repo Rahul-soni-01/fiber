@@ -43,7 +43,7 @@
                                 </span>
                             </div>
                             <div class="col">
-                                {{ $item->report->final_amount ?? 'N/A' }}
+                                {{-- {{ $item->report->final_amount ?? 'N/A' }} --}}
                             </div>
                             <div class="col">
 

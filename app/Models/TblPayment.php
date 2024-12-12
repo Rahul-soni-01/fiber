@@ -11,12 +11,20 @@ class TblPayment extends Model
     protected $table = 'tbl_payments';
 
     protected $fillable = [
+        'supplier_id',
         'purchase_id',
-        'sell_id',
+        // 'sell_id',
         'amount_paid',
         'remaining_amount',
         'payment_date',
         'payment_method',
+        'transaction_type',
+        'bank_name',
+        'account_holder_name',
+        'branch_name',
+        'account_number',
+        'account_type',
+        'ifsc_code',
         'notes',
     ];
 

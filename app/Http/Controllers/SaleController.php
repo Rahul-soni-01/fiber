@@ -123,14 +123,14 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'invoice_no' => 'required|unique:tbl_sales,sale_id',
+            // 'invoice_no' => 'required|unique:tbl_sales,sale_id',
             'total_amount' => 'required|numeric',
             'date' => 'required|date',
             'serial_no.*' => [
                 'required',
                 'distinct',
                 function ($attribute, $value, $fail) {
-                    if (!DB::table('tbl_reports')->where('id', $value)->exists()) {
+                    if (!DB::table('tbl_reports')->where('sr_no_fiber', $value)->exists()) {
                         $fail("The serial number {$value} does not exist in the reports.");
                     }
                 },
@@ -146,26 +146,27 @@ class SaleController extends Controller
         $sale->total_amount = $request->total_amount;
         $sale->sale_date = $request->date;
         $sale->notes = $request->note;
-
+        
         try {
             $sale->save();
+            // dd( $sale);
             $count = count($request->serial_no);
-
             for ($i = 0; $i < $count; $i++) {
                 $report_id = $request->serial_no[$i];
-                $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->find($report_id);
-
+                $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber',$report_id)->where('part', '0')->first();
+                // dd($report);
                 if ($report) {
                     // Update sale_status to 1
                     $report->sale_status = 1;
                     $report->save();
-
+                    // dd("if");
                     $serial_no = $report->sr_no_fiber;
                     $final_amount = $report->final_amount;
-
+                    $report_id = $report->id;
+                    
                     $itemResult = SaleItem::create([
                         'sale_id' => $sale->id,
-                        'serial_no' => $serial_no,
+                        // 'serial_no' => $serial_no,
                         'report_id' => $report_id,
                         'quantity' => 1,
                         'price' => $final_amount,
@@ -176,6 +177,7 @@ class SaleController extends Controller
                         return redirect()->back()->with('error', 'Failed to insert sale');
                     }
                 } else {
+                    // dd("else");
                     return redirect()->back()->with('error', 'Failed to insert sale');
                 }
             }
@@ -210,7 +212,7 @@ class SaleController extends Controller
                     ->where('part', '0')
                     ->where(function ($q) use ($sale) {
                         $q->where('sale_status', 0) // Include unsold serial numbers
-                            ->orWhereIn('id', $sale->items->pluck('report.id'));
+                            ->orWhereIn('id', $sale->items->pluck('report.sale_id'));
                     });
             })->get()->sortBy('sr_no_fiber');
             // dd($sale);
@@ -251,4 +253,41 @@ class SaleController extends Controller
         }
         return redirect('/unauthorized');
     }
+
+    public function getInvoiceDetails(Request $request)
+    {
+        $data = Sale::with('customer')->where('customer_id', $request->customer)->where('sale_id', $request->invoice_no)->get();
+
+        if (count($data) > 0) {    
+            $inwardsItems = SaleItem::with(['sale', 'Report'])
+                ->where('sale_id', $request->invoice_no)
+                ->get();
+
+                foreach($inwardsItems as $inwardsItem){
+                    $cid = $inwardsItem->cid;
+                    $scid = $inwardsItem->scid;
+                    $invoice_no = $inwardsItem->invoice_no;
+            
+                    $returns = TblSaleReturn::where('cid',$cid)->where('scid', $scid)->get();
+                    $qty = 0;
+                    foreach($returns as $return){
+                        $qty += $return->qty;
+                    }
+                    $inwardsItem['return'] = $qty;
+                }
+            $response = [
+                'status' => 'success',
+                'data' => $data,
+                'inwardsItems' => $inwardsItems,
+            ];
+        } else {
+            $response = [
+                'status' => 'error',
+                'message' => 'No data found',
+            ];
+        }
+        return response()->json($response, 200);
+    
+    }
+
 }
