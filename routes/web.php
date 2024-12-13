@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
    
     // payment crud
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+    Route::get('/customer-payment', [PaymentController::class, 'CustomerIndex'])->name('payment.customer.index');
     Route::get('/payment-create', [PaymentController::class, 'create'])->name('payment.create');
     Route::post('/payment-store', [PaymentController::class, 'store'])->name('payment.store');
     Route::get('edit-payment{payment_id}', [PaymentController::class, 'edit'])->name(('payment.edit')); //View deparment By id.
@@ -163,8 +164,6 @@ Route::middleware('auth')->group(function () {
     Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
 
     // Customer Crud
-
-   
 
     Route::get('customer-create', [TblCustomerController::class, 'create'])->name('customer.create');
     Route::get('customer', [TblCustomerController::class, 'index'])->name('customer.index');

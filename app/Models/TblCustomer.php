@@ -23,8 +23,18 @@ class TblCustomer extends Model
         'receiver_name',
     ];
 
+    public function Cuspayments()
+    {
+        return $this->hasMany(CustomerPayment::class, 'customer_id');
+    }
     public function sales()
     {
         return $this->hasMany(Sale::class, 'customer_id', 'id');
     }
+
+    public function SaleReturn()
+    {
+        return $this->hasMany(TblSaleReturn::class, 'c_id');
+    }
+    
 }

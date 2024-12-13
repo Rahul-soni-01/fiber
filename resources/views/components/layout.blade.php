@@ -111,8 +111,9 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('user.index') }}" id="view" class="sub-item">Show User</a></li>
                     <li><a href="{{ route('user.create') }}" id="view" class="sub-item">Add User</a></li>
-                    <li><a href="{{ route('permissions.index') }}" id="view" class="sub-item">Show Permission</a></li>
-                    <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a></li>
+                    <li><a href="{{ route('manage.permissions') }}" id="view" class="sub-item">Show Permission</a></li>
+                    {{-- <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a></li> --}}
+                    <li><a href="{{ route('manage.permissions.create') }}" id="add" class="sub-item">Add Permission</a></li>
                 </ul>
             </li>
             {{-- @endif --}}
@@ -176,7 +177,8 @@
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('payment.create') }}" id="add" class="sub-item">Add Payment</a></li>
-                    <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Show Payment</a></li>
+                    <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li>
+                    <li><a href="{{ route('payment.customer.index') }}" id="view" class="sub-item">Customer Payment</a></li>
                     {{-- <li><a href="{{ route('payment.return.index') }}" id="view" class="sub-item">Payment Return</a></li> --}}
                 </ul>
             </li>

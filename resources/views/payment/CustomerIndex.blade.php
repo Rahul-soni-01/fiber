@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Show Suppiler payment</x-slot>
+    <x-slot name="title">Show Customer payment</x-slot>
     <x-slot name="main">
         <div class="main" id="main" style="">
             <a href="{{ route('payment.create') }}" class="btn btn-primary">Add payment</a>
@@ -8,27 +8,27 @@
                 <thead class="table-light">
                     <tr>
                         <th>ID</th>
-                        <th>Supplier Name</th>
+                        <th>Customer Name</th>
                         <th>Total INR Amount</th>
-                        <th>Purchases</th>
+                        <th>Sell</th>
                         {{-- <th>Total INR Payment</th>
                         <th>Payments</th> --}}
                         <th>Total INR Reaming</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($supplierData as $index => $supplier)
+                    @foreach ($CustomerPayment as $index => $customer)
                         <tr>
                             <td>{{ $index+1 }}</td>
-                            <td>{{ $supplier['party_name'] }}</td>
-                            <td><b class="text-info">{{ $supplier['total_inr_amount'] }}</b>
+                            <td>{{ $customer['customer_name'] }}</td>
+                            <td><b class="text-info">{{ $customer['total_inr_amount'] }}</b>
                                 <button class="btn btn toggle-btn float-right" data-target="purchases-{{ $index }}">
                                     <i class="bi bi-chevron-right"></i> Show
                                 </button>
                                 <table class="datatable-remove table table-sm table-striped mt-2 nested-table" id="purchases-{{ $index }}" style="display: none;">
                                     <thead>
                                         <tr>
-                                            <th>Purchase ID</th>
+                                            <th>Sele ID</th>
                                             <th>Date</th>
                                             <th>Invoice No</th>
                                             <th>INR Amount</th>
@@ -36,13 +36,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($supplier['purchases'] as $purchase)
+                                        @forelse ($customer['sales'] as $sale)
                                             <tr>
-                                                <td>{{ $purchase->id }}</td>
-                                                <td>{{ $purchase->date }}</td>
-                                                <td>{{ $purchase->invoice_no }}</td>
-                                                <td>{{ $purchase->inr_amount }}</td>
-                                                <td><a href="{{ route('show_item.details', ['invoice_no' => $purchase['invoice_no']]) }}"><i
+                                                <td>{{ $sale->id }}</td>
+                                                <td>{{ $sale->sale_date }}</td>
+                                                <td>{{ $sale->sale_id }}</td>
+                                                <td>{{ $sale->total_amount }}</td>
+                                                <td><a href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
                                                     class="ri-eye-fill"></i></a> </td>
                                             </tr>
                                         @empty
@@ -56,7 +56,7 @@
                                     </tbody>
                                 </table>
                             </td>
-                            <td> <b class="text-success">{{ $supplier['total_inr_payments'] }} </b>
+                            <td> <b class="text-success">{{ $customer['total_inr_payments'] }} </b>
                                 <button class="btn btn toggle-btn float-right" data-target="payments-{{ $index }}">
                                     <i class="bi bi-chevron-right"></i> Show 
                                 </button>
@@ -69,7 +69,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($supplier['payments'] as $payment)
+                                       @forelse ($customer['payments'] as $payment)
                                             <tr>
                                                 <td>{{ $payment->id }}</td>
                                                 <td>{{ $payment->amount_paid }}</td>
@@ -87,12 +87,11 @@
                             </td>
                             
                             
-                            <td><b class="text-danger">{{ $supplier['total_remaining_payment'] }}</b></td>
+                            <td><b class="text-danger">{{ $customer['total_remaining_payment'] }}</b></td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-
 
             {{-- <div class="d-flex justify-content-center align-items-center"> <h5>Supplier Payment Details </h5></div>
 

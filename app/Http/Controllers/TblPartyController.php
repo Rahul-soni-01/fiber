@@ -133,13 +133,12 @@ class TblPartyController extends Controller
     }
 
     public function Purchase_details(tbl_party $tbl_party,$id,Request $request){
-       $inwards = tbl_purchase::where('pid',$id)->get();
-
-       $SubCategories = tbl_sub_category::all();
+        $inwards = tbl_purchase::where('pid',$id)->get();
+        $SubCategories = tbl_sub_category::all();
             $Categories = tbl_category::all();
             // $tbl_parties = tbl_party::all();
         $PurchaseReturns = TblPurchaseReturn::with('purchaseReturnDetails','party','purchaseReturnDetails.category','purchaseReturnDetails.subCategory')
-            ->where('pid',$id)
+            ->where('p_id',$id)
             ->get();
 
        return view('party.PurchaseDetails', ['inwards' => $inwards,'SubCategories'=>$SubCategories,'Categories'=>$Categories,'PurchaseReturns'=>$PurchaseReturns]);

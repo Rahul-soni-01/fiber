@@ -36,4 +36,9 @@ class TblPayment extends Model
     {
         return $this->belongsTo(Sale::class, 'sell_id', 'id');
     }
+    public function supplier()
+    {
+        return $this->belongsTo(tbl_party::class, 'supplier_id', 'id');
+    }
+    
 }

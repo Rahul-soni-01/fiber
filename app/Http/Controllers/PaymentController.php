@@ -26,14 +26,14 @@ class PaymentController extends Controller
             $selles = Sale::all();
             $tbl_purchases = tbl_purchase::all();
 
-            return view('payment.create',compact('customers','suppliers','selles','tbl_purchases'));
+            return view('payment.create', compact('customers', 'suppliers', 'selles', 'tbl_purchases'));
         }
         return redirect('/unauthorized');
 
     }
     public function store(Request $request)
     {
-        if(!empty($request->sid)){
+        if (!empty($request->sid)) {
             $request->validate([
                 'date' => 'required|date',
                 'sid' => 'required|integer',
@@ -52,7 +52,7 @@ class PaymentController extends Controller
 
             $paymentData = [
                 'payment_date' => $request->date,
-                'supplier_id' => $request->cid, // Assuming 'cid' refers to customer_id
+                'supplier_id' => $request->sid, // Assuming 'cid' refers to customer_id
                 'purchase_id' => json_encode($request->sale_id), // Store as JSON array
                 'amount_paid' => $request->paid_total,
                 'payment_method' => $request->payment_method,
@@ -67,10 +67,10 @@ class PaymentController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-    
+
             TblPayment::create($paymentData); // Replace Payment with your model
-        }
-        elseif(!empty($request->cid)){
+        } elseif (!empty($request->cid)) {
+            // dd($request->all());
             $request->validate([
                 'date' => 'required|date',
                 'cid' => 'required|integer',
@@ -87,10 +87,10 @@ class PaymentController extends Controller
                 'ifsc_code' => 'nullable|string|max:255',
             ]);
 
-            $paymentData = [
+            $CustomerPaymentData = [
                 'payment_date' => $request->date,
-                'supplier_id' => $request->cid, // Assuming 'cid' refers to customer_id
-                'purchase_id' => json_encode($request->sale_id), // Store as JSON array
+                'customer_id' => $request->cid, // Assuming 'cid' refers to customer_id
+                'sell_id' => json_encode($request->sale_id), // Store as JSON array
                 'amount_paid' => $request->paid_total,
                 'payment_method' => $request->payment_method,
                 'notes' => $request->note ?? null,
@@ -104,14 +104,71 @@ class PaymentController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-    
-            TblPayment::create($paymentData); // Replace Payment with your model
+
+            CustomerPayment::create($CustomerPaymentData); // Replace Payment with your model
+        } else {
+            return redirect()->back()->with('error', 'Failed to created Payment.');
         }
-    
+
         return redirect()->route('payment.index')->with('success', 'Payment created successfully');
     }
-    public function index(){
+    public function index()
+    {
+        $Supplierpaymentes = TblPayment::with('supplier')->get();
+       
+        $supplierData = tbl_party::with('purchase','payments')
+            ->get()
+            ->map(function ($party) {
+                return [
+                    'party_id' => $party->id,
+                    'party_name' => $party->party_name, // Adjust column as needed
+                    'total_inr_amount' => $party->purchase->sum('inr_amount'),
+                    'purchases' => $party->purchase,
+                    'payments' => $party->payments,
+                    'total_inr_payments' => $party->payments->sum('amount_paid'),
+                    'total_remaining_payment' => $party->purchase->sum('inr_amount') - $party->payments->sum('amount_paid') ,
+                    'total_payment' => $party->payments->sum('amount_paid'),
+                ];
+            });
+        // ->groupBy('pid')
+        /*$CustomerPayment = TblCustomer::with('Cuspayments','sales','SaleReturn')
+        ->get()
+        ->map(function ($Customer) {
+            return [
+                'customer_id' => $Customer->id,
+                'customer_name' => $Customer->customer_name, // Adjust column as needed
+                'total_inr_amount' => $Customer->sales->sum('total_amount'),
+                'purchases' => $Customer->sales,
+                'payments' => $Customer->Cuspayments,
+                'total_inr_payments' => $Customer->Cuspayments->sum('amount_paid'),
+                'total_remaining_payment' => $Customer->sales->sum('total_amount') - $Customer->Cuspayments->sum('amount_paid') ,
+                'total_payment' => $Customer->payments->sum('amount_paid'),
+            ];
+        });*/
+       
+        // dd($AggregatedSupplierData, $supplierData);
+        $customers = TblCustomer::all();
+        $suppliers = tbl_party::all();
 
-        return view('payment.index', compact('paymentes', 'supplier', 'items'));
+        return view('payment.index', compact('supplierData', 'Supplierpaymentes', 'suppliers', 'customers'));
+    }
+
+    public function CustomerIndex(){
+        $CustomerPayment = TblCustomer::with('Cuspayments','sales','SaleReturn')
+        ->get()
+        ->map(function ($Customer) {
+            return [
+                'customer_id' => $Customer->id,
+                'customer_name' => $Customer->customer_name, // Adjust column as needed
+                'total_inr_amount' => $Customer->sales->sum('total_amount'),
+                'sales' => $Customer->sales,
+                'payments' => $Customer->Cuspayments,
+                'total_inr_payments' => $Customer->Cuspayments->sum('amount_paid'),
+                'total_remaining_payment' => $Customer->sales->sum('total_amount') - $Customer->Cuspayments->sum('amount_paid') ,
+                'total_payment' => $Customer->Cuspayments->sum('amount_paid'),
+            ];
+        });
+
+        return view('payment.CustomerIndex', compact('CustomerPayment'));
     }
 }
