@@ -190,6 +190,15 @@
                     <li><a href="{{ route('customer.index') }}" id="view" class="sub-item">Show Customer</a></li>
                 </ul>
             </li>
+
+            <li id="Account" class="sidebar">
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Pre Account <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li>
+                    <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Show Customer</a></li>
+                </ul>
+            </li>
         </ul>
 
     </div>

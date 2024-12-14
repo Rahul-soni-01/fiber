@@ -17,6 +17,7 @@ use App\Http\Controllers\SaleItemController;
 use App\Http\Controllers\TblCustomerController;
 use App\Http\Controllers\TbltypeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\TblAccCoaController;
 
 
 use Illuminate\Support\Facades\Hash;
@@ -58,7 +59,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage-permissions-store', [ManagePermissionController::class, 'store'])->name('manage.permissions.store');
     Route::get('/manage-permissions-departments-{id}', [ManagePermissionController::class, 'edit'])->name('managePermissions.departments');
     Route::post('/manage-permissions-update-{id}', [ManagePermissionController::class, 'update'])->name('manage-permissions.update');
-
+   
+    // acccoa Crud
+    Route::get('/acccoa', [TblAccCoaController::class, 'index'])->name('acccoa.index');
+    Route::get('/acccoa-create', [TblAccCoaController::class, 'create'])->name('acccoa.create');
+    Route::post('/acccoa-store', [TblAccCoaController::class, 'store'])->name('acccoa.store');
+    Route::get('edit-department{department_id}', [TblAccCoaController::class, 'edit'])->name(('acccoa.edit')); //View acccoa By id.
+    Route::put('/acccoa/{id}', [TblAccCoaController::class, 'update'])->name('acccoa.update');
+    Route::delete('/acccoa{department_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
+   
+    
     // departments Crud
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
     Route::get('/departments-create', [DepartmentController::class, 'create'])->name('departments.create');

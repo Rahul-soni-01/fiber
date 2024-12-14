@@ -26,7 +26,6 @@ class DepartmentController extends Controller
 
     public function store(Request $request)
     {
-    
         $request->validate([
             'name' => 'required|unique:departments,name|max:255',
         ]);
@@ -36,19 +35,16 @@ class DepartmentController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-        $departments = Department::all();
-        return view('departments.index', compact('departments'));
+            $departments = Department::all();
+            return view('departments.index', compact('departments'));
         }
         return redirect('/unauthorized');
-
-        
     }
     public function edit($id, Request $request)
     {
         if ($this->checkPermission($request, 'edit')) {
-
-        $department = Department::findOrFail($id);
-        return view('departments.edit', compact('department'));
+            $department = Department::findOrFail($id);
+            return view('departments.edit', compact('department'));
         }
         return redirect('/unauthorized');
 
