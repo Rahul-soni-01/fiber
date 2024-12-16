@@ -60,13 +60,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage-permissions-departments-{id}', [ManagePermissionController::class, 'edit'])->name('managePermissions.departments');
     Route::post('/manage-permissions-update-{id}', [ManagePermissionController::class, 'update'])->name('manage-permissions.update');
    
+    // predefine edit
+    Route::get('/predefine', [TblAccCoaController::class, 'predefine'])->name('predefine.index');
+    Route::put('/predefine-update', [TblAccCoaController::class, 'predefineUpdate'])->name('predefine.update');
+    
     // acccoa Crud
     Route::get('/acccoa', [TblAccCoaController::class, 'index'])->name('acccoa.index');
     Route::get('/acccoa-create', [TblAccCoaController::class, 'create'])->name('acccoa.create');
     Route::post('/acccoa-store', [TblAccCoaController::class, 'store'])->name('acccoa.store');
-    Route::get('edit-department{department_id}', [TblAccCoaController::class, 'edit'])->name(('acccoa.edit')); //View acccoa By id.
+    Route::get('edit-acccoa-{acccoa_id}', [TblAccCoaController::class, 'edit'])->name(('acccoa.edit')); //View acccoa By id.
     Route::put('/acccoa/{id}', [TblAccCoaController::class, 'update'])->name('acccoa.update');
-    Route::delete('/acccoa{department_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
+    Route::delete('/acccoa{acccoa_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
    
     
     // departments Crud

@@ -196,7 +196,8 @@
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li>
-                    <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Show Customer</a></li>
+                    <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li>
+                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a></li>
                 </ul>
             </li>
         </ul>
@@ -248,11 +249,11 @@
                 $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
             });
 
-            /*$('.select2').select2({
+            $('.select2').select2({
                 maximumInputLength: 20,
                 placeholder: "Select an option",
                 allowClear: true
-            });*/
+            });
         });
 
         var count = 1;

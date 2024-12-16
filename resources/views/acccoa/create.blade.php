@@ -25,11 +25,11 @@
                                     <div class="mb-3">
                                         <label for="PHeadCode" class="form-label">Parents Head Code</label>
                                         {{-- <input type="text" name="PHeadCode" id="PHeadCode" class="form-control" placeholder="Enter Parent Head Code"> --}}
-                                        <select id="PHeadCode" name="PHeadCode" class="form-control"
+                                        <select id="PHeadCode" name="PHeadCode" class="form-control select2"
                                             placeholder="Enter Party Name" >
                                             <option value="" disabled selected>Choose a Parents Head Code</option>
                                             @foreach($accounts as $accounts)
-                                            <option value="{{ $accounts->HeadCode }}">{{ $accounts->HeadCode }} - {{ $accounts->HeadName }}</option>
+                                            <option value="{{ $accounts->HeadCode }}">{{ $accounts->HeadCode }} - {{ $accounts->HeadName }} , Parents {{ $accounts->PHeadCode }}/{{ $accounts->PHeadName }} </option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -22,9 +22,12 @@
                             <td>{{ $index+1 }}</td>
                             <td>{{ $customer['customer_name'] }}</td>
                             <td><b class="text-info">{{ $customer['total_inr_amount'] }}</b>
-                                <button class="btn btn toggle-btn float-right" data-target="purchases-{{ $index }}">
+                                {{-- <button class="btn btn toggle-btn float-right" data-target="purchases-{{ $index }}">
                                     <i class="bi bi-chevron-right"></i> Show
-                                </button>
+                                    
+                                </button> --}}
+                                <button class="btn float-right"> <a href="{{ route('customer.sell.details', ['customer_id' => $customer['customer_id'] ]) }}"> Show </a></button>  
+                                
                                 <table class="datatable-remove table table-sm table-striped mt-2 nested-table" id="purchases-{{ $index }}" style="display: none;">
                                     <thead>
                                         <tr>
