@@ -17,10 +17,10 @@
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>Customer name</th>
+                        <th>Customer Name</th>
                         <th>Address</th>
-                        <th>telephone no </th>
-                        <th>contact person name </th>
+                        <th>Telephone no </th>
+                        <th>Contact Person Name </th>
                         <th>Action </th>
                     </tr>
                 </thead>

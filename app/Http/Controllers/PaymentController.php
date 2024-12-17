@@ -9,12 +9,17 @@ use App\Models\tbl_party;
 use App\Models\TblCustomer;
 use App\Models\Sale;
 use App\Models\tbl_purchase;
+use App\Models\TblAccPredefineAccount;
+use App\Http\Controllers\TblAccCoaController;
+use Illuminate\Support\Facades\DB;
+
+
 
 class PaymentController extends Controller
 {
     private function checkPermission(Request $request, $action)
     {
-        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Department ?? [];
+        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Sale ?? [];
         return in_array($action, $permissions);
     }
 
@@ -105,7 +110,20 @@ class PaymentController extends Controller
                 'updated_at' => now(),
             ];
 
-            CustomerPayment::create($CustomerPaymentData); // Replace Payment with your model
+            $CustomerPayment = CustomerPayment::create($CustomerPaymentData); 
+            $payment_insert_id = $CustomerPayment->id; // Retrieve the auto-incremented ID
+
+            $predefine_account = TblAccPredefineAccount::first();
+            $Narration          = "Payment Voucher";
+            $Comment            = "Payment Voucher for customer";
+            $COAID              = $predefine_account->cashCode;
+            $amnt_type = 'Credit';
+            $referenceNo = $request->cid;
+            $reVID = $request->cid;
+            $amnt = $request->paid_total;
+            $this->insert_sale_special_creditvoucher($Narration, $Comment, $COAID, $amnt_type,$amnt, $referenceNo, $reVID, $payment_insert_id);
+            
+
         } else {
             return redirect()->back()->with('error', 'Failed to created Payment.');
         }
@@ -130,26 +148,10 @@ class PaymentController extends Controller
                     'total_payment' => $party->payments->sum('amount_paid'),
                 ];
             });
-        // ->groupBy('pid')
-        /*$CustomerPayment = TblCustomer::with('Cuspayments','sales','SaleReturn')
-        ->get()
-        ->map(function ($Customer) {
-            return [
-                'customer_id' => $Customer->id,
-                'customer_name' => $Customer->customer_name, // Adjust column as needed
-                'total_inr_amount' => $Customer->sales->sum('total_amount'),
-                'purchases' => $Customer->sales,
-                'payments' => $Customer->Cuspayments,
-                'total_inr_payments' => $Customer->Cuspayments->sum('amount_paid'),
-                'total_remaining_payment' => $Customer->sales->sum('total_amount') - $Customer->Cuspayments->sum('amount_paid') ,
-                'total_payment' => $Customer->payments->sum('amount_paid'),
-            ];
-        });*/
-       
-        // dd($AggregatedSupplierData, $supplierData);
+        
         $customers = TblCustomer::all();
         $suppliers = tbl_party::all();
-
+        // dd($Supplierpaymentes);
         return view('payment.index', compact('supplierData', 'Supplierpaymentes', 'suppliers', 'customers'));
     }
 
@@ -170,5 +172,43 @@ class PaymentController extends Controller
         });
 
         return view('payment.CustomerIndex', compact('CustomerPayment'));
+    }
+
+    public function insert_sale_special_creditvoucher($Narration, $Comment, $COAID, $amnt_type,$amnt = null, $referenceNo, $reVID,$payment_insert_id)
+    {
+        $VDate = date('Y-m-d');
+        $coaController = new TblAccCoaController();
+        $maxid = $coaController->getMaxFieldNumber('id', 'tbl_acc_vaucher', 'Vtype', 'JV', 'VNo');
+        $u_id = auth()->user()->id;
+        $vaucherNo = "JV-". ($maxid +1);
+
+        $debitinsert = array(
+            'fyear'          =>  0,
+            'VNo'            =>  $vaucherNo,
+            'Vtype'          =>  'JV',
+            'referenceNo'    =>  $payment_insert_id,
+            'VDate'          =>  $VDate,
+            'approvedDate'   =>  $VDate,
+            'COAID'          =>  $COAID,
+            'Narration'      =>  $Narration,     
+            'ledgerComment'  =>  $Comment,   
+            'RevCodde'       =>  $reVID,
+            'isApproved'     =>  1,
+            'approvedBy'     =>  $u_id,
+        );
+
+        if($amnt_type == 'Debit'){
+            
+            $debitinsert['Debit']  = $amnt;
+            $debitinsert['Credit'] =  0.00;    
+        }else{
+
+            $debitinsert['Debit']  = 0.00;
+            $debitinsert['Credit'] =  $amnt; 
+        }
+
+       DB::table('tbl_acc_vaucher')->insert($debitinsert);
+
+    return true;
     }
 }

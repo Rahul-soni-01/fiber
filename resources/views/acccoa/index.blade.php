@@ -48,14 +48,14 @@
                             // Group the accounts by HeadLevel
                             $groupedAccounts = $accounts->groupBy('HeadLevel');
                         @endphp
-             {{-- <table class="table table-bordered datatable-remove">
+             <table class="table table-bordered datatable-remove">
                 <thead class="table-bordered">
                     <tr>
-                        <th width="40%" bgcolor="#E7E0EE" align="center"><?php echo 'particulars'; ?>
+                        <th width="40%" bgcolor="#E7E0EE" align="center">Particulars
                         </th>
-                        <th  width="20%" colspan="2"  bgcolor="#E7E0EE" align="right" class="text-center"><?php echo 'Opening';?></th>
-                        <th  width="20%" colspan="2" bgcolor="#E7E0EE" align="right" class="text-center"><?php echo 'Current';?></th>
-                        <th  width="20%"  colspan="2"  bgcolor="#E7E0EE" align="right" class="text-center"><?php echo 'Balance';?></th>
+                        <th  width="20%" colspan="2"  bgcolor="#E7E0EE" align="right" class="text-center">Opening</th>
+                        <th  width="20%" colspan="2" bgcolor="#E7E0EE" align="right" class="text-center">Current</th>
+                        <th  width="20%"  colspan="2"  bgcolor="#E7E0EE" align="right" class="text-center">Balance</th>
 
                     </tr>
                     <tr>
@@ -68,8 +68,28 @@
                         <th width="10%" bgcolor="#E7E0EE" align="center">Credit</th>
                     </tr>
                     </thead>
-
-             </table> --}}
+                    <tbody>
+                        @if(isset($groupedAccounts[1]))
+                        @foreach ($groupedAccounts[1] as $topLevel)
+                        <tr>
+                            <td>
+                                {{ $topLevel->HeadCode }}. {{ $topLevel->HeadName }}
+                            </td>
+                        </tr>
+                            @if (isset($groupedAccounts[2]))
+                                @foreach ($groupedAccounts[2] as $childLevel2)
+                            <tr>
+                                <td></td>
+                                <td>
+                                    {{ $childLevel2->HeadCode }}  {{ $childLevel2->HeadName }}
+                                </td>
+                            </tr>
+                                @endforeach
+                            @endif
+                        @endforeach
+                        @endif
+                    </tbody>
+             </table>
                         @if(isset($groupedAccounts[1]))
                             @foreach ($groupedAccounts[1] as $topLevel)
                                 <!-- Display top-level account -->

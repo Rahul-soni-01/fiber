@@ -25,7 +25,7 @@
                     <select id="bankCode" name="bankCode" class="form-control select2" placeholder="Enter Bank Code">
                         <option value="" disabled selected>Choose a Bank Code</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->bankCode) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->bankCode) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -37,7 +37,7 @@
                     <select id="advance" name="advance" class="form-control select2" placeholder="Enter Advance">
                         <option value="" disabled selected>Choose an Advance</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->advance) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->advance) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -49,7 +49,7 @@
                     <select id="fixedAsset" name="fixedAsset" class="form-control select2" placeholder="Enter Fixed Asset">
                         <option value="" disabled selected>Choose a Fixed Asset</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->fixedAsset) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->fixedAsset) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -61,7 +61,7 @@
                     <select id="purchaseCode" name="purchaseCode" class="form-control select2" placeholder="Enter Purchase Code">
                         <option value="" disabled selected>Choose a Purchase Code</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->purchaseCode) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->purchaseCode) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -73,7 +73,7 @@
                     <select id="salesCode" name="salesCode" class="form-control select2" placeholder="Enter Sales Code">
                         <option value="" disabled selected>Choose a Sales Code</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->salesCode) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->salesCode) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -85,7 +85,7 @@
                     <select id="serviceCode" name="serviceCode" class="form-control select2" placeholder="Enter Service Code">
                         <option value="" disabled selected>Choose a Service Code</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->serviceCode) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->serviceCode) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -97,7 +97,7 @@
                     <select id="customerCode" name="customerCode" class="form-control select2" placeholder="Enter Customer Code">
                         <option value="" disabled selected>Choose a Customer Code</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->customerCode) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->customerCode) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -109,7 +109,7 @@
                     <select id="supplierCode" name="supplierCode" class="form-control select2" placeholder="Enter Supplier Code">
                         <option value="" disabled selected>Choose a Supplier Code</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->supplierCode) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->supplierCode) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -121,7 +121,7 @@
                     <select id="costs_of_good_solds" name="costs_of_good_solds" class="form-control select2" placeholder="Enter Costs of Good Solds">
                         <option value="" disabled selected>Choose Costs of Good Solds</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->costs_of_good_solds) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->costs_of_good_solds) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -133,7 +133,7 @@
                     <select id="vat" name="vat" class="form-control select2" placeholder="Enter VAT">
                         <option value="" disabled selected>Choose VAT</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->vat) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->vat) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach
@@ -145,7 +145,7 @@
                     <select id="tax" name="tax" class="form-control select2" placeholder="Enter Tax">
                         <option value="" disabled selected>Choose Tax</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode === $predefineaccount->tax) selected @endif>
+                            <option value="{{ $account->HeadCode }}" @if($account->HeadCode == $predefineaccount->tax) selected @endif>
                                 {{ $account->HeadCode }} - {{ $account->HeadName }}
                             </option>
                         @endforeach

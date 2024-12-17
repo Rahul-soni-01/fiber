@@ -10,7 +10,7 @@
                         <th>ID</th>
                         <th>Supplier Name</th>
                         <th>Total INR Amount</th>
-                        <th>Purchases</th>
+                        <th>Seller Payment</th>
                         {{-- <th>Total INR Payment</th>
                         <th>Payments</th> --}}
                         <th>Total INR Reaming</th>
@@ -18,11 +18,13 @@
                 </thead>
                 <tbody>
                     @foreach ($supplierData as $index => $supplier)
+                    {{-- {{ dd($supplier)}} --}}
                         <tr>
                             <td>{{ $index+1 }}</td>
                             <td>{{ $supplier['party_name'] }}</td>
                             <td><b class="text-info">{{ $supplier['total_inr_amount'] }}</b>
-                                <button class="btn btn toggle-btn float-right" data-target="purchases-{{ $index }}">
+
+                                {{-- <button class="btn btn toggle-btn float-right" data-target="purchases-{{ $index }}">
                                     <i class="bi bi-chevron-right"></i> Show
                                 </button>
                                 <table class="datatable-remove table table-sm table-striped mt-2 nested-table" id="purchases-{{ $index }}" style="display: none;">
@@ -54,10 +56,12 @@
                                             </tr>
                                         @endforelse
                                     </tbody>
-                                </table>
+                                </table> --}}
+
+                                <button class="btn float-right"> <a href="{{ route('party.purchase.details', ['party_id' => $supplier['party_id'] ]) }}"> Show </a></button>
                             </td>
                             <td> <b class="text-success">{{ $supplier['total_inr_payments'] }} </b>
-                                <button class="btn btn toggle-btn float-right" data-target="payments-{{ $index }}">
+                                {{-- <button class="btn btn toggle-btn float-right" data-target="payments-{{ $index }}">
                                     <i class="bi bi-chevron-right"></i> Show 
                                 </button>
                                 <table class="datatable-remove table table-sm table-striped mt-2 nested-table" id="payments-{{ $index }}" style="display: none;">
@@ -83,7 +87,9 @@
                                             </tr>
                                         @endforelse
                                     </tbody>
-                                </table>
+                                </table> --}}
+
+                                <a class="btn float-right" href="{{ route('party.purchase.details', ['party_id' =>  $supplier['party_id'] ]) }}?payment"> supplier Payment </a> 
                             </td>
                             
                             

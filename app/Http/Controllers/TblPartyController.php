@@ -7,6 +7,7 @@ use App\Models\tbl_category;
 use App\Models\tbl_sub_category;
 use App\Models\tbl_purchase;
 use App\Models\TblPurchaseReturn;
+use App\Models\TblPayment;
 use Illuminate\Http\Request;
 
 class TblPartyController extends Controller
@@ -133,6 +134,11 @@ class TblPartyController extends Controller
     }
 
     public function Purchase_details(tbl_party $tbl_party,$id,Request $request){
+
+    
+        $SupplierPayment = TblPayment::with('supplier')
+        ->where('supplier_id',$id )
+        ->get();
         $inwards = tbl_purchase::where('pid',$id)->get();
         $SubCategories = tbl_sub_category::all();
             $Categories = tbl_category::all();
@@ -140,7 +146,7 @@ class TblPartyController extends Controller
         $PurchaseReturns = TblPurchaseReturn::with('purchaseReturnDetails','party','purchaseReturnDetails.category','purchaseReturnDetails.subCategory')
             ->where('p_id',$id)
             ->get();
-
-       return view('party.PurchaseDetails', ['inwards' => $inwards,'SubCategories'=>$SubCategories,'Categories'=>$Categories,'PurchaseReturns'=>$PurchaseReturns]);
+        // dd($PurchaseReturns);
+       return view('party.PurchaseDetails', ['inwards' => $inwards,'SubCategories'=>$SubCategories,'Categories'=>$Categories,'PurchaseReturns'=>$PurchaseReturns , 'id' =>$id,'SupplierPayments'=> $SupplierPayment]);
     }
 }

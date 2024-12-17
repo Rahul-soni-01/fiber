@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TblCustomer;
 use App\Models\Sale;
 use App\Models\TblSaleReturn;
+use App\Models\CustomerPayment;
 
 
 class TblCustomerController extends Controller
@@ -107,6 +108,9 @@ class TblCustomerController extends Controller
 
     public function Sale_details(TblCustomer $tblCustomer, $id, Request $request){
         
+        $CustomerPayment = CustomerPayment::with('customer')
+        ->where('customer_id',$id )
+        ->get();
         $sales = Sale::with('customer')
         ->where('customer_id',$id)
         ->get();
@@ -117,6 +121,6 @@ class TblCustomerController extends Controller
         // dd($salereturns);
         
  
-        return view('customer.SellDetails', ['sales' => $sales,'salereturns'=>$salereturns]);
+        return view('customer.SellDetails', ['sales' => $sales,'salereturns'=>$salereturns,'CustomerPayments'=>$CustomerPayment,'id'=>$id]);
     }
 }

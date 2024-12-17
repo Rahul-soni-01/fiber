@@ -10,7 +10,7 @@
                         <th>ID</th>
                         <th>Customer Name</th>
                         <th>Total INR Amount</th>
-                        <th>Sell</th>
+                        <th>Customer Payment </th>
                         {{-- <th>Total INR Payment</th>
                         <th>Payments</th> --}}
                         <th>Total INR Reaming</th>
@@ -60,7 +60,8 @@
                                 </table>
                             </td>
                             <td> <b class="text-success">{{ $customer['total_inr_payments'] }} </b>
-                                <button class="btn btn toggle-btn float-right" data-target="payments-{{ $index }}">
+                                
+                                {{-- <button class="btn btn toggle-btn float-right" data-target="payments-{{ $index }}">
                                     <i class="bi bi-chevron-right"></i> Show 
                                 </button>
                                 <table class="datatable-remove table table-sm table-striped mt-2 nested-table" id="payments-{{ $index }}" style="display: none;">
@@ -86,7 +87,8 @@
                                             </tr>
                                         @endforelse
                                     </tbody>
-                                </table>
+                                </table> --}}
+                                <a class="btn float-right" href="{{ route('customer.sell.details', ['customer_id' =>  $customer['customer_id'] ]) }}?payment"> Customer Payment </a>  
                             </td>
                             
                             
