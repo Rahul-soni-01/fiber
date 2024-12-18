@@ -101,7 +101,6 @@
                     <li><a href="{{ route('type.index') }}" id="view" class="sub-item">Show Types</a></li>
                     <li><a href="{{ route('type.create') }}" id="add" class="sub-item">Add Types</a></li>
                 </ul>
-
             </li>
             {{-- @if('admin' === auth()->user()->type) --}}
 
@@ -198,6 +197,14 @@
                     <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li>
                     <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li>
                     <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a></li>
+                </ul>
+            </li>
+            <li id="Bank" class="sidebar">
+                <a class="sub-btn" id="sub-btn-add"><i class="ri-bank-line"></i>Bank <i
+                        class="ri-arrow-down-s-line"></i></a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('banks.create') }}" id="add" class="sub-item">Add Bank</a></li>
+                    <li><a href="{{ route('banks.index') }}" id="view" class="sub-item"> Show Bank </a></li>
                 </ul>
             </li>
         </ul>

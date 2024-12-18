@@ -18,6 +18,7 @@ use App\Http\Controllers\TblCustomerController;
 use App\Http\Controllers\TbltypeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TblAccCoaController;
+use App\Http\Controllers\TblBankController;
 
 
 use Illuminate\Support\Facades\Hash;
@@ -72,7 +73,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/acccoa/{id}', [TblAccCoaController::class, 'update'])->name('acccoa.update');
     Route::delete('/acccoa{acccoa_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
    
-    
+    //bank crud
+    Route::get('/bank', [TblBankController::class, 'index'])->name('banks.index');
+    Route::get('/bank-create', [TblBankController::class, 'create'])->name('banks.create');
+    Route::post('/bank-store', [TblBankController::class, 'store'])->name('banks.store');
+    Route::get('edit-bank{bank_id}', [TblBankController::class, 'edit'])->name(('banks.edit')); //View deparment By id.
+    Route::put('/bank/{id}', [TblBankController::class, 'update'])->name('banks.update');
+    Route::delete('/bank{department_id}', [TblBankController::class, 'destroy'])->name('banks.destroy');
+
     // departments Crud
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
     Route::get('/departments-create', [DepartmentController::class, 'create'])->name('departments.create');
