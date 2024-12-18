@@ -78,9 +78,7 @@
                         <tfoot>
                             <tr>
                                 <td colspan="4" align="right"><strong>Final Balance:</strong></td>
-                                <td align="center" 
-                                    style="font-weight: bold; 
-                                           color: {{ $balance >= 0 ? 'green' : 'red' }};">
+                                <td class="text-center fw-bold {{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
                                     {{ number_format($balance, 2) }}
                                 </td>
                             </tr>
