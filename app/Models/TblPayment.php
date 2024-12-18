@@ -18,6 +18,7 @@ class TblPayment extends Model
         'remaining_amount',
         'payment_date',
         'payment_method',
+        'bank_id',
         'transaction_type',
         'bank_name',
         'account_holder_name',
@@ -25,6 +26,7 @@ class TblPayment extends Model
         'account_number',
         'account_type',
         'ifsc_code',
+        'cheque_no',
         'notes',
     ];
 

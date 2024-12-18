@@ -61,6 +61,11 @@
                                 <input type="text" name="account_holder_name" id="account_holder_name"
                                     class="form-control" value="{{ old('account_holder_name') }}" required placeholder="Enter Account Holder Name">
                             </div>
+                            <div class="mb-3">
+                                <label for="opening_balance" class="form-label">Account Opening Balance</label>
+                                <input type="text" name="opening_balance" id="opening_balance"
+                                    class="form-control" value="{{ old('opening_balance') }}" required placeholder="Enter Account Opening Blanace">
+                            </div>
 
                             <button type="submit" class="btn btn-success">Add Bank</button>
                         </div>

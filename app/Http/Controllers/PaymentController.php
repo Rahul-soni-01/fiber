@@ -8,6 +8,7 @@ use App\Models\TblPayment;
 use App\Models\tbl_party;
 use App\Models\TblCustomer;
 use App\Models\Sale;
+use App\Models\TblBank;
 use App\Models\tbl_purchase;
 use App\Models\TblAccPredefineAccount;
 use App\Http\Controllers\TblAccCoaController;
@@ -29,9 +30,10 @@ class PaymentController extends Controller
             $customers = TblCustomer::all();
             $suppliers = tbl_party::all();
             $selles = Sale::all();
+            $banks = TblBank::all();
             $tbl_purchases = tbl_purchase::all();
 
-            return view('payment.create', compact('customers', 'suppliers', 'selles', 'tbl_purchases'));
+            return view('payment.create', compact('banks','customers', 'suppliers', 'selles', 'tbl_purchases'));
         }
         return redirect('/unauthorized');
 
@@ -46,13 +48,15 @@ class PaymentController extends Controller
                 'invoice_no.*' => 'integer', // Each sale ID should be an integer
                 'paid_total' => 'required|numeric|min:0',
                 'payment_method' => 'required|string|in:Cash,Bank',
-                'transaction_type' => 'nullable|string|in:RTGS,NEFT', // Only for Bank
+                'transaction_type' => 'nullable|string|in:RTGS,NEFT,CHEQUE', // Only for Bank
+                'bank_id' => 'nullable|string|max:255',
                 'bank_name' => 'nullable|string|max:255',
                 'holder_name' => 'nullable|string|max:255',
                 'branch_name' => 'nullable|string|max:255',
                 'account_number' => 'nullable|string|max:255',
                 'account_type' => 'nullable|string|in:HSS,CD,CC,OD',
                 'ifsc_code' => 'nullable|string|max:255',
+                'cheque_no' => 'nullable|string|max:255',
             ]);
 
             $paymentData = [
@@ -64,11 +68,13 @@ class PaymentController extends Controller
                 'notes' => $request->note ?? null,
                 'transaction_type' => $request->payment_method === 'Bank' ? $request->transaction_type : null,
                 'bank_name' => $request->payment_method === 'Bank' ? $request->bank_name : null,
+                'bank_id' => $request->payment_method === 'Bank' ? $request->bank_id : null,
                 'account_holder_name' => $request->payment_method === 'Bank' ? $request->holder_name : null,
                 'branch_name' => $request->payment_method === 'Bank' ? $request->branch_name : null,
                 'account_number' => $request->payment_method === 'Bank' ? $request->account_number : null,
                 'account_type' => $request->payment_method === 'Bank' ? $request->account_type : null,
                 'ifsc_code' => $request->payment_method === 'Bank' ? $request->ifsc_code : null,
+                'cheque_no' => $request->payment_method === 'Bank' ? $request->cheque_no : null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -83,13 +89,14 @@ class PaymentController extends Controller
                 'sale_id.*' => 'integer', // Each sale ID should be an integer
                 'paid_total' => 'required|numeric|min:0',
                 'payment_method' => 'required|string|in:Cash,Bank',
-                'transaction_type' => 'nullable|string|in:RTGS,NEFT', // Only for Bank
+                'transaction_type' => 'nullable|string|in:RTGS,NEFT,CHEQUE', // Only for Bank
                 'bank_name' => 'nullable|string|max:255',
                 'holder_name' => 'nullable|string|max:255',
                 'branch_name' => 'nullable|string|max:255',
                 'account_number' => 'nullable|string|max:255',
                 'account_type' => 'nullable|string|in:HSS,CD,CC,OD',
                 'ifsc_code' => 'nullable|string|max:255',
+                'cheque_no' => 'nullable|string|max:255',
             ]);
 
             $CustomerPaymentData = [
@@ -100,12 +107,14 @@ class PaymentController extends Controller
                 'payment_method' => $request->payment_method,
                 'notes' => $request->note ?? null,
                 'transaction_type' => $request->payment_method === 'Bank' ? $request->transaction_type : null,
+                'bank_id' => $request->payment_method === 'Bank' ? $request->bank_id : null,
                 'bank_name' => $request->payment_method === 'Bank' ? $request->bank_name : null,
                 'account_holder_name' => $request->payment_method === 'Bank' ? $request->holder_name : null,
                 'branch_name' => $request->payment_method === 'Bank' ? $request->branch_name : null,
                 'account_number' => $request->payment_method === 'Bank' ? $request->account_number : null,
                 'account_type' => $request->payment_method === 'Bank' ? $request->account_type : null,
                 'ifsc_code' => $request->payment_method === 'Bank' ? $request->ifsc_code : null,
+                'cheque_no' => $request->payment_method === 'Bank' ? $request->cheque_no : null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

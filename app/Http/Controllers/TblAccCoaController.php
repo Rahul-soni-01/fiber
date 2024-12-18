@@ -196,17 +196,18 @@ class TblAccCoaController extends Controller
     public function getMaxFieldNumber($field, $table, $where = null, $type = null, $field2 = null)
     {
         $query = DB::table($table)
-            ->select($field);
+            ->select('*');
 
         if ($where !== null) {
             $query->where($where, $type);
         }
 
         $record = $query->orderBy('id', 'desc')->first();
-
+        // $data = DB::table($table)->select($field);
         if ($record) {
             if ($field2 !== null) {
                 $num = $record->{$field2};
+                // dd($record,$field2,$num);
                 if (strpos($num, '-') !== false) { // Ensure it can be split
                     list($txt, $intval) = explode('-', $num);
                     return (int) $intval; // Return the numeric part

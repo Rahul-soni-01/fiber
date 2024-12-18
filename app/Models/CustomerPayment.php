@@ -24,6 +24,8 @@ class CustomerPayment extends Model
         'account_number',
         'account_type',
         'ifsc_code',
+        'cheque_no',
+        'bank_id',
         'notes',
     ];
 

@@ -77,7 +77,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/bank', [TblBankController::class, 'index'])->name('banks.index');
     Route::get('/bank-create', [TblBankController::class, 'create'])->name('banks.create');
     Route::post('/bank-store', [TblBankController::class, 'store'])->name('banks.store');
-    Route::get('edit-bank{bank_id}', [TblBankController::class, 'edit'])->name(('banks.edit')); //View deparment By id.
+    Route::get('edit-bank-{bank_id}', [TblBankController::class, 'edit'])->name(('banks.edit')); //View deparment By id.
+    Route::get('show-bank-{bank_id}', [TblBankController::class, 'show'])->name(('banks.show')); //View deparment By id.
     Route::put('/bank/{id}', [TblBankController::class, 'update'])->name('banks.update');
     Route::delete('/bank{department_id}', [TblBankController::class, 'destroy'])->name('banks.destroy');
 
@@ -85,7 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
     Route::get('/departments-create', [DepartmentController::class, 'create'])->name('departments.create');
     Route::post('/departments-store', [DepartmentController::class, 'store'])->name('departments.store');
-    Route::get('edit-department{department_id}', [DepartmentController::class, 'edit'])->name(('departments.edit')); //View deparment By id.
+    Route::get('edit-department-{department_id}', [DepartmentController::class, 'edit'])->name(('departments.edit')); //View deparment By id.
     Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
     Route::delete('/departments{department_id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
    

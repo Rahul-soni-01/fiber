@@ -75,21 +75,36 @@
                                 <input type="radio" id="neft" name="transaction_type" value="NEFT" class="form-check-input">
                                 <label for="neft" class="form-check-label">NEFT</label>
                             </div>
-                        
+                            <div class="form-check">
+                                <input type="radio" id="cheque" name="transaction_type" value="CHEQUE" class="form-check-input">
+                                <label for="cheque" class="form-check-label">Cheque</label>
+                            </div>
+
                             <div class="form-group mt-2">
-                                <label for="bank_name">Bank Name:</label>
+                                <label for="bank_name">Reciver Bank Name:</label>
+                                {{-- <input type="text" id="bank_name" name="b" class="form-control" placeholder="Enter Bank Name"> --}}
+                                <select id="bank_id" name="bank_id" class="form-control" placeholder="Select Bank Your send Name"> 
+                                    <option value="" disabled selected>Select Your Reciver Bank Name</option>
+                                    @foreach($banks as $key => $bank)
+                                        <option value="{{$bank->id}}"> {{$bank->bank_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group mt-2">
+                                <label for="bank_name">Customer Bank Name:</label>
                                 <input type="text" id="bank_name" name="bank_name" class="form-control" placeholder="Enter Bank Name">
                             </div>
                             <div class="form-group">
-                                <label for="holder_name">Account Holder Name:</label>
+                                <label for="holder_name">Customer Account Holder Name:</label>
                                 <input type="text" id="holder_name" name="holder_name" class="form-control" placeholder="Enter Account Holder Name">
                             </div>
                             <div class="form-group">
-                                <label for="branch_name">Branch Name:</label>
+                                <label for="branch_name">Customer Branch Name:</label>
                                 <input type="text" id="branch_name" name="branch_name" class="form-control" placeholder="Enter Branch Name">
                             </div>
                             <div class="form-group">
-                                <label for="account_number">Account Number:</label>
+                                <label for="account_number">Customer Account Number:</label>
                                 <input type="text" id="account_number" name="account_number" class="form-control" placeholder="Enter Account Number">
                             </div>
                             <div class="form-group">
@@ -105,6 +120,11 @@
                             <div class="form-group">
                                 <label for="ifsc_code">IFSC Code:</label>
                                 <input type="text" id="ifsc_code" name="ifsc_code" class="form-control" placeholder="Enter IFSC Code">
+                            </div>
+
+                            <div class="form-group mt-2">
+                                <label for="cheque_no">Cheque No: *(Cheque available)</label>
+                                <input type="text" id="cheque_no" name="cheque_no" class="form-control" placeholder="Enter Cheque No.">
                             </div>
                         </div>
                             <div class="mb-3 offset-sm-3 col-md-6">
@@ -165,7 +185,9 @@
                             </select>
                         </div>
                         <div id="supplier_bank_details" class="mt-3 offset-sm-3 col-md-6" style="display: none;">
-                            <label for="transaction_type">Transaction Yype</label>
+                            
+                            
+                            <label for="transaction_type">Sender Transaction Type</label>
                             <div class="form-check">
                                 <input type="radio" id="rtgs" name="transaction_type" value="RTGS" class="form-check-input">
                                 <label for="rtgs" class="form-check-label">RTGS</label>
@@ -174,25 +196,40 @@
                                 <input type="radio" id="neft" name="transaction_type" value="NEFT" class="form-check-input">
                                 <label for="neft" class="form-check-label">NEFT</label>
                             </div>
+                            <div class="form-check">
+                                <input type="radio" id="cheque" name="transaction_type" value="CHEQUE" class="form-check-input">
+                                <label for="cheque" class="form-check-label">Cheque</label>
+                            </div>
                         
                             <div class="form-group mt-2">
-                                <label for="bank_name">Bank Name:</label>
+                                <label for="bank_name">Sender Bank Name:</label>
+                                {{-- <input type="text" id="bank_name" name="b" class="form-control" placeholder="Enter Bank Name"> --}}
+                                <select id="bank_id" name="bank_id" class="form-control" placeholder="Select Bank Your send Name"> 
+                                    <option value="" disabled selected>Select Your Bank Name </option>
+                                    @foreach($banks as $key => $bank)
+                                        <option value="{{$bank->id}}"> {{$bank->bank_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group mt-2">
+                                <label for="bank_name">Reciver Bank Name:</label>
                                 <input type="text" id="bank_name" name="bank_name" class="form-control" placeholder="Enter Bank Name">
                             </div>
                             <div class="form-group">
-                                <label for="holder_name">Account Holder Name:</label>
+                                <label for="holder_name">Reciver Account Holder Name:</label>
                                 <input type="text" id="holder_name" name="holder_name" class="form-control" placeholder="Enter Account Holder Name">
                             </div>
                             <div class="form-group">
-                                <label for="branch_name">Branch Name:</label>
+                                <label for="branch_name">Reciver Branch Name:</label>
                                 <input type="text" id="branch_name" name="branch_name" class="form-control" placeholder="Enter Branch Name">
                             </div>
                             <div class="form-group">
-                                <label for="account_number">Account Number:</label>
+                                <label for="account_number">Reciver Account Number:</label>
                                 <input type="text" id="account_number" name="account_number" class="form-control" placeholder="Enter Account Number">
                             </div>
                             <div class="form-group">
-                                <label for="account_type">Type of Account:</label>
+                                <label for="account_type">Reciver Type of Account:</label>
                                 <select id="account_type" name="account_type" class="form-control">
                                     <option value="" disabled selected>Select Type of Account</option>
                                     <option value="HSS">HSS</option>
@@ -204,6 +241,10 @@
                             <div class="form-group">
                                 <label for="ifsc_code">IFSC Code:</label>
                                 <input type="text" id="ifsc_code" name="ifsc_code" class="form-control" placeholder="Enter IFSC Code">
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="cheque_no">Cheque No: *if(Cheque available) </label>
+                                <input type="text" id="cheque_no" name="cheque_no" class="form-control" placeholder="Enter Cheque No.">
                             </div>
                         </div>
                             <div class="mb-3 offset-sm-3 col-md-6">

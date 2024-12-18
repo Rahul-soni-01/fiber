@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TblBank;
+use App\Models\CustomerPayment;
+use App\Models\TblPayment;
 
 
 class TblBankController extends Controller
@@ -38,6 +40,32 @@ class TblBankController extends Controller
     {
         $bank = TblBank::findOrFail($id);
         return view('banks.edit', compact('bank'));
+    }
+
+    public function show($id){
+        $bank = TblBank::findOrFail($id);
+        $opening = $bank->opening_balance;
+        $customer_payments = CustomerPayment::with('customer')->where('bank_id', $id)->get();
+        $total_customer_payment = 0;
+        foreach ($customer_payments as $payment) {
+            $total_customer_payment += $payment->amount_paid;
+        }
+
+        $supplier_payments = TblPayment::with('supplier')->where('bank_id', $id)->get();
+        $total_supplier_payment = 0;
+        foreach($supplier_payments as $payment){
+            $total_supplier_payment += $payment->amount_paid;
+        }
+        
+        $all_payments = $customer_payments->merge($supplier_payments);
+
+        $all_payments = $all_payments->sortBy(function ($payment) {
+            return $payment->payment_date; // Use the combined date-time field for sorting
+        });
+
+        // dd($all_payments);
+
+        return view('banks.show', compact('bank','customer_payments','supplier_payments','total_customer_payment','total_supplier_payment','id','all_payments'));
     }
 
     public function update(Request $request, $id)

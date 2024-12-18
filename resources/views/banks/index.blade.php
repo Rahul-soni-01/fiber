@@ -16,6 +16,7 @@
                         <th>Bank Name</th>
                         <th>Branch</th>
                         <th>Account Type</th>
+                        <th>Opening Blanace</th>
                         <th>Account Number</th>
                         <th>Account Holder</th>
                         <th>Action</th>
@@ -28,6 +29,7 @@
                             <td>{{ $bank->bank_name }}</td>
                             <td>{{ $bank->branch ?? 'N/A' }}</td>
                             <td>{{ $bank->account_type }}</td>
+                            <td>{{ $bank->opening_balance }}</td>
                             <td>{{ $bank->account_number }}</td>
                             <td>{{ $bank->account_holder_name }}</td>
                             <td>
@@ -43,12 +45,18 @@
                                         <i class="ri-delete-bin-fill"></i> Delete
                                     </button>
                                 </form>
+                                <!-- Show Button -->
+                                <a href="{{ route('banks.show', $bank->id) }}" class="btn btn-sm btn-info">
+                                    <i class="ri-eye-fill"></i> Show
+                                </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td class="text-center">No banks found.</td>
                             <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center">No banks found.</td>
                             <td class="text-center"></td>
                             <td class="text-center"></td>
                             <td class="text-center"></td>
