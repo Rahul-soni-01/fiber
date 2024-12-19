@@ -173,7 +173,7 @@
                         </div>
                         @endif
 
-                        @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
+                        @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric' || auth()->user()->type === 'godown' )
 
                         <div class="row ">
                             <!-- ITEM -->

@@ -17,8 +17,7 @@
                   <a class="nav-link" id="supplier-payment-tab" data-bs-toggle="tab" href="#supplier-payment" role="tab" aria-controls="supplier-payment" aria-selected="false">Supplier Payment</a>
                 </li>
             </ul>
-            <div class="tab-content" id="customerTabContent">
-
+            <div class="tab-content mt-2" id="customerTabContent">
                 <div class="tab-pane fade show active" id="payment" role="tabpanel" aria-labelledby="payment-tab">
                     <table class="table table-bordered datatable-remove">
                         <thead class="table-bordered">

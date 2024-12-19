@@ -82,6 +82,9 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('party.create') }}" id="add" class="sub-item">Add Supplier</a></li>
                     <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Supplier</a></li>
+                    
+                    <li><a href="{{ route('payment.create') }}" id="add" class="sub-item">Add Payment</a></li>
+                    <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li>
                 </ul>
             </li>
 
@@ -171,22 +174,18 @@
                     <li><a href="{{ route('sale.return.index') }}" id="view" class="sub-item">Sale Return</a></li>
                 </ul>
             </li>
-            <li id="Sale" class="sidebar">
-                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Payment <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('payment.create') }}" id="add" class="sub-item">Add Payment</a></li>
-                    <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li>
-                    <li><a href="{{ route('payment.customer.index') }}" id="view" class="sub-item">Customer Payment</a></li>
-                    {{-- <li><a href="{{ route('payment.return.index') }}" id="view" class="sub-item">Payment Return</a></li> --}}
-                </ul>
-            </li>
+           
             <li id="Customer" class="sidebar">
                 <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Customer<i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
                     <li><a href="{{ route('customer.create') }}" id="add" class="sub-item">Add Customer</a></li>
                     <li><a href="{{ route('customer.index') }}" id="view" class="sub-item">Show Customer</a></li>
+
+                    
+                    <li><a href="{{ route('payment.customer.create') }}" id="add" class="sub-item">Add Payment</a></li>
+                    {{-- <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li> --}}
+                    <li><a href="{{ route('payment.customer.index') }}" id="view" class="sub-item">Customer Payment</a></li>
                 </ul>
             </li>
 
@@ -207,6 +206,18 @@
                     <li><a href="{{ route('banks.index') }}" id="view" class="sub-item"> Show Bank </a></li>
                 </ul>
             </li>
+
+            <li id="Expense" class="sidebar">
+                <a class="sub-btn" id="sub-btn-expense">
+                    <i class="ri-money-dollar-circle-line"></i> Expense
+                    <i class="ri-arrow-down-s-line"></i>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('expenses.create') }}" id="add-expense" class="sub-item">Add Expense</a></li>
+                    <li><a href="{{ route('expenses.index') }}" id="view-expense" class="sub-item">Show Expense</a></li>
+                </ul>
+            </li>
+            
         </ul>
 
     </div>

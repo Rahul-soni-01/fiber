@@ -10,6 +10,7 @@ use App\Models\tbl_category;
 use App\Models\tbl_sub_category;
 use App\Models\Report;
 use App\Models\TblCustomer;
+use App\Models\Tbltype;
 use App\Models\TblSaleReturn;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -114,8 +115,9 @@ class SaleController extends Controller
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
             $serial_nos = Report::where('status', '1')->where('sale_status', '!=', '1')->where('part', '0')->get()->sortBy('sr_no_fiber');
-
-            return view('sale.create', compact('customers', 'inwards', 'items', 'serial_nos'));
+            $types = Tbltype::orderBy('id', 'asc')->get();
+            // return view('sale.create', compact('customers', 'inwards', 'items', 'serial_nos'));
+            return view('sale.newcreate', compact('types','customers', 'inwards', 'items', 'serial_nos'));
         }
         return redirect('/unauthorized');
 

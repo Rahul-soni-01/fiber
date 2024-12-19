@@ -38,6 +38,20 @@ class PaymentController extends Controller
         return redirect('/unauthorized');
 
     }
+    public function customercreate(Request $request)
+    {
+        if ($this->checkPermission($request, 'add')) {
+            $customers = TblCustomer::all();
+            $suppliers = tbl_party::all();
+            $selles = Sale::all();
+            $banks = TblBank::all();
+            $tbl_purchases = tbl_purchase::all();
+
+            return view('payment.customercreate', compact('banks','customers', 'suppliers', 'selles', 'tbl_purchases'));
+        }
+        return redirect('/unauthorized');
+
+    }
     public function store(Request $request)
     {
         if (!empty($request->sid)) {

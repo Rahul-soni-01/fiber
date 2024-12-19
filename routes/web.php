@@ -19,6 +19,7 @@ use App\Http\Controllers\TbltypeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TblAccCoaController;
 use App\Http\Controllers\TblBankController;
+use App\Http\Controllers\TblExpenseController;
 
 
 use Illuminate\Support\Facades\Hash;
@@ -82,6 +83,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/bank/{id}', [TblBankController::class, 'update'])->name('banks.update');
     Route::delete('/bank{department_id}', [TblBankController::class, 'destroy'])->name('banks.destroy');
 
+    // expensive crud
+    Route::get('/expense', [TblExpenseController::class, 'index'])->name('expenses.index');
+    Route::get('/expense-create', [TblExpenseController::class, 'create'])->name('expenses.create');
+    Route::post('/expense-store', [TblExpenseController::class, 'store'])->name('expenses.store');
+    Route::get('edit-expense-{expense_id}', [TblExpenseController::class, 'edit'])->name('expenses.edit'); // View expense by ID
+    Route::get('show-expense-{expense_id}', [TblExpenseController::class, 'show'])->name('expenses.show'); // View expense by ID
+    Route::put('/expense/{id}', [TblExpenseController::class, 'update'])->name('expenses.update');
+    Route::delete('/expense{expense_id}', [TblExpenseController::class, 'destroy'])->name('expenses.destroy');
+
     // departments Crud
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
     Route::get('/departments-create', [DepartmentController::class, 'create'])->name('departments.create');
@@ -93,7 +103,8 @@ Route::middleware('auth')->group(function () {
     // payment crud
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
     Route::get('/customer-payment', [PaymentController::class, 'CustomerIndex'])->name('payment.customer.index');
-    Route::get('/payment-create', [PaymentController::class, 'create'])->name('payment.create');
+    Route::get('/payment-supplier-create', [PaymentController::class, 'create'])->name('payment.create');
+    Route::get('/payment-customer-create', [PaymentController::class, 'customercreate'])->name('payment.customer.create');
     Route::post('/payment-store', [PaymentController::class, 'store'])->name('payment.store');
     Route::get('edit-payment{payment_id}', [PaymentController::class, 'edit'])->name(('payment.edit')); //View deparment By id.
     Route::put('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');

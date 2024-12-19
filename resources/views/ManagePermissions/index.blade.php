@@ -1,8 +1,8 @@
 <x-layout>
     <x-slot name="title">Show Permission</x-slot>
     <x-slot name="main">
-        <div class="main" id="main" style="">
-            <a href="{{ route('manage.permissions.create') }}" class="btn btn-primary m-3">Add User Permission</a>
+        <div class="main" id="main">
+            <a href="{{ route('manage.permissions.create') }}" class="btn btn-primary mb-3">Add User Permission</a>
             @if ($errors->any())
             <div style="color: red;">
                 <ul>
