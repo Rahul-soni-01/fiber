@@ -20,6 +20,9 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TblAccCoaController;
 use App\Http\Controllers\TblBankController;
 use App\Http\Controllers\TblExpenseController;
+use App\Http\Controllers\TblSaleProductCategoryController;
+use App\Http\Controllers\TblSaleProductSubCategoryController;
+
 
 
 use Illuminate\Support\Facades\Hash;
@@ -74,6 +77,24 @@ Route::middleware('auth')->group(function () {
     Route::put('/acccoa/{id}', [TblAccCoaController::class, 'update'])->name('acccoa.update');
     Route::delete('/acccoa{acccoa_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
    
+    //saleproductcategory crud
+    Route::get('/saleproductcategory', [TblSaleProductCategoryController::class, 'index'])->name('saleproductcategory.index');
+    Route::get('/saleproductcategory-create', [TblSaleProductCategoryController::class, 'create'])->name('saleproductcategory.create');
+    Route::post('/saleproductcategory-store', [TblSaleProductCategoryController::class, 'store'])->name('saleproductcategory.store');
+    Route::get('edit-saleproductcategory-{id}', [TblSaleProductCategoryController::class, 'edit'])->name('saleproductcategory.edit');
+    Route::get('show-saleproductcategory-{id}', [TblSaleProductCategoryController::class, 'show'])->name('saleproductcategory.show');
+    Route::put('/saleproductcategory/{id}', [TblSaleProductCategoryController::class, 'update'])->name('saleproductcategory.update');
+    Route::delete('/saleproductcategory/{id}', [TblSaleProductCategoryController::class, 'destroy'])->name('saleproductcategory.destroy');
+    
+    //saleproductsubcategory crud
+    Route::get('/saleproductsubcategory', [TblSaleProductSubCategoryController::class, 'index'])->name('saleproductsubcategory.index');
+    Route::get('/saleproductsubcategory-create', [TblSaleProductSubCategoryController::class, 'create'])->name('saleproductsubcategory.create');
+    Route::post('/saleproductsubcategory-store', [TblSaleProductSubCategoryController::class, 'store'])->name('saleproductsubcategory.store');
+    Route::get('edit-saleproductsubcategory-{id}', [TblSaleProductSubCategoryController::class, 'edit'])->name('saleproductsubcategory.edit');
+    Route::get('show-saleproductsubcategory-{id}', [TblSaleProductSubCategoryController::class, 'show'])->name('saleproductsubcategory.show');
+    Route::put('/saleproductsubcategory-{id}', [TblSaleProductSubCategoryController::class, 'update'])->name('saleproductsubcategory.update');
+    Route::delete('/saleproductsubcategory/{id}', [TblSaleProductSubCategoryController::class, 'destroy'])->name('saleproductsubcategory.destroy');
+
     //bank crud
     Route::get('/bank', [TblBankController::class, 'index'])->name('banks.index');
     Route::get('/bank-create', [TblBankController::class, 'create'])->name('banks.create');
