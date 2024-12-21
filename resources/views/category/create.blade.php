@@ -19,9 +19,15 @@
                     <div class="col-md-3">
                         <h3>Category</h3>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <input type="text" class="form-control" name="category_name" id="category_name"
                             placeholder="Enter category name" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="sr_no">Sellable (*if avalible) </label>
+                        {{-- <input type="number" name="sr_no" id="sr_no" class="form-control" placeholder="Enter Serial Number (Optional)"> --}}
+                        <input type="checkbox" name="is_sellable" id="is_sellable" class="form-control-input" value="1">
+                        
                     </div>
                     <div class="col-md-3">
                         <button type="submit" class="btn btn-success">Submit</button>
@@ -50,7 +56,8 @@
                             required>
                             <option value="" disabled>Select Category</option>
                             @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                            {{-- <option value="{{ $category->id }}">{{ $category->category_name }}</option> --}}
+                            <option value="{{ $category->category_name}}">{{ $category->category_name }}</option>
                             @endforeach
                         </select>
                         @error('category')
@@ -73,13 +80,20 @@
                             <option value="Mtr">Mtr</option>
                         </select>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
+                    <div class="col row mb-3">
+                        <div class="col-md-2">
                             <label for="sr_no" class="form-label">SR No.</label><br>
                             <input type="hidden" name="sr_no" value="0">
                             <input type="checkbox" id="sr_no" name="sr_no" value="1">
                         </div>
-                        <div class="col-md-3 mt-3">
+
+                        <div class="col">
+                            <label for="sr_no">Sellable (*if avalible) </label>
+                            {{-- <input type="number" name="sr_no" id="sr_no" class="form-control" placeholder="Enter Serial Number (Optional)"> --}}
+                            <input type="checkbox" name="is_sellable" id="is_sellable" class="form-control-input" value="1">
+                            
+                        </div>
+                        <div class="col ">
                             <button type="submit" class="btn btn-success mt-3">Submit</button>
                         </div>
                     </div>

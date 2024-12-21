@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tbl_categories', function (Blueprint $table) {
             $table->id();
             $table->string('category_name');
+            $table->boolean('is_sellable')->default(0);
             $table->timestamps();
         });
     }

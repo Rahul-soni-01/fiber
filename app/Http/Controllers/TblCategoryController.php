@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\tbl_category;
+use App\Models\TblSaleProductCategory;
 use Illuminate\Http\Request;
 
 class TblCategoryController extends Controller
@@ -40,12 +41,26 @@ class TblCategoryController extends Controller
         if ($this->checkPermission($request, 'add')) {
 
             $request->validate([
-                'category_name' => 'required|string|max:255',
+                'category_name' => 'required|string|unique:tbl_categories,category_name|max:255',
+                'sr_no' => 'nullable|integer',
             ]);
+            $sellable = $request->has('is_sellable') ? $request->is_sellable : 0;
+            if($sellable == '1'){
+                $validatedData = $request->validate([
+                    'category_name' => 'required|string|max:255',
+                ]);
+                
+                $Salecategory = new TblSaleProductCategory();
+                $Salecategory->name = $validatedData['category_name'];
+                $Salecategory->save();
+            }
             $category = new tbl_category();
             $category->category_name = $request->category_name;
-
+            // $category->is_sellable = $Salecategory->new id();
             $result = $category->save();
+
+            // dd($sellable);
+            
             if ($result) {
                 return redirect()->route('category.index')->with('success', 'Category added successfully.');
             } else {
@@ -57,8 +72,6 @@ class TblCategoryController extends Controller
 
     public function show(tbl_category $tbl_category, Request $request)
     {
-       
-
     }
 
     public function edit(tbl_category $tbl_category,$id,Request $request)
@@ -75,11 +88,18 @@ class TblCategoryController extends Controller
         $request->validate([
             'category_name' => 'required|string|max:255',
         ]);
+        
+        $sellable = $request->has('is_sellable') ? $request->is_sellable : null;
 
         $category = tbl_category::findOrFail($id);
         $category->category_name = $request->category_name;
         $result = $category->save();
-    
+
+        if($sellable == '1'){
+            $Salecategory = new TblSaleProductCategory();
+            $Salecategory->name =  $request->category_name;
+            $Salecategory->save();
+        }
         if ($result) {
             return redirect()->route('category.index')->with('success', 'Category updated successfully.');
         } else {

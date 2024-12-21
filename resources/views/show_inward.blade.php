@@ -3,7 +3,7 @@
     <x-slot name="main">
         <div class="main" id="main">
             <form action="search" method="get">
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col">
                         <input type="date" id="s_date" name="s_date" class="form-control"
                             value="{{ request('s_date') }}">

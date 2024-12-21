@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\tbl_sub_category;
 use App\Models\tbl_category;
+use App\Models\TblSaleProductSubCategory;
+use App\Models\TblSaleProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,21 +56,41 @@ class TblSubCategoryController extends Controller
      */
     public function store(tbl_sub_category $tbl_sub_category, Request $request)
     {
-     
         $rules = [
-            'category' => 'required|integer',
+            'category' => 'required',
             'sub_category' => 'required|string|max:255',
             'unit' => 'required|string|in:Pic,Mtr',
         ];
-
+        
         $validatedData = $request->validate($rules);
+        
+        // dd($request->all());
+        $sellable = $request->has('is_sellable') ? $request->is_sellable : 0;
+        $cid = tbl_category::where('category_name',$request->category)->first()->id;
+        $spcid = TblSaleProductCategory::where('name',$request->category)->first()->id;
+        // dd($spcid);
+
+        
         $subcategory = new tbl_sub_category();
-        $subcategory->cid = $request->category;
+        $subcategory->cid = $cid;
         $subcategory->sub_category_name = $request->sub_category;
         $subcategory->unit = $request->unit;
         $subcategory->sr_no = $request->sr_no;
+        $subcategory->is_sellable = $request->has('is_sellable') ? $request->is_sellable : 0;
         $result = $subcategory->save();
 
+        if($sellable == '1'){    
+            if($spcid){
+                $Salecategory = new TblSaleProductSubCategory();
+                $Salecategory->spcid = $spcid;
+                $Salecategory->name = $request->sub_category;
+                $Salecategory->unit = $request->unit;
+                $Salecategory->sr_no = $request->sr_no;
+                $Salecategory->save();
+            }else{
+                return redirect()->back()->with('error', '!! Failed to add subcategory !!  ');
+            }
+        }
         if ($result) {
             return redirect()->route('subcategory.index')->with('success', 'Category added successfully.');
         } else {
@@ -102,7 +124,8 @@ class TblSubCategoryController extends Controller
         $subcategory->cid = $request->input('cid');
         $subcategory->sub_category_name = $request->input('sub_category_name');
         $subcategory->unit = $request->input('unit');
-        $subcategory->sr_no = $request->input('sr_no', 0); 
+        $subcategory->sr_no = $request->input('sr_no', 0);
+        $subcategory->is_sellable = $request->has('is_sellable') ? $request->is_sellable : 0;
         $subcategory->save();
     
         // Redirect the user back with a success message

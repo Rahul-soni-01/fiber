@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('sub_category_name');
             $table->string('unit');
             $table->boolean('sr_no')->default(1);
+            $table->boolean('is_sellable')->default(0);
             $table->timestamps();
         });
     }

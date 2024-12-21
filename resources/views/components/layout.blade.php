@@ -58,7 +58,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div id="header" class="row">
-        <div class="col-md-1 header-first"><label id="menu" class="button" for="check"><i
+        <div class="col-md-1 header-first d-flex justify-content-center align-items-center"><label id="menu" class="button" for="check"><i
                     class="ri-menu-line"></i></label></div>
         <div class="col-md-2 logo"> <a href="/"><img src="{{asset('storage/logo.jpg') }}" alt=""></a></div>
         <div class="col-md-3 offset-md-6 d-flex align-items-center justify-content-center">
@@ -215,28 +215,28 @@
                     <i class="ri-arrow-down-s-line"></i>
                 </a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('expenses.create') }}" id="add-expense" class="sub-item">Add Expense</a></li>
-                    <li><a href="{{ route('expenses.index') }}" id="view-expense" class="sub-item">Show Expense</a></li>
+                    <li><a href="{{ route('expenses.create') }}" id="add" class="sub-item">Add Expense</a></li>
+                    <li><a href="{{ route('expenses.index') }}" id="view" class="sub-item">Show Expense</a></li>
                 </ul>
             </li>
 
-            <li id="Expense" class="sidebar">
-                <a class="sub-btn" id="sub-btn-expense">
+            <li id="Sale Product List" class="sidebar">
+                <a class="sub-btn" id="sub-btn">
                     <i class="ri-money-dollar-circle-line"></i> Sale Product List
                     <i class="ri-arrow-down-s-line"></i>
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="{{ route('saleproductcategory.create') }}" id="add-expense" class="sub-item">Add Sale Product Category</a>
+                        <a href="{{ route('saleproductcategory.create') }}" id="add" class="sub-item">Add Sale Product Category</a>
                     </li>
                     <li>
-                        <a href="{{ route('saleproductcategory.index') }}" id="view-expense" class="sub-item">Show Sale Product Categories</a>
+                        <a href="{{ route('saleproductcategory.index') }}" id="view" class="sub-item">Show Sale Product Categories</a>
                     </li>
                     <li>
-                        <a href="{{ route('saleproductsubcategory.create') }}" id="add-expense" class="sub-item">Add Sale Product Sub Category</a>
+                        <a href="{{ route('saleproductsubcategory.create') }}" id="add" class="sub-item">Add Sale Product Sub Category</a>
                     </li>
                     <li>
-                        <a href="{{ route('saleproductsubcategory.index') }}" id="view-expense" class="sub-item">Show Sale Product Sub Categories</a>
+                        <a href="{{ route('saleproductsubcategory.index') }}" id="view" class="sub-item">Show Sale Product Sub Categories</a>
                     </li>
                 </ul>
                 

@@ -37,7 +37,9 @@ Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
 
 // Route::middleware(['auth', 'type:admin'])->group(function () {
 // });
-
+Route::get('/welcome', function () {
+    return view('demo');
+});
 
 Route::middleware('auth')->group(function () {
     Route::post('/check_permission', [TblUserController::class, 'permission'])->name('check_permission');
