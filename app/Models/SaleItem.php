@@ -12,10 +12,16 @@ class SaleItem extends Model
 
     // Specify the fillable fields
     protected $fillable = [
+        'sid',
         'sale_id',
         'report_id',
-        'quantity',
-        'price',
+        'cname',
+        'scname',
+        'unit',
+        'sr_no',
+        'qty',
+        'rate',
+        'p_tax',
         'total',
     ];
     public function sale()

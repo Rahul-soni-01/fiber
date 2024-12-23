@@ -300,65 +300,135 @@
 
         var count = 1;
         function BtnAdd(categories, subCategories) {
-
-            $('#TBody').append(`
+            if (window.location.pathname == '/sale-create') {
+            $('#TBody').append(`        
                 <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
-                    <div class="col custom-col">
-                        <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
-                            <option value="" disabled selected class="0" >Choose a Category</option>
-                        </select>
+                        <div class="col custom-col">
+                            <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
+                                <option value="" disabled selected class="0" >Choose a Category</option>
+                            </select>
+                        </div>
+                        <div class="col custom-col">
+                            <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
+                                <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
+                            </select>
+                        </div>
+                        <div class="col custom-col">
+                            <select id="data[${count}][unit]" name="unit[]"
+                                class="form-control">
+                                <option value="" disabled>Select</option>
+                                <option value="Pic">Pic</option>
+                                <option value="Mtr">Mtr</option>
+                            </select>
+                        </div>
+                        <div class="col custom-col" id="sr_no_div_${count}" style="display:none;">
+                            <select id="data[${count}][sr_no]" name="sr_no[]"
+                                class="form-control select2">
+                                <option value="" disabled>Select Sr No</option>
+                            </select>
+                        </div>
+                        <div class="col custom-col" id="col_div_${count}">
+                            <input type="text" name="sr_no[]" class="form-control" id="sr_no_${count}" >
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
+                                class="form-control" onchange="total()">
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
+                                class="form-control" onchange="total()">
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
+                                class="form-control" disabled>
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
+                            step="0.01" class="form-control">
+                        </div>
+                        <div class="col custom-col">
+                            <button type="button" class="btn btn-grey" onclick="BtnDel(this)">Delete</button>
+                        </div>
                     </div>
-                    <div class="col custom-col">
-                        <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
-                            <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
-                        </select>
-                    </div>
-                    <div class="col custom-col">
-                        <select id="data[${count}][unit]" name="unit[]"
-                            class="form-control">
-                            <option value="">Select</option>
-                            <option value="Pic">Pic</option>
-                            <option value="Mtr">Mtr</option>
-                        </select>
-                    </div>
-                    <div class="col custom-col">
-                        <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
-                            class="form-control" onchange="total()">
-                    </div>
-                    <div class="col custom-col">
-                        <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
-                            class="form-control" onchange="total()">
-                    </div>
-                    <div class="col custom-col">
-                        <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
-                    </div>
-                    <div class="col custom-col">
-                        <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
-                            class="form-control" disabled>
-                    </div>
-                    <div class="col custom-col">
-                        <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
-                        step="0.01" class="form-control">
-                    </div>
-                    <div class="col custom-col">
-                        <button type="button" class="btn btn-grey" onclick="BtnDel(this)">Delete</button>
-                    </div>
-                </div>
-            `);
+             `);
 
-            // Append categories
-            if (categories && Array.isArray(categories)) {
-                categories.forEach(category => {
-                    $(`#data\\[${count}\\]\\[cname\\]`).append(`
-                <option value="${category.id}">${category.category_name}</option>`);
-                });
+             if (categories && Array.isArray(categories)) {
+                    categories.forEach(category => {
+                        $(`#data\\[${count}\\]\\[cname\\]`).append(`
+                        <option value="${category.id}">${category.name}</option>`);
+                    });
+                }
+                
+                // Append subcategories
+                if (subCategories && Array.isArray(subCategories)) {
+                    subCategories.forEach(subCategory => {
+                        $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.spcid}" data-unit="${subCategory.unit}" data-sr_no="${subCategory.sr_no}"  data-value="${subCategory.name}" >${subCategory.name}</option>`);
+                    });
+                }
             }
-
-            // Append subcategories
-            if (subCategories && Array.isArray(subCategories)) {
-                subCategories.forEach(subCategory => {
-                    $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.cid}" data-unit="${subCategory.unit}" >${subCategory.sub_category_name}</option>`);
-                });
+            else{
+                $('#TBody').append(`
+                    <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
+                        <div class="col custom-col">
+                            <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
+                                <option value="" disabled selected class="0" >Choose a Category</option>
+                            </select>
+                        </div>
+                        <div class="col custom-col">
+                            <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
+                                <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
+                            </select>
+                        </div>
+                        <div class="col custom-col">
+                            <select id="data[${count}][unit]" name="unit[]"
+                                class="form-control">
+                                <option value="">Select</option>
+                                <option value="Pic">Pic</option>
+                                <option value="Mtr">Mtr</option>
+                            </select>
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
+                                class="form-control" onchange="total()">
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
+                                class="form-control" onchange="total()">
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
+                                class="form-control" disabled>
+                        </div>
+                        <div class="col custom-col">
+                            <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
+                            step="0.01" class="form-control">
+                        </div>
+                        <div class="col custom-col">
+                            <button type="button" class="btn btn-grey" onclick="BtnDel(this)">Delete</button>
+                        </div>
+                    </div>
+                `);
+                
+                // Append categories
+                if (categories && Array.isArray(categories)) {
+                    categories.forEach(category => {
+                        $(`#data\\[${count}\\]\\[cname\\]`).append(`
+                        <option value="${category.id}">${category.category_name}</option>`);
+                    });
+                }
+                
+                // Append subcategories
+                if (subCategories && Array.isArray(subCategories)) {
+                    subCategories.forEach(subCategory => {
+                        $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.cid}" data-unit="${subCategory.unit}" >${subCategory.sub_category_name}</option>`);
+                    });
+                }
             }
 
             count++;

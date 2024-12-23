@@ -128,63 +128,107 @@ class SaleController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
-            // 'invoice_no' => 'required|unique:tbl_sales,sale_id',
-            'total_amount' => 'required|numeric',
+            'sale_id' => 'required|unique:tbl_sales,sale_id',
             'date' => 'required|date',
-            'serial_no.*' => [
-                'required',
-                'distinct',
-                function ($attribute, $value, $fail) {
-                    if (!DB::table('tbl_reports')->where('sr_no_fiber', $value)->exists()) {
-                        $fail("The serial number {$value} does not exist in the reports.");
-                    }
-                },
+            'cid' => 'required',
+            'amount_r' => 'required|numeric',
+            'shipping_cost' => 'required|numeric',
+            'round_total' => 'required|numeric',
+            'amount' => 'required|numeric',
+            'cname' => 'required|array',
+            'cname.*' => 'required',
+            'scname' => 'required|array',
+            'scname.*' => 'required',
+            'unit' => 'required|array',
+            'unit.*' => 'required',
+            'sr_no' => 'required|array',
+            'sr_no.*' => [
+                'nullable',
+                'distinct', // Ensure all values in sr_no are unique in the request
             ],
+            'qty' => 'required|array',
+            'qty.*' => 'required',
+            'rate' => 'required|array',
+            'rate.*' => 'required',
+            'p_tax' => 'required|array',
+            'p_tax.*' => 'required',
+            'total' => 'required|array',
+            'total.*' => 'required',
+
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $sale = new Sale();
-        $sale->sale_id = $request->invoice_no;
+        $sale->sale_id = $request->sale_id;
         $sale->customer_id = $request->cid;
-        $sale->total_amount = $request->total_amount;
         $sale->sale_date = $request->date;
+        $sale->amount_r = $request->amount_r;
+        $sale->shipping_cost = $request->shipping_cost;
+        $sale->round_total = $request->round_total;
+        $sale->amount = $request->amount;
         $sale->notes = $request->note;
         
         try {
             $sale->save();
-            // dd( $sale);
-            $count = count($request->serial_no);
+            $count = count($request->sr_no);
             for ($i = 0; $i < $count; $i++) {
-                $report_id = $request->serial_no[$i];
+                $report_id = $request->sr_no[$i];
                 $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber',$report_id)->where('part', '0')->first();
                 // dd($report);
                 if ($report) {
                     // Update sale_status to 1
                     $report->sale_status = 1;
                     $report->save();
-                    // dd("if");
-                    $serial_no = $report->sr_no_fiber;
-                    $final_amount = $report->final_amount;
+                    // dd($report,$request->cname[$i]);
                     $report_id = $report->id;
-                    
-                    $itemResult = SaleItem::create([
-                        'sale_id' => $sale->id,
-                        // 'serial_no' => $serial_no,
-                        'report_id' => $report_id,
-                        'quantity' => 1,
-                        'price' => $final_amount,
-                        'total' => $final_amount,
-                    ]);
-
+                    try {
+                        $itemResult = SaleItem::create([
+                            'sid' => $sale->id,
+                            'sale_id' => $request->sale_id,
+                            // 'serial_no' => $serial_no,
+                            'report_id' => $report_id, // Report ID
+                            'cname' => $request->cname[$i],
+                            'scname' => $request->scname[$i],
+                            'unit' => $request->unit[$i],
+                            'sr_no' => $request->sr_no[$i],
+                            'qty' => $request->qty[$i],
+                            'rate' => $request->rate[$i],
+                            'p_tax' => $request->p_tax[$i],
+                            'total' => $request->total[$i],
+                        ]);
+                    }catch (\Exception $e) {
+                        // Catch any other exceptions and display a general error
+                        return back()->with('error', 'An error occurred while saving the item: ' . $e->getMessage())->withInput();
+                    }
+                    // dd($itemResult);
                     if (!$itemResult) {
                         return redirect()->back()->with('error', 'Failed to insert sale');
                     }
                 } else {
-                    // dd("else");
-                    return redirect()->back()->with('error', 'Failed to insert sale');
+                    try {
+                        $itemResult = SaleItem::create([
+                            'sid' => $sale->id,
+                            'sale_id' => $request->sale_id,
+                            // 'serial_no' => $serial_no,
+                            'report_id' => $report_id ??, // Report ID
+                            'cname' => $request->cname[$i],
+                            'scname' => $request->scname[$i],
+                            'unit' => $request->unit[$i],
+                            'sr_no' => $request->sr_no[$i],
+                            'qty' => $request->qty[$i],
+                            'rate' => $request->rate[$i],
+                            'p_tax' => $request->p_tax[$i],
+                            'total' => $request->total[$i],
+                        ]);
+                    }catch (\Exception $e) {
+                        // Catch any other exceptions and display a general error
+                        return back()->with('error', 'An error occurred while saving the item: ' . $e->getMessage())->withInput();
+                    }
+                    
                 }
             }
 

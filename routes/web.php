@@ -187,6 +187,10 @@ Route::middleware('auth')->group(function () {
     // Route::view('add_report', 'add_report')->name('report.add');
     Route::post('/stockReport', [ReportController::class, 'stockReport'])->name('report.stockReport');
     Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
+    
+    //get sub category wise sr no report list
+    Route::post('/get-sc-sr-no', [ReportController::class, 'get_sc_sr_no'])->name('report.get_sc_sr_no');
+
 
     // Route::get('report', [ReportController::class, 'index'])->name('report.index');
     Route::get('report', [ReportController::class, 'indexNew'])->name('report.index');

@@ -3,14 +3,14 @@
     <x-slot name="main">
         <a href="{{ route('sale.index') }}" class="btn btn-primary">Back to Sale</a>
         @if ($errors->any())
-                <div style="color: red;">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
+            <div style="color: red;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="main" id="main">
             <form action="{{route('sale.store')}}" method="post">
                 @csrf
@@ -22,14 +22,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <input type="number" id="invoice_no" name="invoice_no" class="form-control"
+                            <input type="number" id="invoice_no" name="sale_id" class="form-control"
                                 placeholder="Enter Invoice no." required>
                         </div>
                         <div class="col-md-4">
                             <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
                                 value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4">  
                             <select id="party_name" name="cid" class="form-control"
                                 placeholder="Enter Party Name" required>
                                 <option value="" disabled selected>Choose a Customer</option>
@@ -41,9 +41,7 @@
                     </div>
                     <div class="cus-container mt-2">
                         <h1>Product Details</h1>
-                                                
                         <div class="row custom-row g-2 align-items-center">
-
                             <!-- Sale Product Category Name -->
                             <div class="col custom-col">
                                 <label for="data[0][cname]" class="form-label"  style="white-space:nowrap;">Sale Category </label>
@@ -58,10 +56,11 @@
                             <!-- Category Name -->
                             <div class="col custom-col">
                                 <label for="data[0][cname]" class="form-label"  style="white-space:nowrap;"> Sub Category</label>
+                                {{-- {{dd($sale_product_subcategories);}} --}}
                                 <select id="data[0][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
                                     <option value="" disabled selected>Sub Category</option>
                                     @foreach($sale_product_subcategories as $sale_product_subcategory)
-                                        <option value="{{ $sale_product_subcategory->id }}" class="{{ $sale_product_subcategory->spcid }}" data-unit="{{ $sale_product_subcategory->unit }}">{{ $sale_product_subcategory->name }}</option>
+                                        <option value="{{ $sale_product_subcategory->id }}" class="{{ $sale_product_subcategory->spcid }}" data-unit="{{ $sale_product_subcategory->unit }}" data-sr_no="{{ $sale_product_subcategory->sr_no }}" data-value="{{ $sale_product_subcategory->name }}">{{ $sale_product_subcategory->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -96,7 +95,17 @@
                                     <option value="Mtr">Mtr</option>
                                 </select>
                             </div>
-    
+                            
+                            <div class="col custom-col" id="sr_no_div_0" style="display: none;">
+                                <label for="data[0][sr_no]" class="form-label">Sr No</label>
+                                <select id="data[0][sr_no]" name="sr_no[]" class="form-control select2">
+                                    <option value="" disabled selected>Select</option> 
+                                </select>
+                            </div>
+                            <div class="col custom-col" id="col_div_0">
+                                <label for="data[0][sr_no]" class="form-label">Sr No</label>
+                                <input type="text" name="sr_no[]" class="form-control" id="sr_no_0" placeholder="Plz dont write here">
+                            </div>
                             <!-- Quantity -->
                             <div class="col custom-col">
                                 <label for="data[0][qty]" class="form-label">Qty</label>
@@ -135,7 +144,7 @@
                             <div class="col custom-col">
                             <label for="" class="form-label"></label>
                                 <button type="button" class="btn btn-primary"
-                                onclick="BtnAdd({{ json_encode($inwards)}},{{ json_encode($items)}})">Add</button>
+                                onclick="BtnAdd({{ json_encode($sale_product_categories)}},{{ json_encode($sale_product_subcategories)}})">Add</button>
                             </div>
                         </div>
                         
@@ -147,7 +156,7 @@
                             <div class="col-sm-2 offset-sm-8">Amount ($/¥)</div>
                             <div class="col-sm-2">
                                 <input type="number" id="amount_d" name="amount_d" placeholder="How much USD"  step="0.01" required
-                                    class="form-control" onchange="rate()">
+                                    class="form-control" onchange="rate()" disabled>
                             </div>
                         </div>
     
@@ -155,7 +164,7 @@
                             <div class="col-sm-2 offset-sm-8">Rate (₹)</div>
                             <div class="col-sm-2">
                                 <input type="number" id="rate_r" name="rate_r" class="form-control" step="0.01"
-                                    placeholder="Rate of USD" required onchange="rate()" value="1">
+                                    placeholder="Rate of USD" required onchange="rate()" value="1" disabled>
                             </div>
                         </div>
                         <div class="row mt-3">

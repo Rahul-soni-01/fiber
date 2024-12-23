@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('tbl_sales', function (Blueprint $table) {
             $table->id(); // Primary key
             $table->string('sale_id')->unique()->nullable(); 
-            $table->foreignId('customer_id')->nullable();
-            $table->decimal('total_amount', 12, 2)->nullable(); 
             $table->date('sale_date')->nullable(); 
+            $table->foreignId('customer_id')->nullable();
+            $table->decimal('amount_r', 12, 2)->nullable(); 
+            $table->decimal('shipping_cost', 12, 2)->nullable(); 
+            $table->decimal('round_total', 12, 2)->nullable(); 
+            $table->decimal('amount', 12, 2)->nullable(); 
             $table->text('notes')->nullable(); 
             $table->timestamps(); 
         });

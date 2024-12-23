@@ -13,11 +13,17 @@ return new class extends Migration
     {
         Schema::create('tbl_sales_items', function (Blueprint $table) {
             $table->id(); 
-            $table->foreignId('sale_id')->constrained('tbl_sales'); 
-            $table->foreignId('report_id')->nullable();
-            $table->integer('quantity')->nullable();
-            $table->decimal('price', 10, 2)->nullable();
-            $table->decimal('total', 12, 2)->nullable();
+            $table->string('sid')->nullable();
+            $table->string('sale_id')->nullable(); 
+            $table->string('report_id')->nullable(); 
+            $table->string('cname')->nullable();
+            $table->string('scname')->nullable();
+            $table->string('unit')->nullable();
+            $table->string('sr_no')->nullable();
+            $table->string('qty')->nullable();
+            $table->string('rate')->nullable();
+            $table->string('p_tax')->nullable();
+            $table->decimal('total', 10, 2)->nullable();
             $table->timestamps();
         });
     }

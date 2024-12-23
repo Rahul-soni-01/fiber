@@ -280,6 +280,19 @@ function filterOptions(event) {
                     let selectedSubCategory = subCategorySelect.value;
                     let selectedOption = subCategorySelect.options[subCategorySelect.selectedIndex];
                     let dataUnit = selectedOption.getAttribute('data-unit');
+                    if (window.location.pathname == '/sale-create') {
+                        let datasr_no = selectedOption.getAttribute('data-sr_no');
+                        let datavalue = selectedOption.getAttribute('data-value');
+                        if(datasr_no == 1){
+                            SubCategorysale_sr_no(datavalue,extractedIndex)
+                        }else{
+                            let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
+
+                            if (sr_no_input) { // Check if the element exists
+                                sr_no_input.readOnly = true;
+                            }
+                        }
+                    }
                     if (dataUnit) {
                         for (let i = 0; i < unitSelect.options.length; i++) {
                             if (unitSelect.options[i].value === dataUnit) {
@@ -289,6 +302,8 @@ function filterOptions(event) {
                         }
                     }
                 }
+                // console.log(subCategorySelect);
+                
             }
         } else {
             alert('Pattern did not match');
@@ -380,11 +395,49 @@ function getDataForReturn(event) {
     }
 }
 
+function SubCategorysale_sr_no(datavalue,extractedIndex){
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    var data = {
+        _token: csrfToken,
+         type:datavalue,
+    };
+    $.ajax({
+        url: "/get-sc-sr-no",
+        type: "POST",
+        data: data,
+        success: function (response) {
+            
+            let srNoDiv = document.querySelector(`#sr_no_div_${extractedIndex}`);
+            let colDiv = document.querySelector(`#col_div_${extractedIndex}`);
+            let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
 
+            if (sr_no_input) { // Check if the element exists
+                sr_no_input.disabled  = true;
+            }
+            if (srNoDiv) {
+                srNoDiv.style.display = 'block';
+                colDiv.style.display = 'none';
+            }
+            let sr_noSelect = document.querySelector(`#sr_no_div_${extractedIndex} select[id="data[${extractedIndex}][sr_no]"]`);
 
+            if (sr_noSelect) {
+                // Create the HTML for the options
+                let html = '';
+                response.forEach(function (item) {
+                    html += `<option value="${item}">${item}</option>`;
+                });
 
-// Event delegation for removing rows
+                // Append the new options to the select element
+                sr_noSelect.innerHTML += html;
+            } else {
+                console.error('Select element not found');
+            }
+            let qtyInput = document.getElementById(`data[${extractedIndex}][qty]`);
 
+            if (qtyInput) {
+                qtyInput.value = 1;
+            }
+        }
+    });
 
-
-
+}

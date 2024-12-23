@@ -519,6 +519,21 @@ class ReportController extends Controller
         // return view('report.show', compact('report'));
         return view('report.index', compact('reports', 'tbl_parties'));
     }
+
+    public function get_sc_sr_no(Request $request){
+        $type = $request->type;
+        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        ->where('part',0)
+        ->where('sale_status',0)
+        ->whereHas('tbl_type', function ($query) use ($type) {
+            $query->where('name', $type);
+        })
+        ->get()
+        ->pluck('sr_no_fiber');
+
+        return response()->json($reports, 200);
+        // dd(count($reports),$reports);
+    }
     public function search(Request $request)
     {
         if ($request->sr_no) {
