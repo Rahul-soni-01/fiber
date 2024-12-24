@@ -9,17 +9,22 @@
                         <th>#</th>
                         <th>Date</th>
                         <th>Customer</th>
-                        <th>Serial No</th>
+                        <th>Sale Invoice No</th>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Reason</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($salereturns as $salereturn)
-                    
                     <tr>
                         <td>{{$salereturn->id}}</td>
                         <td>{{$salereturn->date}}</td>
                         <td>{{$salereturn->customer->customer_name ?? 'N/A' }}</td>
-                        <td>{{$salereturn->sr_no}}</td>
+                        <td>{{$salereturn->sale_id}}</td>
+                        <td>{{$salereturn->category->name}} - {{$salereturn->subCategory->name}}</td>
+                        <td>{{$salereturn->qty}}</td>
+                        <td>{{$salereturn->reason}}</td>
                     </tr>
                     @endforeach
                 </tbody>

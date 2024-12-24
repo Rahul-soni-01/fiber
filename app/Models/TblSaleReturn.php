@@ -13,7 +13,15 @@ class TblSaleReturn extends Model
     protected $fillable = [
         'date',
         'sr_no',
-        'c_id',
+        'customer_id',
+        'sale_id',
+        'qty',
+        'reason',
+        'cname',
+        'scname',
+        'unit',
+        'rate',
+        
     ];
 
     /**
@@ -21,6 +29,16 @@ class TblSaleReturn extends Model
      */
     public function customer()
     {
-        return $this->belongsTo(TblCustomer::class, 'c_id');
+        return $this->belongsTo(TblCustomer::class, 'customer_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(TblSaleProductCategory::class, 'cid', 'id');
+    }
+
+    public function subCategory()
+    {
+        return $this->belongsTo(TblSaleProductSubCategory::class, 'scid', 'id');
     }
 }

@@ -180,34 +180,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     window.onload = checkQueryParams(), check_permission();
-    
+
     // this is for only purchase rerun create time
     const currentPath = window.location.pathname;
     const targetPath = "/inward-return-create";
-       
-    if(currentPath === targetPath){
+
+    if (currentPath === targetPath) {
         document.getElementById('AddReturnRow').addEventListener('click', function () {
-        if (!invoiceResponse || !invoiceResponse.inwardsItems) {
-            Swal.fire({
-                icon: "error",
-                title: "No Items Available",
-                text: "Please fetch invoice details first.",
-            });
-            return;
-        }
+            if (!invoiceResponse || !invoiceResponse.inwardsItems) {
+                Swal.fire({
+                    icon: "error",
+                    title: "No Items Available",
+                    text: "Please fetch invoice details first.",
+                });
+                return;
+            }
 
-        // Create a new row element
-        const returnRow = document.createElement('div');
-        returnRow.classList.add('row', 'return-item', 'mt-2');
+            // Create a new row element
+            const returnRow = document.createElement('div');
+            returnRow.classList.add('row', 'return-item', 'mt-2');
 
-        returnRow.innerHTML = `
+            returnRow.innerHTML = `
             <div class="col">
              <input type="hidden" class="form-control" name="pid" value="${invoiceResponse.data[0].pid}" placeholder="Qty" min="1">
              <input type="hidden" class="form-control" name="invoice_no" value="${invoiceResponse.inwardsItems[0].invoice_no}" placeholder="Qty" min="1">
                 <select class="form-control return-item-select" name="purchaseitems[]">
                     <option value="" disabled selected>Select Item</option>
                     ${invoiceResponse.inwardsItems.map(item =>
-            `<option value="${item.id}" 
+                `<option value="${item.id}" 
                             data-category="${item.category.category_name}" 
                             data-subcategory="${item.sub_category.sub_category_name}" 
                             data-unit="${item.unit}" 
@@ -227,14 +227,65 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         `;
 
-        // Append the new row to the container
-        document.getElementById('ReturnItems').appendChild(returnRow);
+            // Append the new row to the container
+            document.getElementById('ReturnItems').appendChild(returnRow);
 
-        // Attach event listener to the "Remove" button of the new row
-        returnRow.querySelector('.remove-return-row').addEventListener('click', function () {
-            returnRow.remove();
+            // Attach event listener to the "Remove" button of the new row
+            returnRow.querySelector('.remove-return-row').addEventListener('click', function () {
+                returnRow.remove();
+            });
         });
-    });
+    }
+    else if(currentPath == "/sale-return"){
+        document.getElementById('AddReturnRow').addEventListener('click', function () {
+            if (!invoiceResponse || !invoiceResponse.inwardsItems) {
+                Swal.fire({
+                    icon: "error",
+                    title: "No Items Available",
+                    text: "Please fetch invoice details first.",
+                });
+                return;
+            }
+
+            // Create a new row element
+            const returnRow = document.createElement('div');
+            returnRow.classList.add('row', 'return-item', 'mt-2');
+
+            returnRow.innerHTML = `
+            <div class="col">
+             <input type="hidden" class="form-control" name="customer_id" value="${invoiceResponse.data[0].customer_id}">
+             <input type="hidden" class="form-control" name="sale_id" value="${invoiceResponse.inwardsItems[0].sale_id}">
+                <select class="form-control return-item-select" name="saleitems[]">
+                    <option value="" disabled selected>Select Item</option>
+                    ${invoiceResponse.inwardsItems.map(item =>
+                `<option value="${item.id}" 
+                            data-category="${item.category.name}" 
+                            data-subcategory="${item.sub_category.name}" 
+                            data-unit="${item.unit}" 
+                            data-price="${item.rate}">
+                            ${item.category.name} - ${item.sub_category.name}
+                        </option>`).join('')}
+                </select>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control return-qty" name="qty[]" placeholder="Qty" min="1">
+            </div>
+            <div class="col">
+                <textarea class="form-control return-reason" name="reason[]"placeholder="Reason"></textarea>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-danger remove-return-row">Remove</button>
+            </div>
+        `;
+
+            // Append the new row to the container
+            document.getElementById('ReturnItems').appendChild(returnRow);
+
+            // Attach event listener to the "Remove" button of the new row
+            returnRow.querySelector('.remove-return-row').addEventListener('click', function () {
+                returnRow.remove();
+            });
+        });
     }
 
 });
@@ -283,9 +334,9 @@ function filterOptions(event) {
                     if (window.location.pathname == '/sale-create') {
                         let datasr_no = selectedOption.getAttribute('data-sr_no');
                         let datavalue = selectedOption.getAttribute('data-value');
-                        if(datasr_no == 1){
-                            SubCategorysale_sr_no(datavalue,extractedIndex)
-                        }else{
+                        if (datasr_no == 1) {
+                            SubCategorysale_sr_no(datavalue, extractedIndex)
+                        } else {
                             let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
 
                             if (sr_no_input) { // Check if the element exists
@@ -303,12 +354,12 @@ function filterOptions(event) {
                     }
                 }
                 // console.log(subCategorySelect);
-                
+
             }
         } else {
             alert('Pattern did not match');
         }
-      
+
     } else {
         console.log("Other select element triggered the function");
     }
@@ -321,68 +372,126 @@ function getDataForReturn(event) {
 
     const party = document.getElementById('party_name').value;
     const invoice_no = document.getElementById('invoice_no').value;
-
-    if (!party || !invoice_no) {
-        Swal.fire("Please Enter Party Or Invoice !");
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    if (window.location.pathname == '/sale-return') {
+        url = "/get-invoice-sell-details";
+        var data = {
+            _token: csrfToken,
+            invoice_no: invoice_no,
+            customer: party,
+            status: 1,
+        };
     } else {
-        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        url = "/get-invoice-details";
         var data = {
             _token: csrfToken,
             party: party,
             invoice_no: invoice_no,
             status: 1,
         };
+    }
+    if (!party || !invoice_no) {
+        Swal.fire("Please Enter Party Or Invoice !");
+    } else {
         $.ajax({
-            url: "/get-invoice-details",
+            url: url,
             type: "POST",
             data: data,
             success: function (response) {
                 if (response && response.status === 'success' && response.data && response.data.length > 0) {
-                    invoiceResponse = response;
-                    data = response.data[0];
-                    // i want append html on id InvoiceData
-                    document.getElementById('InvoiceData').innerHTML = '';
+                    if (response.sale == 'sale') {
+                        invoiceResponse = response;
+                        data = response.data[0];
+                        // Append html on id InvoiceData
+                        document.getElementById('InvoiceData').innerHTML = '';
 
-                    var html = '';
+                        var html = '';
 
-                    html += '<div class="row">';
-                    html += '<div class="col">Invoice No.</div>';
-                    html += '<div class="col">Date</div>';
-                    html += '<div class="col">Party Name</div>';
-                    html += '</div>';
-
-                    // Add invoice details row
-                    html += '<div class="row">';
-                    html += '<div class="col"><h5 class="form-control">' + data.invoice_no + '</h5></div>';
-                    html += '<div class="col"><h5 class="form-control">' + data.date + '</h5></div>';
-                    html += '<div class="col"><h5 class="form-control">' + data.party.party_name + '</h5></div>';
-                    html += '</div>';
-
-
-                    html += '<div class="row">';
-                    html += '<div class="col"><b>Category</b></div>';
-                    html += '<div class="col"><b>Subcategory</b></div>';
-                    html += '<div class="col"><b>Unit</b></div>';
-                    html += '<div class="col"><b>Qty</b></div>';
-                    html += '<div class="col"><b>Alraedy Return</b></div>';
-                    html += '<div class="col"><b>Price</b></div>';
-                    html += '<div class="col"><b>TOtal</b></div>';
-                    html += '</div>';
-                    response.inwardsItems.forEach(function (item) {
-                        html += '<div class="row mt-2">';
-                        html += '<div class="col">' + item.category.category_name + '</div>'; // category_name property
-                        html += '<div class="col">' + item.sub_category.sub_category_name + '</div>'; // sub_category_name property
-                        html += '<div class="col">' + item.unit + '</div>'; // unit property
-                        html += '<div class="col">' + item.qty + '</div>'; // qty property
-                        html += '<div class="col">' + item.return + '</div>'; // return property
-                        html += '<div class="col">' + item.price + '</div>'; // price property
-                        html += '<div class="col">' + item.total + '</div>'; // total property
+                        html += '<div class="row">';
+                        html += '<div class="col">Invoice No.</div>';
+                        html += '<div class="col">Date</div>';
+                        html += '<div class="col">Customer Name</div>';
                         html += '</div>';
 
-                    });
-                    document.getElementById('InvoiceData').innerHTML += html;
-                    html += '';
+                        // Add invoice details row
+                        html += '<div class="row">';
+                        html += '<div class="col"><h5 class="form-control">' + data.sale_id + '</h5></div>';
+                        html += '<div class="col"><h5 class="form-control">' + data.sale_date + '</h5></div>';
+                        html += '<div class="col"><h5 class="form-control">' + data.customer.customer_name + '</h5></div>';
+                        html += '</div>';
 
+
+                        html += '<div class="row">';
+                        html += '<div class="col"><b>Category</b></div>';
+                        html += '<div class="col"><b>Subcategory</b></div>';
+                        html += '<div class="col"><b>Unit</b></div>';
+                        html += '<div class="col"><b>Qty</b></div>';
+                        html += '<div class="col"><b>Alraedy Return</b></div>';
+                        html += '<div class="col"><b>Price</b></div>';
+                        html += '<div class="col"><b>Total</b></div>';
+                        html += '</div>';
+                        response.inwardsItems.forEach(function (item) {
+                            console.log(item);
+                            html += '<div class="row mt-2">';
+                            html += '<div class="col">' + item.category.name + '</div>'; // category_name property
+                            html += '<div class="col">' + item.sub_category.name + '</div>'; // sub_category_name property
+                            html += '<div class="col">' + item.unit + '</div>'; // unit property
+                            html += '<div class="col">' + item.qty + '</div>'; // qty property
+                            html += '<div class="col">' + item.return + '</div>'; // return property
+                            html += '<div class="col">' + item.rate + '</div>'; // price property
+                            html += '<div class="col">' + item.total + '</div>'; // total property
+                            html += '</div>';
+
+                        });
+                        document.getElementById('InvoiceData').innerHTML += html;
+                        html += '';
+                    } else {
+
+                        invoiceResponse = response;
+                        data = response.data[0];
+                        // i want append html on id InvoiceData
+                        document.getElementById('InvoiceData').innerHTML = '';
+
+                        var html = '';
+
+                        html += '<div class="row">';
+                        html += '<div class="col">Invoice No.</div>';
+                        html += '<div class="col">Date</div>';
+                        html += '<div class="col">Party Name</div>';
+                        html += '</div>';
+
+                        // Add invoice details row
+                        html += '<div class="row">';
+                        html += '<div class="col"><h5 class="form-control">' + data.invoice_no + '</h5></div>';
+                        html += '<div class="col"><h5 class="form-control">' + data.date + '</h5></div>';
+                        html += '<div class="col"><h5 class="form-control">' + data.party.party_name + '</h5></div>';
+                        html += '</div>';
+
+
+                        html += '<div class="row">';
+                        html += '<div class="col"><b>Category</b></div>';
+                        html += '<div class="col"><b>Subcategory</b></div>';
+                        html += '<div class="col"><b>Unit</b></div>';
+                        html += '<div class="col"><b>Qty</b></div>';
+                        html += '<div class="col"><b>Alraedy Return</b></div>';
+                        html += '<div class="col"><b>Price</b></div>';
+                        html += '<div class="col"><b>Total</b></div>';
+                        html += '</div>';
+                        response.inwardsItems.forEach(function (item) {
+                            html += '<div class="row mt-2">';
+                            html += '<div class="col">' + item.category.category_name + '</div>'; // category_name property
+                            html += '<div class="col">' + item.sub_category.sub_category_name + '</div>'; // sub_category_name property
+                            html += '<div class="col">' + item.unit + '</div>'; // unit property
+                            html += '<div class="col">' + item.qty + '</div>'; // qty property
+                            html += '<div class="col">' + item.return + '</div>'; // return property
+                            html += '<div class="col">' + item.price + '</div>'; // price property
+                            html += '<div class="col">' + item.total + '</div>'; // total property
+                            html += '</div>';
+
+                        });
+                        document.getElementById('InvoiceData').innerHTML += html;
+                        html += '';
+                    }
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -395,24 +504,24 @@ function getDataForReturn(event) {
     }
 }
 
-function SubCategorysale_sr_no(datavalue,extractedIndex){
+function SubCategorysale_sr_no(datavalue, extractedIndex) {
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var data = {
         _token: csrfToken,
-         type:datavalue,
+        type: datavalue,
     };
     $.ajax({
         url: "/get-sc-sr-no",
         type: "POST",
         data: data,
         success: function (response) {
-            
+
             let srNoDiv = document.querySelector(`#sr_no_div_${extractedIndex}`);
             let colDiv = document.querySelector(`#col_div_${extractedIndex}`);
             let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
 
             if (sr_no_input) { // Check if the element exists
-                sr_no_input.disabled  = true;
+                sr_no_input.disabled = true;
             }
             if (srNoDiv) {
                 srNoDiv.style.display = 'block';

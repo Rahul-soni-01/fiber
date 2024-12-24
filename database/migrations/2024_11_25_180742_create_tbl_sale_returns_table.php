@@ -14,8 +14,15 @@ return new class extends Migration
         Schema::create('tbl_sale_returns', function (Blueprint $table) {
             $table->id();
             $table->date('date')->nullable(); // Nullable date field
+            $table->string('customer_id')->nullable(); // Nullable foreign 
+            $table->string('sale_id')->nullable();
             $table->string('sr_no')->nullable(); // Nullable serial number
-            $table->unsignedBigInteger('c_id')->nullable(); // Nullable foreign key
+            $table->string('cid')->nullable();
+            $table->string('scid')->nullable();
+            $table->integer('qty')->nullable();
+            $table->string('unit')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

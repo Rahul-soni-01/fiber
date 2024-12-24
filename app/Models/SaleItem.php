@@ -33,4 +33,13 @@ class SaleItem extends Model
     {
         return $this->belongsTo(Report::class, 'report_id', 'id'); 
     }
+    public function category()
+    {
+        return $this->belongsTo(TblSaleProductCategory::class, 'cname', 'id');
+    }
+
+    public function subCategory()
+    {
+        return $this->belongsTo(TblSaleProductSubCategory::class, 'scname', 'id');
+    }
 }
