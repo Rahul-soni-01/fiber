@@ -93,14 +93,12 @@ class SaleController extends Controller
         } else {
             $count = count($request->saleitems);
             for ($i = 0; $i < $count; $i++) {
-                
                 $saleitems = SaleItem::findOrFail($request->saleitems[$i]);
                 
                 // Data Store in tbl_sale_returns 
                 $sale_return = new TblSaleReturn();
-                // make it todays date
+                
                 $sale_return->date = date('Y-m-d');
-                // $sale_return->date = $request->date;
                 $sale_return->customer_id = $request->customer_id;
                 $sale_return->sale_id = $request->sale_id;
                 $sale_return->qty = $request->qty[$i];

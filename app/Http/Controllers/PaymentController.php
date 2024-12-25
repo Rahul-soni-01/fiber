@@ -133,9 +133,8 @@ class PaymentController extends Controller
                 'updated_at' => now(),
             ];
 
-            $CustomerPayment = CustomerPayment::create($CustomerPaymentData); 
+            $CustomerPayment = CustomerPayment::create($CustomerPaymentData);
             $payment_insert_id = $CustomerPayment->id; // Retrieve the auto-incremented ID
-
             $predefine_account = TblAccPredefineAccount::first();
             $Narration          = "Payment Voucher";
             $Comment            = "Payment Voucher for customer";
@@ -144,9 +143,11 @@ class PaymentController extends Controller
             $referenceNo = $request->cid;
             $reVID = $request->cid;
             $amnt = $request->paid_total;
-            $this->insert_sale_special_creditvoucher($Narration, $Comment, $COAID, $amnt_type,$amnt, $referenceNo, $reVID, $payment_insert_id);
+            $VoucherController =  new TblVoucherController();
+            $valucher = $VoucherController->insert_sale_credit_voucher($Narration, $Comment, $COAID, $amnt_type,$amnt, $referenceNo, $reVID, $payment_insert_id);
             
-
+            // $this->insert_sale_special_creditvoucher($Narration, $Comment, $COAID, $amnt_type,$amnt, $referenceNo, $reVID, $payment_insert_id);
+            
         } else {
             return redirect()->back()->with('error', 'Failed to created Payment.');
         }
@@ -201,9 +202,9 @@ class PaymentController extends Controller
     {
         $VDate = date('Y-m-d');
         $coaController = new TblAccCoaController();
-        $maxid = $coaController->getMaxFieldNumber('id', 'tbl_acc_vaucher', 'Vtype', 'JV', 'VNo');
+        $maxid = $coaController->getMaxFieldNumber('id', 'tbl_acc_vaucher', 'Vtype', 'CV', 'VNo');
         $u_id = auth()->user()->id;
-        $vaucherNo = "JV-". ($maxid +1);
+        $vaucherNo = "CV-". ($maxid +1);
 
         $debitinsert = array(
             'fyear'          =>  0,
@@ -221,17 +222,18 @@ class PaymentController extends Controller
         );
 
         if($amnt_type == 'Debit'){
-            
             $debitinsert['Debit']  = $amnt;
             $debitinsert['Credit'] =  0.00;    
         }else{
-
             $debitinsert['Debit']  = 0.00;
             $debitinsert['Credit'] =  $amnt; 
         }
 
-       DB::table('tbl_acc_vaucher')->insert($debitinsert);
-
+        $voucherCreate = DB::table('tbl_acc_vaucher')->insert($debitinsert);
+        if($voucherCreate){
+            
+        }
+        
     return true;
     }
 }

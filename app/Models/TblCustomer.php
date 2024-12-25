@@ -18,6 +18,7 @@ class TblCustomer extends Model
      */
     protected $fillable = [
         'customer_name',
+        'HeadCode',
         'address',
         'telephone_no',
         'receiver_name',

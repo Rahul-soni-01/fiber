@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tbl_customers', function (Blueprint $table) {
             $table->id();
             $table->string('customer_name');
+            $table->string('HeadCode');
             $table->string('address');
             $table->string('telephone_no');
             $table->string('receiver_name');

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TblAccCoa;
 use Illuminate\Http\Request;
 use App\Models\TblCustomer;
 use App\Models\Sale;
 use App\Models\TblSaleReturn;
 use App\Models\CustomerPayment;
-
+use App\Models\TblAccPredefineAccount;
 
 class TblCustomerController extends Controller
 {
@@ -35,9 +36,39 @@ class TblCustomerController extends Controller
             'receiver_name' => 'required|string|max:255',
         ]);
 
+        $predefineaccount = TblAccPredefineAccount::findOrFail(1);
+        // dd($predefineaccount);
+        $HeadLevel = 3;
+
+        $thousand = match ($HeadLevel) {
+            1 => 20001,
+            2 => 30001,
+            3 => 40001,
+        };
+
+        $maxHeadCode = TblAccCoa::where('HeadLevel', )
+                ->where('HeadCode', '>=', 40000)
+                ->max('HeadCode');
+                dd($maxHeadCode);
+        if ($maxHeadCode) {
+            $HeadCode = $maxHeadCode + 1;
+        } else {
+            $HeadCode = $thousand; // Start with the base value
+        }
+        $PHeadName = TblAccCoa::where('HeadCode',$predefineaccount->customerCode)->first()->HeadName;
+        
+        $newledger = new TblAccCoa();
+        $newledger->HeadCode = $HeadCode;
+        $newledger->HeadName = $request->customer_name;
+        $newledger->PHeadName = $PHeadName;
+        $newledger->PHeadCode = $predefineaccount->customerCode;
+        $newledger->HeadLevel = 4;
+        $HeadCode =  $newledger->save();
+
 
         $customer = new TblCustomer();
         $customer->customer_name = $request->customer_name;
+        $customer->HeadCode = $HeadCode;
         $customer->address = $request->address;
         $customer->telephone_no = $request->telephone_no;
         $customer->receiver_name = $request->receiver_name;
@@ -116,7 +147,7 @@ class TblCustomerController extends Controller
         ->get();
         
         $salereturns = TblSaleReturn::with('customer')
-        ->where('c_id',$id)
+        ->where('customer_id',$id)
         ->get();
         // dd($salereturns);
         
