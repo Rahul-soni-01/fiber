@@ -315,6 +315,13 @@ input[type=number] {
     border-radius: 50%;
   }
 
+  .link .websetting {
+    display: none; /* Hide the span by default */
+}
+
+.link:hover .websetting {
+    display: inline; /* Show the span when hovering over the link */
+}
 @media (min-width: 1024px) {
     .custom-col {
         flex: 0 0 11%;

@@ -46,6 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/check_stock', [TblStockController::class, 'check_stock'])->name('check_stock');
     // Home Blade
     Route::get('/home', [TblUserController::class, 'show'])->name('home');
+    Route::get('/websetting', [DepartmentController::class, 'websetting'])->name('websetting');
+    Route::post('/websetting-update', [DepartmentController::class, 'updateWebSetting'])->name('websetting.update');
+
     
     Route::get('/datainsert', [TblStockController::class, 'datainsert'])->name('datainsert');
     

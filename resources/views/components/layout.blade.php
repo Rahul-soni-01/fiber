@@ -60,18 +60,32 @@
     <div id="header" class="row">
         <div class="col-md-1 header-first d-flex justify-content-center align-items-center"><label id="menu" class="button" for="check"><i
                     class="ri-menu-line"></i></label></div>
-        <div class="col-md-2 logo"> <a href="/"><img src="{{asset('storage/logo.jpg') }}" alt=""></a></div>
+        @php
+            $websetting = DB::table('web_settings')->where('id', 1)->first();
+        @endphp
+                
+        <div class="col-md-2 logo">
+            <a href="/">
+                <!-- Check if logo path exists and use it; otherwise, use a default logo -->
+                <img src="{{ asset($websetting->logo ?? 'storage/default_logo.jpg') }}" alt="Logo">
+            </a>
+        </div>
         <div class="col-md-3 offset-md-6 d-flex align-items-center justify-content-center">
             <strong>{{ auth()->user()->type }}</strong> &nbsp; || &nbsp; <strong>{{ auth()->user()->name }}</strong>
-            <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
-                    class="ml-2 fa-solid fa-user"></i>
+            <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i class="ml-2 fa-solid fa-user"></i>
                 <span class="logout-text">Log out</span>
             </a>
+            @if(auth()->user()->type === 'admin' )
+                
+            <a href="{{ route('websetting')}}" class="ml-2 link">
+                <i class="ri-settings-line"></i>
+                <span class="websetting">Web Setting</span>
+            </a>
+            @endif
         </div>
             </div>
     {{-- <div id="fakeheader"></div> --}}
-    {{-- <input type="checkbox" id="check" checked hidden> --}}
-    {{-- {{$permissions}} --}}
+    
     <div class="slidebar" id="slidebar">
         <ul>
             <li id="Home" class="sidebar">

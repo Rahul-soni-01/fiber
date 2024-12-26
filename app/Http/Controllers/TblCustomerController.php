@@ -36,7 +36,7 @@ class TblCustomerController extends Controller
             'receiver_name' => 'required|string|max:255',
         ]);
 
-        $predefineaccount = TblAccPredefineAccount::findOrFail(1);
+       /* $predefineaccount = TblAccPredefineAccount::findOrFail(1);
         // dd($predefineaccount);
         $HeadLevel = 3;
 
@@ -63,12 +63,12 @@ class TblCustomerController extends Controller
         $newledger->PHeadName = $PHeadName;
         $newledger->PHeadCode = $predefineaccount->customerCode;
         $newledger->HeadLevel = 4;
-        $HeadCode =  $newledger->save();
+        $HeadCode =  $newledger->save();*/
 
 
         $customer = new TblCustomer();
         $customer->customer_name = $request->customer_name;
-        $customer->HeadCode = $HeadCode;
+        // $customer->HeadCode = $HeadCode;
         $customer->address = $request->address;
         $customer->telephone_no = $request->telephone_no;
         $customer->receiver_name = $request->receiver_name;
