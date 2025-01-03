@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('web_settings', function (Blueprint $table) {
             $table->id();
+            $table->string('company_name')->nullable(); 
             $table->string('logo')->nullable(); // Path to the main logo
+            $table->string('company_address')->nullable(); 
+            $table->string('PAN_no')->nullable(); 
+            $table->string('GSTIN_no')->nullable(); 
+            $table->string('phno')->nullable(); 
+            $table->string('email')->nullable(); 
+            $table->string('lutno')->nullable(); 
             $table->string('invoice_logo')->nullable(); // Path to the invoice logo
             $table->string('favicon')->nullable(); // Path to the favicon
             $table->string('currency')->default('INR'); // Default currency

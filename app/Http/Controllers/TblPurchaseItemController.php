@@ -188,7 +188,7 @@ class TblPurchaseItemController extends Controller
             ->get();
 
         // Combine the two collections
-        return view('inward.invoice', compact('inwards', 'inwardsItems'));
+        return view('inward.invoice', compact('inwards', 'inwardsItems','invoice_no'));
     }
 
 

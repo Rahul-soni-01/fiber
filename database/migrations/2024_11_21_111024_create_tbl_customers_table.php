@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('telephone_no');
             $table->string('receiver_name');
+            $table->string('gst_no')->nullable();
             $table->timestamps();
         });
     }

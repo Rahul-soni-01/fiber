@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Show Departments</x-slot>
+    <x-slot name="title">Edit Departments</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
             <h3>Edit Department</h3>

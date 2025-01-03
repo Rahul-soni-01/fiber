@@ -6,6 +6,13 @@
             <ul class="nav nav-tabs " id="customerTab" role="tablist">
                 <li class="nav-item ml-1" role="presentation">
                     <a href="{{ route('banks.index') }}" class="btn btn-info"> show All Banks </a>
+                    <a href="{{ route('generate-pdf', ['bank' => $id]) }}" class="btn btn-primary" id="download-btn1212">Download PDF</a>
+
+                    {{-- <form action="/download-pdf12" method="POST"> --}}
+                        {{-- @csrf <!-- CSRF token for security --> --}}
+                        {{-- <button type="button" class="btn btn-primary" id="download-btn">Download current as PDF</button> --}}
+                    {{-- </form> --}}
+
                 </li>
                 <li class="nav-item ml-1" role="presentation">
                     <a class="nav-link active" id="payment-tab" data-bs-toggle="tab" href="#payment" role="tab" aria-controls="customer-payment" aria-selected="true">Payment History </a>

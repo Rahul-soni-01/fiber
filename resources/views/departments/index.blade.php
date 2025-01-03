@@ -1,10 +1,9 @@
 <x-layout>
     <x-slot name="title">Show Departments</x-slot>
     <x-slot name="main">
-        <div class="main" id="main" style="">
-            
+        <div class="main" id="main">
 
-            <a href="{{ route('departments.create') }}" class="btn btn-primary">Add Departments</a>
+            <a href="{{ route('departments.create') }}" class="btn btn-primary mb-2">Add Departments</a>
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
@@ -18,7 +17,6 @@
                         <tr>
                             <td>{{$department->id}}</td>
                             <td>{{$department->name}}</td>
-
                             <td><a href="{{ route('departments.edit', ['department_id' => $department->id]) }}"><i class="ri-eye-fill"></i></a>  <form action="{{ route('departments.destroy', $department->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE') <!-- Specify the method as DELETE -->

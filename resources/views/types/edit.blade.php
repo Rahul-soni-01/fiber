@@ -1,8 +1,8 @@
 <x-layout>
-    <x-slot name="title">Show Departments</x-slot>
+    <x-slot name="title">Edit Types</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <h3>Edit Department</h3>
+            <h3>Edit Types</h3>
             <a href="{{ route('type.index') }}" class="btn btn-primary">Back to Type</a>
             <form action="{{ route('type.update', $type->id) }}" method="POST">
                 @csrf

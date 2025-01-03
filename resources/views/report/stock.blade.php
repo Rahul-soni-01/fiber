@@ -9,8 +9,8 @@
                         <th>Subcategory Name</th> 
                         <th>Total Purchase Quantity</th>
                         <th>Total Stock Quantity</th>
-                        <th>Qty Status 0</th>
-                        <th>Qty Status 1</th>
+                        <th>Not Used Qty</th>
+                        <th>Used Qty</th>
                         <th>Total Reports</th>
                         <th>Total Dead Stock</th>
                         <th>Total Purchase Price</th>

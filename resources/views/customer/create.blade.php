@@ -33,8 +33,12 @@
                                 <label for="receiver_name">Receiver Name</label>
                                 <input type="text" name="receiver_name" class="form-control" placeholder="Enter Receiver Name" required>
                             </div>
-                            <div class="text-center"> <!-- Centering the button -->
-                                <button class="btn btn-dark">Add Customer</button>
+                            <div class="mb-3">
+                                <label for="gst_no">GSTIN</label>
+                                <input type="text" name="gst_no" class="form-control" placeholder="Enter GST No..." >
+                            </div>
+                            <div class="text-center"> 
+                                <button class="btn btn-success">Add Customer</button>
                             </div>
                         </div>
                     </div>

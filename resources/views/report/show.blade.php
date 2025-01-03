@@ -2,6 +2,7 @@
     <x-slot name="title">Show Report</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
+            
             <table class="table table-bordered custom-border datatable-remove" id="tbl">
                 <tbody id="Tbody">
                     <tr>

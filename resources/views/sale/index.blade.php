@@ -2,7 +2,7 @@
     <x-slot name="title">Show All sale</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <a href="{{ route('sale.create') }}" class="btn btn-primary mt-2 mb-2">Add Sale</a>
+            <a href="{{ route('sale.create') }}" class="btn btn-primary mb-2">Add Sale</a>
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>

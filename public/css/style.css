@@ -140,6 +140,7 @@ body {
 
 #main{
     padding: 20px;
+    /* font-weight: bold; */
 }
 
 #header {
@@ -160,8 +161,8 @@ body {
 
 .footer {
     position: relative;
-    background: #3586ff;
-    height: 100px;
+    background: #E0E0E0;
+    height: 50px;
     padding: 20px 50px; 
     display: flex;
     justify-content: center;

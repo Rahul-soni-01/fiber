@@ -2,6 +2,10 @@
     <x-slot name="title">Show Sale</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
+            <a href="{{ route('generate-pdf', ['sale' => $sale->id]) }}" class="btn btn-primary mb-3" id="download-btn1212">Download PDF</a>
+            @if($sale->customer->gst_no != null)
+            <a href="{{ route('generate-pdf', ['sale' => $sale->id, 'gst'=>1] ) }}" class="btn btn-primary mb-3" id="download-btn1212">Download GST PDF</a>
+            @endif
             <div class="container">
                 <div class="row">
                     <div class="col">Invoice No.</div>

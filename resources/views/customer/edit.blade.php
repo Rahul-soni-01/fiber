@@ -2,7 +2,7 @@
     <x-slot name="title">Edit Party</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <a href="{{ route('party.show') }}" class="btn btn-primary">Back to Departments</a>
+            <a href="{{ route('party.show') }}" class="btn btn-primary mb-2">Back to Departments</a>
             @if ($errors->any())
             <div style="color: red;">
                 <ul>
@@ -38,6 +38,10 @@
                                 <label for="receiver_name">Receiver Name</label>
                                 <input type="text" name="receiver_name" class="form-control"
                                     value="{{ old('receiver_name', $customer->receiver_name) }}" placeholder="Enter Receiver Name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="gst_no">GSTIN</label>
+                                <input type="text" value="{{ old('gst_no', $customer->gst_no) }}" name="gst_no" class="form-control" placeholder="Enter GST No..." >
                             </div>
                             <div class="text-center"> <!-- Centering the button -->
                                 <button class="btn btn-success">Update Customer</button>

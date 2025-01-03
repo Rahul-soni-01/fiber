@@ -4,6 +4,8 @@
         <div class="main" id="main">
             @foreach ($inwards as $item)
             <div class="container">
+
+                <a href="{{ route('generate-pdf', ['invoice_no' => $invoice_no]) }}" class="btn btn-primary" id="download-btn1212">Download PDF</a>
                 <div class="row">
                     <div class="col">Invoice No.</div>
                     <div class="col">Date</div>
@@ -134,38 +136,6 @@
             </div>
             @endforeach
 
-
-            {{--<table class="table table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Category Name</th>
-                        <th>Sub Category Name</th>
-                        <th>Qty</th>
-                        <th>POU</th>
-                        <th>Total</th>
-                        <th>Tax(%)</th>
-                        <th>Final Total</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    @foreach ($items as $item)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{$item['category_name']}}</td>
-                        <td>{{$item['subcategory_name']}}</td>
-                        <td>{{$item['qty']}}</td>
-                        <td>{{$item['price']}}</td>
-                        <td>{{$item['total']}}</td>
-                        <td>{{$item['tax']}}</td>
-                        <td>{{$item['final_price']}}</td>
-                    </tr>
-                    @endforeach
-
-                </tbody>
-            </table>--}}
         </div>
     </x-slot>
 </x-layout>

@@ -15,6 +15,7 @@
                     </ul>
                 </div>
                 @endif
+              
                 <table class="table table-bordered custom-border datatable-remove" id="tbl">
                     <tbody id="Tbody">
                         @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin' ||
@@ -68,7 +69,6 @@
 
                                 @endif
                             </td>
-
                         </tr>
                         @endif
                         @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user' || auth()->user()->type
@@ -178,6 +178,7 @@
                                 <h5>WATT</h5>
                             </td>
                         </tr>
+                        
                         {{-- @endif --}}
                         @if(auth()->user()->type === 'electric' || auth()->user()->type === 'user' ||
                         auth()->user()->type === 'admin' )

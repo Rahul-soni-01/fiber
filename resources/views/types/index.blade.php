@@ -3,7 +3,7 @@
     <x-slot name="main">
         <div class="main" id="main" style="">
 
-            <a href="{{ route('type.create') }}" class="btn btn-primary">Add Type</a>
+            <a href="{{ route('type.create') }}" class="btn btn-primary mb-3">Add Type</a>
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>

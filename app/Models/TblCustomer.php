@@ -22,6 +22,7 @@ class TblCustomer extends Model
         'address',
         'telephone_no',
         'receiver_name',
+        'gst_no',
     ];
 
     public function Cuspayments()
@@ -35,7 +36,7 @@ class TblCustomer extends Model
 
     public function SaleReturn()
     {
-        return $this->hasMany(TblSaleReturn::class, 'c_id');
+        return $this->hasMany(TblSaleReturn::class, 'customer_id');
     }
     
 }

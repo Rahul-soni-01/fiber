@@ -28,14 +28,24 @@ class TblCustomerController extends Controller
 
     public function store(Request $request)
     {
-        
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'telephone_no' => 'required|numeric',
             'receiver_name' => 'required|string|max:255',
-        ]);
+            'gst_no' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    // Regex for GST Validation
+                    $pattern = '/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9A-Z]{1}$/';
 
+                    if (!preg_match($pattern, $value)) {
+                        $fail('The GSt No must be a valid GST number.' . $value);
+                    }
+                },
+            ],
+        ]);
+        
        /* $predefineaccount = TblAccPredefineAccount::findOrFail(1);
         // dd($predefineaccount);
         $HeadLevel = 3;
@@ -68,12 +78,11 @@ class TblCustomerController extends Controller
 
         $customer = new TblCustomer();
         $customer->customer_name = $request->customer_name;
-        // $customer->HeadCode = $HeadCode;
+        $customer->HeadCode = $HeadCode ?? 0;
         $customer->address = $request->address;
         $customer->telephone_no = $request->telephone_no;
         $customer->receiver_name = $request->receiver_name;
-
-
+        $customer->gst_no = $request->gst_no ?? null;
         $result = $customer->save();
 
         if ($result) {
@@ -107,6 +116,18 @@ class TblCustomerController extends Controller
             'address' => 'required|string|max:255',
             'telephone_no' => 'required|numeric',
             'receiver_name' => 'required|string|max:255',
+            'gst_no' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    // Regex for GST Validation
+                    $pattern = '/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9A-Z]{1}$/';
+
+                    if (!preg_match($pattern, $value)) {
+                        $fail('The GSt No must be a valid GST number.' . $value);
+
+                    }
+                },
+            ],
         ]);
     
         $customer = TblCustomer::findOrFail($id);
@@ -115,6 +136,7 @@ class TblCustomerController extends Controller
         $customer->address = $request->address;
         $customer->telephone_no = $request->telephone_no;
         $customer->receiver_name = $request->receiver_name;
+        $customer->gst_no = $request->gst_no;
     
         $result = $customer->save();
     

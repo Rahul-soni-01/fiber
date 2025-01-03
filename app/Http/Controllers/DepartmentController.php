@@ -89,6 +89,13 @@ class DepartmentController extends Controller
     {
         // Validate input data
         $validated = $request->validate([
+            'company_name' => 'required|string|max:255',
+            'company_address' => 'required|string|max:255',
+            'PAN_no' => 'required|string|max:255',
+            'GSTIN_no' => 'required|string|max:255',
+            'phno' => 'required|string|max:255',
+            'email' => 'required|email|string|max:255',
+            'lutno' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'invoice_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -103,9 +110,15 @@ class DepartmentController extends Controller
         $invoiceLogoPath = $this->handleFileUpload($request, 'invoice_logo', 'invoice_logo');
         $faviconPath = $this->handleFileUpload($request, 'favicon', 'favicon');
         
-        // dd($invoiceLogoPath);
         // Prepare data to be updated in the database
         $dataToUpdate = [
+            'company_name' => $validated['company_name'],
+            'company_address' => $validated['company_address'],
+            'PAN_no' => $validated['PAN_no'],
+            'GSTIN_no' => $validated['GSTIN_no'],
+            'phno' => $validated['phno'],
+            'email' => $validated['email'],
+            'lutno' => $validated['lutno'],
             'currency' => $validated['currency'],
             'timezone' => $validated['timezone'],
             'footer_text' => $validated['footer_text'],

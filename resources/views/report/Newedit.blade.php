@@ -2,7 +2,7 @@
     <x-slot name="title">Edit {{auth()->user()->type}} Report</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <form action="{{ route('report.update', $report->id) }}" method="POST">
+            <form action="{{ route('report.update', $report->id) }}" method="POST" id="report-form">
                 @csrf
                 @method('PUT')
 
@@ -13,8 +13,9 @@
                         <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                </div>
+                </div> 
                 @endif
+                {{-- {{ dd($report);}} --}}
                 <div id="Tbody">
                     @if(in_array(auth()->user()->type, ['electric', 'admin', 'cavity', 'user']))
                     <div class="row mt-3">
@@ -46,10 +47,11 @@
                             @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
                             <input type="text" id="wn" name="worker_name" class="form-control"
                                 placeholder="Enter Worker Name" value="{{ old('worker_name', $report->worker_name) }}"
-                                @if($report->part == 1 && in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif
-                                >
-                                @endif
-                            </div>
+                                @if($report->part == 1 && in_array(auth()->user()->type, ['electric', 'cavity']))
+                            readonly @endif
+                            >
+                            @endif
+                        </div>
                     </div>
                     @endif
 
@@ -65,8 +67,8 @@
                             <input type="text" id="srfiber" name="sr_no_fiber" class="form-control"
                                 placeholder="Enter SR No Fiber" value="{{ old('sr_no_fiber', $report->sr_no_fiber) }}"
                                 @if(in_array(auth()->user()->type,
-                                ['electric', 'cavity'])) readonly @endif>
-                                @endif
+                            ['electric', 'cavity'])) readonly @endif>
+                            @endif
                         </div>
                         <div class="col-md-2">
                             <input type="text" id="temp" name="temp" class="form-control"
@@ -81,7 +83,8 @@
                         <div class="col-md-3">
                             @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                             <input type="text" id="mj" name="m_j" class="form-control" placeholder="Enter M/J Value"
-                                value="{{ old('m_j', $report->m_j) }}" @if(in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif>
+                                value="{{ old('m_j', $report->m_j) }}" @if(in_array(auth()->user()->type, ['electric',
+                            'cavity'])) readonly @endif>
                             @endif
                         </div>
                     </div>
@@ -108,16 +111,12 @@
                         </div>
                         <div class="col-md-3">
                             @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
-                            <select id="type" name="type" class="form-control" required @if(in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif>
-                                <option value="">Select Type</option>
-                                <option value="15" {{ old('type', $report->type) == '15' ? 'selected' : '' }}>15
-                                </option>
-                                <option value="18" {{ old('type', $report->type) == '18' ? 'selected' : '' }}>18
-                                </option>
-                                <option value="21" {{ old('type', $report->type) == '21' ? 'selected' : '' }}>21
-                                </option>
-                                <option value="26" {{ old('type', $report->type) == '26' ? 'selected' : '' }}>26
-                                </option>
+                            <select id="type" name="type" class="form-control" required
+                                @if(in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif>
+                                <option value="" disabled selected>Select Type</option>
+                                @foreach($types as $type)
+                                    <option value="{{$type->id}}" @if($type->id == $report->type) selected @endif>{{$type->name}}</option>
+                                @endforeach
                             </select>
                             @endif
                         </div>
@@ -163,42 +162,74 @@
                             </div>
                         </div>
                     </div>
-                    @foreach($reportitems as $reportitem)
-                    
-                    <div class="row mt-4 ">
-                        <div class="col-md-3">
-                            <strong>{{ $reportitem->tbl_sub_category->category->category_name}}:- {{ $reportitem->tbl_sub_category->sub_category_name }}</strong>
+                    @foreach($reportitems as $index => $reportitem)
+                    <div class="row mt-4 align-items-center" id="row_{{$index+1}}">
+                        <div class="col-12 col-md-2 d-flex">
+                            <select required onchange="tbl_stock({{$index+1}});" id="subcategory_{{$index+1}}"
+                                name="sub_category[]" class="tbl_sub ml-2 form-control">
+                                <option value="" selected disabled>Select</option>
+                                @foreach($all_sub_categories as $key => $sub_category)
+                                <option value="{{$sub_category->id}}" data-unit="{{$sub_category->unit}}"
+                                    data-sr_no="{{$sub_category->sr_no}}" @if($sub_category->id == $reportitem->scid)
+                                    selected @endif>
+                                    {{$sub_category->category->category_name}} - {{$sub_category->sub_category_name}}
+                                </option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="row col-md-9">
-                            <div class="col-md-3">
-                                <span>{{ $reportitem->sr_no }}</span>
-                            </div>
-                            <div class="col-md-2">
-                                <span>{{ $reportitem->amp }}</span>
-                            </div>
-                            <div class="col-md-2">
-                                <span>{{ $reportitem->volt }}</span>
-                            </div>
-                            <div class="col-md-3">
-                                <span>{{ $reportitem->watt }}</span>
-                               
-                            </div>
-                            <div class="col-md-2">
-                                <span >
-                                    @if($reportitem->dead_status == 0)
-                                    <span class="badge badge-success">Active</span>
-                                    @elseif($reportitem->dead_status == 1)
-                                    <span class="badge badge-danger">Dead</span>
-                                    {{-- Dead Stock --}}
-
+                        <div class="col-12 col-md-10" id="col_{{$index+1}}"> 
+                            <div class="row" id="row_{{$index+1}}">
+                                <input type="hidden" name="sr_no_or_not[]" value="{{$reportitem->tbl_sub_category->sr_no}}">
+                                <div class="col-12 col-md-3">
+                                    <input type="text" name="srled[]" list="srled_{{$index+1}}" class="form-control"
+                                        placeholder="Select or enter a new sr no, Small Alpha Plz" required value="{{$reportitem->sr_no}}">
+                                    <datalist id="srled_{{$index+1}}">
+                                        <option value="{{$reportitem->sr_no}}" selected>{{$reportitem->sr_no}} </option>    
+                                    </datalist>
+                                </div>
+                                <div class="col-md-2">
+                                    @if($reportitem->sr_no != 0)
+                                        <input type="text" id="ampled_1" name="ampled[]" class="form-control"
+                                        value="{{ $reportitem->amp }}" placeholder="Enter AMP"> 
                                     @else
-                                    Unknown
+                                        <input type="hidden" id="ampled_1" name="ampled[]" class="form-control"
+                                        value="{{ $reportitem->amp }}" placeholder="Enter AMP"> 
                                     @endif
-                                </span>
+                                </div>
+                                <div class="col-md-2">
+                                    @if($reportitem->sr_no != 0)
+                                        <input type="text" id="ampled_1" name="voltled[]" class="form-control"
+                                        value="{{ $reportitem->volt }}" placeholder="Enter Volt">
+                                    @else
+                                        <input type="hidden" id="ampled_1" name="voltled[]" class="form-control"
+                                        value="{{ $reportitem->volt }}" placeholder="Enter Volt">
+                                    @endif
+                                </div>
+                                <div class="col-12 col-md-5 d-flex justify-content-between">
+                                    @if($reportitem->sr_no != 0)
+                                    <input type="text" id="ampled_1" name="wattled[]" class="form-control"
+                                        value="{{ $reportitem->watt }}" placeholder="Enter Watt">
+                                    @else
+                                    <input type="hidden" id="ampled_1" name="wattled[]" class="form-control"
+                                    value="{{ $reportitem->watt }}" placeholder="Enter Watt">
+                                    @endif
+                                        
+                                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-{{$index+1}}"  @if($reportitem->dead_status == '1') disabled @endif>
+                                        
+                                    <input type="checkbox" name="dead[]" value="1" class="m-2"
+                                        @if($reportitem->dead_status == '1') checked @endif
+                                    onchange="syncHiddenInput(this, {{$index+1}})">
+                                    <lable class="m-2">Dead</lable>
+                                    <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn"
+                                        id="1">Delete</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     @endforeach
+                    <script>
+                        let row = {{ count($reportitems); }}+1;
+                    </script>
 
                     <div id="TBody" class="mt-4"></div>
                     <div class="row mt-3">
@@ -217,7 +248,7 @@
                         </div>
                     </div>
 
-                    
+
 
                     @if(in_array(auth()->user()->type, ['admin', 'user']))
                     <div class="row mt-3">
@@ -232,7 +263,7 @@
                     @endif
                 </div>
 
-                <button type="submit" class="btn btn-success">SUBMIT</button>
+                <button type="button" id="submit-button" class="btn btn-success">SUBMIT</button>
         </div>
     </x-slot>
 </x-layout>

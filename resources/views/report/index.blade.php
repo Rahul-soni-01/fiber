@@ -47,13 +47,13 @@
                 </div>
             </form>
 
-            @if (request()->path() !== 'report-new')
+            
             <p class="mt-4">New reports Filter.</p>
             <label class="switch">
                 <input type="checkbox" id="toggleSwitch">
                 <span class="slider"></span>
             </label>
-            @endif
+            
 
 
             @if ($reports->isEmpty())
@@ -166,7 +166,7 @@
                             <td>{{ $report->sr_no_fiber }}</td>
                             <td>{{ $report->temp }}</td>
                             <td>{{ $report->m_j }}</td>
-                            <td>{{ $report->tbl_type->name }}</td>
+                            <td>{{ $report->tbl_type->name ?? null}}</td>
                             {{-- <td>{{ $report->sr_isolator }}</td>
                             <td>{{ $report->sr_fiber_nano }}</td>
                             <td>{{ $report->sr_fiber_moto }}</td>
@@ -193,6 +193,7 @@
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
                                         class="ri-eye-fill"></i></a>
+                                        <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                             </td>
                             @endif
 

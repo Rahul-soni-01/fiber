@@ -8,8 +8,10 @@
     <link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    {{-- <link rel="stylesheet" href="{{asset('Denis/css/style.css')}}"> --}}
-    {{-- <link rel="stylesheet" href="{{asset('Denis/css/bootstrap.min.css')}}"> --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('Denis/css/style.css')}}"> --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('Denis/css/bootstrap.min.css')}}"> --}}
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="js/jquery-3.7.1.min.js"></script>
 
@@ -35,8 +37,18 @@
 
     <!-- Select2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<!-- plugins:css -->
-    {{-- <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
+    <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+
+    <!-- plugins:css -->
+    {{--
+    <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
@@ -51,19 +63,19 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="assets/images/favicon.png" /> --}}
-   
+
 </head>
 
 <body>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div id="header" class="row">
-        <div class="col-md-1 header-first d-flex justify-content-center align-items-center"><label id="menu" class="button" for="check"><i
-                    class="ri-menu-line"></i></label></div>
+        <div class="col-md-1 header-first d-flex justify-content-center align-items-center"><label id="menu"
+                class="button" for="check"><i class="ri-menu-line"></i></label></div>
         @php
-            $websetting = DB::table('web_settings')->where('id', 1)->first();
+        $websetting = DB::table('web_settings')->where('id', 1)->first();
         @endphp
-                
+
         <div class="col-md-2 logo">
             <a href="/">
                 <!-- Check if logo path exists and use it; otherwise, use a default logo -->
@@ -72,20 +84,21 @@
         </div>
         <div class="col-md-3 offset-md-6 d-flex align-items-center justify-content-center">
             <strong>{{ auth()->user()->type }}</strong> &nbsp; || &nbsp; <strong>{{ auth()->user()->name }}</strong>
-            <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i class="ml-2 fa-solid fa-user"></i>
+            <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
+                    class="ml-2 fa-solid fa-user"></i>
                 <span class="logout-text">Log out</span>
             </a>
             @if(auth()->user()->type === 'admin' )
-                
+
             <a href="{{ route('websetting')}}" class="ml-2 link">
                 <i class="ri-settings-line"></i>
                 <span class="websetting">Web Setting</span>
             </a>
             @endif
         </div>
-            </div>
+    </div>
     {{-- <div id="fakeheader"></div> --}}
-    
+
     <div class="slidebar" id="slidebar">
         <ul>
             <li id="Home" class="sidebar">
@@ -98,7 +111,7 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('party.create') }}" id="add" class="sub-item">Add Supplier</a></li>
                     <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Supplier</a></li>
-                    
+
                     <li><a href="{{ route('payment.create') }}" id="add" class="sub-item">Add Payment</a></li>
                     <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li>
                 </ul>
@@ -130,8 +143,10 @@
                     <li><a href="{{ route('user.index') }}" id="view" class="sub-item">Show User</a></li>
                     <li><a href="{{ route('user.create') }}" id="view" class="sub-item">Add User</a></li>
                     <li><a href="{{ route('manage.permissions') }}" id="view" class="sub-item">Show Permission</a></li>
-                    {{-- <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a></li> --}}
-                    <li><a href="{{ route('manage.permissions.create') }}" id="add" class="sub-item">Add Permission</a></li>
+                    {{-- <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a>
+                    </li> --}}
+                    <li><a href="{{ route('manage.permissions.create') }}" id="add" class="sub-item">Add Permission</a>
+                    </li>
                 </ul>
             </li>
             {{-- @endif --}}
@@ -176,7 +191,7 @@
                     <li><a href="{{ route('report.reject') }}" id="view" class="sub-item">Rejected Report</a></li>
                     @endif
                     <li><a href="{{ route('report.search') }}" id="add" class="sub-item">Search Report</a></li>
-                    <li><a href="{{ route('report.new') }}" id="add" class="sub-item">Report New Stock</a></li>
+                    <li><a href="{{ route('report.new') }}" id="add" class="sub-item">All Report </a></li>
                     <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">stock Report</a></li>
                 </ul>
             </li>
@@ -190,7 +205,7 @@
                     <li><a href="{{ route('sale.return.index') }}" id="view" class="sub-item">Sale Return</a></li>
                 </ul>
             </li>
-           
+
             <li id="Customer" class="sidebar">
                 <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Customer<i
                         class="ri-arrow-down-s-line"></i></a>
@@ -198,10 +213,12 @@
                     <li><a href="{{ route('customer.create') }}" id="add" class="sub-item">Add Customer</a></li>
                     <li><a href="{{ route('customer.index') }}" id="view" class="sub-item">Show Customer</a></li>
 
-                    
+
                     <li><a href="{{ route('payment.customer.create') }}" id="add" class="sub-item">Add Payment</a></li>
-                    {{-- <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li> --}}
-                    <li><a href="{{ route('payment.customer.index') }}" id="view" class="sub-item">Customer Payment</a></li>
+                    {{-- <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li>
+                    --}}
+                    <li><a href="{{ route('payment.customer.index') }}" id="view" class="sub-item">Customer Payment</a>
+                    </li>
                 </ul>
             </li>
 
@@ -211,7 +228,8 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li>
                     <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li>
-                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a></li>
+                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a>
+                    </li>
                 </ul>
             </li>
             <li id="Bank" class="sidebar">
@@ -241,21 +259,25 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="{{ route('saleproductcategory.create') }}" id="add" class="sub-item">Add Sale Product Category</a>
+                        <a href="{{ route('saleproductcategory.create') }}" id="add" class="sub-item">Add Sale Product
+                            Category</a>
                     </li>
                     <li>
-                        <a href="{{ route('saleproductcategory.index') }}" id="view" class="sub-item">Show Sale Product Categories</a>
+                        <a href="{{ route('saleproductcategory.index') }}" id="view" class="sub-item">Show Sale Product
+                            Categories</a>
                     </li>
                     <li>
-                        <a href="{{ route('saleproductsubcategory.create') }}" id="add" class="sub-item">Add Sale Product Sub Category</a>
+                        <a href="{{ route('saleproductsubcategory.create') }}" id="add" class="sub-item">Add Sale
+                            Product Sub Category</a>
                     </li>
                     <li>
-                        <a href="{{ route('saleproductsubcategory.index') }}" id="view" class="sub-item">Show Sale Product Sub Categories</a>
+                        <a href="{{ route('saleproductsubcategory.index') }}" id="view" class="sub-item">Show Sale
+                            Product Sub Categories</a>
                     </li>
                 </ul>
-                
+
             </li>
-            
+
         </ul>
 
     </div>
@@ -264,20 +286,22 @@
         <hr style="border:0.5px solid lightgray;">
         {{$main}}
     </div>
+</div>
 
-    <!-- <div class="footer" id="footer">
-        <h1>Footer Page</h1>
-    </div> -->
+     <div class="footer" id="footer">
+        {{$websetting->footer_text  ?? null}}
+    </div> 
 
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $(document).ready(function () {
             // $('.table').DataTable();
-                $('.table').not('.datatable-remove').DataTable({
-                    pageLength: 25 
-                });
-                
+            $('.table').not('.datatable-remove').DataTable({
+                pageLength: 25 
+            });
+            
+            $(".chosen-select").chosen({
+                no_results_text: "Oops, nothing found!"
             });
 
             const menuButton = document.getElementById('menu');
@@ -310,6 +334,36 @@
                 placeholder: "Select an option",
                 allowClear: true
             });
+            $('#download-btn').click(function(e) {
+                e.preventDefault();
+
+                var content = $('#payment').html();
+                var currentUrl = window.location.href;
+                 $.ajax({
+                    url: '/generate-pdf',
+                    type: 'POST',
+                    data: { 
+                        content: content,
+                        currentUrl:currentUrl 
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                    },
+                    success: function(response) {
+                        const link = document.createElement('a');
+                        const url = window.URL.createObjectURL(response);
+                        link.href = url;
+                        link.downOload = 'generated-file.pdf';
+                        link.click();
+                        window.URL.revokebjectURL(url);
+                    },
+                    error: function(error) {
+                        console.error('Error downloading PDF:', error);
+                    }
+                });
+            
+            });
+
         });
 
         var count = 1;
@@ -513,7 +567,6 @@
             total();
         }
 
-
         function total() {
             for (var i = 0; i < count; i++) {
                 var qtyElement = document.getElementById(`data[${i}][qty]`);
@@ -607,7 +660,9 @@
             calculateshipping();
         }
 
-        var row = 1;
+        if (typeof window.row == 'undefined') {
+            window.row = 1; // Initialize globally
+        }
         function AddRow(subcategories) {
             $('#TBody').append(`
                 <tr>
@@ -685,7 +740,7 @@
                 </div> <!-- End previous col div -->
                 <div class="row mt-1" id="row_${row_id}">
                     <input type="hidden" name="sr_no_or_not[]" value="0">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
                         <datalist id="srled_${row_id}">
                             <option value=""></option>
@@ -927,6 +982,7 @@
         }
 
         function NewReportCreateRow(subcategories){
+            console.log(subcategories,row);
             $('#TBody').append(`
               <div class="row mb-3 align-items-center" id="row_${row}">
                     <!-- Select Dropdown -->
@@ -951,7 +1007,108 @@
         // <td class="d-flex"><input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT" >
         //                 <button type="button" onclick="removeRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</i></button>
         //             </td>
+
+        function filterInvoices() {
+            const selectedSupplierId = document.getElementById('supplier_select').value;
+
+            const invoiceSelect = document.getElementById('invoice_select');
+            // const invoiceOptions = invoiceSelect.querySelectorAll('option');
+
+            $(invoiceSelect).find('option').each(function () {
+                const supplierId = $(this).data('supplier');
+                if (supplierId == selectedSupplierId || !supplierId) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            $(invoiceSelect).val([]); // Reset selection
+            $(invoiceSelect).trigger("chosen:updated");
+        }
+
+        function filterSales() {
+            const selectedCustomerId = document.getElementById('customer_select').value;
+            const sellSelect = document.getElementById('sell_no_select');
+
+            // Show/hide options based on the selected customer
+            $(sellSelect).find('option').each(function () {
+                const customerId = $(this).data('customer');
+                if (customerId == selectedCustomerId || !customerId) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // Reset Chosen dropdown to reflect updated options
+            $(sellSelect).val([]); // Reset selection
+            $(sellSelect).trigger("chosen:updated");
+        }
+
+        function GetInvoiceData(user,selectId){
+            const selectedId = document.getElementById(selectId).value;
+
+            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            if(user === 'supplier'){
+                var url = "/get-invoice-details";
+                const party = document.getElementById('supplier_select').value;
+                var data = {
+                    _token: csrfToken,
+                    invoice_no: selectedId,
+                    party: party,
+                    status: 1,
+                };
+            }
+            else{
+               var url = "/get-invoice-sell-details"; 
+               const customer = document.getElementById('customer_select').value;
+               var data = {
+                    _token: csrfToken,
+                    invoice_no: selectedId,
+                    customer: customer,
+                    status: 1,
+                };
+            }
+            
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: data,
+                success: function (response) {
+                    if(user === 'supplier'){
+                        $('#supplier_paid_total').val(response.data[0].amount); 
+                    }else if(user === 'customer'){
+                        $('#customer_amount').val(response.data[0].total_amount); 
+                    }
+                }
+            });
+        }
+
+        function toggleBankDetails(user) {
+            if( user ==='customer'){
+                const paymentMethod = document.getElementById('payment_method').value;
+                const bankDetails = document.getElementById('bank_details');
+
+                if (paymentMethod === 'Bank') {
+                    bankDetails.style.display = 'block';
+                } else {
+                    bankDetails.style.display = 'none';
+                }
+            } else if(user ==='supplier'){
+                const paymentMethod = document.getElementById('supplier_payment_method').value;
+                const bankDetails = document.getElementById('supplier_bank_details');
+
+                if (paymentMethod === 'Bank') {
+                    bankDetails.style.display = 'block';
+                } else {
+                    bankDetails.style.display = 'none';
+                }
+            }
+        }
+
     </script>
+ 
 </body>
 
 </html>

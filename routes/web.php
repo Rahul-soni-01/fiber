@@ -22,11 +22,45 @@ use App\Http\Controllers\TblBankController;
 use App\Http\Controllers\TblExpenseController;
 use App\Http\Controllers\TblSaleProductCategoryController;
 use App\Http\Controllers\TblSaleProductSubCategoryController;
-
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\PdfGeneratorController;
 
 use Illuminate\Support\Facades\Hash;
 
+/*Route::post('/download-pdf', function () {
+    $content = Request::input('content');
+    $pdf = Pdf::loadView('pdf-template',$content);
+    return $pdf->download('example.pdf');
+
+// get Method
+     $data = ['title' => 'Sample PDF Title', 'content' => 'This is the PDF content.']; // Example data
+    $pdf = Pdf::loadView('pdf-template', $data);
+
+    return $pdf->download('example.pdf');
+    
+});
+Route::get('/download-pdf', function () {
+    
+    $data = ['title' => 'Sample PDF Title', 'content' => 'This is the PDF content.']; // Example data
+    $pdf = Pdf::loadView('pdf-template', $data);
+
+    return $pdf->download('example.pdf');
+});
+
+Route::post('/download-pdf', function () {
+    // dd(Request()->all());
+    $content = Request::input('content');
+    $data = ['title' => 'Sample PDF Title', 'content' => $content ]; // Example data
+    $pdf = Pdf::loadView('pdf-template', $data);
+
+    return response($pdf->output(), 200)
+    // ->header('Content-Type', 'application/pdf')
+    ->header('Content-Disposition', 'inline; filename="example.pdf"');
+    // return $pdf->download('example.pdf');
+});*/
+
+Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
+// Route::post('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
 
 Route::post('login', [TblUserController::class, 'login'])->name('login.post');
 Route::get('/', function () {
@@ -49,9 +83,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/websetting', [DepartmentController::class, 'websetting'])->name('websetting');
     Route::post('/websetting-update', [DepartmentController::class, 'updateWebSetting'])->name('websetting.update');
 
-    
+
     Route::get('/datainsert', [TblStockController::class, 'datainsert'])->name('datainsert');
-    
+
     // User Crud
     Route::get('/user', [TblUserController::class, 'index'])->name('user.index');
     Route::get('/user-create', [TblUserController::class, 'create'])->name('user.create');
@@ -69,11 +103,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage-permissions-store', [ManagePermissionController::class, 'store'])->name('manage.permissions.store');
     Route::get('/manage-permissions-departments-{id}', [ManagePermissionController::class, 'edit'])->name('managePermissions.departments');
     Route::post('/manage-permissions-update-{id}', [ManagePermissionController::class, 'update'])->name('manage-permissions.update');
-   
+
     // predefine edit
     Route::get('/predefine', [TblAccCoaController::class, 'predefine'])->name('predefine.index');
     Route::put('/predefine-update', [TblAccCoaController::class, 'predefineUpdate'])->name('predefine.update');
-    
+
     // acccoa Crud
     Route::get('/acccoa', [TblAccCoaController::class, 'index'])->name('acccoa.index');
     Route::get('/acccoa-create', [TblAccCoaController::class, 'create'])->name('acccoa.create');
@@ -81,7 +115,7 @@ Route::middleware('auth')->group(function () {
     Route::get('edit-acccoa-{acccoa_id}', [TblAccCoaController::class, 'edit'])->name(('acccoa.edit')); //View acccoa By id.
     Route::put('/acccoa/{id}', [TblAccCoaController::class, 'update'])->name('acccoa.update');
     Route::delete('/acccoa{acccoa_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
-   
+
     //saleproductcategory crud
     Route::get('/saleproductcategory', [TblSaleProductCategoryController::class, 'index'])->name('saleproductcategory.index');
     Route::get('/saleproductcategory-create', [TblSaleProductCategoryController::class, 'create'])->name('saleproductcategory.create');
@@ -90,7 +124,7 @@ Route::middleware('auth')->group(function () {
     Route::get('show-saleproductcategory-{id}', [TblSaleProductCategoryController::class, 'show'])->name('saleproductcategory.show');
     Route::put('/saleproductcategory/{id}', [TblSaleProductCategoryController::class, 'update'])->name('saleproductcategory.update');
     Route::delete('/saleproductcategory/{id}', [TblSaleProductCategoryController::class, 'destroy'])->name('saleproductcategory.destroy');
-    
+
     //saleproductsubcategory crud
     Route::get('/saleproductsubcategory', [TblSaleProductSubCategoryController::class, 'index'])->name('saleproductsubcategory.index');
     Route::get('/saleproductsubcategory-create', [TblSaleProductSubCategoryController::class, 'create'])->name('saleproductsubcategory.create');
@@ -125,7 +159,7 @@ Route::middleware('auth')->group(function () {
     Route::get('edit-department-{department_id}', [DepartmentController::class, 'edit'])->name(('departments.edit')); //View deparment By id.
     Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
     Route::delete('/departments{department_id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
-   
+
     // payment crud
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
     Route::get('/customer-payment', [PaymentController::class, 'CustomerIndex'])->name('payment.customer.index');
@@ -148,7 +182,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/party-{id}', [TblPartyController::class, 'update'])->name('party.update');
     Route::delete('/party-{party_id}', [TblPartyController::class, 'destroy'])->name('party.destroy');
     Route::get('party-search', [TblPartyController::class, 'search'])->name('party.search');
-    
+
     // Type Crud
     Route::get('type-create', [TbltypeController::class, 'create'])->name('type.create');
     Route::get('type', [TbltypeController::class, 'index'])->name('type.index');
@@ -190,7 +224,7 @@ Route::middleware('auth')->group(function () {
     // Route::view('add_report', 'add_report')->name('report.add');
     Route::post('/stockReport', [ReportController::class, 'stockReport'])->name('report.stockReport');
     Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
-    
+
     //get sub category wise sr no report list
     Route::post('/get-sc-sr-no', [ReportController::class, 'get_sc_sr_no'])->name('report.get_sc_sr_no');
 
@@ -204,10 +238,11 @@ Route::middleware('auth')->group(function () {
     Route::get('report-type-show-{report_id}', [ReportController::class, 'typeshow'])->name(('report.type.show')); // type 15,18,21,26 wise record display
     Route::get('report-edit-{report_id}', [ReportController::class, 'edit'])->name(('report.edit'));
     // Route::put('report-update-{report_id}', [ReportController::class, 'update'])->name(('report.update'));
-    Route::put('report-update-{report_id}', [ReportController::class, 'Newupdate'])->name(('report.update'));
+    // Route::put('report-update-{report_id}', [ReportController::class, 'Newupdate'])->name(('report.update'));
+    Route::put('report-update-{report_id}', [ReportController::class, 'Latestupdate'])->name(('report.update'));
     Route::get('report-reject', [ReportController::class, 'reject'])->name(('report.reject'));
     Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
-    
+
     Route::get('/serial-history', [SaleController::class, 'history'])->name('serial.history');
     // Sale Crud
     Route::get('sale-return-index', [SaleController::class, 'return_index'])->name('sale.return.index');

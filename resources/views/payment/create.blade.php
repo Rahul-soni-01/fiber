@@ -1,9 +1,7 @@
 <x-layout>
     <x-slot name="title">New Payment</x-slot>
     <x-slot name="main">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-        <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+      
 
         <div class="main" id="main">
             <a href="{{ route('payment.index') }}" class="btn btn-primary">Back to Payment</a>
@@ -35,9 +33,7 @@
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label for="party_name">Invoice </label>
-                                <select id="invoice_select" name="invoice_no[]" class="chosen-select"
-                                    placeholder="Enter Invoice" required onchange="GetInvoiceData('supplier',this.id);"
-                                    multiple>
+                                <select id="invoice_select" name="invoice_no[]" class="chosen-select" placeholder="Enter Invoice" required onchange="GetInvoiceData('supplier',this.id);" multiple>
                                     <option value="" disabled selected>Choose a Invoice</option>
                                     @foreach($tbl_purchases as $tbl_purchase)
                                     <option value="{{ $tbl_purchase->invoice_no }}"
@@ -163,125 +159,6 @@
             </div>
         </div>
 
-        <script>
-            $(document).ready(function () {
-            $(".chosen-select").chosen({
-                no_results_text: "Oops, nothing found!"
-            });
-        });
-        
-        document.getElementById('col1').addEventListener('click', function () {
-            document.getElementById('form1').classList.remove('d-none');
-            document.getElementById('form1').classList.add('d-block');
-            document.getElementById('form2').classList.remove('d-block');
-            document.getElementById('form2').classList.add('d-none');
-        });
-
-        document.getElementById('col2').addEventListener('click', function () {
-            document.getElementById('form2').classList.remove('d-none');
-            document.getElementById('form2').classList.add('d-block');
-            document.getElementById('form1').classList.remove('d-block');
-            document.getElementById('form1').classList.add('d-none');
-        });
-
-        function filterInvoices() {
-            const selectedSupplierId = document.getElementById('supplier_select').value;
-
-            const invoiceSelect = document.getElementById('invoice_select');
-            // const invoiceOptions = invoiceSelect.querySelectorAll('option');
-
-            $(invoiceSelect).find('option').each(function () {
-                const supplierId = $(this).data('supplier');
-                if (supplierId == selectedSupplierId || !supplierId) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-
-            $(invoiceSelect).val([]); // Reset selection
-            $(invoiceSelect).trigger("chosen:updated");
-        }
-
-        function filterSales() {
-            const selectedCustomerId = document.getElementById('customer_select').value;
-            const sellSelect = document.getElementById('sell_no_select');
-
-            // Show/hide options based on the selected customer
-            $(sellSelect).find('option').each(function () {
-                const customerId = $(this).data('customer');
-                if (customerId == selectedCustomerId || !customerId) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-
-            // Reset Chosen dropdown to reflect updated options
-            $(sellSelect).val([]); // Reset selection
-            $(sellSelect).trigger("chosen:updated");
-        }
-
-        function GetInvoiceData(user,selectId){
-            const selectedId = document.getElementById(selectId).value;
-
-            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            if(user === 'supplier'){
-                var url = "/get-invoice-details";
-                const party = document.getElementById('supplier_select').value;
-                var data = {
-                    _token: csrfToken,
-                    invoice_no: selectedId,
-                    party: party,
-                    status: 1,
-                };
-            }
-            else{
-               var url = "/get-invoice-sell-details"; 
-               const customer = document.getElementById('customer_select').value;
-               var data = {
-                    _token: csrfToken,
-                    invoice_no: selectedId,
-                    customer: customer,
-                    status: 1,
-                };
-            }
-            
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: data,
-                success: function (response) {
-                    if(user === 'supplier'){
-                        $('#supplier_paid_total').val(response.data[0].amount); 
-                    }else if(user === 'customer'){
-                        $('#customer_amount').val(response.data[0].total_amount); 
-                    }
-                }
-            });
-        }
-
-        function toggleBankDetails(user) {
-            if( user ==='customer'){
-                const paymentMethod = document.getElementById('payment_method').value;
-                const bankDetails = document.getElementById('bank_details');
-
-                if (paymentMethod === 'Bank') {
-                    bankDetails.style.display = 'block';
-                } else {
-                    bankDetails.style.display = 'none';
-                }
-            } else if(user ==='supplier'){
-                const paymentMethod = document.getElementById('supplier_payment_method').value;
-                const bankDetails = document.getElementById('supplier_bank_details');
-
-                if (paymentMethod === 'Bank') {
-                    bankDetails.style.display = 'block';
-                } else {
-                    bankDetails.style.display = 'none';
-                }
-            }
-        }
-        </script>
+      
     </x-slot>
 </x-layout>

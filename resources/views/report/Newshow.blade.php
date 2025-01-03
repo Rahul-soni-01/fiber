@@ -2,6 +2,7 @@
     <x-slot name="title">Show Report</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
+            <a href="{{ route('generate-pdf', ['report' => $report->id]) }}" class="btn btn-primary mb-3" id="download-btn1212">Download PDF</a>
             <div class="container-fluid custom-border">
                 <div class="row mt-4 ">
                     <div class="col-md-3">
@@ -84,7 +85,7 @@
                         <h5>Type</h5>
                     </div>
                     <div class="col-md-2">
-                        <span>{{ $report->type }}</span>
+                        <span>{{ $report->tbl_type->name }}</span>
                     </div>
                 </div>
 
