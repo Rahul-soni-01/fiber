@@ -8,12 +8,16 @@
     <link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    {{--
-    <link rel="stylesheet" href="{{asset('Denis/css/style.css')}}"> --}}
-    {{--
-    <link rel="stylesheet" href="{{asset('Denis/css/bootstrap.min.css')}}"> --}}
+    {{-- <link rel="stylesheet" href="{{asset('Denis/css/style.css')}}"> --}}
+    {{-- <link rel="stylesheet" href="{{asset('Denis/css/bootstrap.min.css')}}"> --}}
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="js/jquery-3.7.1.min.js"></script>
+     
+    {{-- <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
+    {{-- <link rel="stylesheet" href="public/css/style.css"> --}}
+    {{-- <link rel="stylesheet" href="public/css/bootstrap.min.css"> --}}
+    {{-- <script src="public/js/script.js"></script>
+    <script src="public/js/jquery-3.7.1.min.js"></script> --}}
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
