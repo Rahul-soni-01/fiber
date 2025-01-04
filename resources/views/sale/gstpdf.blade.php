@@ -16,62 +16,77 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
     <style>
-         body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             line-height: 1.6;
             position: relative;
-        /* //  width: 210mm;
+            border: 1px solid black;
+            /* //  width: 210mm;
         //  height: 297mm;  */
         }
 
         .row {
             display: table;
             width: 100%;
-            font-size: 14px;
+            font-size: 10px;
+            border-bottom: 1px solid;
         }
+
+        .row_without_bottom {
+            display: table;
+            width: 100%;
+            font-size: 10px;
+            text-align: center;
+        }
+
         .column {
             display: table-cell;
             width: 50%;
             vertical-align: top;
-            border-bottom: 1px solid black;
-            border-left: 1px solid black;
-            padding: 10px;
+            /* border-bottom: 1px solid black; */
+            /* border-left: 1px solid black; */
+            /* padding: 10px; */
             /* border: 1px solid black; */
         }
-        
-        .subheader-content-2 {
-            border-right: 1px solid black;
+
+        .column_1 {
+            padding-left: 2%;
         }
-        
-        .container {
-            display: flex;
-            width: 100%;
-            margin: 0 auto;
+
+        .subheader-content-2 {
+            /* border-right: 1px solid black; */
+        }
+
+        .float-right {
+            transform-origin: bottom left;
+        }
+
+        .bottom {
             padding-bottom: 10px;
+            padding-right: 10px;
         }
 
         .header {
             width: 100%;
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 8px;
             text-align: center;
-        /* //  border-bottom: 1px solid #ddd;  */
-            border: 1px solid black;
+            border-bottom: 1px solid;
         }
-        
+
         .header-content {
             border-collapse: collapse;
             table-layout: fixed;
             margin: 0 auto;
             border: none;
-            font-size: 16px;
+            font-size: 12px;
         }
 
         .header-content td {
             vertical-align: top;
-            padding: 10px;
+            padding: 3px;
             border: none;
         }
 
@@ -82,7 +97,7 @@
 
         .header-center h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 16px;
             text-align: center;
         }
 
@@ -90,7 +105,7 @@
         .header-right h3 {
             margin-top: 0px;
             text-align: right;
-            font-size: 8px;
+            font-size: 6px;
         }
 
         .summary {
@@ -101,11 +116,11 @@
 
         .footer {
             padding: 10px 0;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #000000;
             width: 100%;
             margin-top: 20px;
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 8px;
         }
 
         .footer-content {
@@ -132,13 +147,12 @@
             text-align: right;
         }
 
-        .text-success {
-            color: #fff;
-            font-size: 18px;
-        }
-
-        .text-danger {
-            color: red;
+        .container {
+            display: flex;
+            width: 100%;
+            font-size: 10px;
+            margin: 0 auto;
+            padding-bottom: 10px;
         }
 
         .table-container {
@@ -150,35 +164,50 @@
             width: 100%;
             margin-left: auto;
             margin-right: 0;
-            border: 1px solid;
-            border: 1px solid #ddd;
-        }
-
-        .table-container table,
-        .table-container th,
-        .table-container td {
-            padding: 8px;
         }
 
         .table-container th {
             background-color: #f8f9fa;
-            font-weight: bold;
             text-align: right;
         }
 
-        .table-container tr:nth-child(odd) {
-            background-color: #f9f9f9;
+        .margin-bottom {
+            border-bottom: 1px solid black;
         }
 
-        .table-container tr:nth-child(even) {
-            background-color: #fff;
+        .margin-bottom_2 {
+            border-bottom: 1px solid black;
+        }
+
+        .special_bottom {}
+
+        .padding_left {
+            padding-left: 2%;
+        }
+
+        .padding_left_1 {
+            padding-left: 10px;
+        }
+
+        .margin_top {
+            margin-top: -2px;
+            font-size: 10px;
+        }
+
+        .msme {
+            font-size: 12px;
+            bottom: 0;
+        }
+
+        .border-right {
+            border-right: 1px solid black;
         }
 
         .denis {
             height: 70px;
             width: 150px;
-            background-color: #fff;
             float: right;
+            margin-right: 1px;
         }
 
         @page {
@@ -188,7 +217,7 @@
         @media screen {
             body {
                 font-family: Arial, sans-serif;
-                margin: 20px;
+                margin: 2px;
                 background-color: #f9f9f9;
             }
         }
@@ -234,33 +263,33 @@
                     }
                     @endphp
                     @if(!empty($imageData))
-                    <img src="data:image/jpeg;base64,{{ $imageData }}" width="150" height="100">
+                    <img src="data:image/jpeg;base64,{{ $imageData }}" width="150" height="70">
                     @else
                     <p>Invoice logo not available</p>
                     @endif
                 </td>
                 <td class="header-center" width="60%" align="center">
-                    <h2 style="font-size:12px; margin-top:-5px;">TAX INVOICE</h2>
-                    <h1 style="font-size:18px; margin-top:-12px;">{{ $websetting->company_name}}</h1>
-                    <p style="font-size:10px; margin-top:5px;"> {{ $websetting->company_address}}</br>
+                    <h2 style="font-size:8px; margin-top:-5px;">TAX INVOICE</h2>
+                    <h1 style="font-size:14px; margin-top:-12px;">{{ $websetting->company_name}}</h1>
+                    <p style="font-size:6px; margin-top:-2px;"> {{ $websetting->company_address}}</br>
                         PAN: {{ $websetting->PAN_no}}
                     </p>
-                    <h3 style="font-size:14px; margin-top:-15px;">GSTIN: {{ $websetting->GSTIN_no}} </h3>
-                    <p style="font-size:10px;margin-top:-15px;">Tel. Mo No :{{ $websetting->phno}}
+                    <h3 style="font-size:10px; margin-top:-8px;">GSTIN: {{ $websetting->GSTIN_no}} </h3>
+                    <p style="font-size:8px;margin-top:-12px;">Tel. Mo No :{{ $websetting->phno}}
                         &nbsp;&nbsp;&nbsp;
                         Email:{{ $websetting->email}} </p>
-                    <h3 style="font-size:14px; margin-top:-15px;">LUT No:{{ $websetting->lutno}} </h3>
+                    <h3 style="font-size:10px; margin-top:-8px;">LUT No:{{ $websetting->lutno}} </h3>
                 </td>
                 <td class="header-right" width="10%" align="right">
                     <p> Original Copy </p>
                 </td>
             </tr>
         </table>
-    </div> 
+    </div>
 
     <div class="subheader row">
         <div class="column subheader-content-1">
-            <table class="">
+            <table>
                 <tr>
                     <td>Invoice :</td>
                     <td> {{ $sale->sale_id }}</td>
@@ -271,7 +300,7 @@
                 </tr>
                 <tr>
                     <td>Place of Supply : </td>
-                    <td style="font-size: 12px;"> {{ $websetting->company_address}}</td>
+                    <td style="font-size: 8px;">{{ $sale->customer->state}}</td>
                 </tr>
                 <tr>
                     <td>Reverse Charge :</td>
@@ -283,150 +312,237 @@
                 </tr>
             </table>
         </div>
-        <div class="column subheader-content-2">
-            <table class="">
+        <div class="column subheader-content-2" style="border-left: 1px solid;">
+            <table>
                 <tr>
                     <td>Transport:</td>
                     <td> Self </td>
                 </tr>
                 <tr>
                     <td>Vehicle No:</td>
-                    <td> </td>
+                    <td> N/A </td>
                 </tr>
                 <tr>
                     <td>Station :</td>
-                    <td style="font-size: 12px;"> {{ $sale->customer->address}}</td>
+                    <td style="font-size: 8px;"> {{ $sale->customer->address}}</td>
                 </tr>
                 <tr>
-                    <td>E-Way Bill NO. :</td>
-                    <td>  </td>
+                    <td colspan="2">E-Way Bill no :</td>
                 </tr>
             </table>
         </div>
     </div>
 
     <div class="subheader row">
-        <div class="column ">
-            <table class="">
+        <div class="column">
+            <table>
                 <tr>
-                    <th>Billed To</th>
-                    <td style="font-size: 12px;"> {{ $sale->customer->address}}</td>
+                    <td><strong> Billed To : </strong></td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <th>GST / UIN :</th>
+                    <td colspan="2" style="font-size: 8px;"> {{ $sale->customer->address}}</td>
+                </tr>
+                <tr>
+                    <td> <strong>GST / UIN : </strong></td>
                     <td> {{ $sale->customer->gst_no}}</td>
                 </tr>
             </table>
         </div>
-        <div class="column ">
-            <table class="">
+        <div class="column" style="border-left: 1px solid;">
+            <table>
                 <tr>
-                    <th>Shipped to</th>
-                    <td style="font-size: 12px;"> {{ $sale->customer->address}}</td>
+                    <td> <strong> Shipped to :</strong></td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <th>GST / UIN :</th>
+                    <td colspan="2" style="font-size: 8px;"> {{ $sale->customer->ship_address}} {{
+                        $sale->customer->city}}</td>
+                </tr>
+                <tr>
+                    <td> <strong>GST / UIN : </strong></td>
                     <td> {{ $sale->customer->gst_no}}</td>
                 </tr>
             </table>
         </div>
     </div>
 
-     <div class="container">
 
-        <div class="table-container">
-            <div class="header-center" width="50%" align="center">
-                <h3>Product Details</h3>
+    <div class="margin-bottom">
+        <div class="row_without_bottom">
+            <div class="column border-right"> <strong> S.N. </strong></div>
+            <div class="column border-right"> <strong> Description Of Goods </strong></div>
+            <div class="column border-right"> <strong> HSN/Code </strong></div>
+            <div class="column border-right"> <strong> Qty </strong></div>
+            <div class="column border-right"> <strong> Unit </strong></div>
+            <div class="column border-right"> <strong> Price </strong></div>
+            <div class="column"> <strong> Total(T) </strong></div>
+        </div>
+    </div>
+    <div class="margin-bottom">
+        @php $qty = 0; @endphp
+        @foreach ($sale['items'] as $index => $item1)
+        @php
+        $qty += $item1['qty'];
+        @endphp
+        <div class="row_without_bottom">
+            <div class="column border-right">{{ $index+1}}</div>
+            <div class="column border-right">{{ $item1->category->name }}->{{ $item1->subCategory->name }}</div>
+            <div class="column border-right"></div>
+            <div class="column border-right">{{ $item1['qty'] }}</div>
+            <div class="column border-right">{{ $item1['unit'] }}</div>
+            <div class="column border-right">{{ $item1['rate'] }}</div>
+            <div class="column"> {{ $item1['qty'] * $item1['rate'] }}</div>
+        </div>
+        @endforeach
+    </div>
+    @php
+    $final = $sale['amount_r'] + $sale['shipping_cost'] - $sale['round_total'];
+    $cgst = $final * $websetting->cgst/100;
+    $sgst = $final * $websetting->sgst/100;
+    @endphp
+    <div class="row_without_bottom">
+        <div class="column"></div>
+        <div class="column"></div>
+        <div class="column"></div>
+        <div class="column">Add</div>
+        <div class="column"> CGST</div>
+        <div class="column border-right">@ {{ $websetting->cgst}} %</div>
+        <div class="column"> {{ $cgst}}</div>
+    </div>
+    <div class="row_without_bottom margin-bottom">
+        <div class="column"></div>
+        <div class="column"></div>
+        <div class="column"></div>
+        <div class="column">Add</div>
+        <div class="column"> SGST</div>
+        <div class="column border-right"> @ {{ $websetting->sgst}} %</div>
+        <div class="column"> {{ $sgst}}</div>
+    </div>
+
+    <div class="row_without_bottom">
+        <div class="column"> </div>
+        <div class="column"> </div>
+        <div class="column"> </div>
+        <div class="column"> <strong> Grand Total </strong></div>
+        <div class="column"> </div>
+        <div class="column border-right"> {{ $websetting->currency }} </div>
+        <div class="column margin-bottom"> <strong>{{ $word = $final+ $cgst + $sgst }} </strong></div>
+    </div>
+    <div class="row_without_bottom">
+        <div class="column">
+            <div class="row_without_bottom">
+                <div class="column margin-bottom"> HSN/SAC </div>
+                <div class="column margin-bottom"> Tax Rate </div>
+                <div class="column margin-bottom"> Taxable Amt </div>
+                <div class="column margin-bottom"> CGST Amt </div>
+                <div class="column margin-bottom"> SGST Amt </div>
+                <div class="column margin-bottom"> Total Amt </div>
             </div>
-            <table class="table table-striped" border="1">
-                <thead>
-                    <tr>
-                        <th>Category Name</th>
-                        <th>Sub Category Name</th>
-                        <th>Unit</th>
-                        <th>Qty</th>
-                        <th>Rate</th>
-                        <th>Total</th>
-                        <th>Tax(%)</th>
-                        <th>Total(T)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($sale['items'] as $item1)
-                    <tr>
-                        <td>{{ $item1->category->name }}</td>
-                        <td>{{ $item1->subCategory->name }}</td>
-                        <td>{{ $item1['unit'] }}</td>
-                        <td>{{ $item1['qty'] }}</td>
-                        <td>{{ $item1['rate'] }}</td>
-                        <td>{{ $item1['qty']*$item1['rate']}}</td>
-                        <td>{{ $item1['p_tax'] ?? 0 }}</td>
-                        <td>{{ $item1['total'] }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
-
-        <div class="table-container">
-            <table class="table table-striped mt-3 ">
-                <tbody>
-
-                    <tr>
-                        <td width=60%></td>
-                        <td>Amount (INR)</td>
-                        <td>{{ $sale['amount_r'] }}</td>
-                    </tr>
-                    <tr>
-                        <td width=60%></td>
-                        <td>Shipping Cost</td>
-                        <td>{{ $sale['shipping_cost'] }}</td>
-                    </tr>
-                    <tr>
-                        <td width=60%></td>
-                        <td>Total Amount</td>
-                        <td>{{ $sale['inr_amount'] + $sale['shipping_cost'] }}</td>
-                    </tr>
-                    <tr>
-                        <td width=60%></td>
-                        <td>Round Amount</td>
-                        <td>{{ $sale['round_total'] }}</td>
-                    </tr>
-                    <tr>
-                        <td width=60%></td>
-                        <td>Final Amount</td>
-                        <td>{{ $sale['amount_r'] + $sale['shipping_cost'] - $sale['round_total'] }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div> 
-
-
-    <div class="footer">
-        <table class="footer-content" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                <td class="footer-left">
-                    <br><br><br><br>
-                    <span>hello@maktech.com</span><br>
-                    <span>555 444 6666</span>
-                </td>
-                <td class="footer-center">
-                    <br><br><br><br>
-                    <span>!! Thank You !!</span>
-                </td>
-                <td class="footer-right">
-                    <span>Authorized Signatory</span><br>
-                    <br>
-                    <div class="denis"> </div> <br>
-                    <span>&nbsp;</span>
-                </td>
-            </tr>
-        </table>
+        <div class="column"> </div>
+        <div class="column"> </div>
     </div>
+    <div class="row_without_bottom">
+        <div class="column">
+            <div class="row_without_bottom">
+                <div class="column"> </div>
+                <div class="column"> {{ $websetting->cgst + $websetting->sgst }} %</div>
+                <div class="column"> {{ $cgst + $sgst}}</div>
+                <div class="column"> {{ $cgst }} </div>
+                <div class="column"> {{ $sgst }} </div>
+                <div class="column"> {{ $word }} </div>
+            </div>
+        </div>
+        <div class="column"> </div>
+        <div class="column"> </div>
+    </div>
+    @php
+    $word = $final + $cgst + $sgst;
 
-    <p style="margin-bottom:0px; font-size:8px;">Time: {{ \Carbon\Carbon::now() }}</p>
+    $dictionary = [
+    0 => 'zero',
+    1 => 'one',
+    2 => 'two',
+    3 => 'three',
+    4 => 'four',
+    5 => 'five',
+    6 => 'six',
+    7 => 'seven',
+    8 => 'eight',
+    9 => 'nine',
+    10 => 'ten',
+    11 => 'eleven',
+    12 => 'twelve',
+    13 => 'thirteen',
+    14 => 'fourteen',
+    15 => 'fifteen',
+    16 => 'sixteen',
+    17 => 'seventeen',
+    18 => 'eighteen',
+    19 => 'nineteen',
+    20 => 'twenty',
+    30 => 'thirty',
+    40 => 'forty',
+    50 => 'fifty',
+    60 => 'sixty',
+    70 => 'seventy',
+    80 => 'eighty',
+    90 => 'ninety',
+    100 => 'hundred',
+    1000 => 'thousand',
+    ];
 
+    $result = '';
+    if ($word < 21) { $result=$dictionary[$word]; } elseif ($word < 100) { $tens=intval($word / 10) * 10; $units=$word %
+        10; $result=$dictionary[$tens] . ($units ? '-' . $dictionary[$units] : '' ); } elseif ($word < 1000) {
+        $hundreds=intval($word / 100); $remainder=$word % 100; $result=$dictionary[$hundreds] . ' ' . $dictionary[100] .
+        ($remainder ? ' and ' . ($remainder < 21 ? $dictionary[$remainder] : $dictionary[intval($remainder / 10) * 10] .
+        ($remainder % 10 ? '-' . $dictionary[$remainder % 10] : '' )) : '' ); } elseif ($word>= 1000) {
+        $thousands = intval($word / 1000);
+        $remainder = $word % 1000;
+        $result = $dictionary[$thousands] . ' ' . $dictionary[1000] . ($remainder ? ' ' . (intval($remainder / 100)
+        ? $dictionary[intval($remainder / 100)] . ' ' . $dictionary[100] : '') . ($remainder % 100 ? ' and ' .
+        ($remainder % 100 < 21 ? $dictionary[$remainder % 100] : $dictionary[intval(($remainder % 100) / 10) * 10] .
+            ($remainder % 10 ? '-' . $dictionary[$remainder % 10] : '' )) : '' ) : '' ); }
+            $capitalizedResult=ucwords($result); @endphp <p class="margin-bottom">{{ $capitalizedResult }}</p>
+
+
+            <div class="special_bottom row">
+                <center class="msme"> MSME- UDYAM REGISTRATION NUMBER </center>
+                <center>
+                    <p class="margin_top">UDYAM-GJ-22-0324303</p>
+                </center>
+            </div>
+            <div class="special_bottom row">
+                <div class="msme column_1"><strong>Bank Details :</strong>KOTAK MAHINDRA BANK, A/C No:- 1011975493, IFSC
+                    :- KKBK0002849 </div>
+
+            </div>
+
+            <div class="row ">
+                <div class="column padding_left border-right">
+                    <strong> Terms & Conditions</strong>
+                    <p>1. Goods once sold will not be taken back.</p>
+                    <p>2. Interest @ 18% p.a. will be charged For MAKTECH </p>
+                    <p>is not made within the stipulated time. </p>
+                    <p>3. Subject to 'Surat' Jurisdiction only.</p>
+                    <p>4. Supply meant for SEZ under LUT without payment of integrated tax</p>
+                </div>
+
+                <div class="column padding_left_1 border-right">
+                    <center> <strong> E-Invoice QR Code</strong> </center>
+                </div>
+                <div class="column padding_left_1">
+
+                    <div class="denis"> 
+                        <strong> Receiver's Signature:</strong>
+                    </div>      
+                </div>
+            </div>
+
+
+            <p style="margin-bottom:0px; font-size:4px;">Time: {{ \Carbon\Carbon::now() }}</p>
 </body>
 
 </html>

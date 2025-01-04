@@ -88,22 +88,33 @@ class DepartmentController extends Controller
     public function updateWebSetting(Request $request)
     {
         // Validate input data
-        $validated = $request->validate([
-            'company_name' => 'required|string|max:255',
-            'company_address' => 'required|string|max:255',
-            'PAN_no' => 'required|string|max:255',
-            'GSTIN_no' => 'required|string|max:255',
-            'phno' => 'required|string|max:255',
-            'email' => 'required|email|string|max:255',
-            'lutno' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'invoice_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'currency' => 'required|string|max:10',
-            'timezone' => 'required|string|max:255',
-            'footer_text' => 'nullable|string|max:500',
-            'language' => 'required|string|max:10',
-        ]);
+        try {
+            $validated = $request->validate([
+                'company_name' => 'required|string|max:255',
+                'company_address' => 'required|string|max:255',
+                'PAN_no' => 'required|string|max:255',
+                'GSTIN_no' => 'required|string|max:255',
+                'cgst' => 'required|numeric|max:255',
+                'sgst' => 'required|numeric|max:255',
+                'igst' => 'required|numeric|max:255',
+                'phno' => 'required|string|max:255',
+                'email' => 'required|email|string|max:255',
+                'lutno' => 'required|string|max:255',
+                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'invoice_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'currency' => 'required|string|max:10',
+                'timezone' => 'required|string|max:255',
+                'footer_text' => 'nullable|string|max:500',
+                'language' => 'required|string|max:10',
+            ]);
+            
+            // Continue processing with $validated data...
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstErrorMessage = $e->validator->errors()->first();
+            return redirect()->back()->withErrors($e->validator)->withInput()->with('error', $firstErrorMessage);
+        }
+        
     
         // Handle file uploads (if present)
         $logoPath = $this->handleFileUpload($request, 'logo', 'logo');
@@ -116,6 +127,9 @@ class DepartmentController extends Controller
             'company_address' => $validated['company_address'],
             'PAN_no' => $validated['PAN_no'],
             'GSTIN_no' => $validated['GSTIN_no'],
+            'cgst' => $validated['cgst'],
+            'sgst' => $validated['sgst'],
+            'igst' => $validated['igst'],
             'phno' => $validated['phno'],
             'email' => $validated['email'],
             'lutno' => $validated['lutno'],

@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('company_address')->nullable(); 
             $table->string('PAN_no')->nullable(); 
             $table->string('GSTIN_no')->nullable(); 
+            $table->string('cgst')->nullable(); 
+            $table->string('sgst')->nullable(); 
+            $table->string('igst')->nullable(); 
             $table->string('phno')->nullable(); 
             $table->string('email')->nullable(); 
             $table->string('lutno')->nullable(); 

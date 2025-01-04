@@ -48,16 +48,15 @@ class PdfGeneratorController extends Controller
             $saleController =  new SaleController();
             $tblCustomer = new TblCustomer();
             $saleData = $saleController->show($tblCustomer, $saleid, $request);
-            // dd($saleData);
-           
+            
             $data = $saleData->getData();
+            // dd($data);
             if($request->input('gst')){
                 $html = view('sale.gstpdf', $data)->render(); // Create a dedicated view for PDF
             }else{
                 $html = view('sale.pdf', $data)->render(); // Create a dedicated view for PDF
             }
             
-            // Display the HTML directly in the browser
             // return response($html);
             $dompdf = new \Dompdf\Dompdf();
             $dompdf->loadHtml($html);

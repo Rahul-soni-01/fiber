@@ -12,7 +12,7 @@
                 </ul>
             </div>
             @endif
-            <a href="{{ route('customer.create') }}" class="btn btn-primary">Add customer</a>
+            <a href="{{ route('customer.create') }}" class="btn btn-primary mb-3">Add customer</a>
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>

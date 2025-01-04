@@ -6,6 +6,10 @@
         <p style="color: green;">{{ session('success') }}</p>
     @endif
 
+    @if(session('error'))
+        <p style="color: red;">{{ session('error') }}</p>
+    @endif
+
     <form action="{{ route('websetting.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="container mt-4">
@@ -27,6 +31,18 @@
                 <div class="col-md-4 col-sm-3 mb-3">
                     <label for="GSTIN_no" class="form-label">GST IN:</label>
                     <input type="text" class="form-control" placeholder="GST No" id="GSTIN_no" name="GSTIN_no" value="{{ $websetting->GSTIN_no  ?? null }}" required>
+                </div>
+                <div class="col-md-4 col-sm-3 mb-3">
+                    <label for="cgst" class="form-label">CGST</label>
+                    <input type="text" class="form-control" placeholder="CGST ()" id="cgst" name="cgst" value="{{ $websetting->cgst  ?? null }}" required>
+                </div>
+                <div class="col-md-4 col-sm-3 mb-3">
+                    <label for="sgst" class="form-label">SGST</label>
+                    <input type="text" class="form-control" placeholder="SGST ()" id="sgst" name="sgst" value="{{ $websetting->sgst  ?? null }}" required>
+                </div>
+                <div class="col-md-4 col-sm-3 mb-3">
+                    <label for="igst" class="form-label">IGST </label>
+                    <input type="text" class="form-control" placeholder="IGST ()" id="igst" name="igst" value="{{ $websetting->igst  ?? null }}" required>
                 </div>
                 <div class="col-md-4 col-sm-3 mb-3">
                     <label for="phno" class="form-label">Ph No:</label>

@@ -31,6 +31,9 @@ class TblCustomerController extends Controller
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'pincode' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
             'telephone_no' => 'required|numeric',
             'receiver_name' => 'required|string|max:255',
             'gst_no' => [
@@ -44,6 +47,10 @@ class TblCustomerController extends Controller
                     }
                 },
             ],
+            'ship_address' => 'nullable|string|max:255',
+            'ship_pincode' => 'nullable|string|max:255',
+            'ship_city' => 'nullable|string|max:255',
+            'ship_state' => 'nullable|string|max:255',
         ]);
         
        /* $predefineaccount = TblAccPredefineAccount::findOrFail(1);
@@ -80,9 +87,16 @@ class TblCustomerController extends Controller
         $customer->customer_name = $request->customer_name;
         $customer->HeadCode = $HeadCode ?? 0;
         $customer->address = $request->address;
+        $customer->pincode = $request->pincode;
+        $customer->city = $request->city;
+        $customer->state = $request->state;
         $customer->telephone_no = $request->telephone_no;
         $customer->receiver_name = $request->receiver_name;
         $customer->gst_no = $request->gst_no ?? null;
+        $customer->ship_address = $request->ship_address ?? null;
+        $customer->ship_pincode = $request->ship_pincode ?? null;
+        $customer->ship_city = $request->ship_city ?? null;
+        $customer->ship_state = $request->ship_state ?? null;
         $result = $customer->save();
 
         if ($result) {
@@ -114,6 +128,9 @@ class TblCustomerController extends Controller
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'pincode' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
             'telephone_no' => 'required|numeric',
             'receiver_name' => 'required|string|max:255',
             'gst_no' => [
@@ -124,19 +141,29 @@ class TblCustomerController extends Controller
 
                     if (!preg_match($pattern, $value)) {
                         $fail('The GSt No must be a valid GST number.' . $value);
-
                     }
                 },
             ],
+            'ship_address' => 'nullable|string|max:255',
+            'ship_pincode' => 'nullable|string|max:255',
+            'ship_city' => 'nullable|string|max:255',
+            'ship_state' => 'nullable|string|max:255',
         ]);
     
         $customer = TblCustomer::findOrFail($id);
     
         $customer->customer_name = $request->customer_name;
         $customer->address = $request->address;
+        $customer->pincode = $request->pincode;
+        $customer->city = $request->city;
+        $customer->state = $request->state;
         $customer->telephone_no = $request->telephone_no;
         $customer->receiver_name = $request->receiver_name;
         $customer->gst_no = $request->gst_no;
+        $customer->ship_address = $request->ship_address;
+        $customer->ship_pincode = $request->ship_pincode;
+        $customer->ship_city = $request->ship_city;
+        $customer->ship_state = $request->ship_state;
     
         $result = $customer->save();
     

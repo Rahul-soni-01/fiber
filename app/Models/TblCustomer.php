@@ -20,9 +20,16 @@ class TblCustomer extends Model
         'customer_name',
         'HeadCode',
         'address',
+        'pincode',
+        'city',
+        'state',
         'telephone_no',
         'receiver_name',
         'gst_no',
+        'ship_address',
+        'ship_pincode',
+        'ship_city',
+        'ship_state',
     ];
 
     public function Cuspayments()

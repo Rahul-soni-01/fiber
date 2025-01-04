@@ -16,9 +16,16 @@ return new class extends Migration
             $table->string('customer_name');
             $table->string('HeadCode');
             $table->string('address');
+            $table->string('pincode');
+            $table->string('city');
+            $table->string('state');
             $table->string('telephone_no');
             $table->string('receiver_name');
             $table->string('gst_no')->nullable();
+            $table->string('ship_address')->nullable();
+            $table->string('ship_pincode')->nullable();
+            $table->string('ship_city')->nullable();
+            $table->string('ship_state')->nullable();
             $table->timestamps();
         });
     }
