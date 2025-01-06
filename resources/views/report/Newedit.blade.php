@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-3">
                             <select id="part" name="part" class="form-control" @if(in_array(auth()->user()->type,
-                                ['electric', 'cavity'])) readonly @endif>
+                                ['cavity'])) readonly @endif>
                                 <option value="" disabled {{ old('part', $report->part ?? null) === null ? 'selected' :
                                     '' }}>
                                     Select Part
@@ -47,7 +47,7 @@
                             @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
                             <input type="text" id="wn" name="worker_name" class="form-control"
                                 placeholder="Enter Worker Name" value="{{ old('worker_name', $report->worker_name) }}"
-                                @if($report->part == 1 && in_array(auth()->user()->type, ['electric', 'cavity']))
+                                @if(in_array(auth()->user()->type, ['electric', 'cavity']))
                             readonly @endif
                             >
                             @endif
@@ -73,7 +73,7 @@
                         <div class="col-md-2">
                             <input type="text" id="temp" name="temp" class="form-control"
                                 placeholder="Enter Temperature" value="{{ old('temp', $report->temp) }}"
-                                @if(in_array(auth()->user()->type, ['electric', 'cavity'])) readonly @endif>
+                                @if(in_array(auth()->user()->type, ['cavity'])) readonly @endif>
                         </div>
                         <div class="col-md-2">
                             @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))

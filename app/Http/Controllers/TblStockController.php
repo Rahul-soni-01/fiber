@@ -35,7 +35,7 @@ class TblStockController extends Controller
         $price = $request->price / $request->qty;
         $serial_no_list = $request->serial_no ?? ['0'];
         foreach ($serial_no_list as $item) {
-            
+
             $existingRecord = TblStock::where('invoice_no', $invoice_no)
                 ->where('cid', $request->cid)
                 ->where('scid', $request->scid)
@@ -65,37 +65,46 @@ class TblStockController extends Controller
     public function check_stock(Request $request)
     {
         $subcategory_id = $request->subcategory_id;
-        $data = TblStock::where('scid', $subcategory_id)->where('status', '0')->get();
-        return response()->json(['data' => $data]);
+
+        if ($subcategory_id) {
+            $sr_no = tbl_sub_category::where('id', $subcategory_id)->value('sr_no');
+            $query = TblStock::where('scid', $subcategory_id);
+            if ($sr_no == 1) {
+                $query->where('status', '0');
+            }
+            $data = $query->get();
+            return response()->json(['data' => $data]);
+        }
+        return response()->json(['error' => 'Subcategory ID not provided'], 400);
     }
 
     public function datainsert()
     {
-        
+
         $invoice_no = 103;
         $price = 1000;
         $cid = 14;  // 1,1,1
         $scid = 27; // 1,2,3
-    
+
         for ($i = -1; $i <= 101; $i++) {
-            if($i === 99){
+            if ($i === 99) {
                 return redirect()->route('home');
             }
-            
+
             TblStock::create([
                 'date' => now()->format('Y-m-d'),
                 'invoice_no' => $invoice_no,
                 'cid' => $cid,
                 'scid' => $scid,
-                'serial_no' =>3001 + $i,
+                'serial_no' => 3001 + $i,
                 'qty' => 1,
                 'price' => $price,
-                'priceofUnit' => $price/100,
+                'priceofUnit' => $price / 100,
                 'status' => 0,
                 'dead_status' => 0,
             ]);
         }
-       
+
     }
-    
+
 }

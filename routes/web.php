@@ -24,43 +24,9 @@ use App\Http\Controllers\TblSaleProductCategoryController;
 use App\Http\Controllers\TblSaleProductSubCategoryController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PdfGeneratorController;
-
 use Illuminate\Support\Facades\Hash;
 
-/*Route::post('/download-pdf', function () {
-    $content = Request::input('content');
-    $pdf = Pdf::loadView('pdf-template',$content);
-    return $pdf->download('example.pdf');
-
-// get Method
-     $data = ['title' => 'Sample PDF Title', 'content' => 'This is the PDF content.']; // Example data
-    $pdf = Pdf::loadView('pdf-template', $data);
-
-    return $pdf->download('example.pdf');
-    
-});
-Route::get('/download-pdf', function () {
-    
-    $data = ['title' => 'Sample PDF Title', 'content' => 'This is the PDF content.']; // Example data
-    $pdf = Pdf::loadView('pdf-template', $data);
-
-    return $pdf->download('example.pdf');
-});
-
-Route::post('/download-pdf', function () {
-    // dd(Request()->all());
-    $content = Request::input('content');
-    $data = ['title' => 'Sample PDF Title', 'content' => $content ]; // Example data
-    $pdf = Pdf::loadView('pdf-template', $data);
-
-    return response($pdf->output(), 200)
-    // ->header('Content-Type', 'application/pdf')
-    ->header('Content-Disposition', 'inline; filename="example.pdf"');
-    // return $pdf->download('example.pdf');
-});*/
-
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
-// Route::post('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
 
 Route::post('login', [TblUserController::class, 'login'])->name('login.post');
 Route::get('/', function () {
@@ -68,9 +34,6 @@ Route::get('/', function () {
 })->middleware('guest')->name('login');
 Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
 
-
-// Route::middleware(['auth', 'type:admin'])->group(function () {
-// });
 Route::get('/welcome', function () {
     return view('demo');
 });

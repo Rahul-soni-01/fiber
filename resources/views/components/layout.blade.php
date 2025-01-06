@@ -8,14 +8,19 @@
     <link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    {{-- <link rel="stylesheet" href="{{asset('Denis/css/style.css')}}"> --}}
-    {{-- <link rel="stylesheet" href="{{asset('Denis/css/bootstrap.min.css')}}"> --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('Denis/css/style.css')}}"> --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('Denis/css/bootstrap.min.css')}}"> --}}
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="js/jquery-3.7.1.min.js"></script>
-     
-    {{-- <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
-    {{-- <link rel="stylesheet" href="public/css/style.css"> --}}
-    {{-- <link rel="stylesheet" href="public/css/bootstrap.min.css"> --}}
+
+    {{--
+    <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
+    {{--
+    <link rel="stylesheet" href="public/css/style.css"> --}}
+    {{--
+    <link rel="stylesheet" href="public/css/bootstrap.min.css"> --}}
     {{-- <script src="public/js/script.js"></script>
     <script src="public/js/jquery-3.7.1.min.js"></script> --}}
 
@@ -41,7 +46,7 @@
 
     <!-- Select2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -290,11 +295,11 @@
         <hr style="border:0.5px solid lightgray;">
         {{$main}}
     </div>
-</div>
+    </div>
 
-     <div class="footer" id="footer">
-        {{$websetting->footer_text  ?? null}}
-    </div> 
+    <div class="footer" id="footer">
+        {{$websetting->footer_text ?? null}}
+    </div>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -827,25 +832,36 @@
                 success: function (response) {
                     var data = response.data;
                     var srled = document.getElementById(`srled_${row_id}`);
-                    // console.log(srled);
-                    
-                    // var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
-                    // console.log(inputField);
-                    // inputField.removeAttribute('value');
-                    // if (inputField) {
-                        // inputField.value = '';
-                    // }
 
-                    srled.innerHTML = '<option value="" selected disable>Select</option>';
-                    
-                    data.forEach(function(item) {
+                    if (!srled) {
+                        console.error(`Element with ID 'srled_${row_id}' not found.`);
+                        return;
+                    }
+
+                    var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
+                    if (inputField) {
+                        inputField.removeAttribute('value');
+                    } else {
+                        console.error(`Input field with list='srled_${row_id}' not found.`);
+                    }
+
+                    // Clear existing options
+                    srled.innerHTML = '<option value="">Select</option>';
+
+                    if (data.length == 0) {
                         var option = document.createElement("option");
-                        option.value = item.serial_no;
-                        option.text = item.serial_no;
+                        option.value = "";
+                        option.text = "No data available";
                         srled.appendChild(option);
-                    });
-                    // console.log(srled);
-                }
+                    } else {
+                        data.forEach(function (item) {
+                            var option = document.createElement("option");
+                            option.value = item.serial_no;
+                            option.text = item.serial_no;
+                            srled.appendChild(option);
+                        });
+                    }
+                 }
             });
         }
 
@@ -870,26 +886,25 @@
 
                     var inputField = document.querySelector(`input[list="srcard_${row_id}"]`);
                     inputField.removeAttribute('value');
-                    console.log(inputField);
-                    /*const element12 = document.querySelector(`.sr_card_${row_id}`);
 
-                    document.querySelector(`.sr_card_${row_id}`).textContent = ""; 
-                    document.querySelector(`.sr_card_${row_id}`).innerHTML = "";   
-
-                    if (element12) {
-                        element12.value = ""; // Clear the value
-                    } else {
-                        console.error(`Element with class 'srled_${row_id}' not found.`);
-                    }*/
-
+                    // Clear existing options
                     srled.innerHTML = '<option value="">Select</option>';
-                    
-                    data.forEach(function(item) {
+
+                    if (data.length === 0) {
+                        // Append a single option if no data is available
                         var option = document.createElement("option");
-                        option.value = item.serial_no;
-                        option.text = item.serial_no;
+                        option.value = "";
+                        option.text = "No data available";
                         srled.appendChild(option);
-                    });
+                    } else {
+                        // Populate options if data is available
+                        data.forEach(function(item) {
+                            var option = document.createElement("option");
+                            option.value = item.serial_no;
+                            option.text = item.serial_no;
+                            srled.appendChild(option);
+                        });
+                    }
                 }
             });
         }
@@ -986,7 +1001,7 @@
         }
 
         function NewReportCreateRow(subcategories){
-            console.log(subcategories,row);
+            // console.log(subcategories,row);
             $('#TBody').append(`
               <div class="row mb-3 align-items-center" id="row_${row}">
                     <!-- Select Dropdown -->
@@ -1112,7 +1127,7 @@
         }
 
     </script>
- 
+
 </body>
 
 </html>

@@ -20,105 +20,16 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            /* line-height: 1.6; */
+            line-height: 1.3;
             position: relative;
-            /* width: 210mm;
-            height: 297mm; */
-        }
-
-        .main {
-            /* margin: 20mm; */
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-            margin: 0 auto;
-            padding-bottom: 10px;
-        }
-
-        .header {
-            width: 100%;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            border: none;
-            background-color: #2C3E50;
-            color: #ddd;
-        }
-
-        .header-content {
-            border-collapse: collapse;
-            table-layout: fixed;
-            margin: 0 auto;
-            border: none;
-            font-size: 16px;
-        }
-
-        .header-content td {
-            vertical-align: top;
-            padding: 10px;
-            border: none;
-        }
-
-        .header-left img {
-            display: block;
-            margin: 0 auto;
-        }
-
-        .header-center h1 {
-            margin: 0;
-            font-size: 24px;
-            text-align: center;
-        }
-
-        .header-right p,
-        .header-right h3 {
-            margin: 5px 0;
-            text-align: right;
+            /* border: 1px solid black; */
         }
 
         .summary {
             margin-top: 20px;
             border: 1px solid #ddd;
             padding: 10px;
-        }
-
-        .footer {
-            padding: 10px 0;
-            border-top: 1px solid #ddd;
-            background-color: #2C3E50;
-            color: white;
-            width: 100%;
-            margin-top: 20px;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-
-        .footer-content {
-            width: 100%;
-            border-collapse: collapse;
-            /* table-layout: fixed; */
-            border: none;
-        }
-
-        .footer-content td {
-            padding: 10px;
-            vertical-align: top;
-            border: none;
-        }
-
-        .footer-left {
-            text-align: left;
-        }
-
-        .footer-center {
-            text-align: center;
-        }
-
-        .footer-right {
-            text-align: right;
         }
 
         .text-success {
@@ -172,6 +83,71 @@
             float: right;
         }
 
+        .row {
+            display: table;
+            width: 100%;
+            font-size: 10px;
+            border-right: 1px solid;
+            border-left: 1px solid;
+            border-top: 1px solid;
+        }
+        .column {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding: 6px;
+        }
+        .left{
+            float: left;
+            justify-content: left;
+        }
+        .center{
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .right{
+            float: right;
+            justify-content: right;
+            align-items: right;
+            text-align: right;
+        }
+        .margin-top-minus{
+            margin-top: -20px;
+            margin-bottom: 0px;
+        }
+
+        .margin-top-minus-2{
+            margin-top: -7px;
+        }
+
+        .border{
+            border: 1px solid #000;
+        }
+
+        .border-bootom{
+            border-bottom: 1px solid #000;
+        }
+
+        .border-right{
+            border-right: 1px solid #000;
+        }
+        .bottom{
+            margin-top: 10px;
+            bottom: 0px;
+        }
+        .margin-top{
+            margin-top:8px;
+        }
+        .row-no-border{
+            display: table;
+            width: 100%;
+            font-size: 10px;
+            border: none;
+        }
+        .btn-danger{
+            color: #ff0000;
+        }
         @page {
             margin-bottom: 10px;
         }
@@ -196,9 +172,6 @@
                 position: absolute;
                 bottom: 0;
             }
-        }
-
-        @media print {
             .container {
                 page-break-before: always;
             }
@@ -208,147 +181,223 @@
 
 <body>
     <div class="main">
-
-
-        <div class="header">
-            <table class="header-content" border="0" cellspacing="0" cellpadding="0" width="100%">
-                <tr>
-                    <td class="header-left" width="30%" align="left">
-                        @php
-                        $websetting = DB::table('web_settings')->where('id', 1)->first();
-                        $imagePath = public_path($websetting->invoice_logo); // Resolve full file path
-                        $imageData = '';
-
-                        if (file_exists($imagePath)) {
-                        $imageData = base64_encode(file_get_contents($imagePath));
-                        }
-                        @endphp
-                        @if(!empty($imageData))
-                        <img src="data:image/jpeg;base64,{{ $imageData }}" width="150" height="100">
-                        @else
-                        <p>Invoice logo not available</p>
-                        @endif
-                    </td>
-                    <td class="header-center" width="65%" align="center">
-                        <h2 style="font-size:12px; margin-top:-5px;">TAX INVOICE</h2>
-                        <h1 style="font-size:18px; margin-top:-12px;">{{ $websetting->company_name}}</h1>
-                        <p style="font-size:10px; margin-top:5px;"> {{ $websetting->company_address}}</br>
-                            PAN: {{ $websetting->PAN_no}}
-                        </p>
-                        <h3 style="font-size:14px; margin-top:-15px;">GSTIN: {{ $websetting->GSTIN_no}} </h3>
-                        <p style="font-size:10px;margin-top:-15px;">Tel. Mo No :{{ $websetting->phno}}
-                            &nbsp;&nbsp;&nbsp;
-                            Email:{{ $websetting->email}} </p>
-                        <h3 style="font-size:14px; margin-top:-15px;">LUT No:{{ $websetting->lutno}} </h3>
-                    </td>
-                    <td class="header-right" width="5%" align="right">
-                        {{--
-                        <p>Sale Date:- {{ date('d-m-Y', strtotime($sale['sale_date'])) }}</p>
-                        <h3>Invoice No - {{ $sale['sale_id']}}</h3>
-                        <p><strong>Customer</strong> {{ $sale->customer->customer_name }}</p>
-                        --}}
-                    </td>
-                </tr>
-            </table>
-            <table class="subheader-content">
-
-            </table>
+        <div class="row">
+           <div class="column left">
+            <h2 class="margin-top-minus-2">GST IN</h2>
+           </div>
+           <div class="column center">
+            <p> <strong  class="border-bootom"> Bill OF SUPPLY</strong></p></br>
+            <h2 class="margin-top-minus">FIBER MFG</h2>
+           </div>
+           <div class="column right">
+            <p class="margin-top-minus-2">Original Copy</p>
+           </div>
         </div>
 
-        <div class="container">
-            <div class="container">
-
-                <div class="table-container">
-                    <div class="header-center" width="50%" align="center">
-                        <h3>Product Details</h3>
-                    </div>
-                    <table class="table table-striped" border="1">
-                        <thead>
-                            <tr>
-                                <th>Category Name</th>
-                                <th>Sub Category Name</th>
-                                <th>Unit</th>
-                                <th>Qty</th>
-                                <th>Rate</th>
-                                <th>Total</th>
-                                <th>Tax(%)</th>
-                                <th>Total(T)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($sale['items'] as $item1)
-                            <tr>
-                                <td>{{ $item1->category->name }}</td>
-                                <td>{{ $item1->subCategory->name }}</td>
-                                <td>{{ $item1['unit'] }}</td>
-                                <td>{{ $item1['qty'] }}</td>
-                                <td>{{ $item1['rate'] }}</td>
-                                <td>{{ $item1['qty']*$item1['rate']}}</td>
-                                <td>{{ $item1['p_tax'] ?? 0 }}</td>
-                                <td>{{ $item1['total'] }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-container">
-                    <table class="table table-striped mt-3 ">
-                        <tbody>
-
-                            <tr>
-                                <td width=60%></td>
-                                <td>Amount (INR)</td>
-                                <td>{{ $sale['amount_r'] }}</td>
-                            </tr>
-                            <tr>
-                                <td width=60%></td>
-                                <td>Shipping Cost</td>
-                                <td>{{ $sale['shipping_cost'] }}</td>
-                            </tr>
-                            <tr>
-                                <td width=60%></td>
-                                <td>Total Amount</td>
-                                <td>{{ $sale['inr_amount'] + $sale['shipping_cost'] }}</td>
-                            </tr>
-                            <tr>
-                                <td width=60%></td>
-                                <td>Round Amount</td>
-                                <td>{{ $sale['round_total'] }}</td>
-                            </tr>
-                            <tr>
-                                <td width=60%></td>
-                                <td>Final Amount</td>
-                                <td>{{ $sale['amount_r'] + $sale['shipping_cost'] - $sale['round_total'] }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="row">
+            <div class="column border-right">
+                <p>Bill No. : <strong>{{ $sale->sale_id }}</strong></p>
+                <p>Dated : <strong> {{ $sale->sale_date }}</strong></p>
+            </div>
+            <div class="column">
+                <p>GR/RR No : <strong>{{ $sale->customer_name }}</strong></p>
+                <p> Transport: </p>
             </div>
         </div>
 
-        <div class="footer">
-            <table class="footer-content" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="footer-left">
-                        <br><br><br><br>
-                        <span>hello@maktech.com</span><br>
-                        <span>555 444 6666</span>
-                    </td>
-                    <td class="footer-center">
-                        <br><br><br><br>
-                        <span>!! Thank You !!</span>
-                    </td>
-                    <td class="footer-right">
-                        <span>Authorized Signatory</span><br>
-                        <br>
-                        <div class="denis"> </div> <br>
-                        <span>&nbsp;</span>
-                    </td>
-                </tr>
-            </table>
+        <div class="row">
+            <div class="column border-right">
+                <p> <strong> Billed To. :</strong></br>
+                    {{ $sale->customer->customer_name }},
+                    {{ $sale->customer->address}}
+                </p>
+            </div>
+            <div class="column">
+                <p> <strong> Shipped To. :</strong></br>
+                    {{ $sale->customer->customer_name }},
+                    {{ $sale->customer->ship_address}}
+                </p>
+            </div>
         </div>
-
+        <div class="row">
+            <div class="column border-right"><strong>S.N</strong></div>
+            <div class="column border-right"><strong>Description Of Goods</strong></div>
+            <div class="column border-right"><strong>HSN/SAC</strong></div>
+            <div class="column border-right"><strong>Unit</strong></div>
+            <div class="column border-right"><strong>Qty</strong></div>
+            <div class="column border-right"><strong>Rate</strong></div>
+            <div class="column border-right"><strong>Tax %</strong></div>
+            <div class="column"><strong>Total</strong></div>
+        </div>
+        @php
+            $total = 0;
+            $qty = 0;
+        @endphp
+        @foreach ($sale['items'] as $item1)
+        <div class="row center">
+            <div class="column border-right">{{ $loop->iteration }}</div>
+            <div class="column border-right">{{ $item1->category->name }} -> {{ $item1->subCategory->name }}</div>
+            <div class="column border-right"></div>
+            <div class="column border-right">{{ $item1['unit'] }}</div>
+            <div class="column border-right">{{ $item1['qty'] }}</div>
+            <div class="column border-right">{{ $item1['rate'] }}</div>
+            <div class="column border-right">{{ $item1['p_tax'] ?? 0 }}</div>
+            <div class="column">{{ $item1['total'] }}</div>
+        </div>
+        @php
+            $total += $item1['total'];
+            $qty += $item1['qty'];
+        @endphp
+        @endforeach
+        <div class="row">
+            {{-- <div class="border-bootom"></div> --}}
+            <div class="margin-top"></div>
+            <div class="margin-top"></div>
+        </div>
+        <div class="row">
+            <div class="column left"></div>
+            <div class="column center"></div>
+            <div class="column right">
+                <div class="row-no-border">
+                    <div class="column"><strong>Total :- </strong> {{$total}}</div>
+                </div>
+                <div class="row-no-border margin-top-minus-2">
+                    <div class="column "><strong>Shipping Total :- </strong> {{$sale['shipping_cost'] ?? 0 }}</div>
+                </div>
+                <div class="row-no-border margin-top-minus-2">
+                    <div class="column btn-danger"><strong>Round Total :- </strong> {{$sale['round_total'] ?? 0 }}</div>
+                </div>
+                <div class="row-no-border margin-top-minus-2">
+                    <div class="column border-bootom"><strong>Total Qty :- </strong> {{$qty}}</div>
+                    <div class="column border-bootom"><strong>Total :- </strong> {{$sale['amount'] ?? 0 }}</div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="row border-bootom">
+            <div class="column left">
+                <div class="bottom">
+                    <div class="margin-top"></div>
+                    <div class="margin-top"></div>
+                    Receiver's Signature
+                </div>
+            </div>
+            <div class="column right">
+                <div class="bottom">
+                    <div class="margin-top"></div>
+                    <div class="margin-top"></div>
+                    Authorised Signatory
+                </div>
+            </div>
+        </div> 
+        <div class="margin-top"></div>
+        <div class="row">
+            <div class="column left">
+             <h2 class="margin-top-minus-2">GST IN</h2>
+            </div>
+            <div class="column center">
+             <p> <strong  class="border-bootom"> Bill OF SUPPLY</strong></p></br>
+             <h2 class="margin-top-minus">FIBER MFG</h2>
+            </div>
+            <div class="column right">
+             <p class="margin-top-minus-2">Duplicate Copy</p>
+            </div>
+         </div>
+ 
+         <div class="row">
+             <div class="column border-right">
+                 <p>Bill No. : <strong>{{ $sale->sale_id }}</strong></p>
+                 <p>Dated : <strong> {{ $sale->sale_date }}</strong></p>
+             </div>
+             <div class="column">
+                 <p>GR/RR No : <strong>{{ $sale->customer_name }}</strong></p>
+                 <p> Transport: </p>
+             </div>
+         </div>
+ 
+         <div class="row">
+             <div class="column border-right">
+                 <p> <strong> Billed To. :</strong></br>
+                     {{ $sale->customer->customer_name }},
+                     {{ $sale->customer->address}}, {{ $sale->customer->city}}
+                 </p>
+             </div>
+             <div class="column">
+                 <p> <strong> Shipped To. :</strong></br>
+                     {{ $sale->customer->customer_name }},
+                     {{ $sale->customer->ship_address}} {{ $sale->customer->ship_city}}
+                 </p>
+             </div>
+         </div>
+         <div class="row">
+             <div class="column border-right"><strong>S.N</strong></div>
+             <div class="column border-right"><strong>Description Of Goods</strong></div>
+             <div class="column border-right"><strong>HSN/SAC</strong></div>
+             <div class="column border-right"><strong>Unit</strong></div>
+             <div class="column border-right"><strong>Qty</strong></div>
+             <div class="column border-right"><strong>Rate</strong></div>
+             <div class="column border-right"><strong>Tax</strong></div>
+             <div class="column"><strong>Total</strong></div>
+         </div>
+         @php
+             $total = 0;
+             $qty = 0;
+         @endphp
+         @foreach ($sale['items'] as $item1)
+         
+         <div class="row center">
+             <div class="column border-right">{{ $loop->iteration }}</div>
+             <div class="column border-right">{{ $item1->category->name }} -> {{ $item1->subCategory->name }}</div>
+             <div class="column border-right"></div>
+             <div class="column border-right">{{ $item1['unit'] }}</div>
+             <div class="column border-right">{{ $item1['qty'] }}</div>
+             <div class="column border-right">{{ $item1['rate'] }}</div>
+             <div class="column border-right">{{ $item1['p_tax'] ?? 0 }}</div>
+             <div class="column">{{ $item1['total'] }}</div>
+         </div>
+         @php
+             $total += $item1['total'];
+             $qty += $item1['qty'];
+         @endphp
+         @endforeach
+         <div class="border-bootom"></div>
+         <div class="margin-top"></div>
+         <div class="row">
+             <div class="column left"></div>
+             <div class="column center"></div>
+             <div class="column right">
+                <div class="row-no-border">
+                    <div class="column"><strong>Total :- </strong> {{$total}}</div>
+                </div>
+                <div class="row-no-border margin-top-minus-2">
+                    <div class="column "><strong>Shipping Total :- </strong> {{$sale['shipping_cost'] ?? 0 }}</div>
+                </div>
+                <div class="row-no-border margin-top-minus-2">
+                    <div class="column btn-danger"><strong>Round Total :- </strong> {{$sale['round_total'] ?? 0 }}</div>
+                </div>
+                <div class="row-no-border margin-top-minus-2">
+                    <div class="column border-bootom"><strong>Total Qty :- </strong> {{$qty}}</div>
+                    <div class="column border-bootom"><strong>Total :- </strong> {{$sale['amount'] ?? 0 }}</div>
+                </div>
+             </div>
+         </div>
+        
+         <div class="row border-bootom">
+             <div class="column left">
+                 <div class="bottom">
+                     <div class="margin-top"></div>
+                     <div class="margin-top"></div>
+                     Receiver's Signature
+                 </div>
+             </div>
+             <div class="column right">
+                 <div class="bottom">
+                     <div class="margin-top"></div>
+                     <div class="margin-top"></div>
+                     Authorised Signatory
+                 </div>
+             </div>
+         </div> 
         <p style="margin-bottom:0px; font-size:8px;">Time: {{ \Carbon\Carbon::now() }}</p>
     </div>
 </body>

@@ -113,15 +113,12 @@
                         $part = $report->part;
 
                         if (in_array($type, ['electric', 'cavity', 'user']) && $status == '1') {
-                        continue;
+                            continue;
                         }
                         if ($status != 0 && $type == 'account') {
-                        continue;
+                            continue;
                         }
 
-                        if ($type == 'electric' && $part == '0') {
-                        continue;
-                        }
                         @endphp
 
                         <tr
@@ -144,16 +141,6 @@
                             @endif
                             @if ($type === 'cavity')
                             <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
-                            {{-- <td>{{ $report->sr_cavity_nani }}</td>
-                            <td>{{ $report->sr_cavity_moti }}</td>
-                            <td>{{ $report->sr_combiner_3_1 }}</td>
-                            <td>{{ $report->amp_combiner_3_1 }}</td>
-                            <td>{{ $report->volt_combiner_3_1 }}</td>
-                            <td>{{ $report->watt_combiner_3_1 }}</td>
-                            <td>{{ $report->sr_couplar_2_2 }}</td> --}}
-                            {{-- <td>{{ $report->amp_couplar_2_2 }}</td>
-                            <td>{{ $report->volt_couplar_2_2 }}</td> --}}
-                            {{-- <td>{{ $report->watt_couplar_2_2 }}</td> --}}
                             <td>{{ $report->sr_no_fiber }}</td>
                             <td>{{ $report->note1 }}</td>
                             <td>
@@ -167,13 +154,7 @@
                             <td>{{ $report->temp }}</td>
                             <td>{{ $report->m_j }}</td>
                             <td>{{ $report->tbl_type->name ?? null}}</td>
-                            {{-- <td>{{ $report->sr_isolator }}</td>
-                            <td>{{ $report->sr_fiber_nano }}</td>
-                            <td>{{ $report->sr_fiber_moto }}</td>
-                            <td>{{ $report->nani_cavity }}</td>
-                            <td>{{ $report->final_cavity }}</td> --}}
-                            <td>
-                                <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                            <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                             </td>
                             @endif
                             @if ($type === 'admin' )
@@ -198,8 +179,9 @@
                             @endif
 
                             @if(auth()->user()->type === 'account')
+
                             <td>{{ $report->sr_no_fiber }}</td>
-                            <td>{{ $report->tbl_type->name }}</td>
+                            <td>{{ $report->tbl_type->name ?? null }}</td>
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
                                         class="ri-eye-fill"></i></a>

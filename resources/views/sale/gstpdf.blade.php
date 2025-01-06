@@ -209,6 +209,9 @@
             float: right;
             margin-right: 1px;
         }
+        .margin-top-minus-2{
+            margin-top: -7px;
+        }
 
         @page {
             margin-bottom: 10px;
@@ -356,8 +359,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="font-size: 8px;"> {{ $sale->customer->ship_address}} {{
-                        $sale->customer->city}}</td>
+                    <td colspan="2" style="font-size: 8px;"> {{ $sale->customer->ship_address}} {{ $sale->customer->city}}</td>
                 </tr>
                 <tr>
                     <td> <strong>GST / UIN : </strong></td>
@@ -507,42 +509,40 @@
             ($remainder % 10 ? '-' . $dictionary[$remainder % 10] : '' )) : '' ) : '' ); }
             $capitalizedResult=ucwords($result); @endphp <p class="margin-bottom">{{ $capitalizedResult }}</p>
 
+    <div class="special_bottom row">
+        <center class="msme"> MSME- UDYAM REGISTRATION NUMBER </center>
+        <center>
+            <p class="margin_top">UDYAM-GJ-22-0324303</p>
+        </center>
+    </div>
+    <div class="special_bottom row">
+        <div class="msme column_1"><strong>Bank Details :</strong>KOTAK MAHINDRA BANK, A/C No:- 1011975493, IFSC
+            :- KKBK0002849 </div>
+    </div>
 
-            <div class="special_bottom row">
-                <center class="msme"> MSME- UDYAM REGISTRATION NUMBER </center>
-                <center>
-                    <p class="margin_top">UDYAM-GJ-22-0324303</p>
-                </center>
-            </div>
-            <div class="special_bottom row">
-                <div class="msme column_1"><strong>Bank Details :</strong>KOTAK MAHINDRA BANK, A/C No:- 1011975493, IFSC
-                    :- KKBK0002849 </div>
+    <div class="row ">
+        <div class="column padding_left border-right">
+            <strong> Terms & Conditions</strong>
+            <p>1. Goods once sold will not be taken back.</p>
+            <p>2. Interest @ 18% p.a. will be charged For MAKTECH </p>
+            <p>is not made within the stipulated time. </p>
+            <p>3. Subject to 'Surat' Jurisdiction only.</p>
+            <p>4. Supply meant for SEZ under LUT without payment of integrated tax</p>
+        </div>
 
-            </div>
+        <div class="column padding_left_1 border-right">
+            <center> <strong> E-Invoice QR Code</strong> </center>
+        </div>
+        <div class="column padding_left_1">
 
-            <div class="row ">
-                <div class="column padding_left border-right">
-                    <strong> Terms & Conditions</strong>
-                    <p>1. Goods once sold will not be taken back.</p>
-                    <p>2. Interest @ 18% p.a. will be charged For MAKTECH </p>
-                    <p>is not made within the stipulated time. </p>
-                    <p>3. Subject to 'Surat' Jurisdiction only.</p>
-                    <p>4. Supply meant for SEZ under LUT without payment of integrated tax</p>
-                </div>
-
-                <div class="column padding_left_1 border-right">
-                    <center> <strong> E-Invoice QR Code</strong> </center>
-                </div>
-                <div class="column padding_left_1">
-
-                    <div class="denis"> 
-                        <strong> Receiver's Signature:</strong>
-                    </div>      
-                </div>
-            </div>
+            <div class="denis"> 
+                <strong> Receiver's Signature:</strong>
+            </div>      
+        </div>
+    </div>
 
 
-            <p style="margin-bottom:0px; font-size:4px;">Time: {{ \Carbon\Carbon::now() }}</p>
+    <p style="margin-bottom:0px; font-size:4px;">Time: {{ \Carbon\Carbon::now() }}</p>
 </body>
 
 </html>
