@@ -1,9 +1,6 @@
 <x-layout>
     <x-slot name="title">New Payment</x-slot>
     <x-slot name="main">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-        <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
 
         <div class="main" id="main">
             <a href="{{ route('payment.customer.index') }}" class="btn btn-primary">Back to Payment</a>
@@ -297,26 +294,12 @@
         </div>
 
         <script>
-            $(document).ready(function () {
+        $(document).ready(function () {
             $(".chosen-select").chosen({
                 no_results_text: "Oops, nothing found!"
             });
         });
         
-        document.getElementById('col1').addEventListener('click', function () {
-            document.getElementById('form1').classList.remove('d-none');
-            document.getElementById('form1').classList.add('d-block');
-            document.getElementById('form2').classList.remove('d-block');
-            document.getElementById('form2').classList.add('d-none');
-        });
-
-        document.getElementById('col2').addEventListener('click', function () {
-            document.getElementById('form2').classList.remove('d-none');
-            document.getElementById('form2').classList.add('d-block');
-            document.getElementById('form1').classList.remove('d-block');
-            document.getElementById('form1').classList.add('d-none');
-        });
-
         function filterInvoices() {
             const selectedSupplierId = document.getElementById('supplier_select').value;
 

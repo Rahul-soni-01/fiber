@@ -1183,7 +1183,6 @@ class ReportController extends Controller
 
         $totalPurchase = tbl_purchase_item::sum('total');
 
-
         $stockResults = TblStock::select(
             'scid',
             DB::raw('SUM(qty) as total_qty'),
@@ -1194,17 +1193,19 @@ class ReportController extends Controller
             ->get()
             ->keyBy('scid'); // Group by scid for easy lookup
 
-        $reportResults = TblReportItem::select(
-            'scid',
-            DB::raw('COUNT(*) as total_count'),
-            DB::raw('SUM(dead_status) as total_dead_stock')
+            $reportResults = TblReportItem::select(
+                'scid',
+                DB::raw('COUNT(*) as total_count'),
+                DB::raw('SUM(dead_status) as total_dead_stock'),
+                DB::raw('SUM(used_qty) as total_used_stock'),
+                DB::raw('SUM(CASE WHEN dead_status = 1 THEN used_qty ELSE 0 END) as dead_status_used_qty')
 
-        )
+            )
             ->groupBy('scid')
             ->get()
             ->keyBy('scid'); // Group by scid for easy lookup
 
-
+        // dd($reportResults);
         // Combine all data with subcategories
         $subcategoryData = $subcategories->map(function ($subcategory) use ($purchaseResults, $stockResults, $reportResults) {
             $scid = $subcategory->id;
@@ -1215,9 +1216,10 @@ class ReportController extends Controller
                 'qty_status_0' => $stockResults->get($scid)->qty_status_0 ?? 0,
                 'qty_status_1' => $stockResults->get($scid)->qty_status_1 ?? 0,
                 'total_count' => $reportResults->get($scid)->total_count ?? 0,
+                'total_used_stock' => $reportResults->get($scid)->total_used_stock ?? 0,
                 'total_dead_stock' => $reportResults->get($scid)->total_dead_stock ?? 0,
+                'dead_status_used_qty' => $reportResults->get($scid)->dead_status_used_qty ?? 0,
                 'total_purchase' => $purchaseResults->get($scid)->total_purchase ?? 0,
-
             ];
         });
 
@@ -1357,7 +1359,6 @@ class ReportController extends Controller
                             $existingRecord->dead_status = 1;
                         }
                         $existingRecord->save();
-
                     } else {
                         $avalabile = 1;
                         $party = tbl_party::where('party_name', 'opening stock')->first();
@@ -1416,8 +1417,10 @@ class ReportController extends Controller
                         ->first();
                     if ($existingRecord) {
                         $amount += $existingRecord->priceofUnit;
+                        
                         if ($dead == 1) {
                             $existingRecord->dead_status = 1;
+                          
                         }
                         $existingRecord->save();
                     } else {
@@ -1449,16 +1452,17 @@ class ReportController extends Controller
                 }
                 $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
 
-
                 $TblReportItem = new TblReportItem();
                 $TblReportItem->scid = $request->sub_category[$index];
                 $TblReportItem->unit = $unit;
                 $TblReportItem->report_id = $report_id;
                 $TblReportItem->tblstock_id = $tbl_stock_id;
+                $TblReportItem->dead_status = $dead;
                 $TblReportItem->sr_no = $request->srled[$index];
                 $TblReportItem->amp = $request->ampled[$index] ?? null;
                 $TblReportItem->volt = $request->voltled[$index] ?? null;
                 $TblReportItem->watt = $request->wattled[$index] ?? null;
+                $TblReportItem->used_qty = $request->used_qty[$index];
                 try {
                     $TblReportItem->save();
 

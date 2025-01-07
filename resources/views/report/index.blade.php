@@ -159,7 +159,7 @@
                             @endif
                             @if ($type === 'admin' )
                             <td>{{ $report->sr_no_fiber }}</td>
-                            <td>{{ $report->type }}</td>
+                            <td>{{ $report->tbl_type->name ?? 0 }}</td>
                             <td>{{ $report->worker_name }}</td>
                             <td>
                                 @if ($report->part == 0)
@@ -172,9 +172,9 @@
                             </td>
                             <td>{{ $report->final_amount }}</td>
                             <td>
-                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary">Show <i
                                         class="ri-eye-fill"></i></a>
-                                        <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                                <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                             </td>
                             @endif
 
@@ -183,7 +183,7 @@
                             <td>{{ $report->sr_no_fiber }}</td>
                             <td>{{ $report->tbl_type->name ?? null }}</td>
                             <td>
-                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary">Show <i
                                         class="ri-eye-fill"></i></a>
                             </td>
                             @endif

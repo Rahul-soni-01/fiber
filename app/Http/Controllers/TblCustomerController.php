@@ -53,7 +53,7 @@ class TblCustomerController extends Controller
             'ship_state' => 'nullable|string|max:255',
         ]);
         
-       /* $predefineaccount = TblAccPredefineAccount::findOrFail(1);
+        $predefineaccount = TblAccPredefineAccount::findOrFail(1);
         // dd($predefineaccount);
         $HeadLevel = 3;
 
@@ -63,15 +63,14 @@ class TblCustomerController extends Controller
             3 => 40001,
         };
 
-        $maxHeadCode = TblAccCoa::where('HeadLevel', )
-                ->where('HeadCode', '>=', 40000)
+        $maxHeadCode = TblAccCoa::where('HeadLevel', '=', 4)
                 ->max('HeadCode');
-                dd($maxHeadCode);
         if ($maxHeadCode) {
             $HeadCode = $maxHeadCode + 1;
         } else {
             $HeadCode = $thousand; // Start with the base value
         }
+        // dd($HeadCode);
         $PHeadName = TblAccCoa::where('HeadCode',$predefineaccount->customerCode)->first()->HeadName;
         
         $newledger = new TblAccCoa();
@@ -80,8 +79,7 @@ class TblCustomerController extends Controller
         $newledger->PHeadName = $PHeadName;
         $newledger->PHeadCode = $predefineaccount->customerCode;
         $newledger->HeadLevel = 4;
-        $HeadCode =  $newledger->save();*/
-
+        $newledger =  $newledger->save();
 
         $customer = new TblCustomer();
         $customer->customer_name = $request->customer_name;

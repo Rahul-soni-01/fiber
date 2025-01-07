@@ -131,8 +131,7 @@
 
                             <!-- Button Column -->
                             <div class="col-12 col-md-4 text-right">
-                                <button type="button"
-                                    onclick="NewReportCreateRow({{ json_encode($all_sub_categories) }})"
+                                <button type="button" onclick="NewReportCreateRow({{ json_encode($all_sub_categories) }})"
                                     class="btn btn-dark">
                                     Add
                                 </button>
@@ -181,11 +180,18 @@
                             <div class="row" id="row_{{$index+1}}">
                                 <input type="hidden" name="sr_no_or_not[]" value="{{$reportitem->tbl_sub_category->sr_no}}">
                                 <div class="col-12 col-md-3">
+
+                                    @if($reportitem->sr_no != 0)
+                                  
                                     <input type="text" name="srled[]" list="srled_{{$index+1}}" class="form-control"
                                         placeholder="Select or enter a new sr no, Small Alpha Plz" required value="{{$reportitem->sr_no}}">
                                     <datalist id="srled_{{$index+1}}">
                                         <option value="{{$reportitem->sr_no}}" selected>{{$reportitem->sr_no}} </option>    
                                     </datalist>
+                                    @else
+                                    <input type="hidden" name="srled[]" value="0">
+                                    <input type="number" id="used_qty_{{$index+1}}" value="{{$reportitem->used_qty}}" name="used_qty[]" class="form-control" placeholder="Enter Qty">
+                                    @endif
                                 </div>
                                 <div class="col-md-2">
                                     @if($reportitem->sr_no != 0)
@@ -248,8 +254,6 @@
                         </div>
                     </div>
 
-
-
                     @if(in_array(auth()->user()->type, ['admin', 'user']))
                     <div class="row mt-3">
                         <div class="col-md-3">
@@ -262,8 +266,7 @@
                     </div>
                     @endif
                 </div>
-
-                <button type="button" id="submit-button" class="btn btn-success">SUBMIT</button>
+            <button type="button" id="submit-button" class="btn btn-success">SUBMIT</button>
         </div>
     </x-slot>
 </x-layout>

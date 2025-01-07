@@ -93,7 +93,19 @@ class PaymentController extends Controller
                 'updated_at' => now(),
             ];
 
-            TblPayment::create($paymentData); // Replace Payment with your model
+            /*$SupplierPayment = TblPayment::create($paymentData); // Replace Payment with your model
+            $payment_insert_id = $SupplierPayment->id; // Retrieve the auto-incremented ID
+            $predefine_account = TblAccPredefineAccount::first();
+            $Narration          = "Payment Voucher";
+            $Comment            = "Payment Voucher for Supplier";
+            $COAID              = $predefine_account->cashCode;
+            $amnt_type = 'Credit';
+            $referenceNo = $request->cid;
+            $reVID = $request->cid;
+            $amnt = $request->paid_total;
+            $VoucherController =  new TblVoucherController();
+            $valucher = $VoucherController->insert_sale_credit_voucher($Narration, $Comment, $COAID, $amnt_type,$amnt, $referenceNo, $reVID, $payment_insert_id);
+            */
         } elseif (!empty($request->cid)) {
             // dd($request->all());
             $request->validate([
@@ -112,7 +124,8 @@ class PaymentController extends Controller
                 'ifsc_code' => 'nullable|string|max:255',
                 'cheque_no' => 'nullable|string|max:255',
             ]);
-
+            $Customerinfo = TblCustomer::findOrFail($request->cid);
+            
             $CustomerPaymentData = [
                 'payment_date' => $request->date,
                 'customer_id' => $request->cid, // Assuming 'cid' refers to customer_id
@@ -133,12 +146,17 @@ class PaymentController extends Controller
                 'updated_at' => now(),
             ];
 
+            
             $CustomerPayment = CustomerPayment::create($CustomerPaymentData);
             $payment_insert_id = $CustomerPayment->id; // Retrieve the auto-incremented ID
             $predefine_account = TblAccPredefineAccount::first();
             $Narration          = "Payment Voucher";
             $Comment            = "Payment Voucher for customer";
-            $COAID              = $predefine_account->cashCode;
+            if($request->payment_method == 'Cash'){
+                $COAID = $predefine_account->cashCode;
+            }elseif($request->payment_method == 'Bank'){
+                $COAID = $predefine_account->bankCode;
+            }
             $amnt_type = 'Credit';
             $referenceNo = $request->cid;
             $reVID = $request->cid;

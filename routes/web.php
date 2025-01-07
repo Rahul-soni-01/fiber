@@ -135,7 +135,6 @@ Route::middleware('auth')->group(function () {
 
     // Party Crud
     Route::get('party-purchase-details-{party_id}', [TblPartyController::class, 'Purchase_details'])->name(('party.purchase.details'));
-
     Route::get('customer-sell-details-{customer_id}', [TblCustomerController::class, 'Sale_details'])->name(('customer.sell.details'));
 
     Route::get('party-create', [TblPartyController::class, 'create'])->name('party.create');
@@ -207,6 +206,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
 
     Route::get('/serial-history', [SaleController::class, 'history'])->name('serial.history');
+    
     // Sale Crud
     Route::get('sale-return-index', [SaleController::class, 'return_index'])->name('sale.return.index');
     Route::get('sale-return', [SaleController::class, 'return'])->name('sale.return');

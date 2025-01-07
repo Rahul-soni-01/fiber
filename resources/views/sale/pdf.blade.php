@@ -335,8 +335,8 @@
              <div class="column border-right"><strong>HSN/SAC</strong></div>
              <div class="column border-right"><strong>Unit</strong></div>
              <div class="column border-right"><strong>Qty</strong></div>
-             <div class="column border-right"><strong>Rate</strong></div>
-             <div class="column border-right"><strong>Tax</strong></div>
+             {{-- <div class="column border-right"><strong>Rate</strong></div> --}}
+             {{-- <div class="column border-right"><strong>Tax</strong></div> --}}
              <div class="column"><strong>Total</strong></div>
          </div>
          @php
@@ -351,8 +351,8 @@
              <div class="column border-right"></div>
              <div class="column border-right">{{ $item1['unit'] }}</div>
              <div class="column border-right">{{ $item1['qty'] }}</div>
-             <div class="column border-right">{{ $item1['rate'] }}</div>
-             <div class="column border-right">{{ $item1['p_tax'] ?? 0 }}</div>
+             {{-- <div class="column border-right">{{ $item1['rate'] }}</div> --}}
+             {{-- <div class="column border-right">{{ $item1['p_tax'] ?? 0 }}</div> --}}
              <div class="column">{{ $item1['total'] }}</div>
          </div>
          @php

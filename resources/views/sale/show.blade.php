@@ -69,22 +69,19 @@
                         </div>
 
                         <div class="col-sm-1">
-                            <label class="form-control">{{$item1['total']}}</label>
+                            <label class="form-control">{{$item1['rate'] * $item1['qty']}}</label>
                         </div>
 
                         <div class="col-sm-1">
                             <label class="form-control" style="padding:.375rem .4rem;">{{$item1['p_tax'] ?? 0}}</label>
                         </div>
                         <div class="col-sm-1">
-                            <label class="form-control" style="padding:.375rem .4rem;">{{ ($item1['total'] *
+                            <label class="form-control" style="padding:.375rem .4rem;">{{ (($item1['rate'] * $item1['qty']) *
                                 $item1['p_tax'] / 100) }}</label>
                         </div>
-
                         <div class="col-sm-2">
-                            <label class="form-control">{{ $item1['total'] + ($item1['total'] * $item1['p_tax'] / 100)
-                                }}</label>
-
-
+                            <label class="form-control">{{ ($item1['rate'] * $item1['qty'])+ ($item1['total'] *
+                                $item1['p_tax'] / 100)}}</label>
                         </div>
 
                     </div>

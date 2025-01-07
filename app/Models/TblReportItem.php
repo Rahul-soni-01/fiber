@@ -16,6 +16,7 @@ class TblReportItem extends Model
         'report_id',
         'dead_status',
         'tblstock_id',
+        'used_qty',
         'sr_no',
         'amp',
         'volt',

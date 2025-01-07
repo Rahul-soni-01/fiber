@@ -48,7 +48,7 @@
                             // Group the accounts by HeadLevel
                             $groupedAccounts = $accounts->groupBy('HeadLevel');
                         @endphp
-                        <table class="table table-bordered datatable-remove">
+                        {{-- <table class="table table-bordered datatable-remove">
                             <thead class="table-bordered">
                                 <tr>
                                     <th width="40%" bgcolor="#E7E0EE" align="center">Particulars
@@ -89,7 +89,7 @@
                                     @endforeach
                                     @endif
                             </tbody>
-                        </table>
+                        </table> --}}
                         @if(isset($groupedAccounts[1]))
                             @foreach ($groupedAccounts[1] as $topLevel)
                                 <!-- Display top-level account -->

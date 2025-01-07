@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-    else if(currentPath == "/sale-return"){
+    else if (currentPath == "/sale-return") {
         document.getElementById('AddReturnRow').addEventListener('click', function () {
             if (!invoiceResponse || !invoiceResponse.inwardsItems) {
                 Swal.fire({
@@ -287,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
     document.getElementById('submit-button').addEventListener('click', function () {
         Swal.fire({
             title: 'Are you sure?',

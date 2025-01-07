@@ -750,11 +750,15 @@
                 <div class="row mt-1" id="row_${row_id}">
                     <input type="hidden" name="sr_no_or_not[]" value="0">
                     <div class="col-12 col-md-3">
-                        <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                        <input type="hidden" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
                         <datalist id="srled_${row_id}">
                             <option value=""></option>
                         </datalist>
+                         <input type="hidden" name="srled[]" value="0">
+                         <input type="number" id="used_qty_${row_id}" name="used_qty[]" class="form-control" placeholder="Enter Qty">
                     </div>
+                     
+
                     <div class="col-12 col-md-2">                     
                         <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row_id}">
                     </div>
@@ -785,6 +789,7 @@
                                 <datalist id="srled_${row_id}">
                                     <option value=""></option>
                                 </datalist>
+                                 <input type="hidden" id="used_qty_${row_id}" name="used_qty[]" class="form-control" value="1">
                             </div>
 
                             <div class="col-12 col-md-2">
