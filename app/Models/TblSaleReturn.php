@@ -29,7 +29,7 @@ class TblSaleReturn extends Model
      */
     public function customer()
     {
-        return $this->belongsTo(TblCustomer::class, 'customer_id');
+        return $this->belongsTo(TblCustomer::class, 'customer_id','id');
     }
 
     public function category()

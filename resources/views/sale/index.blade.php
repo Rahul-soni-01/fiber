@@ -19,7 +19,7 @@
                         <td>{{$sale->sale_id}}</td>
                         <td>{{$sale->sale_date}}</td>
                         <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td>
-                        <td>{{$sale->total_amount}}</td>
+                        <td>{{$sale->amount}}</td>
                         <td>
                             <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i class="ri-eye-fill"></i></a>
                             <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i class="ri-pencil-line"></i></a>

@@ -170,7 +170,7 @@ class TblPurchaseController extends Controller
                 ->get();
 
             // dd($existingrecord);
-            return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories', 'invoice_no', 'req_category', 'req_subcategory', 'req_qty', 'req_price', 'req_unit', 'sr_no', 'existingrecord','getsr_nos'));
+            return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories', 'invoice_no', 'req_category', 'req_subcategory', 'req_qty', 'req_price', 'req_unit', 'sr_no', 'existingrecord', 'getsr_nos'));
         }
         return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories'));
     }
@@ -181,14 +181,33 @@ class TblPurchaseController extends Controller
             $SubCategories = tbl_sub_category::all();
             $Categories = tbl_category::all();
             $tbl_parties = tbl_party::all();
-            $PurchaseReturns = TblPurchaseReturn::with('purchaseReturnDetails','party','purchaseReturnDetails.category','purchaseReturnDetails.subCategory')->get();
+            $PurchaseReturns = TblPurchaseReturn::with('purchaseReturnDetails', 'party', 'purchaseReturnDetails.category', 'purchaseReturnDetails.subCategory')->get();
             // make a query to get all purchase return details
 
             // dd($PurchaseReturns);
-            return view('inward.return', ['PurchaseReturns'=> $PurchaseReturns, 'Categories' => $Categories, 'tbl_parties' => $tbl_parties, 'SubCategories' => $SubCategories]);
+            return view('inward.return', ['PurchaseReturns' => $PurchaseReturns, 'Categories' => $Categories, 'tbl_parties' => $tbl_parties, 'SubCategories' => $SubCategories]);
         }
         return redirect('/unauthorized');
     }
+
+
+    public function Return_show_id(Request $request, $id)
+    {
+        if ($this->checkPermission($request, 'view')) {
+            $SubCategories = tbl_sub_category::all();
+            $Categories = tbl_category::all();
+            $tbl_parties = tbl_party::all();
+            $PurchaseReturn = TblPurchaseReturn::with('purchaseReturnDetails', 'party', 'purchaseReturnDetails.category', 'purchaseReturnDetails.subCategory')
+                ->findOrFail($id);
+            // make a query to get all purchase return details
+
+            // dd($PurchaseReturn);
+            return view('inward.return-show', ['PurchaseReturn' => $PurchaseReturn, 'Categories' => $Categories, 'tbl_parties' => $tbl_parties, 'SubCategories' => $SubCategories,'id'=> $id]);
+        }
+        
+        return redirect('/unauthorized');
+    }
+
     public function Return_Create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
@@ -223,51 +242,83 @@ class TblPurchaseController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             } else {
-                
-                $purchaseReturn = new TblPurchaseReturn();
-                $purchaseReturn->invoice_no = $request->invoice_no;
-                $purchaseReturn->p_id = $request->pid;
-                // make todays date
-                $purchaseReturn->date = date('Y-m-d');
-                // $purchaseReturn->date = ;
-                try {
+                $existingPurchaseReturn = TblPurchaseReturn::where('invoice_no', $request->invoice_no)
+                    ->where('p_id', $request->pid)
+                    ->first();
+
+                if (!$existingPurchaseReturn) {
+                    // Create a new TblPurchaseReturn if it does not exist
+                    $purchaseReturn = new TblPurchaseReturn();
+                    $purchaseReturn->invoice_no = $request->invoice_no;
+                    $purchaseReturn->p_id = $request->pid;
+                    // Make today's date
+                    $purchaseReturn->date = date('Y-m-d');
                     $purchaseReturn->save();
+                }
+             
+                try {
                     $count = count($request->purchaseitems);
                     
                     for ($i = 0; $i < $count; $i++) {
                         $purchase_item_id = $request->purchaseitems[$i];
-                        // $item = tbl_purchase_item::where()->first();
-                        $purchase_item = tbl_purchase_item::find($purchase_item_id);
-                        $cid = $purchase_item->cid;
-                        $scid = $purchase_item->scid;
-                        $unit = $purchase_item->unit;
-                        $price = $purchase_item->price;
-                        
-                        $TblPurchaseReturnItem = TblPurchaseReturnItem::create([
-                            'invoice_no' => $request->invoice_no, 
-                            'cid' => $cid,
-                            'scid' => $scid,
-                            'qty' => $request->qty[$i], 
-                            'reason' => $request->reason[$i], 
-                            'unit' => $unit, 
-                            'price' => $price,
-                        ]);
-                        if (!$TblPurchaseReturnItem) {
-                            return redirect()->back()->with('error', 'Failed to insert Purchase Return');
-                        }
-                        // $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->find($purchase_item_id);
-                    }
-                }catch (\Exception $e) {
-                    return redirect()->back()->with('error', 'Failed to insert sale: ' . $e->getMessage());
-                }
-                return redirect()->route('inward.return.index')->with('success', 'Purchase Return successfully.');
+                        $purchase_item = tbl_purchase_item::findOrFail($purchase_item_id);
+                        // If purchase item is found
+                        if ($purchase_item) {
+                           
+                            $cid = $purchase_item->cid;
+                            $scid = $purchase_item->scid;
+                            $unit = $purchase_item->unit;
+                            $price = $purchase_item->price;
+                            $purchaseqty = $purchase_item->qty;
 
+                            // Check total returned quantity for this product
+                            $totalReturnedQty = TblPurchaseReturnItem::where('invoice_no', $request->invoice_no)
+                                ->where('cid', $purchase_item->cid)
+                                ->where('scid', $purchase_item->scid)
+                                ->sum('qty');
+
+                                // dd($purchaseqty,$totalReturnedQty,$totalReturnedQty + $request->qty[$i]);
+                            // Ensure that returned quantity does not exceed purchased quantity
+                            if (($totalReturnedQty + $request->qty[$i]) <= $purchaseqty) {
+                                // Insert the purchase return item
+                                TblPurchaseReturnItem::create([
+                                    'invoice_no' => $request->invoice_no,
+                                    'cid' => $cid,
+                                    'scid' => $scid,// Add product_id
+                                    'qty' => $request->qty[$i],
+                                    'reason' => $request->reason[$i],
+                                    'unit' => $unit,
+                                    'price' => $price,
+                                ]);
+                            } else {
+                                // If return quantity exceeds purchase quantity, show error
+                                return redirect()->back()->withErrors([
+                                    'qty' => 'The returned quantity for product ' . $purchase_item->scid . ' exceeds the purchased quantity.',
+                                ]);
+                            }
+                        } else {
+                            // If the purchase item is not found
+                            return redirect()->back()->withErrors([
+                                'item' => 'Purchase item not found for ID ' . $purchase_item_id,
+                            ]);
+                        }
+                    }
+
+                    return redirect()->route('inward.return.index')->with('success', 'Purchase Return successfully created.');
+
+                } catch (\Exception $e) {
+                    return redirect()->back()->with('error', 'Failed to insert Purchase Return: ' . $e->getMessage());
+                }
+
+
+                return redirect()->route('inward.return.index')->with('success', 'Purchase Return successfully.');
             }
         }
         return redirect('/unauthorized');
     }
 
-    public function paymentindex(Request $request){
+    public function paymentindex(Request $request)
+    {
         $inwards = tbl_purchase::with('party')->get();
         dd($inwards);
     }

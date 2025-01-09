@@ -43,7 +43,7 @@ class TblCustomer extends Model
 
     public function SaleReturn()
     {
-        return $this->hasMany(TblSaleReturn::class, 'customer_id');
+        return $this->hasMany(TblSaleReturn::class, 'customer_id','id');
     }
     
 }

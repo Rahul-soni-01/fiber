@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot name="title"> Add Purchase Return</x-slot>
     <x-slot name="main">
-        <a href="{{ route('inward.return.index') }}" class="btn btn-primary"> Back Purchase Return</a>
+        <a href="{{ route('inward.return.index') }}" class="btn btn-primary mb-2"> Back Purchase Return</a>
         
             @csrf
 

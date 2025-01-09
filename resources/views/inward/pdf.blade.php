@@ -22,6 +22,8 @@
             padding: 0;
             line-height: 1.6;
             position: relative;
+            background-color: #F9F9F9;
+            border: 1px solid #111;
         }
 
         .container {
@@ -29,6 +31,30 @@
             width: 100%;
             margin: 0 auto;
             padding-bottom: 10px;
+            border-bottom: 1px solid #000000;
+        }
+
+        .row {
+            display: table;
+            width: 100%;
+            font-size: 10px;
+            /* border-bottom: 1px solid #000000; */
+            /* border: 1px solid; */
+            /* border-right: 1px solid;
+            border-left: 1px solid;
+            border-top: 1px solid; */
+        }
+        .border-top{
+            border-top: 1px solid #111;
+        }
+        .border-right{
+            border-right: 1px solid #111;
+        }
+        .column {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding: 6px;
         }
 
         .header {
@@ -36,10 +62,8 @@
             font-family: Arial, sans-serif;
             font-size: 12px;
             text-align: center;
-            border-bottom: 1px solid #ddd;
-            border: none;
-            background-color: #2C3E50;
-            color: #ddd;
+            border-bottom: 1px solid #000000;
+            background-color: #F9F9F9;
         }
 
         .header-content {
@@ -81,9 +105,7 @@
 
         .footer {
             padding: 10px 0;
-            border-top: 1px solid #ddd;
-            background-color: #2C3E50;
-            color: white;
+            background-color: #F9F9F9;
             width: 100%;
             margin-top: 20px;
             font-family: Arial, sans-serif;
@@ -93,7 +115,6 @@
         .footer-content {
             width: 100%;
             border-collapse: collapse;
-            /* table-layout: fixed; */
             border: none;
         }
 
@@ -133,15 +154,12 @@
             width: 100%;
             margin-left: auto;
             margin-right: 0;
-            border: none;
         }
 
         .table-container table,
         .table-container th,
         .table-container td {
-            border: 1px solid #ddd;
             padding: 8px;
-            border: none;
         }
 
         .table-container th {
@@ -150,14 +168,25 @@
             text-align: right;
         }
 
-        .table-container tr:nth-child(odd) {
-            background-color: #f9f9f9;
+        .margin-top-minus {
+            margin-top: -20px;
+            margin-bottom: 0px;
         }
 
-        .table-container tr:nth-child(even) {
-            background-color: #fff;
+        .right {
+            float: right;
+            justify-content: right;
+            align-items: right;
+            text-align: right;
         }
-
+        .center{
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .border-bottom {
+            border-bottom: 1px solid #111;
+        }
         @page {
             margin-bottom: 10px;
         }
@@ -181,124 +210,130 @@
 
 <body>
     <div class="header">
-        <table class="header-content" border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr>
-                <td class="header-left" width="20%" align="left">
-                    <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('storage/logo/676d049101b61.jpg'))) }}" width="200" height="100">
-                </td>
-                <td class="header-center" width="45%" align="center">
-                    <h1>Invoice</h1>
-                </td>
-                <td class="header-right" width="35%" align="right">
-                    <p>Purchase Date:-  {{ date('d-m-Y', strtotime($inwards[0]['date'])) }}</p>
-                    <h3>Invoice No - {{ $invoice_no}}</h3>
-                    <p><strong>Customer</strong> {{ $inwards[0]->party->party_name }}</p>
-                </td>
-            </tr>
-        </table>
-    </div>
+        @php
+        $websetting = DB::table('web_settings')->where('id', 1)->first();
+        @endphp
+        <div class="row">
+            <div class="column header-left">
+                @php
+                $websetting = DB::table('web_settings')->where('id', 1)->first();
+                $imagePath = public_path($websetting->invoice_logo); // Resolve full file path
+                $imageData = '';
 
+                if (file_exists($imagePath)) {
+                    $imageData = base64_encode(file_get_contents($imagePath));
+                }
+                @endphp
+                @if(!empty($imageData))
+                <img src="data:image/jpeg;base64,{{ $imageData }}" width="150" height="70">
+                @else
+                <p>Invoice logo not available</p>
+                @endif
+            </div>
+            <div class="column header-center">
+                <h1> Purchase Order</h1>
+            </div>
+            <div class="column header-right border-right">
+                <p>Purchase Date:- {{ date('d-m-Y', strtotime($inwards[0]['date'])) }}</p>
+                <h3>Invoice No - {{ $invoice_no}}</h3>
+                <p><strong>Supplier</strong> {{ $inwards[0]->party->party_name }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row center" width="45%" align="center">
+        <h3>Product Details</h3>
+    </div>
     <div class="container">
         @foreach ($inwards as $item)
-        <div class="container">
-            
-            <div class="table-container">
-                <div class="header-center" width="50%" align="center">
-                    <h3>Product Details</h3>
-                </div>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Category Name</th>
-                            <th>Sub Category Name</th>
-                            <th>Unit</th>
-                            <th>Qty</th>
-                            <th>Rate</th>
-                            <th>Total</th>
-                            <th>Tax(%)</th>
-                            <th>Total(T)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($inwardsItems as $item1)
-                        <tr>
-                            <td>{{ $item1->category->category_name }}</td>
-                            <td>{{ $item1->subCategory->sub_category_name }}</td>
-                            <td>{{ $item1['unit'] }}</td>
-                            <td>{{ $item1['qty'] }}</td>
-                            <td>{{ $item1['price'] }}</td>
-                            <td>{{ $item1['total'] }}</td>
-                            <td>{{ $item1['tax'] ?? 0 }}</td>
-                            <td>{{ $item1['total'] + ($item1['total'] * $item1['tax'] / 100) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <div class="row border-bottom border-top">
+            <div class="column"><strong>Category Name</strong></div>
+            <div class="column"><strong>Sub Category Name</strong></div>
+            <div class="column"><strong>Unit</strong></div>
+            <div class="column"><strong>Qty</strong></div>
+            <div class="column"><strong>Rate</strong></div>
+            <div class="column"><strong>Total</strong></div>
+            <div class="column"><strong>Tax(%)</strong></div>
+            <div class="column"><strong>Total(T)</strong></div>
+        </div>
+        @foreach ($inwardsItems as $item1)
+        <div class="row">
+            <div class="column">{{ $item1->category->category_name ?? 'N/A' }}</div>
+            <div class="column">{{ $item1->subCategory->sub_category_name ?? 'N/A' }}</div>
+            <div class="column">{{ $item1['unit'] ?? 'N/A' }}</div>
+            <div class="column">{{ $item1['qty'] ?? 0 }}</div>
+            <div class="column">{{ $item1['price'] ?? 0 }}</div>
+            <div class="column">{{ $item1['total'] ?? 0 }}</div>
+            <div class="column">{{ $item1['tax'] ?? 0 }}</div>
+            <div class="column">{{ ($item1['total'] ?? 0) + (($item1['total'] ?? 0) * ($item1['tax'] ?? 0) / 100) }}
             </div>
-
-            <!-- Financial Summary Table -->
-            <div class="table-container">
-                <table class="table table-bordered mt-3">
-                    <tbody>
-                        <tr>
-                            <td width=60%></td>
-                            <td>Amount ($/¥)</td>
-                            <td>{{ $item['amount'] }}</td>
-                        </tr>
-                        <tr>
-                            <td width=60%></td>
-                            <td>Rate (INR)</td>
-                            <td>{{ $item['inr_rate'] }}</td>
-                        </tr>
-                        <tr>
-                            <td width=60%></td>
-                            <td>Amount (INR)</td>
-                            <td>{{ $item['inr_amount'] }}</td>
-                        </tr>
-                        <tr>
-                            <td width=60%></td>
-                            <td>Shipping Cost</td>
-                            <td>{{ $item['shipping_cost'] }}</td>
-                        </tr>
-                        <tr>
-                            <td width=60%></td>
-                            <td>Total Amount</td>
-                            <td>{{ $item['inr_amount'] + $item['shipping_cost'] }}</td>
-                        </tr>
-                        <tr>
-                            <td width=60%></td>
-                            <td>Round Amount</td>
-                            <td>{{ $item['round_amount'] }}</td>
-                        </tr>
-                        <tr>
-                            <td width=60%></td>
-                            <td>Final Amount</td>
-                            <td>{{ $item['inr_amount'] + $item['shipping_cost'] - $item['round_amount'] }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
         </div>
         @endforeach
+        <div class="row border-top">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column right"><strong>Amount ($/¥)</strong></div>
+            <div class="column center">{{ $item['amount'] }}</div>
+        </div>
+        <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column right"><strong>Rate (INR)</strong></div>
+            <div class="column center">{{ $item['inr_rate'] }}</div>
+        </div>
+        <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column right"><strong>Amount (INR)</strong></div>
+            <div class="column center">{{ $item['inr_amount'] }}</div>
+        </div>
+        <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column right"><strong>Shipping Cost</strong></div>
+            <div class="column center">{{ $item['shipping_cost'] ?? 0 }}</div>
+        </div>
+        <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column right"><strong>Total Amount</strong></div>
+            <div class="column center">{{ $item['inr_amount'] + $item['shipping_cost'] }}</div>
+        </div>
+        <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column right"><strong>Round Amount</strong></div>
+            <div class="column center">{{ $item['round_amount'] ?? 0 }}</div>
+        </div>
+        <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column right"><strong>Final Amount</strong></div>
+            <div class="column center">
+                <h3>{{ $item['inr_amount'] + $item['shipping_cost'] - $item['round_amount'] }}</h3>
+            </div>
+        </div>
     </div>
+    @endforeach
 
-    <div class="footer">
-        <table class="footer-content" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                <td class="footer-left">
-                    <span>hello@maktech.com</span><br>
-                    <span>555 444 6666</span>
-                </td>
-                <td class="footer-center">
-                    <span>Thank You</span>
-                </td>
-                <td class="footer-right">
-                    <span>Authorized Signatory</span><br><br><br>
-                    <span>_________________________</span>
-                </td>
-            </tr>
-        </table>
+    <div class="footer row border-bottom border-right">
+        <div class="column left">
+            <span>hello@maktech.com</span><br>
+            <span>555 444 6666</span>
+        </div>
+        <div class="column center">
+            <span>Thank You</span>
+        </div>
+        <div class="column right">
+            <span>Authorized Signatory</span><br><br><br>
+            <span>_________________________</span>
+        </div>
     </div>
 
     <p style="margin-bottom:0px; font-size:8px;">Time: {{ \Carbon\Carbon::now() }}</p>

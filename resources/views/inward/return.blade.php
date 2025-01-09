@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot name="title">Purchase Return</x-slot>
     <x-slot name="main">
-        <a href="{{ route('purchase.return.create') }}" class="btn btn-primary">Add Purchase Return</a>
+        <a href="{{ route('purchase.return.create') }}" class="btn btn-primary mb-3">Add Purchase Return</a>
         <table class="table table-striped">
             <thead class="table-dark">
                 <tr>
@@ -10,7 +10,7 @@
                     <th>Party</th>
                     <th>Invoice No</th>
                     <th>Return Product</th>
-                    {{-- <th>Action</th> --}}
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +35,9 @@
                                 </li>
                             @endforeach
                         </td>
-                        {{-- <td></td> --}}
+                        <td><a
+                            href="{{ route('inward.return.show', ['invoice_no' => $Purchasereturn->id ]) }}"><i
+                                class="ri-eye-fill"></i></a> </td>
                     </tr>
                     @endforeach
                 </tbody>

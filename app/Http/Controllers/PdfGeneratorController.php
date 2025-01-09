@@ -12,6 +12,7 @@ class PdfGeneratorController extends Controller
 {
     public function pdfGenerator(Request $request)
     {
+        ini_set('memory_limit', '512M');
         $bankId = $request->input('bank'); // Retrieve the bank parameter
         if($bankId) {
             $BankController =  new TblBankController();
@@ -29,6 +30,7 @@ class PdfGeneratorController extends Controller
         }
         $invoice_no = $request->input('invoice_no'); // Retrieve the invoice_no parameter
         if($invoice_no){
+            
             $purchaseItemController =  new TblPurchaseItemController();
             $purchaseData = $purchaseItemController->show_item($invoice_no);  
             $data = $purchaseData->getData();
@@ -88,5 +90,47 @@ class PdfGeneratorController extends Controller
             return $dompdf->stream("Report-$reportid.pdf", ['Attachment' => true]);
         }
         
+        $purchase_return_id = $request->input('purchase_return'); // Retrieve the purchase_return parameter
+        if($purchase_return_id){
+            ini_set('memory_limit', '512M');
+            $Controller =  new TblPurchaseController();
+            $Data = $Controller->Return_show_id( $request, $purchase_return_id);
+            // dd($Data);
+           
+            $data = $Data->getData();
+            // dd($data);
+            $html = view('inward.returnpdf', $data)->render(); // Create a dedicated view for PDF
+            // Display the HTML directly in the browser
+            // return response($html);
+            $dompdf = new \Dompdf\Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+        
+            // Stream PDF
+            return $dompdf->stream("purchase-return-$purchase_return_id.pdf", ['Attachment' => true]);
+        }
+        
+        $sale_return_id = $request->input('sale_return'); // Retrieve the sale_return parameter
+        if($sale_return_id){
+            ini_set('memory_limit', '512M');
+            $Controller =  new SaleController();
+            $Data = $Controller->return_show( $request, $sale_return_id);
+            // dd($Data);
+           
+            $data = $Data->getData();
+            // dd($data);
+            $html = view('sale.returnpdf', $data)->render(); // Create a dedicated view for PDF
+            // Display the HTML directly in the browser
+            // return response($html);
+            $dompdf = new \Dompdf\Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+        
+            // Stream PDF
+            return $dompdf->stream("sale-return-$sale_return_id.pdf", ['Attachment' => true]);
+        }
+
     }
 }

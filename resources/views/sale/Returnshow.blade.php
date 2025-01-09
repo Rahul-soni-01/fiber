@@ -1,34 +1,30 @@
 <x-layout>
-    <x-slot name="title">Show All sale Return</x-slot>
+    <x-slot name="title">Show Sale Return: {{$id }}</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
-            <a href="{{ route('sale.return') }}" class="btn btn-primary mt-2 mb-2">Add Sale Return</a>
+            <a href="{{ route('sale.return') }}" class="btn btn-primary mb-2">Add Sale Return</a>
+            <a href="{{ route('generate-pdf', ['sale_return' => $id]) }}" class="btn btn-primary mb-2">Download PDF</a>
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
                         <th>Date</th>
                         <th>Customer</th>
-                        <th>Sale Invoice No</th>
+                        <th>Sub category</th>
                         <th>Qty</th>
                         <th>Reason</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($salereturns as $index => $return)
-                    {{-- {{dd($salereturns);}} --}}
                     <tr>
+                        {{-- {{ dd($return);}} --}}
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $return->max_date }}</td>
+                        <td>{{ $return->date }}</td>
                         <td>{{ $return->customer->customer_name ?? 'N/A' }}</td> <!-- Adjust based on customer model field -->
-                        <td>{{ $return->sale_id }}</td>
-                        <td>{{ $return->total_qty }}</td>
-                        <td>{{ $return->reasons }}</td>
-                        <td>
-                            <a href="{{ route('sale.return.show', $return->sale_id) }}" class="btn btn-info">View</a>
-
-                        </td>
+                        <td>{{ $return->subCategory->name }}</td>
+                        <td>{{ $return->qty }}</td>
+                        <td>{{ $return->reason }}</td>
                     </tr>
                     @endforeach
                 </tbody>

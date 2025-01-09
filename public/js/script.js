@@ -447,7 +447,7 @@ function getDataForReturn(event) {
                         html += '<div class="col"><b>Total</b></div>';
                         html += '</div>';
                         response.inwardsItems.forEach(function (item) {
-                            console.log(item);
+                            // console.log(item);
                             html += '<div class="row mt-2">';
                             html += '<div class="col">' + item.category.name + '</div>'; // category_name property
                             html += '<div class="col">' + item.sub_category.name + '</div>'; // sub_category_name property

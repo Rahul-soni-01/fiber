@@ -173,6 +173,7 @@ Route::middleware('auth')->group(function () {
     Route::get('inward-payment', [TblPurchaseController::class, 'paymentindex'])->name('inward.payment.index');
 
     // inward crud
+    Route::get('inward-return-show-{invoice_no}', [TblPurchaseController::class, 'Return_show_id'])->name('inward.return.show');
     Route::get('inward-return', [TblPurchaseController::class, 'ReturnIndex'])->name('inward.return.index');
     Route::get('inward-return-create', [TblPurchaseController::class, 'Return_Create'])->name('purchase.return.create');
     Route::post('inward-return-store', [TblPurchaseController::class, 'Return_Store'])->name('purchase.return.store');
@@ -208,6 +209,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/serial-history', [SaleController::class, 'history'])->name('serial.history');
     
     // Sale Crud
+    Route::get('sale-return-show-{sale_id}', [SaleController::class, 'return_show'])->name('sale.return.show');
     Route::get('sale-return-index', [SaleController::class, 'return_index'])->name('sale.return.index');
     Route::get('sale-return', [SaleController::class, 'return'])->name('sale.return');
     Route::post('sale-return-store', [SaleController::class, 'return_store'])->name('sale.return.store');
