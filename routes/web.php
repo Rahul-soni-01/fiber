@@ -22,6 +22,7 @@ use App\Http\Controllers\TblBankController;
 use App\Http\Controllers\TblExpenseController;
 use App\Http\Controllers\TblSaleProductCategoryController;
 use App\Http\Controllers\TblSaleProductSubCategoryController;
+use App\Http\Controllers\GstPdfTableController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PdfGeneratorController;
 use Illuminate\Support\Facades\Hash;
@@ -236,9 +237,13 @@ Route::middleware('auth')->group(function () {
     Route::put('/customer-{id}', [TblCustomerController::class, 'update'])->name('customer.update');
     Route::delete('/customer-{customer_id}', [TblCustomerController::class, 'destroy'])->name('customer.destroy');
 
-    // report crud
-    // Route::get('report', [TblPurchaseController::class, 'index'])->name('report.index');
-    // Route::get('report-create', [TblPurchaseController::class, 'create'])->name('report.create');
+    // gst-pdf crud
+    Route::get('/gst-pdf', [GstPdfTableController::class, 'index'])->name('gst-pdf.index');
+    Route::get('gst-pdf-create', [GstPdfTableController::class, 'create'])->name('gst-pdf.create');
+    Route::post('gst-pdf-store', [GstPdfTableController::class, 'store'])->name('gst-pdf.store');
+    Route::get('edit-gst-pdf-{id}', [GstPdfTableController::class, 'edit'])->name('gst-pdf.edit');
+    Route::put('gst-pdf/{id}', [GstPdfTableController::class, 'update'])->name('gst-pdf.update');
+
 
 });
 

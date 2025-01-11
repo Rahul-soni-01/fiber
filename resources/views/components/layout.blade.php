@@ -237,8 +237,8 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li>
                     <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li>
-                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a>
-                    </li>
+                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a></li>
+                    <li><a href="{{ route('gst-pdf.index') }}" id="view" class="sub-item">GST PDF Invoice </a></li>
                 </ul>
             </li>
             <li id="Bank" class="sidebar">

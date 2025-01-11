@@ -28,12 +28,6 @@
             white-space: pre;
         }
 
-        @supports (-webkit-touch-callout: none) {
-            .text-container {
-                white-space: normal;
-            }
-        }
-
         @page {
             margin-bottom: 10px;
         }

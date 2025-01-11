@@ -566,3 +566,26 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
     });
 
 }
+
+function items_add() {
+    // Select the container to append rows
+    const container = document.getElementById('item-container');
+
+    // Get the first input row (template) and clone it
+    const templateRow = document.querySelector('.input-row');
+    const newRow = templateRow.cloneNode(true);
+
+    // Reset input field values in the cloned row
+    newRow.querySelectorAll('input').forEach(input => {
+        input.value = ''; // Clear the input value
+    });
+
+    // Add event listener to remove button
+    const removeButton = newRow.querySelector('.remove-btn');
+    removeButton.addEventListener('click', function() {
+        newRow.remove(); // Remove the current row when clicked
+    });
+
+    // Append the cloned row to the container
+    container.appendChild(newRow);
+}
