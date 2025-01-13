@@ -132,5 +132,25 @@ class PdfGeneratorController extends Controller
             return $dompdf->stream("sale-return-$sale_return_id.pdf", ['Attachment' => true]);
         }
 
+        $gstpdf = $request->input('gst-pdf'); // Retrieve the sale_return parameter
+        if($gstpdf){
+            ini_set('memory_limit', '512M');
+            $Controller =  new GstPdfTableController();
+            $Data = $Controller->show( $gstpdf);
+            // dd($Data);
+           
+            $data = $Data->getData();
+            // dd($data);
+            $html = view('gst_pdf.gstpdf', $data)->render(); // Create a dedicated view for PDF
+            // Display the HTML directly in the browser
+            // return response($html);
+            $dompdf = new \Dompdf\Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+        
+            // Stream PDF
+            return $dompdf->stream("gst-invoice-$gstpdf.pdf", ['Attachment' => true]);
+        }
     }
 }

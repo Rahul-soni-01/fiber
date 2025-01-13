@@ -241,8 +241,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/gst-pdf', [GstPdfTableController::class, 'index'])->name('gst-pdf.index');
     Route::get('gst-pdf-create', [GstPdfTableController::class, 'create'])->name('gst-pdf.create');
     Route::post('gst-pdf-store', [GstPdfTableController::class, 'store'])->name('gst-pdf.store');
+    Route::delete('gst-pdf-delete-{id}', [GstPdfTableController::class, 'destroy'])->name('gst-pdf.delete');
     Route::get('edit-gst-pdf-{id}', [GstPdfTableController::class, 'edit'])->name('gst-pdf.edit');
     Route::put('gst-pdf/{id}', [GstPdfTableController::class, 'update'])->name('gst-pdf.update');
+    Route::get('gst-pdf-show-{id}', [GstPdfTableController::class, 'show'])->name(('gst-pdf.show'));
 
 
 });

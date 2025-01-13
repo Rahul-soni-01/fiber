@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Show Gst Pdf</x-slot>
+    <x-slot name="title">Create Gst Pdf</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
             @php
@@ -217,11 +217,11 @@
                             class="form-control form-control-sm">
                     </div>
                     <div class="col-md-4">
-                        Ack No : <input type="text" name="ack_no" placeholder="Enter Ack No"
+                        Ack No : <input type="number" name="ack_no" placeholder="Enter Ack No"
                             class="form-control form-control-sm">
                     </div>
                     <div class="col-md-4">
-                        Ack Date : <input type="text" name="ack_date" placeholder="Enter Ack Date"
+                        Ack Date : <input type="date" name="ack_date" placeholder="Enter Ack Date"
                             class="form-control form-control-sm">
                     </div>
                 </div>
@@ -274,10 +274,10 @@
                     <div class="col">Add</div>
                     <div class="col"> CGST</div>
                     <div class="col d-flex align-items-center">
-                        @<input type="number" id="cgst" name="cgst" placeholder="Enter CGST"
+                        @<input type="number" id="cgst" name="cgst_per" placeholder="Enter CGST"
                             class="form-control form-control-sm">%
                     </div>
-                    <div class="col"> <input type="number" id="cgst_amt_desc" name="cgst_amt_desc1"
+                    <div class="col"> <input type="number" id="cgst_amt" name="cgst_amt"
                             placeholder="Enter CGST Amt." class="form-control form-control-sm">
                     </div>
                 </div>
@@ -288,13 +288,11 @@
                     <div class="col">Add</div>
                     <div class="col"> SGST</div>
                     <div class="col border-right d-flex align-items-center">@
-                        <input type="number" id="sgst" name="sgst" placeholder="Enter CGST"
-                            class="form-control form-control-sm">
-                        %
+                        <input type="number" id="sgst" name="sgst_per" placeholder="Enter CGST" class="form-control form-control-sm">%
                     </div>
-                    <div class="col"> <input type="number" id="sgst_amt_desc" name="sgst_amt_desc1"
-                            placeholder="Enter CGST Amt." class="form-control form-control-sm"></div>
+                    <div class="col"> <input type="number" id="sgst_amt_desc" name="sgst_amt" placeholder="Enter CGST Amt." class="form-control form-control-sm"></div>
                 </div>
+
                 <div class="row mt-2">
                     <div class="col"></div>
                     <div class="col"></div>
@@ -302,13 +300,10 @@
                     <div class="col">Add</div>
                     <div class="col"> IGST</div>
                     <div class="col border-right d-flex align-items-center">@
-                        <input type="number" id="rgst" name="rgst" placeholder="Enter IGST"
-                            class="form-control form-control-sm">
-                        %
+                        <input type="number" id="igst_per" name="igst_per" placeholder="Enter IGST" class="form-control form-control-sm"> %
                     </div>
                     <div class="col">
-                        <input type="number" id="rgst_amt_desc" name="rgst_amt_desc" placeholder="Enter IGST Amt."
-                            class="form-control form-control-sm">
+                        <input type="number" id="igst_amt" name="rgst_amt" placeholder="Enter IGST Amt." class="form-control form-control-sm">
                     </div>
                 </div>
 
@@ -320,7 +315,7 @@
                     <div class="col"> </div>
                     <div class="col border-right"> {{ $websetting->currency }} </div>
                     <div class="col margin-bottom">
-                        <input type="number" id="grand_total" name="grand_total" placeholder="Enter Grand Total"
+                        <input type="number" id="grand_total_amt" name="grand_total_amt" placeholder="Enter Grand Total Amt."
                             class="form-control form-control-sm">
                     </div>
                 </div>

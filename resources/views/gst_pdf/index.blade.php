@@ -34,14 +34,16 @@
                     <tr>
                         <td>{{ $record->id }}</td>
                         <td>{{ $record->invoice_no }}</td>
-                        <td>{{ $record->date }}</td>
+                        <td>{{ date("d-m-Y",strtotime($record->date)) }} </td>
                         <td>{{ $record->grand_total_qty }}</td>
-                        <td>{{ $record->total_tax_desc }}</td>
+                        <td>{{ $record->grand_total_amt }}</td>
                         <td>
                             <a href="{{ route('gst-pdf.edit',['id'=> $record->id  ])}}" class="btn btn-sm btn-primary">
                                 <i class="ri-edit-fill"></i>
                             </a>
-                            <form action="#" method="POST" style="display:inline;">
+                            <a class="btn  btn-sm btn-info" href="{{ route('gst-pdf.show', ['id' => $record->id]) }}"><i
+                                class="ri-eye-fill"></i></a>
+                            <form action="{{ route('gst-pdf.delete',['id'=> $record->id  ])}}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"

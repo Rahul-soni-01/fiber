@@ -44,13 +44,20 @@ return new class extends Migration
             $table->string('ack_no')->nullable();
             $table->string('ack_date')->nullable();
             $table->json('items')->nullable(); // JSON column for storing items as an array
+            $table->string('cgst_per')->nullable();
+            $table->string('sgst_per')->nullable();
+            $table->string('igst_per')->nullable();
+            $table->string('cgst_amt')->nullable();
+            $table->string('sgst_amt')->nullable();
+            $table->string('igst_amt')->nullable();
             $table->string('grand_total_qty')->nullable();
+            $table->string('grand_total_amt')->nullable();
             $table->string('hsn_sac_desc')->nullable();
             $table->string('tax_rate_desc')->nullable();
             $table->string('taxable_amt_desc')->nullable();
             $table->string('cgst_amt_desc')->nullable();
             $table->string('sgst_amt_desc')->nullable();
-            $table->string('rgst_amt_desc')->nullable();
+            $table->string('igst_amt_desc')->nullable();
             $table->string('total_tax_desc')->nullable();
             $table->string('msme_udyam_reg_number')->nullable();
             $table->string('bank_details')->nullable();
