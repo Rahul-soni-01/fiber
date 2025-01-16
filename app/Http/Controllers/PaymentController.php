@@ -144,8 +144,7 @@ class PaymentController extends Controller
                 'cheque_no' => $request->payment_method === 'Bank' ? $request->cheque_no : null,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ];
-
+            ];  
             
             $CustomerPayment = CustomerPayment::create($CustomerPaymentData);
             $payment_insert_id = $CustomerPayment->id; // Retrieve the auto-incremented ID

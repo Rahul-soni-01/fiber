@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Show Bank</x-slot>
+    <x-slot name="title">Show Expenses</x-slot>
     <x-slot name="main">
         <div class="main" id="main" style="">
             @if (session('success'))
@@ -16,7 +16,6 @@
                         <th>Expense Name</th>
                         <th>Amount</th>
                         <th>Payment Type</th>
-                        <th>Bank ID</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -27,32 +26,26 @@
                         <td>{{ $expense->name ?? 'N/A' }}</td>
                         <td>{{ $expense->amount }}</td>
                         <td>{{ $expense->payment_type ?? 'N/A' }}</td>
-                        <td>{{ $expense->bank_id ?? 'N/A' }}</td>
-                            <td>
+                        <td>
                                 <!-- Edit Button -->
-                                <a href="{{ route('expenses.edit', $expense->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="ri-pencil-fill"></i> Edit
-                                </a>
-                                <!-- Delete Form -->
-                                <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this expense?');" class="btn btn-sm btn-danger">
-                                        <i class="ri-delete-bin-fill"></i> Delete
-                                    </button>
-                                </form>
-                                <!-- Show Button -->
-                                {{-- <a href="{{ route('expenses.show', $expense->id) }}" class="btn btn-sm btn-info">
-                                    <i class="ri-eye-fill"></i> Show
-                                </a> --}}
-                            </td>
+                            <a href="{{ route('expenses.edit', $expense->id) }}" class="btn btn-sm btn-warning">
+                                <i class="ri-pencil-fill"></i> Edit
+                            </a>
+                            <!-- Delete Form -->
+                            <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this expense?');" class="btn btn-sm btn-danger">
+                                    <i class="ri-delete-bin-fill"></i> Delete
+                                </button>
+                            </form>
+                        </td>
                         </tr>
                     @empty
                         <tr>
                             <td class="text-center"></td>
                             <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center">No  found.</td>
+                            <td class="text-center">No found.</td>
                             <td class="text-center"></td>
                             <td class="text-center"></td>
                         </tr>

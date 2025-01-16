@@ -303,7 +303,7 @@
                 <div class="col d-flex align-items-center">
                     @
                     <span id="cgst">
-                        {{ $websetting->cgst ?? 'N/A' }}
+                        {{ $gstPdfRecord->cgst_per ?? 'N/A' }}
                     </span>
                     %
                 </div>
@@ -323,7 +323,8 @@
                 <div class="col border-right d-flex align-items-center">
                     @
                     <span id="sgst">
-                        {{ $websetting->sgst ?? 'N/A' }}
+                       
+                        {{ $gstPdfRecord->sgst_per ?? 'N/A' }}
                     </span>
                     %
                 </div>
@@ -341,15 +342,14 @@
                 <div class="col text-right">Add:</div>
                 <div class="col">IGST</div>
                 <div class="col border-right d-flex align-items-center">
-                    @
-                    <span id="rgst">
-                        {{ $websetting->igst ?? 'N/A' }}
+                    @<span id="rgst">
+                        {{ $gstPdfRecord->igst_per ?? 'N/A' }}
                     </span>
                     %
                 </div>
                 <div class="col">
                     <span id="rgst_amt_desc">
-                        {{ $gstPdfRecord->sgst_amt ?? 'N/A' }}
+                        {{ $gstPdfRecord->igst_amt ?? 'N/A' }}
                     </span>
                 </div>
             </div>
@@ -372,13 +372,13 @@
                 <div class="row">
                     <div class="col-md-9">
                         <div class="row">
-                            <div class="col"> HSN/SAC </div>
-                            <div class="col"> Tax Rate </div>
-                            <div class="col"> Taxable Amt </div>
-                            <div class="col"> CGST Amt </div>
-                            <div class="col"> SGST Amt </div>
-                            <div class="col"> IGST Amt </div>
-                            <div class="col"> Total Amt </div>
+                            <div class="col"> <strong> HSN/SAC </strong> </div>
+                            <div class="col"> <strong> Tax Rate </strong> </div>
+                            <div class="col"> <strong> Taxable Amt </strong> </div>
+                            <div class="col"> <strong> CGST Amt </strong> </div>
+                            <div class="col"> <strong> SGST Amt </strong> </div>
+                            <div class="col"> <strong> IGST Amt </strong> </div>
+                            <div class="col"> <strong> Total Amt </strong> </div>
                         </div>
                     </div>
                     <div class="col-md-3"> </div>

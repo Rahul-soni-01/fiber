@@ -430,7 +430,7 @@
         <div class="column"></div>
         <div class="column">Add</div>
         <div class="column"> CGST</div>
-        <div class="column border-right">@ {{ $gstPdfRecord->igst_per ?? 'N/A' }} %</div>
+        <div class="column border-right">@ {{ $gstPdfRecord->cgst_per ?? 'N/A' }} %</div>
         <div class="column"> {{ $gstPdfRecord->cgst_amt}}</div>
     </div>
     <div class="row_without_bottom ">
@@ -439,7 +439,7 @@
         <div class="column"></div>
         <div class="column">Add</div>
         <div class="column"> SGST</div>
-        <div class="column border-right"> @  {{ $gstPdfRecord->igst_per ?? 'N/A' }}%</div>
+        <div class="column border-right"> @  {{ $gstPdfRecord->sgst_per ?? 'N/A' }}%</div>
         <div class="column"> {{ $gstPdfRecord->sgst_amt}}</div>
     </div>
     <div class="row_without_bottom margin-bottom">

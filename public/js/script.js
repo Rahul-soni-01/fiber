@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
+    expenseestoggleBankDetails();
 });
 
 function filterOptions(event) {
@@ -588,4 +588,15 @@ function items_add() {
 
     // Append the cloned row to the container
     container.appendChild(newRow);
+}
+
+function expenseestoggleBankDetails(){
+    const payment_type = document.getElementById('payment_type').value;
+    const bankDetails = document.getElementById('bank_details');
+
+    if (payment_type === 'Bank') {
+        bankDetails.style.display = 'block';
+    } else {
+        bankDetails.style.display = 'none';
+    }
 }

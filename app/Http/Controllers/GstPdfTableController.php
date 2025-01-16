@@ -205,7 +205,7 @@ class GstPdfTableController extends Controller
     public function show($id)
     {
         $gstPdfRecord = GstPdfTable::findOrFail($id);
-    
+        // {{ dd($gstPdfRecord);}}
         return view('gst_pdf.show', compact('gstPdfRecord', 'id'));
     }
 

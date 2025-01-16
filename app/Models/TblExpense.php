@@ -12,9 +12,13 @@ class TblExpense extends Model
     protected $table = 'tbl_expensive';
 
     protected $fillable = [
+        'date',
         'name',
         'amount',
         'payment_type',
+        'transaction_type',
         'bank_id',
+        'cheque_no',
+        'notes',
     ];
 }
