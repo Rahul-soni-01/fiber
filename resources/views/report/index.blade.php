@@ -72,6 +72,7 @@
                             <th>Worker Name</th>
                             <th>Part</th>
                             <th>Final Amount</th>
+                            <th>Sale</th>
                             <th>Action</th>
                             @endif
 
@@ -171,6 +172,15 @@
                                 @endif
                             </td>
                             <td>{{ $report->final_amount }}</td>
+                            <td>
+                                @if ($report->sale_status == 0)
+                                No sale 
+                                @elseif ($report->sale_status == 1)
+                                Sale
+                                @else
+                                Unknown
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary">Show <i
                                         class="ri-eye-fill"></i></a>

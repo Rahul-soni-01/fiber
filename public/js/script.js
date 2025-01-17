@@ -179,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+    
     window.onload = checkQueryParams(), check_permission();
 
     // this is for only purchase rerun create time
@@ -288,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    document.getElementById('submit-button').addEventListener('click', function () {
+    /*document.getElementById('submit-button').addEventListener('click', function () {
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to submit this report?",
@@ -302,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('report-form').submit();
             }
         });
-    });
+    });*/
     expenseestoggleBankDetails();
 });
 
@@ -568,27 +569,31 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
 }
 
 function items_add() {
-    // Select the container to append rows
     const container = document.getElementById('item-container');
+    const newRow = document.querySelector('.input-row').cloneNode(true);
 
-    // Get the first input row (template) and clone it
-    const templateRow = document.querySelector('.input-row');
-    const newRow = templateRow.cloneNode(true);
-
-    // Reset input field values in the cloned row
-    newRow.querySelectorAll('input').forEach(input => {
-        input.value = ''; // Clear the input value
+    // Clear input values in the new row
+    newRow.querySelectorAll('input').forEach((input) => {
+        input.value = '';
     });
 
-    // Add event listener to remove button
-    const removeButton = newRow.querySelector('.remove-btn');
-    removeButton.addEventListener('click', function() {
-        newRow.remove(); // Remove the current row when clicked
-    });
-
-    // Append the cloned row to the container
+    // Append the new row to the container
     container.appendChild(newRow);
 }
+
+document.addEventListener('click', (event) => {
+    if (event.target.closest('.remove-btn')) {
+        const row = event.target.closest('.input-row');
+        row.remove();
+        calculateTotal(); // Recalculate totals after row removal
+    }
+});
+
+document.addEventListener('input', (event) => {
+    if (event.target.matches('.qty') || event.target.matches('.price') || event.target.matches('#cgst') || event.target.matches('#sgst') || event.target.matches('#igst_per')) {
+        calculateTotal(event.target);
+    }
+});
 
 function expenseestoggleBankDetails(){
     const payment_type = document.getElementById('payment_type').value;
@@ -600,3 +605,54 @@ function expenseestoggleBankDetails(){
         bankDetails.style.display = 'none';
     }
 }
+
+function calculateTotal(element) {
+    // Get all the relevant inputs
+    const rows = document.querySelectorAll('.input-row');
+    const cgstPercent = parseFloat(document.getElementById('cgst').value || 0);
+    const sgstPercent = parseFloat(document.getElementById('sgst').value || 0);
+    const igstPercent = parseFloat(document.getElementById('igst_per').value || 0);
+
+
+    document.getElementById('tax_rate_desc').value = cgstPercent+sgstPercent + igstPercent.toFixed(2);
+    let subtotal = 0;
+
+    // Loop through each row to calculate subtotal
+    rows.forEach((row) => {
+        const qty = parseFloat(row.querySelector('.qty')?.value || 0);
+        const price = parseFloat(row.querySelector('.price')?.value || 0);
+        const totalField = row.querySelector('.total');
+
+        const rowTotal = qty * price;
+        subtotal += rowTotal;
+
+        // Update the total field in the row
+        if (totalField) {
+            totalField.value = rowTotal.toFixed(2);
+        }
+    });
+
+    // Calculate CGST, SGST, and IGST amounts
+    const cgstAmount = (subtotal * cgstPercent) / 100;
+    const sgstAmount = (subtotal * sgstPercent) / 100;
+    const igstAmount = (subtotal * igstPercent) / 100;
+
+    // Update the amounts in the respective fields
+    document.getElementById('cgst_amt').value = cgstAmount.toFixed(2);
+    document.getElementById('cgst_amt_desc').value = cgstAmount.toFixed(2);
+    document.getElementById('sgst_amt').value = sgstAmount.toFixed(2);
+    document.getElementById('sgst_amt_desc').value = sgstAmount.toFixed(2);
+    document.getElementById('igst_amt').value = igstAmount.toFixed(2);
+    document.getElementById('igst_amt_desc').value = igstAmount.toFixed(2);
+
+    document.getElementById('taxable_amt_desc').value = subtotal.toFixed(2);
+    total_tax_desc = cgstAmount + sgstAmount + igstAmount;
+    document.getElementById('total_tax_desc').value = total_tax_desc.toFixed(2);
+    
+
+
+    // Calculate and update the Grand Total
+    const grandTotal = subtotal + cgstAmount + sgstAmount + igstAmount;
+    document.getElementById('grand_total_amt').value = grandTotal.toFixed(2);
+}
+

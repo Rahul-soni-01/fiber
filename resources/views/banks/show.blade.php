@@ -57,6 +57,8 @@
                                         {{ $all_payment->supplier->party_name ?? 'N/A' }} 
                                     @elseif(isset($all_payment->customer_id))
                                         {{ $all_payment->customer->customer_name ?? 'N/A' }}
+                                    @elseif(isset($all_payment->type)=='expense')
+                                        {{$all_payment->name}}
                                     @endif
                                     
                                 </td>
@@ -68,7 +70,9 @@
                                         {{ number_format($all_payment->amount_paid, 2) }} 
                                         @php $balance -= $all_payment->amount_paid; @endphp
 
-                                    @elseif()
+                                    @elseif(isset($all_payment->type)=='expense')
+                                        {{ number_format($all_payment->amount, 2) }} 
+                                        @php $balance -= $all_payment->amount; @endphp
                                     @endif
                                 </td>
                                 <td align="center">

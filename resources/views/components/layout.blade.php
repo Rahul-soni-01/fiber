@@ -237,7 +237,8 @@
                 <ul class="sub-menu">
                     <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li>
                     <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li>
-                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a></li>
+                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a>
+                    </li>
                     <li><a href="{{ route('gst-pdf.index') }}" id="view" class="sub-item">GST PDF Invoice </a></li>
                 </ul>
             </li>
@@ -373,6 +374,21 @@
             
             });
 
+            $('#submit-button').click(function(e) {
+                    Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to submit this report?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, submit it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('report-form').submit();
+                    }
+                });
+            });
         });
 
         var count = 1;
@@ -654,18 +670,7 @@
             var roundAmount = parseFloat(document.getElementById("round_total").value) || 0;
             var amount = subtotal - roundAmount;
             document.getElementById("amount").value = amount.toFixed(2);
-            
-           /* var paid_total = parseFloat(document.getElementById("paid_total").value) || 0;
-            if (paid_total > 0 && amount >= paid_total) {
-                var remaining_amount = amount - paid_total;
-                // console.log(amount,paid_total,remaining_amount);
-                if(remaining_amount > 0 || remaining_amount == 0){
-                    document.getElementById("remaining_amount").value = remaining_amount.toFixed(2);
-                }else{
-                    alert("!! You Can't Paid More Amount, Please Change your Paid Amount !!");
-                    // document.getElementById("paid_total").value = 0.toFixed(2);
-                }
-            }*/
+          
             calculateshipping();
         }
 
@@ -712,7 +717,6 @@
         }
 
         function updateHiddenInput(checkbox) {
-            console.log(checkbox);
             if (checkbox.checked) {
                 checkbox.previousElementSibling.value = "1";
             } else {
@@ -1027,11 +1031,7 @@
             }
             row++;
         }
-        
-        // <td class="d-flex"><input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT" >
-        //                 <button type="button" onclick="removeRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</i></button>
-        //             </td>
-
+    
         function filterInvoices() {
             const selectedSupplierId = document.getElementById('supplier_select').value;
 

@@ -14,21 +14,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($sales as $sale)
+                    @foreach ($sales as $index => $sale)
                     <tr>
-                        <td>{{$sale->sale_id}}</td>
-                        <td>{{$sale->sale_date}}</td>
-                        <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td>
-                        <td>{{$sale->amount}}</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $sale->sale_date ?? 'N/A' }}</td>
+                        <td>{{ $sale->customer_name ?? 'N/A' }}</td>
+                        <td>{{ $sale->total_sale_amount ?? 0 }}</td>
                         <td>
-                            <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i class="ri-eye-fill"></i></a>
-                            <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i class="ri-pencil-line"></i></a>
+                            <button class="btn"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $sale->id ]) }}"> <i class="ri-history-fill"></i> </a></button>  
+                            </a>
+                            {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}">
+                                <i class="ri-pencil-line"></i>
+                            </a> --}}
                             {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this sale?');"
-                                    class="btn"><i class="ri-delete-bin-fill"></i></button>
-                            </form> --}}
+                                <button type="submit"
+                                    onclick="return confirm('Are you sure you want to delete this sale?');" class="btn">
+                                    <i class="ri-delete-bin-fill"></i>
+                                </button>
+                            </form>  --}}
                         </td>
                     </tr>
                     @endforeach

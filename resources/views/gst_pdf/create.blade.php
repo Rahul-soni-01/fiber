@@ -250,17 +250,16 @@
                             <input type="text" class="form-control w-75" placeholder="HSN/Code" name="hsn_code[]">
                         </div>
                         <div class="col border-right">
-                            <input type="number" class="form-control w-75" placeholder="Qty" name="qty[]">
+                            <input type="number" class="form-control qty w-75" placeholder="Qty" name="qty[]" onchange="calculateTotal(this)">
                         </div>
                         <div class="col border-right">
                             <input type="text" class="form-control w-75" placeholder="Unit" name="unit[]">
                         </div>
                         <div class="col border-right">
-                            <input type="number" step="0.01" class="form-control w-75" placeholder="Price"
-                                name="price[]">
+                            <input type="number" step="0.01" class="form-control price w-75" placeholder="Price" onchange="calculateTotal(this)" name="price[]">
                         </div>
                         <div class="col d-flex">
-                            <input type="number" step="0.01" class="form-control w-75" placeholder="Total"
+                            <input type="number" step="0.01" class="form-control w-75 total" placeholder="Total"
                                 name="total[]">
                                 <button type="button" class="btn btn-danger remove-btn"><i class="fa fa-trash"></i></button>
                         </div>
@@ -275,7 +274,7 @@
                     <div class="col"> CGST</div>
                     <div class="col d-flex align-items-center">
                         @<input type="number" id="cgst" name="cgst_per" placeholder="Enter CGST"
-                            class="form-control form-control-sm">%
+                            class="form-control form-control-sm" onchange="calculateTotal()">%
                     </div>
                     <div class="col"> <input type="number" id="cgst_amt" name="cgst_amt"
                             placeholder="Enter CGST Amt." class="form-control form-control-sm">
@@ -288,9 +287,9 @@
                     <div class="col">Add</div>
                     <div class="col"> SGST</div>
                     <div class="col border-right d-flex align-items-center">@
-                        <input type="number" id="sgst" name="sgst_per" placeholder="Enter CGST" class="form-control form-control-sm">%
+                        <input type="number" id="sgst" name="sgst_per" onchange="calculateTotal()" placeholder="Enter CGST" class="form-control form-control-sm">%
                     </div>
-                    <div class="col"> <input type="number" id="sgst_amt_desc" name="sgst_amt" placeholder="Enter CGST Amt." class="form-control form-control-sm"></div>
+                    <div class="col"> <input type="number" id="sgst_amt" name="sgst_amt" placeholder="Enter CGST Amt." class="form-control form-control-sm"></div>
                 </div>
 
                 <div class="row mt-2">
@@ -300,10 +299,10 @@
                     <div class="col">Add</div>
                     <div class="col"> IGST</div>
                     <div class="col border-right d-flex align-items-center">@
-                        <input type="number" id="igst_per" name="igst_per" placeholder="Enter IGST" class="form-control form-control-sm"> %
+                        <input type="number" id="igst_per" name="igst_per" onchange="calculateTotal()" placeholder="Enter IGST" class="form-control form-control-sm"> %
                     </div>
                     <div class="col">
-                        <input type="number" id="igst_amt" name="rgst_amt" placeholder="Enter IGST Amt." class="form-control form-control-sm">
+                        <input type="number" id="igst_amt" name="igst_amt" placeholder="Enter IGST Amt." class="form-control form-control-sm">
                     </div>
                 </div>
 
@@ -361,7 +360,7 @@
                                         class="form-control form-control-sm">
                                 </div>
                                 <div class="col">
-                                    <input type="number" id="rgst_amt_desc" name="rgst_amt_desc"
+                                    <input type="number" id="igst_amt_desc" name="igst_amt_desc"
                                         placeholder="Enter IGST Amount Description"
                                         class="form-control form-control-sm">
                                 </div>

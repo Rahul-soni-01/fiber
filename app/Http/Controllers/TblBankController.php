@@ -52,7 +52,7 @@ class TblBankController extends Controller
         $expenses_payments = TblExpense::where('bank_id', $id)
             ->get()
             ->map(function ($expense) {
-                $expense->payment_date = $expense->date; // Map `date` to `payment_date`
+                $expense->payment_date = $expense->date;
                 $expense->type = 'expense'; // Add a type identifier
                 return $expense;
             });
@@ -92,7 +92,7 @@ class TblBankController extends Controller
         $all_payments = $all_payments->sortBy(function ($payment) {
             return $payment->payment_date ?? $payment->date; // Sort by `payment_date`
         });
-        dd($expenses_payments, $customer_payments, $supplier_payments,$all_payments);
+        // dd($expenses_payments, $customer_payments, $supplier_payments,$all_payments);
 
         return view('banks.show', compact('bank', 'customer_payments', 'supplier_payments', 'total_customer_payment', 'total_supplier_payment', 'id', 'all_payments'));
     }

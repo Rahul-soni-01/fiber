@@ -34,9 +34,11 @@
                         <td>{{ $customer->address }}</td>
                         <td>{{ $customer->telephone_no }}</td>
                         <td>{{ $customer->receiver_name }}</td>
-                        <td>
+                        <td class="d-flex">
+                            <button class="btn">
                             <a href="{{ route('customer.edit', ['customer_id' => $customer->id]) }}"><i
                                     class="ri-eye-fill"></i></a>
+                            </button>
                             <form action="{{ route('customer.destroy', $customer->id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
@@ -47,7 +49,7 @@
                                     <i class="ri-delete-bin-fill"></i>
                                 </button>
                             </form>
-                            <button class="btn"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $customer->id ]) }}"> Customer History </a></button>  
+                            <button class="btn"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $customer->id ]) }}"> <i class="ri-history-fill"></i> </a></button>  
                         </td>
                     </tr>
                     @endforeach

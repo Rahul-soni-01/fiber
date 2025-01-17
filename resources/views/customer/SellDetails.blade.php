@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Customer Sell Details</x-slot>
+    <x-slot name="title">{{$CustomerPayments['0']->customer->customer_name ?? 'N/A'}} Sell Details</x-slot>
     <x-slot name="main">
         <div class="main" id="main">
            
@@ -61,10 +61,7 @@
                                 <th>Transaction Type</th>
                                 <th>Bank Name</th>
                                 <th>Account Holder Name</th>
-                                {{-- <th>Branch Name</th>
-                                <th>Account Number</th>
-                                <th>Account Type</th>
-                                <th>IFSC Code</th> --}}
+                              
                                 <th>Notes</th>
                             </tr>
                         </thead>
@@ -114,7 +111,7 @@
                                 <td>{{$sale->sale_id}}</td>
                                 <td>{{$sale->sale_date}}</td>
                                 {{-- <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td> --}}
-                                <td>{{$sale->total_amount}}</td>
+                                <td>{{$sale->amount}}</td>
                                 <td>
                                     <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
                                             class="ri-eye-fill"></i></a>
