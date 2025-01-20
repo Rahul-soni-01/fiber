@@ -201,7 +201,8 @@
                     @endif
                     <li><a href="{{ route('report.search') }}" id="add" class="sub-item">Search Report</a></li>
                     <li><a href="{{ route('report.new') }}" id="add" class="sub-item">All Report </a></li>
-                    <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">stock Report</a></li>
+                    <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">Stock Report</a></li>
+                    <li><a href="{{ route('report.ready') }}" id="add" class="sub-item">Ready Report</a></li>
                 </ul>
             </li>
 
@@ -296,7 +297,7 @@
         <hr style="border:0.5px solid lightgray;">
         {{$main}}
     </div>
-    </div>
+
 
     <div class="footer" id="footer">
         {{$websetting->footer_text ?? null}}
@@ -389,6 +390,35 @@
                     }
                 });
             });
+
+            // $.each($('#ReadyStock'), function(index, element) {
+                $(document).on('click', '#ReadyStock', function(e) {
+                    e.preventDefault();  // Prevent the default checkbox behavior if needed
+                    
+                    var dataId = $(this).data('id');  // Get the data-id of the clicked checkbox
+                    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
+                        type: "POST",
+                        data: {
+                            "_token": csrfToken,  // CSRF token
+                            "id": dataId,         // Report ID
+                        },
+                        
+                        success: function(response) {
+                            // Reload the page after successful update
+                            location.reload(true);
+                        },
+                        error: function(xhr) {
+                            // Optional: Handle error
+                            console.error(xhr.responseJSON.message);
+                            alert("Failed to update stock status.");
+                        }
+                    });
+            });
+
         });
 
         var count = 1;

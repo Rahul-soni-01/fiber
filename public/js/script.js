@@ -596,13 +596,17 @@ document.addEventListener('input', (event) => {
 });
 
 function expenseestoggleBankDetails(){
-    const payment_type = document.getElementById('payment_type').value;
+    const paymentElement = document.getElementById('payment_type');
+    const payment_type = paymentElement ? paymentElement.value || 0 : 0;
     const bankDetails = document.getElementById('bank_details');
 
-    if (payment_type === 'Bank') {
-        bankDetails.style.display = 'block';
-    } else {
-        bankDetails.style.display = 'none';
+    // Ensure bankDetails element exists
+    if (bankDetails) {
+        if (payment_type === 'Bank') {
+            bankDetails.style.display = 'block';
+        } else {
+            bankDetails.style.display = 'none';
+        }
     }
 }
 

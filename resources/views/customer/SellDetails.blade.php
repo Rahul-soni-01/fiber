@@ -3,32 +3,7 @@
     <x-slot name="main">
         <div class="main" id="main">
            
-            {{-- <form action="search" method="get" class="mb-5">
-                <div class="row">
-                    <div class="col">
-                        <input type="date" id="s_date" name="s_date" class="form-control"
-                            value="{{ request('s_date') }}">
-                    </div>
-                    <div class="col">
-                        <input type="date" id="e_date" name="e_date" class="form-control"
-                            value="{{ request('e_date') }}">
-                    </div>
-                    <div class="col">
-                        <input type="text" id="invoice_number" name="invoice_number" placeholder="Invoice Number"
-                            class="form-control" value="{{ request('invoice_number') }}">
-                    </div>
 
-                    <div class="col">
-                        <input type="text" id="amount" name="amount" placeholder="Amount" class="form-control">
-                    </div>
-                    <div class="col"><input type="text" id="amount_inr" name="amount_inr" placeholder="Amount (₹)"
-                            class="form-control"></div>
-                    <div class="col">
-                        <form method="post"><button type="submit" class="btn btn-dark" id="search"
-                                name="search">Search</button></form>
-                    </div>
-                </div>
-            </form> --}}
             
             <ul class="nav nav-tabs" id="customerTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -38,7 +13,7 @@
                   <a class="nav-link active " id="customer-payment-tab" data-bs-toggle="tab" href="#customer-payment" role="tab" aria-controls="customer-payment" aria-selected="true">Customer Payment</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <a class="nav-link" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history" role="tab" aria-controls="customer-history" aria-selected="false">Customer Purchase</a>
+                  <a class="nav-link" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history" role="tab" aria-controls="customer-history" aria-selected="false">Customer Sale</a>
                 </li>
             </ul>
             <div class="tab-content" id="customerTabContent">

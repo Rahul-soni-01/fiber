@@ -350,9 +350,7 @@
                                         class="form-control form-control-sm">
                                 </div>
                                 <div class="col">
-                                    <input type="number" id="cgst_amt_desc" name="cgst_amt_desc"
-                                        placeholder="Enter CGST Amount Description"
-                                        class="form-control form-control-sm">
+                                    <input type="number" id="cgst_amt_desc" name="cgst_amt_desc" placeholder="Enter CGST Amount Description" class="form-control form-control-sm">
                                 </div>
                                 <div class="col">
                                     <input type="number" id="sgst_amt_desc" name="sgst_amt_desc"

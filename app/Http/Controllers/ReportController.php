@@ -527,6 +527,7 @@ class ReportController extends Controller
         $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
             ->where('part', 0)
             ->where('sale_status', 0)
+            ->where('stock_status', 1)
             ->whereHas('tbl_type', function ($query) use ($type) {
                 $query->where('name', $type);
             })
@@ -550,6 +551,53 @@ class ReportController extends Controller
         }
         return view('report.search');
     }
+
+    public function ready(Request $request)
+    {
+        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        ->where('part', 0)
+        ->where('sale_status', 0)
+        ->where('status', 1);
+        
+        if($request->id){
+            $report = Report::find($request->id);
+            if ($report) {
+                // Update the stock_status field
+                $report->stock_status = $report->stock_status == 1 ? 0 : 1;
+                $report->save();
+        
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Stock status updated successfully.',
+                    'report' => $report,
+                ]);
+            }
+            return response(["status" => 200, "report" => $report]);
+        }
+
+        // Apply filters conditionally
+        if ($request->query('s_date') !== null && $request->query('e_date') !== null) {
+            $startDate = Carbon::parse($request->query('s_date'))->startOfDay();
+            $endDate = Carbon::parse($request->query('e_date'))->endOfDay();
+            $reports->whereBetween('created_at', [$startDate, $endDate]);
+
+        }
+
+        if ($request->query('sr_no') !== null) {
+            $reports->where('sr_no_fiber', $request->query('sr_no'));
+        }
+
+        if ($request->query('worker_name') !== null) {
+            $reports->where('worker_name', 'like', '%' . $request->query('worker_name') . '%');
+        }
+
+        $reports = $reports->get();
+        $ready = 1;
+        $tbl_parties = tbl_party::all();
+        return view("report.index", compact('reports', 'tbl_parties','ready'));
+    }
+    
+
     public function edit($id)
     {
         $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category', 'tbl_type')->find($id);

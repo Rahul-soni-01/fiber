@@ -52,6 +52,8 @@ return new class extends Migration
             $table->integer('temp')->nullable();        
             $table->integer('r_status')->nullable();        
             $table->integer('party_name')->nullable();
+            $table->string('sale_status')->nullable();
+            $table->string('stock_status')->nullable()->default('0');
             $table->integer('final_amount')->nullable();
             $table->timestamps();
         });

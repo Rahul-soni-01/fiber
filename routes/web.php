@@ -206,7 +206,9 @@ Route::middleware('auth')->group(function () {
     Route::put('report-update-{report_id}', [ReportController::class, 'Latestupdate'])->name(('report.update'));
     Route::get('report-reject', [ReportController::class, 'reject'])->name(('report.reject'));
     Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
-
+    Route::get('/report-ready', [ReportController::class, 'ready'])->name('report.ready');
+    Route::post('/report-ready', [ReportController::class, 'ready'])->name('report.ready.update');
+    
     Route::get('/serial-history', [SaleController::class, 'history'])->name('serial.history');
     
     // Sale Crud

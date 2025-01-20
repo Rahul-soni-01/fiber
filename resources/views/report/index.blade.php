@@ -47,15 +47,14 @@
                 </div>
             </form>
 
+            @if(!isset($ready))
+                <p class="mt-4">New reports Filter.</p>
+                <label class="switch">
+                    <input type="checkbox" id="toggleSwitch">
+                    <span class="slider"></span>
+                </label>
+            @endif
             
-            <p class="mt-4">New reports Filter.</p>
-            <label class="switch">
-                <input type="checkbox" id="toggleSwitch">
-                <span class="slider"></span>
-            </label>
-            
-
-
             @if ($reports->isEmpty())
             <p>No reports found.</p>
             @else
@@ -73,6 +72,9 @@
                             <th>Part</th>
                             <th>Final Amount</th>
                             <th>Sale</th>
+                            @if(isset($ready) && $ready == 1)
+                            <th>Stock</th>
+                            @endif
                             <th>Action</th>
                             @endif
 
@@ -122,8 +124,7 @@
 
                         @endphp
 
-                        <tr
-                            class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
+                        <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
                             <td
                                 style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}">
                                 {{ $report->id }}</td>
@@ -173,14 +174,28 @@
                             </td>
                             <td>{{ $report->final_amount }}</td>
                             <td>
-                                @if ($report->sale_status == 0)
-                                No sale 
-                                @elseif ($report->sale_status == 1)
-                                Sale
-                                @else
-                                Unknown
-                                @endif
+                               
+                                    @if ($report->sale_status == 0)
+                                    No sale 
+                                    @elseif ($report->sale_status == 1)
+                                    Sale
+                                    @else
+                                    Unknown
+                                    @endif
+                               
+                                
                             </td>
+                            @if(isset($ready) && $ready == 1)
+                                <td>
+                                    <label class="switch">
+                                        <input type="checkbox" {{ $report->stock_status == 1 ? 'checked' : '' }} id="ReadyStock"  data-id="{{ $report->id}}">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <div class="row-spinner spinner-border" role="status" style="display: none;">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </td>
+                            @endif
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary">Show <i
                                         class="ri-eye-fill"></i></a>
@@ -203,7 +218,6 @@
 
                 </table>
             </div>
-            {{-- <div id="div2" style="display:none;">This is Col mode</div> --}}
             @endif
 
         </div>
