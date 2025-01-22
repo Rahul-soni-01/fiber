@@ -297,6 +297,7 @@
         <hr style="border:0.5px solid lightgray;">
         {{$main}}
     </div>
+    </div>
 
 
     <div class="footer" id="footer">
@@ -392,31 +393,30 @@
             });
 
             // $.each($('#ReadyStock'), function(index, element) {
-                $(document).on('click', '#ReadyStock', function(e) {
-                    e.preventDefault();  // Prevent the default checkbox behavior if needed
-                    
-                    var dataId = $(this).data('id');  // Get the data-id of the clicked checkbox
-                    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
+            $(document).on('click', '#ReadyStock', function(e) {
+                e.preventDefault();  // Prevent the default checkbox behavior if needed
+                
+                var dataId = $(this).data('id');  // Get the data-id of the clicked checkbox
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
 
                     // Perform the AJAX request
-                    $.ajax({
-                        url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
-                        type: "POST",
-                        data: {
-                            "_token": csrfToken,  // CSRF token
-                            "id": dataId,         // Report ID
-                        },
-                        
-                        success: function(response) {
-                            // Reload the page after successful update
-                            location.reload(true);
-                        },
-                        error: function(xhr) {
-                            // Optional: Handle error
-                            console.error(xhr.responseJSON.message);
-                            alert("Failed to update stock status.");
-                        }
-                    });
+                $.ajax({
+                    url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
+                    type: "POST",
+                    data: {
+                        "_token": csrfToken,  // CSRF token
+                        "id": dataId,         // Report ID
+                    },
+                    
+                    success: function(response) {
+                        location.reload(true);
+                    },
+                    error: function(xhr) {
+                        // Optional: Handle error
+                        console.error(xhr.responseJSON.message);
+                        alert("Failed to update stock status.");
+                    }
+                });
             });
 
         });
@@ -556,6 +556,7 @@
 
             count++;
         }
+       
         countserial_no = 0;
         function SaleRowadd(serial_nos){
             countserial_no++;

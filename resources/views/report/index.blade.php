@@ -48,20 +48,20 @@
             </form>
 
             @if(!isset($ready))
-                <p class="mt-4">New reports Filter.</p>
-                <label class="switch">
-                    <input type="checkbox" id="toggleSwitch">
-                    <span class="slider"></span>
-                </label>
+            <p class="mt-4">New reports Filter.</p>
+            <label class="switch">
+                <input type="checkbox" id="toggleSwitch">
+                <span class="slider"></span>
+            </label>
             @endif
-            
+
             @if ($reports->isEmpty())
             <p>No reports found.</p>
             @else
             <div id="div1" class="mt-4">
                 <table class="table  table-striped">
                     <thead>
-                        <tr class="bg-warning">
+                        <tr class="bg-dark text-white">
                             <th>ID</th>
                             <th>Date</th>
 
@@ -121,21 +121,17 @@
                         if ($status != 0 && $type == 'account') {
                             continue;
                         }
-
                         @endphp
 
                         <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
-                            <td
-                                style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}">
+                            <td style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}">
                                 {{ $report->id }}</td>
                             <td>{{ $report->created_at->format('d-m-Y') }}</td>
 
                             @if ($type === 'electric')
-
                             <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
                             <td>{{ $report->note1 }}</td>
-                            <td>
-                                @if ($type === 'electric')
+                            <td> @if ($type === 'electric')
                                 <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                                 @endif
                             </td>
@@ -174,32 +170,43 @@
                             </td>
                             <td>{{ $report->final_amount }}</td>
                             <td>
-                               
-                                    @if ($report->sale_status == 0)
-                                    No sale 
-                                    @elseif ($report->sale_status == 1)
-                                    Sale
-                                    @else
-                                    Unknown
-                                    @endif
-                               
-                                
+
+                                @if ($report->sale_status == 0)
+                                No sale
+                                @elseif ($report->sale_status == 1)
+                                Sale
+                                @else
+                                Unknown
+                                @endif
+
+
                             </td>
                             @if(isset($ready) && $ready == 1)
-                                <td>
-                                    <label class="switch">
-                                        <input type="checkbox" {{ $report->stock_status == 1 ? 'checked' : '' }} id="ReadyStock"  data-id="{{ $report->id}}">
-                                        <span class="slider round"></span>
-                                    </label>
-                                    <div class="row-spinner spinner-border" role="status" style="display: none;">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" {{ $report->stock_status == 1 ? 'checked' : '' }}
+                                    id="ReadyStock" data-id="{{ $report->id}}">
+                                    <span class="slider round"></span>
+                                </label>
+                                <div class="row-spinner spinner-border" role="status" style="display: none;">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </td>
                             @endif
                             <td>
-                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary">Show <i
-                                        class="ri-eye-fill"></i></a>
-                                <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-primary"><i class="ri-eye-fill"></i></a>
+                                <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning"> <i class="ri-pencil-fill"></i> </a>
+
+                                {{-- <form action="{{ route('sale.destroy', $report->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        onclick="return confirm('Are you sure you want to delete this sale?');"
+                                        class="btn btn-sm  btn-danger">
+                                        <i class="ri-delete-bin-fill"></i>
+                                    </button>
+                                </form> --}}
                             </td>
                             @endif
 
@@ -208,8 +215,8 @@
                             <td>{{ $report->sr_no_fiber }}</td>
                             <td>{{ $report->tbl_type->name ?? null }}</td>
                             <td>
-                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary">Show <i
-                                        class="ri-eye-fill"></i></a>
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary"> <i class="ri-eye-fill"></i></a>
+
                             </td>
                             @endif
                         </tr>

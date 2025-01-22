@@ -19,7 +19,6 @@
                     <div class="col">Invoice No.</div>
                     <div class="col">Date</div>
                     <div class="col">Party Name</div>
-
                 </div>
                 <div class="row">
                     <div class="col-md-4">

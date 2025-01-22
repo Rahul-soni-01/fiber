@@ -35,19 +35,19 @@
                             <td>
                                 <!-- Edit Button -->
                                 <a href="{{ route('banks.edit', $bank->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="ri-pencil-fill"></i> Edit
+                                    <i class="ri-pencil-fill"></i> 
                                 </a>
                                 <!-- Delete Form -->
                                 <form action="{{ route('banks.destroy', $bank->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" onclick="return confirm('Are you sure you want to delete this bank?');" class="btn btn-sm btn-danger">
-                                        <i class="ri-delete-bin-fill"></i> Delete
+                                        <i class="ri-delete-bin-fill"></i> 
                                     </button>
                                 </form>
                                 <!-- Show Button -->
                                 <a href="{{ route('banks.show', $bank->id) }}" class="btn btn-sm btn-info">
-                                    <i class="ri-eye-fill"></i> Show
+                                    <i class="ri-eye-fill"></i> 
                                 </a>
                             </td>
                         </tr>

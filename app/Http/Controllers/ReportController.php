@@ -90,12 +90,12 @@ class ReportController extends Controller
     public function create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
-            $sub_categories = tbl_sub_category::where('cid', 1)->get();
+            // $sub_categories = tbl_sub_category::where('cid', 1)->get();
             $all_sub_categories = tbl_sub_category::with('category')
                 ->orderBy('cid')
                 ->get();
-            $categoryId = tbl_category::whereRaw('LOWER(category_name) = ?', ['card'])->value('id');
-            $cards = tbl_sub_category::where('cid', $categoryId)->get();
+            // $categoryId = tbl_category::whereRaw('LOWER(category_name) = ?', ['card'])->value('id');
+            // $cards = tbl_sub_category::where('cid', $categoryId)->get();
             $types = Tbltype::orderBy('id', 'asc')->get();
 
             $party_id = tbl_party::where('party_name', 'opening stock')->value('id');
@@ -103,34 +103,34 @@ class ReportController extends Controller
             $invoice = tbl_purchase::where('pid', $party_id)->first();
             $invoice_no = $invoice->invoice_no;
 
-            $isolators = TblStock::where('cid', 8)
-                ->where('scid', 22)
-                ->where('invoice_no', $invoice_no)
-                ->where('status', 0)
-                ->get();
+            // $isolators = TblStock::where('cid', 8)
+            //     ->where('scid', 22)
+            //     ->where('invoice_no', $invoice_no)
+            //     ->where('status', 0)
+            //     ->get();
 
-            $qsswitches = TblStock::where('cid', 9)
-                ->where('scid', 15)
-                ->where('invoice_no', $invoice_no)
-                ->where('status', 0)
-                ->get();
+            // $qsswitches = TblStock::where('cid', 9)
+            //     ->where('scid', 15)
+            //     ->where('invoice_no', $invoice_no)
+            //     ->where('status', 0)
+            //     ->get();
 
-            $couplars = TblStock::where('cid', 12)
-                ->where('scid', 23)
-                ->where('invoice_no', $invoice_no)
-                ->where('status', 0)
-                ->get();
-            $hrs = TblStock::where('cid', 6)
-                ->where('scid', 19)
-                ->where('invoice_no', $invoice_no)
-                ->where('status', 0)
-                ->get();
+            // $couplars = TblStock::where('cid', 12)
+            //     ->where('scid', 23)
+            //     ->where('invoice_no', $invoice_no)
+            //     ->where('status', 0)
+            //     ->get();
+            // $hrs = TblStock::where('cid', 6)
+            //     ->where('scid', 19)
+            //     ->where('invoice_no', $invoice_no)
+            //     ->where('status', 0)
+            //     ->get();
             // dd($hrs);
 
             $customers = TblCustomer::all();
 
-            // return view("report.create", compact('sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
+            // return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
+            return view("report.createNew", compact('types', 'all_sub_categories', 'customers' ));
         }
         return redirect('/unauthorized');
     }

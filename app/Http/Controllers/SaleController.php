@@ -98,7 +98,6 @@ class SaleController extends Controller
     public function return_store(Request $request)
     {
         // dd($request->all());
-
         $validator = Validator::make(
             $request->all(),
             [
