@@ -93,7 +93,8 @@ class PaymentController extends Controller
                 'updated_at' => now(),
             ];
 
-            /*$SupplierPayment = TblPayment::create($paymentData); // Replace Payment with your model
+            $SupplierPayment = TblPayment::create($paymentData); // Replace Payment with your model
+            /*
             $payment_insert_id = $SupplierPayment->id; // Retrieve the auto-incremented ID
             $predefine_account = TblAccPredefineAccount::first();
             $Narration          = "Payment Voucher";

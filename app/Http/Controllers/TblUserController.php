@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ManagePermission;
 use App\Models\Department;
 use App\Models\Permission;
+use App\Models\Sale;
+use Carbon\Carbon;
+use App\Models\tbl_purchase;
+use App\Models\Report;
+use App\Models\TblPayment;
+use App\Models\CustomerPayment;
 
 class TblUserController extends Controller
 {
@@ -137,7 +143,20 @@ class TblUserController extends Controller
     public function show(tbl_user $tbl_user)
     {
         $permissions = $this->check();
-        return view('home', compact('permissions'));
+        $sales = Sale::whereDate('created_at', Carbon::today())->get();
+        $purchases = tbl_purchase::whereDate('created_at', Carbon::today())->get();
+        $reports = Report::whereDate('created_at', Carbon::today())->get();
+        $supplier_payments = TblPayment::whereDate('created_at', Carbon::today())->get();
+        $customer_payments = CustomerPayment::whereDate('created_at', Carbon::today())->get();
+        // dd([
+        //     'sales' => $sales,
+        //     'purchases' => $purchases,
+        //     'reports' => $reports,
+        //     'supplier_payments' => $supplier_payments,
+        //     'customer_payments' => $customer_payments,
+        // ]);
+        return view('home', compact('permissions', 'sales', 'purchases', 'reports', 'supplier_payments','customer_payments'
+        ));
     }
 
     public function edit(tbl_user $tbl_user, Request $request, $id)

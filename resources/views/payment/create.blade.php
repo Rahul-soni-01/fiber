@@ -1,7 +1,11 @@
 <x-layout>
     <x-slot name="title">New Payment</x-slot>
     <x-slot name="main">
-      
+        @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
         <div class="main" id="main">
             <a href="{{ route('payment.index') }}" class="btn btn-primary">Back to Payment</a>
@@ -152,8 +156,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-success float-right">Submit</button>
                             </div>
+                            <button type="submit" class="btn btn-success float-right">Submit</button>
                     </form>
                 </div>
             </div>
