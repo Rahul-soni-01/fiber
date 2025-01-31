@@ -145,7 +145,9 @@ class TblUserController extends Controller
         $permissions = $this->check();
         $sales = Sale::whereDate('created_at', Carbon::today())->get();
         $purchases = tbl_purchase::whereDate('created_at', Carbon::today())->get();
-        $reports = Report::whereDate('created_at', Carbon::today())->get();
+        $repairreports = Report::where('part',0)->whereDate('created_at', Carbon::today())->get();
+        $newreports = Report::where('part',1)->whereDate('created_at', Carbon::today())->get();
+        // $reports = Report::whereDate('created_at', Carbon::today())->get();
         $supplier_payments = TblPayment::whereDate('created_at', Carbon::today())->get();
         $customer_payments = CustomerPayment::whereDate('created_at', Carbon::today())->get();
         // dd([
@@ -155,8 +157,7 @@ class TblUserController extends Controller
         //     'supplier_payments' => $supplier_payments,
         //     'customer_payments' => $customer_payments,
         // ]);
-        return view('home', compact('permissions', 'sales', 'purchases', 'reports', 'supplier_payments','customer_payments'
-        ));
+        return view('home', compact('permissions', 'sales', 'purchases', 'repairreports','newreports', 'supplier_payments','customer_payments'));
     }
 
     public function edit(tbl_user $tbl_user, Request $request, $id)

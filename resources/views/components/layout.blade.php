@@ -15,12 +15,9 @@
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="js/jquery-3.7.1.min.js"></script>
 
-    {{--
-    <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
-    {{--
-    <link rel="stylesheet" href="public/css/style.css"> --}}
-    {{--
-    <link rel="stylesheet" href="public/css/bootstrap.min.css"> --}}
+    {{-- <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
+    {{--  <link rel="stylesheet" href="public/css/style.css"> --}}
+    {{-- <link rel="stylesheet" href="public/css/bootstrap.min.css"> --}}
     {{-- <script src="public/js/script.js"></script>
     <script src="public/js/jquery-3.7.1.min.js"></script> --}}
 
@@ -34,8 +31,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
         integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
@@ -54,58 +50,103 @@
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
     <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
     <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+    
+
 
     <!-- plugins:css -->
-    {{--
-    <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+    {{-- <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
+    
     <link rel="stylesheet" href="assets/vendors/jvectormap/jquery-jvectormap.css">
     <link rel="stylesheet" href="assets/vendors/flag-icon-css/css/flag-icon.min.css">
     <link rel="stylesheet" href="assets/vendors/owl-carousel-2/owl.carousel.min.css">
     <link rel="stylesheet" href="assets/vendors/owl-carousel-2/owl.theme.default.min.css">
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <!-- End layout styles -->
     <link rel="shortcut icon" href="assets/images/favicon.png" /> --}}
+    <style>
+        /* Header and Sidebar Background */
+        #header, #sidebar {
+            background-color: #1E1E2D; /* Light gray */
+            color: white;
+        }
 
+        /* Main Content Background */
+        .main-content {
+            background-color: #2F2F3B; /* Off-white */
+			color: white;
+        }
+
+        /* Text and Icon Colors */
+        #header, #sidebar {
+            color: #ffffff; /* Dark gray for text */
+        }
+
+        /* Hover and Active States */
+        .nav-link:hover, .logout-link:hover, .link:hover {
+            color: white; /* Blue for hover states */
+        }
+
+        /* Button Styles */
+        .button {
+            color: #ffffff; /* Dark gray for icons */
+        }
+
+        .button:hover {
+            color: #007BFF; /* Blue for hover states */
+        }
+
+        /* Logo and Branding */
+        .logo img {
+            max-height: 50px; /* Adjust logo size */
+        }
+
+        /* Sidebar Menu */
+        .nav-link {
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .nav-link.active {
+            background-color: #007BFF; /* Blue for active menu item */
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <div id="header" class="row">
-        <div class="col-md-1 header-first d-flex justify-content-center align-items-center"><label id="menu"
-                class="button" for="check"><i class="ri-menu-line"></i></label></div>
-        @php
-        $websetting = DB::table('web_settings')->where('id', 1)->first();
-        @endphp
+    <div id="header" class="row fixed-top text-white p-2">
+        <div class="col-md-1 header-first d-flex justify-content-center align-items-center">
+            <label for="check" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+                <i class="ri-menu-line"></i>
+            </label>
+        </div>
 
         <div class="col-md-2 logo">
             <a href="/">
-                <!-- Check if logo path exists and use it; otherwise, use a default logo -->
-                <img src="{{ asset($websetting->logo ?? 'storage/default_logo.jpg') }}" alt="Logo">
+                @php
+                $websetting = DB::table('web_settings')->where('id', 1)->first();
+                @endphp
+                <img src="{{ asset($websetting->logo ?? 'storage/default_logo.jpg') }}" alt="Logo" class="img-fluid">
             </a>
         </div>
+
         <div class="col-md-3 offset-md-6 d-flex align-items-center justify-content-center">
             <strong>{{ auth()->user()->type }}</strong> &nbsp; || &nbsp; <strong>{{ auth()->user()->name }}</strong>
-            <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2"><i
-                    class="ml-2 fa-solid fa-user"></i>
+            <a href="{{ route('logout') }}" class="logout-link d-flex flex-column align-items-center p-2">
+                <i class="ml-2 fa-solid fa-user"></i>
                 <span class="logout-text">Log out</span>
             </a>
-            @if(auth()->user()->type === 'admin' )
-
-            <a href="{{ route('websetting')}}" class="ml-2 link">
+            @if(auth()->user()->type === 'admin')
+            <a href="{{ route('websetting') }}" class="ml-2 link">
                 <i class="ri-settings-line"></i>
                 <span class="websetting">Web Setting</span>
             </a>
             @endif
         </div>
     </div>
+
     {{-- <div id="fakeheader"></div> --}}
 
     <div class="slidebar" id="slidebar">
@@ -236,9 +277,9 @@
                 <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Pre Account <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li>
-                    <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li>
-                    <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a>
+                    {{-- <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li> --}}
+                    {{-- <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li> --}}
+                    {{-- <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a> --}}
                     </li>
                     <li><a href="{{ route('gst-pdf.index') }}" id="view" class="sub-item">GST PDF Invoice </a></li>
                 </ul>
@@ -292,6 +333,7 @@
         </ul>
 
     </div>
+    
     <div class="special-main" id="special-main">
         <h3>{{$title}}</h3>
         <hr style="border:0.5px solid lightgray;">

@@ -6,7 +6,7 @@
             <script src="https://cdn.tailwindcss.com"></script>
         </head>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
 
             <!-- Sales Card -->
             <div class="bg-white shadow-sm rounded-2xl p-6 flex items-center space-x-4">
@@ -23,7 +23,7 @@
                         }
                     @endphp
                         <p class="text-gray-500 text-xl font-bold">${{ number_format($sum, 2) }}</p>
-
+                        <a href="{{route('sale.index')}}">view more</a>
                 </div>
             </div>
 
@@ -51,8 +51,17 @@
                     <i class="fas fa-chart-line text-2xl"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold">Today's Reports</h3>
-                    <p class="text-gray-500 text-xl font-bold">{{ $reports->count() }}</p>
+                    <h3 class="text-lg font-semibold">Today's New Reports</h3>
+                    <p class="text-gray-500 text-xl font-bold">{{ $newreports->count() }}</p>
+                </div>
+            </div>
+            <div class="bg-white shadow-sm rounded-2xl p-6 flex items-center space-x-4">
+                <div class="bg-yellow-500 text-white p-4 rounded-full">
+                    <i class="fas fa-chart-line text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold">Today's Repair Reports</h3>
+                    <p class="text-gray-500 text-xl font-bold">{{ $repairreports->count() }}</p>
                 </div>
             </div>
 
