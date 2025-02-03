@@ -31,7 +31,7 @@ return new class extends Migration {
             $table->text('notes')->nullable();
             $table->timestamps();
         
-            $table->foreign('purchase_id')->references('id')->on('tbl_purchases')->onDelete('cascade');
+            // $table->foreign('purchase_id')->references('id')->on('tbl_purchases')->onDelete('cascade');
             // $table->foreign('sell_id')->references('id')->on('tbl_sales')->onDelete('cascade');
         });
     }

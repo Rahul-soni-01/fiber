@@ -15,9 +15,12 @@
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="js/jquery-3.7.1.min.js"></script>
 
-    {{-- <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
-    {{--  <link rel="stylesheet" href="public/css/style.css"> --}}
-    {{-- <link rel="stylesheet" href="public/css/bootstrap.min.css"> --}}
+    {{--
+    <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
+    {{--
+    <link rel="stylesheet" href="public/css/style.css"> --}}
+    {{--
+    <link rel="stylesheet" href="public/css/bootstrap.min.css"> --}}
     {{-- <script src="public/js/script.js"></script>
     <script src="public/js/jquery-3.7.1.min.js"></script> --}}
 
@@ -31,7 +34,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
         integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
@@ -50,13 +54,14 @@
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
     <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
     <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
-    
+
 
 
     <!-- plugins:css -->
-    {{-- <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+    {{--
+    <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
-    
+
     <link rel="stylesheet" href="assets/vendors/jvectormap/jquery-jvectormap.css">
     <link rel="stylesheet" href="assets/vendors/flag-icon-css/css/flag-icon.min.css">
     <link rel="stylesheet" href="assets/vendors/owl-carousel-2/owl.carousel.min.css">
@@ -64,51 +69,29 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="shortcut icon" href="assets/images/favicon.png" /> --}}
     <style>
-        /* Header and Sidebar Background */
-        #header, #sidebar {
-            background-color: #E0E0E0; /* Light gray */
-            /* color: white; */
+        #header {
+            background-color: #212529;
+        }
+        #sidebar1 {
+            background-color: #212529;
         }
 
-        /* Main Content Background */
         .main-content {
-            background-color: #ffffff; /* Off-white */
-			/* color: white; */
+            background-color: #FFFFFF;
         }
 
-        /* Text and Icon Colors */
-        #header, #sidebar {
-            /* color: #ffffff; Dark gray for text */
+        .offcanvas {
+            transition: opacity 0.3s ease-in-out;
         }
 
-        /* Hover and Active States */
-        .nav-link:hover, .logout-link:hover, .link:hover {
-            color: white; /* Blue for hover states */
+        .offcanvas-start {
+            opacity: 0;
+            transform: translateX(-100%);
         }
 
-        /* Button Styles */
-        .button {
-            color: #ffffff; /* Dark gray for icons */
-        }
-
-        .button:hover {
-            color: #007BFF; /* Blue for hover states */
-        }
-
-        /* Logo and Branding */
-        .logo img {
-            /* max-height: 0px; Adjust logo size */
-        }
-
-        /* Sidebar Menu */
-        .nav-link {
-            padding: 10px 15px;
-            border-radius: 5px;
-        }
-
-        .nav-link.active {
-            background-color: #007BFF; /* Blue for active menu item */
-            color: white;
+        .offcanvas.show {
+            opacity: 1;
+            transform: translateX(0);
         }
     </style>
 </head>
@@ -116,9 +99,12 @@
 <body>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <div id="header" class="row">
-        <div class="col-md-1 header-first d-flex justify-content-center align-items-center"><label id="menu"
-                class="button" for="check"><i class="ri-menu-line"></i></label></div>
+    <div id="header" class="row text-white p-2">
+        <div class="col-md-1 d-flex justify-content-center align-items-center">
+            <label for="check" data-bs-toggle="offcanvas" data-bs-target="#sidebar1">
+                <i class="ri-menu-line">Toggle</i>
+            </label>
+        </div>
 
         <div class="col-md-2 logo">
             <a href="/">
@@ -144,200 +130,215 @@
         </div>
     </div>
 
-    {{-- <div id="fakeheader"></div> --}}
+    <div class="container-fluid ">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="text-white offcanvas offcanvas-start pt-3 bg-dark" id="sidebar1">
+                <ul class="nav flex-column">
+                    <!-- Home -->
+                    <li id="Home" class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}"><i class="ri-home-2-line"></i>Home</a>
+                    </li>
 
-    <div class="slidebar" id="slidebar">
-        <ul>
-            <li id="Home" class="sidebar">
-                <a href="{{ route('home') }}"><i class="ri-home-2-line"></i>Home</a>
-            </li>
+                    <!-- Supplier -->
+                    <li id="Party" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#supplierSubmenu" role="button"
+                            aria-expanded="false" aria-controls="supplierSubmenu">
+                            <i class="ri-user-star-line"></i>Supplier <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="supplierSubmenu">
+                            <li><a href="{{ route('party.create') }}" class="sub-nav-item">Add Supplier</a></li>
+                            <li><a href="{{ route('party.show') }}" class="sub-nav-item">Show Supplier</a></li>
+                            <li><a href="{{ route('payment.create') }}" class="sub-nav-item">Add Payment</a></li>
+                            <li><a href="{{ route('payment.index') }}" class="sub-nav-item">Supplier Payment</a></li>
+                        </ul>
+                    </li>
 
-            <li id="Party" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Supplier<i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('party.create') }}" id="add" class="sub-item">Add Supplier</a></li>
-                    <li><a href="{{ route('party.show') }}" id="view" class="sub-item">Show Supplier</a></li>
+                    <!-- Departments -->
+                    <li id="Department" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#departmentSubmenu" role="button"
+                            aria-expanded="false" aria-controls="departmentSubmenu">
+                            <i class="ri-user-line"></i>Departments <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="departmentSubmenu">
+                            <li><a href="{{ route('departments.index') }}" class="sub-item">Show Departments</a></li>
+                            <li><a href="{{ route('departments.create') }}" class="sub-item">Add Departments</a></li>
+                        </ul>
+                    </li>
 
-                    <li><a href="{{ route('payment.create') }}" id="add" class="sub-item">Add Payment</a></li>
-                    <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li>
-                </ul>
-            </li>
+                    <!-- Types -->
+                    <li id="Type" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#typeSubmenu" role="button"
+                            aria-expanded="false" aria-controls="typeSubmenu">
+                            <i class="ri-user-line"></i>Types <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="typeSubmenu">
+                            <li><a href="{{ route('type.index') }}" class="sub-item">Show Types</a></li>
+                            <li><a href="{{ route('type.create') }}" class="sub-item">Add Types</a></li>
+                        </ul>
+                    </li>
 
-            <li id="Department" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-line"></i>Departments<i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('departments.index') }}" id="view" class="sub-item">Show Departments</a></li>
-                    <li><a href="{{ route('departments.create') }}" id="add" class="sub-item">Add Departments</a></li>
-                </ul>
+                    <!-- Permissions -->
+                    <li id="Permission" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#permissionSubmenu" role="button"
+                            aria-expanded="false" aria-controls="permissionSubmenu">
+                            <i class="ri-lock-2-line"></i>Permissions <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="permissionSubmenu">
+                            <li><a href="{{ route('user.index') }}" class="sub-item">Show User</a></li>
+                            <li><a href="{{ route('user.create') }}" class="sub-item">Add User</a></li>
+                            <li><a href="{{ route('manage.permissions') }}" class="sub-item">Show Permission</a></li>
+                            <li><a href="{{ route('manage.permissions.create') }}" class="sub-item">Add Permission</a>
+                            </li>
+                        </ul>
+                    </li>
 
-            </li>
-            <li id="Type" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-line"></i>Types<i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('type.index') }}" id="view" class="sub-item">Show Types</a></li>
-                    <li><a href="{{ route('type.create') }}" id="add" class="sub-item">Add Types</a></li>
-                </ul>
-            </li>
-            {{-- @if('admin' === auth()->user()->type) --}}
+                    <!-- Category -->
+                    <li id="Category" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#categorySubmenu" role="button"
+                            aria-expanded="false" aria-controls="categorySubmenu">
+                            <i class="ri-folder-line"></i>Category <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="categorySubmenu">
+                            <li><a href="{{ route('category.create') }}" class="sub-item">Add Category</a></li>
+                            <li><a href="{{ route('category.index') }}" class="sub-item">Show Category</a></li>
+                            <li><a href="{{ route('subcategory.index') }}" class="sub-item">Show Sub Category</a></li>
+                        </ul>
+                    </li>
 
-            <li id="Permission" class="sidebar">
-                <a class="sub-btn" id="sub-btn-permissions"><i class="ri-lock-2-line"></i>Permissions <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('user.index') }}" id="view" class="sub-item">Show User</a></li>
-                    <li><a href="{{ route('user.create') }}" id="view" class="sub-item">Add User</a></li>
-                    <li><a href="{{ route('manage.permissions') }}" id="view" class="sub-item">Show Permission</a></li>
-                    {{-- <li><a href="{{ route('manage.permissions') }}" id="add" class="sub-item">Add Permission</a>
-                    </li> --}}
-                    <li><a href="{{ route('manage.permissions.create') }}" id="add" class="sub-item">Add Permission</a>
+                    <!-- Inward -->
+                    <li id="Inward" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#inwardSubmenu" role="button"
+                            aria-expanded="false" aria-controls="inwardSubmenu">
+                            <i class="ri-download-line"></i>Inward <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="inwardSubmenu">
+                            <li><a href="{{ route('inward.good.view') }}" class="sub-item">Add Good Inward</a></li>
+                            <li><a href="{{ route('inward.index') }}" class="sub-item">Show Inward</a></li>
+                            <li><a href="{{ route('inward.return.index') }}" class="sub-item">Show Return Purchase</a>
+                            </li>
+                            <li><a href="{{ route('inward.payment.index') }}" class="sub-item">Show Payment</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Report -->
+                    <li id="Report" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#reportSubmenu" role="button"
+                            aria-expanded="false" aria-controls="reportSubmenu">
+                            <i class="ri-file-chart-line"></i>Report <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="reportSubmenu">
+                            @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user' ||
+                            auth()->user()->type === 'account' || auth()->user()->type === 'cavity' ||
+                            auth()->user()->type === 'electric')
+                            <li><a href="{{ route('report.index') }}" class="sub-item">Show Report</a></li>
+                            @endif
+                            @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' ||
+                            auth()->user()->type === 'godown')
+                            <li><a href="{{ route('report.create') }}" class="sub-item">Add Report</a></li>
+                            @endif
+                            @if(auth()->user()->type === 'user')
+                            <li><a href="{{ route('report.reject') }}" class="sub-item">Rejected Report</a></li>
+                            @endif
+                            <li><a href="{{ route('report.search') }}" class="sub-item">Search Report</a></li>
+                            <li><a href="{{ route('report.new') }}" class="sub-item">All Report</a></li>
+                            <li><a href="{{ route('report.stock') }}" class="sub-item">Stock Report</a></li>
+                            <li><a href="{{ route('report.ready') }}" class="sub-item">Ready Report</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Sale -->
+                    <li id="Sale" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#saleSubmenu" role="button"
+                            aria-expanded="false" aria-controls="saleSubmenu">
+                            <i class="ri-download-line"></i>Sale <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="saleSubmenu">
+                            <li><a href="{{ route('sale.create') }}" class="sub-item">Add Sale</a></li>
+                            <li><a href="{{ route('sale.index') }}" class="sub-item">Show Sale</a></li>
+                            <li><a href="{{ route('sale.return.index') }}" class="sub-item">Sale Return</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Customer -->
+                    <li id="Customer" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#customerSubmenu" role="button"
+                            aria-expanded="false" aria-controls="customerSubmenu">
+                            <i class="ri-user-star-line"></i>Customer <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="customerSubmenu">
+                            <li><a href="{{ route('customer.create') }}" class="sub-item">Add Customer</a></li>
+                            <li><a href="{{ route('customer.index') }}" class="sub-item">Show Customer</a></li>
+                            <li><a href="{{ route('payment.customer.create') }}" class="sub-item">Add Payment</a></li>
+                            <li><a href="{{ route('payment.customer.index') }}" class="sub-item">Customer Payment</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Pre Account -->
+                    <li id="Account" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#accountSubmenu" role="button"
+                            aria-expanded="false" aria-controls="accountSubmenu">
+                            <i class="ri-user-star-line"></i>Pre Account <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="accountSubmenu">
+                            <li><a href="{{ route('gst-pdf.index') }}" class="sub-item">GST PDF Invoice</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Bank -->
+                    <li id="Bank" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#bankSubmenu" role="button"
+                            aria-expanded="false" aria-controls="bankSubmenu">
+                            <i class="ri-bank-line"></i>Bank <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="bankSubmenu">
+                            <li><a href="{{ route('banks.create') }}" class="sub-item">Add Bank</a></li>
+                            <li><a href="{{ route('banks.index') }}" class="sub-item">Show Bank</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Expense -->
+                    <li id="Expense" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#expenseSubmenu" role="button"
+                            aria-expanded="false" aria-controls="expenseSubmenu">
+                            <i class="ri-money-dollar-circle-line"></i>Expense <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="expenseSubmenu">
+                            <li><a href="{{ route('expenses.create') }}" class="sub-item">Add Expense</a></li>
+                            <li><a href="{{ route('expenses.index') }}" class="sub-item">Show Expense</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Sale Product List -->
+                    <li id="Sale Product List" class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#saleProductSubmenu" role="button"
+                            aria-expanded="false" aria-controls="saleProductSubmenu">
+                            <i class="ri-money-dollar-circle-line"></i>Sale Product List <i
+                                class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul class="collapse submenu" id="saleProductSubmenu">
+                            <li><a href="{{ route('saleproductcategory.create') }}" class="sub-item">Add Sale Product
+                                    Category</a></li>
+                            <li><a href="{{ route('saleproductcategory.index') }}" class="sub-item">Show Sale Product
+                                    Categories</a></li>
+                            <li><a href="{{ route('saleproductsubcategory.create') }}" class="sub-item">Add Sale Product
+                                    Sub Category</a></li>
+                            <li><a href="{{ route('saleproductsubcategory.index') }}" class="sub-item">Show Sale Product
+                                    Sub Categories</a></li>
+                        </ul>
                     </li>
                 </ul>
-            </li>
-            {{-- @endif --}}
+            </div>
 
-            <li id="Category" class="sidebar">
-                <a class="sub-btn" id="sub-btn-show"><i class="ri-folder-line"></i>Category <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('category.create') }}" id="add" class="sub-item">Add Category</a></li>
-                    <li><a href="{{ route('category.index') }}" id="view" class="sub-item">Show Category</a></li>
-                    {{-- <li><a href="{{ route('category.create') }}" id="add" class="sub-item">Add Sub Category</a>
-                    </li> --}}
-                    <li><a href="{{ route('subcategory.index') }}" id="view" class="sub-item">Show Sub Category</a></li>
-                </ul>
-            </li>
-
-            <li id="Inward" class="sidebar">
-                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Inward <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('inward.good.view') }}" id="add" class="sub-item">Add Good Inward</a></li>
-                    <li><a href="{{ route('inward.index') }}" id="view" class="sub-item">Show Inward</a></li>
-                    <li><a href="{{ route('inward.return.index') }}" id="view" class="sub-item">Show Return Purchase</a>
-                    <li><a href="{{ route('inward.payment.index') }}" id="view" class="sub-item">Show Payment</a>
-                    </li>
-                </ul>
-            </li>
-            <li id="Report" class="sidebar">
-                <a class="sub-btn" id="sub-btn-show"><i class="ri-file-chart-line"></i>Report <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user' || auth()->user()->type ===
-                    'account' || auth()->user()->type === 'cavity' || auth()->user()->type === 'electric' )
-                    <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
-                    @endif
-                    @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric' || auth()->user()->type
-                    === 'godown')
-                    <li><a href="{{ route('report.create') }}" id="add" class="sub-item">Add Report</a></li>
-                    @endif
-
-                    @if(auth()->user()->type === 'user' )
-                    <li><a href="{{ route('report.reject') }}" id="view" class="sub-item">Rejected Report</a></li>
-                    @endif
-                    <li><a href="{{ route('report.search') }}" id="add" class="sub-item">Search Report</a></li>
-                    <li><a href="{{ route('report.new') }}" id="add" class="sub-item">All Report </a></li>
-                    <li><a href="{{ route('report.stock') }}" id="add" class="sub-item">Stock Report</a></li>
-                    <li><a href="{{ route('report.ready') }}" id="add" class="sub-item">Ready Report</a></li>
-                </ul>
-            </li>
-
-            <li id="Sale" class="sidebar">
-                <a class="sub-btn" id="sub-btn-show"><i class="ri-download-line"></i>Sale <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('sale.create') }}" id="add" class="sub-item">Add Sale</a></li>
-                    <li><a href="{{ route('sale.index') }}" id="view" class="sub-item">Show Sale</a></li>
-                    <li><a href="{{ route('sale.return.index') }}" id="view" class="sub-item">Sale Return</a></li>
-                </ul>
-            </li>
-
-            <li id="Customer" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Customer<i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('customer.create') }}" id="add" class="sub-item">Add Customer</a></li>
-                    <li><a href="{{ route('customer.index') }}" id="view" class="sub-item">Show Customer</a></li>
-
-
-                    <li><a href="{{ route('payment.customer.create') }}" id="add" class="sub-item">Add Payment</a></li>
-                    {{-- <li><a href="{{ route('payment.index') }}" id="view" class="sub-item">Supplier Payment</a></li>
-                    --}}
-                    <li><a href="{{ route('payment.customer.index') }}" id="view" class="sub-item">Customer Payment</a>
-                    </li>
-                </ul>
-            </li>
-
-            <li id="Account" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-user-star-line"></i>Pre Account <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    {{-- <li><a href="{{ route('acccoa.create') }}" id="add" class="sub-item">Add Account</a></li> --}}
-                    {{-- <li><a href="{{ route('acccoa.index') }}" id="view" class="sub-item">Chart of Accounts </a></li> --}}
-                    {{-- <li><a href="{{ route('predefine.index') }}" id="view" class="sub-item">Predefine of Accounts </a> --}}
-                    </li>
-                    <li><a href="{{ route('gst-pdf.index') }}" id="view" class="sub-item">GST PDF Invoice </a></li>
-                </ul>
-            </li>
-            <li id="Bank" class="sidebar">
-                <a class="sub-btn" id="sub-btn-add"><i class="ri-bank-line"></i>Bank <i
-                        class="ri-arrow-down-s-line"></i></a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('banks.create') }}" id="add" class="sub-item">Add Bank</a></li>
-                    <li><a href="{{ route('banks.index') }}" id="view" class="sub-item"> Show Bank </a></li>
-                </ul>
-            </li>
-
-            <li id="Expense" class="sidebar">
-                <a class="sub-btn" id="sub-btn-expense">
-                    <i class="ri-money-dollar-circle-line"></i> Expense
-                    <i class="ri-arrow-down-s-line"></i>
-                </a>
-                <ul class="sub-menu">
-                    <li><a href="{{ route('expenses.create') }}" id="add" class="sub-item">Add Expense</a></li>
-                    <li><a href="{{ route('expenses.index') }}" id="view" class="sub-item">Show Expense</a></li>
-                </ul>
-            </li>
-
-            <li id="Sale Product List" class="sidebar">
-                <a class="sub-btn" id="sub-btn">
-                    <i class="ri-money-dollar-circle-line"></i> Sale Product List
-                    <i class="ri-arrow-down-s-line"></i>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="{{ route('saleproductcategory.create') }}" id="add" class="sub-item">Add Sale Product
-                            Category</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('saleproductcategory.index') }}" id="view" class="sub-item">Show Sale Product
-                            Categories</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('saleproductsubcategory.create') }}" id="add" class="sub-item">Add Sale
-                            Product Sub Category</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('saleproductsubcategory.index') }}" id="view" class="sub-item">Show Sale
-                            Product Sub Categories</a>
-                    </li>
-                </ul>
-
-            </li>
-
-        </ul>
-
+            <!-- Main Content -->
+            <div class="main-content pt-3">
+                <h3>{{$title}}</h3>
+                <hr style="border:0.5px solid lightgray;">
+                {{$main}}
+            </div>
+        </div>
     </div>
-    
-    <div class="special-main" id="special-main">
-        <h3>{{$title}}</h3>
-        <hr style="border:0.5px solid lightgray;">
-        {{$main}}
-    </div>
-    </div>
-
 
     <div class="footer" id="footer">
         {{$websetting->footer_text ?? null}}
@@ -355,12 +356,11 @@
                 no_results_text: "Oops, nothing found!"
             });
 
-            const menuButton = document.getElementById('menu');
+           /* const menuButton = document.getElementById('menu');
             const sidebar = document.getElementById('slidebar');
             const mainContent = document.getElementById('special-main');
 
             menuButton.addEventListener('click', () => {
-                // Toggle sidebar visibility
                 if (sidebar.style.display === 'none') {
                     sidebar.style.display = 'block';
                     mainContent.style.marginLeft = '15%';
@@ -378,7 +378,7 @@
 
             $('.toggle-icon').click(function() {
                 $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
-            });
+            });*/
 
             $('.select2').select2({
                 maximumInputLength: 20,

@@ -12,24 +12,25 @@ body {
 }
 
 .logo img {
-    height: 100px;
-    width: 200px;
+    height: 50px;
+    /* width: 200px; */
 }
 
 .slidebar {
-    /* margin-top: 100px; */
+    margin-top: 100px;
     /* top: 0; */
     left: 0;
     float: left;
     height: 100%;
     width: 15%;
-    /* position: fixed; */
+    position: fixed;
     z-index: 1;
-    background-color: rgb(224, 224, 224);
+    background-color:#1E1E2D;
     overflow-x: hidden;
     padding: 12px;
-    box-shadow: 1px 1px 10px gray;
+    box-shadow: 1px 1px 10px rgb(255, 255, 255);
     transition: .2s;
+    color:#ddd;
 }
 
 .slidebar ul {
@@ -60,7 +61,7 @@ body {
 }
 
 .slidebar ul a {
-    color: black;
+    color: rgb(255, 255, 255);
     text-decoration: none;
     display: block;
     margin-top: 10px;
@@ -68,13 +69,12 @@ body {
     font-weight: 400;
     font-family: Arial, Helvetica, sans-serif;
     padding: 5px 5px;
-    color: black;
+    /* color: black; */
     position: relative;
 }
 
 .slidebar ul i {
     margin-right: 10px;
-
 }
 
 .slidebar ul a:hover:before {
@@ -86,7 +86,6 @@ body {
     bottom: 0;
     box-shadow: 1px 1px 10px gray;
     border-radius: 6px;
-
 }
 
 .bars {
@@ -124,13 +123,13 @@ body {
     /* transition: margin-left .5s;
     padding: 16px; */
     min-height: 100%;
-    margin-left: 15%;
+    /* margin-left: 15%; */
     /* width: 85%; 
     padding: 20px; */
     /* padding: 115px 0px 0px 20px; */
     border: 2px solid #ccc;        
     border-radius: 10px;           
-    background-color: #f9f9f9;     
+    background-color: #8786a4;     
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     transition: width 0.3s,       
                 margin-left 0.3s, 
@@ -139,7 +138,7 @@ body {
 }
 
 #main{
-    padding: 20px;
+    /* padding: 20px; */
     /* font-weight: bold; */
 }
 
@@ -161,7 +160,8 @@ body {
 
 .footer {
     position: relative;
-    background: #E0E0E0;
+    background: #1E1E2D;
+    color: #fff;
     height: 50px;
     padding: 20px 50px; 
     display: flex;
