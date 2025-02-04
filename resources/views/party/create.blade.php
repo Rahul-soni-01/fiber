@@ -1,15 +1,16 @@
-<x-layout>
-    <x-slot name="title">Add Supplier</x-slot>
-    <x-slot name="main">
-        <div class="main1" id="main1">
+@extends('demo')
+@section('title', 'Add Supplier')
+
+@section('content')
+        <div class="text-white" id="">
             @if ($errors->any())
-            <div style="color: red;">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+                <div style="color: red;">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
         
             <form action="{{ route('party.store') }}" method="post">
@@ -17,8 +18,9 @@
                 <div class="container">
                     <div class="row justify-content-center"> <!-- Centering the form on larger screens -->
                         <div class="col-12 col-lg-6"> <!-- Full width on mobile, 50% on larger screens -->
+                            
                             <div class="mb-3">
-                                <label for="party_name">Supplier Name</label>
+                                <span for="party_name">Supplier Name</span>
                                 <input type="text" name="party_name" class="form-control"
                                     placeholder="Enter Supplier Name">
                             </div>
@@ -37,7 +39,7 @@
                                     placeholder="Enter Person Name">
                             </div>
                             <div class="text-center"> <!-- Centering the button -->
-                                <button class="btn btn-dark">Add Party</button>
+                                <button class="btn btn-success">Add Party</button>
                             </div>
                         </div>
                     </div>
@@ -45,5 +47,4 @@
 
             </form>
         </div>
-    </x-slot>
-</x-layout>
+@endsection

@@ -19,7 +19,7 @@
                             $sum += $sale->amount;
                         }
                     @endphp
-                    <p class="text-muted h5">${{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
                     <a href="{{route('sale.index')}}">View more</a>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                             $sum += $purchase->inr_amount;
                         }
                     @endphp
-                    <p class="text-muted h5">${{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@
         <!-- Supplier Payments Card -->
         <div class="col-md-4">
             <div class="card shadow-sm p-3 d-flex flex-row align-items-center h-100">
-                <div class="bg-purple text-white p-3 rounded-circle">
+                <div class="bg-info text-white p-3 rounded-circle">
                     <i class="fas fa-hand-holding-usd fa-2x"></i>
                 </div>
                 <div class="ms-3">
@@ -86,7 +86,7 @@
                             $sum += $supplier_payment->amount_paid;
                         }
                     @endphp
-                    <p class="text-muted h5">${{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@
                             $sum += $customer_payment->amount_paid;
                         }
                     @endphp
-                    <p class="text-muted h5">${{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
                 </div>
             </div>
         </div>

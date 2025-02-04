@@ -16,6 +16,16 @@ body {
     width: 200px;
 }
 
+.sidebar .nav-link {
+    color: white !important;
+}
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+#header {
+    background: linear-gradient(45deg, #09203F, #537895);
+}
+
 .slidebar {
     /* margin-top: 100px; */
     /* top: 0; */
@@ -143,25 +153,15 @@ body {
     /* font-weight: bold; */
 }
 
-/* #header {
-    height: fit-content;
-    width: 100%;
-    z-index: 2;
-    display: flex;
-    position: fixed;
-    margin-left: 0;
-    background-color: rgb(224, 224, 224);
-    transition: margin-left .5s;
-}*/
-
 #menu-bar{
     display: flex; /* Flexbox layout */
     transition: all 0.3s ease;
 }
 
-.footer {
+#footer {
     position: relative;
-    background: #E0E0E0;
+    /* background: #E0E0E0; */
+
     height: 50px;
     padding: 20px 50px; 
     display: flex;

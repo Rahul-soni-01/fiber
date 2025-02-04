@@ -659,4 +659,118 @@ function calculateTotal(element) {
     const grandTotal = subtotal + cgstAmount + sgstAmount + igstAmount;
     document.getElementById('grand_total_amt').value = grandTotal.toFixed(2);
 }
+$(document).ready(function () {
 
+    // $('.table').DataTable();
+    $('.table').not('.datatable-remove').DataTable({
+        pageLength: 25 
+    });
+    
+    $(".chosen-select").chosen({
+        no_results_text: "Oops, nothing found!"
+    });
+
+    const menuButton = document.getElementById('menu');
+    const sidebar = document.getElementById('slidebar');
+    const mainContent = document.getElementById('special-main');
+
+    menuButton.addEventListener('click', () => {
+        // Toggle sidebar visibility
+        if (sidebar.style.display === 'none') {
+            sidebar.style.display = 'block';
+            mainContent.style.marginLeft = '15%';
+            mainContent.style.width = '85%';
+        } else {
+            sidebar.style.display = 'none';
+            mainContent.style.width = '100%';
+            mainContent.style.marginLeft = '0';
+        }
+    });
+
+    $(".sub-btn").on("click", function (e) {
+        $(this).next('.sub-menu').slideToggle();
+    });
+
+    $('.toggle-icon').click(function() {
+        $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
+    });
+
+    $('.select2').select2({
+        maximumInputLength: 20,
+        placeholder: "Select an option",
+        allowClear: true
+    });
+    $('#download-btn').click(function(e) {
+        e.preventDefault();
+
+        var content = $('#payment').html();
+        var currentUrl = window.location.href;
+         $.ajax({
+            url: '/generate-pdf',
+            type: 'POST',
+            data: { 
+                content: content,
+                currentUrl:currentUrl 
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+            },
+            success: function(response) {
+                const link = document.createElement('a');
+                const url = window.URL.createObjectURL(response);
+                link.href = url;
+                link.downOload = 'generated-file.pdf';
+                link.click();
+                window.URL.revokebjectURL(url);
+            },
+            error: function(error) {
+                console.error('Error downloading PDF:', error);
+            }
+        });
+    
+    });
+
+    $('#submit-button').click(function(e) {
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to submit this report?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('report-form').submit();
+            }
+        });
+    });
+
+    // $.each($('#ReadyStock'), function(index, element) {
+    $(document).on('click', '#ReadyStock', function(e) {
+        e.preventDefault();  // Prevent the default checkbox behavior if needed
+        
+        var dataId = $(this).data('id');  // Get the data-id of the clicked checkbox
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
+
+            // Perform the AJAX request
+        $.ajax({
+            url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
+            type: "POST",
+            data: {
+                "_token": csrfToken,  // CSRF token
+                "id": dataId,         // Report ID
+            },
+            
+            success: function(response) {
+                location.reload(true);
+            },
+            error: function(xhr) {
+                // Optional: Handle error
+                console.error(xhr.responseJSON.message);
+                alert("Failed to update stock status.");
+            }
+        });
+    });
+
+});
