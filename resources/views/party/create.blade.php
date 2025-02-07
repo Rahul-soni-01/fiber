@@ -2,7 +2,8 @@
 @section('title', 'Add Supplier')
 
 @section('content')
-        <div class="text-white" id="">
+        <div class="text-white">
+            <a href="{{ route('party.show') }}" class="btn btn-primary">Back to Supplier</a>
             @if ($errors->any())
                 <div style="color: red;">
                     <ul>

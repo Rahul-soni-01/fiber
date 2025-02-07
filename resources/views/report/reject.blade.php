@@ -1,7 +1,8 @@
-<x-layout>
-    <x-slot name="title">Show {{ auth()->user()->type }} Report</x-slot>
-    <x-slot name="main">
-        <div class="main" id="main">
+@extends('demo')
+@section('title', 'Report')
+
+@section('content')
+<h1>Report</h1>
 
             @if ($errors->any())
             <div style="color: red;">
@@ -98,5 +99,4 @@
                 }
             });
         </script>
-    </x-slot>
-</x-layout>
+   @endsection

@@ -10,22 +10,31 @@ body {
     width: 100%;
     min-height: 100%;
 }
-
+.table {
+    color: white;
+}
 .logo img {
     height: 100px;
     width: 200px;
 }
 
-.sidebar .nav-link {
+.sidebar .nav-link, a,label {
     color: white !important;
 }
+
 .sidebar .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 #header {
     background: linear-gradient(45deg, #09203F, #537895);
 }
-
+.dataTables_wrapper .dataTables_length select {
+    background-color: #212529 !important;
+    color: white !important;
+}
+.permissions-list{
+    margin-left: 20px;
+}
 .slidebar {
     /* margin-top: 100px; */
     /* top: 0; */

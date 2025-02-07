@@ -1,9 +1,11 @@
-<x-layout>
-    <x-slot name="title">Show All sale Return</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'Sale Return')
+
+@section('content')
+<h1>Sale Return</h1>
         <div class="main" id="main">
             <a href="{{ route('sale.return') }}" class="btn btn-primary mt-2 mb-2">Add Sale Return</a>
-            <table class="table table-striped">
+            <table class="table text-white">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
@@ -34,5 +36,4 @@
                 </tbody>
             </table>
         </div>
-    </x-slot>
-</x-layout>
+   @endsection

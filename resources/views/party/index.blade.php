@@ -54,7 +54,7 @@
 
                 @foreach ($parties as $party)
                     <tr>
-                        <td>{{$party->id}}</td>
+                        <td>{{$loop->iteration}}</td>
                         <td>{{$party->party_name}}</td>
                         <td>{{$party->address}}</td>
                         <td>{{$party->telephone_no}}</td>

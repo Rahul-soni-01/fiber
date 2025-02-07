@@ -11,8 +11,8 @@
     {{--
     <link rel="shortcut icon" href="public/storage/favicon.ico'"> --}}
     <link rel="stylesheet" href="css/login.css">
-    {{--
-    <link rel="stylesheet" href="public/css/login.css"> --}}
+    
+    {{--  <link rel="stylesheet" href="public/css/login.css"> --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

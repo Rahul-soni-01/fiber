@@ -7,11 +7,11 @@
         <!-- Sales Card -->
         <div class="col-md-4">
             <div class="card shadow-sm p-3 d-flex flex-row align-items-center h-100">
-                <div class="bg-primary text-white p-3 rounded-circle">
+                <div class="bg-primary p-3 rounded-circle">
                     <i class="fas fa-shopping-cart fa-2x"></i>
                 </div>
                 <div class="ms-3">
-                    <h5 class="fw-semibold">Today's Sales</h5>
+                    <h5 class="fw-semibold text-dark">Today's Sales</h5>
                     <p class="text-muted h5">{{ $sales->count() }}</p>
                     @php
                         $sum = 0;
@@ -20,7 +20,7 @@
                         }
                     @endphp
                     <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
-                    <a href="{{route('sale.index')}}">View more</a>
+                    <a href="{{route('sale.index')}}" class="text-dark"> <i class="fa fa-eye" aria-hidden="true"></i> Details</a>
                 </div>
             </div>
         </div>
@@ -28,11 +28,11 @@
         <!-- Purchases Card -->
         <div class="col-md-4">
             <div class="card shadow-sm p-3 d-flex flex-row align-items-center h-100">
-                <div class="bg-success text-white p-3 rounded-circle">
+                <div class="bg-success p-3 rounded-circle">
                     <i class="fas fa-truck fa-2x"></i>
                 </div>
                 <div class="ms-3">
-                    <h5 class="fw-semibold">Today's Purchases</h5>
+                    <h5 class="fw-semibold text-dark">Today's Purchases</h5>
                     <p class="text-muted h5">{{ $purchases->count() }}</p>
                     @php
                         $sum = 0;
@@ -41,6 +41,7 @@
                         }
                     @endphp
                     <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
+                    <a href="{{route('inward.index')}}" class="text-dark"> <i class="fa fa-eye" aria-hidden="true"></i> Details</a>
                 </div>
             </div>
         </div>
@@ -48,12 +49,13 @@
         <!-- Reports Card -->
         <div class="col-md-4">
             <div class="card shadow-sm p-3 d-flex flex-row align-items-center h-100">
-                <div class="bg-warning text-white p-3 rounded-circle">
+                <div class="bg-warning p-3 rounded-circle">
                     <i class="fas fa-chart-line fa-2x"></i>
                 </div>
                 <div class="ms-3">
-                    <h5 class="fw-semibold">Today's New Reports</h5>
+                    <h5 class="fw-semibold text-dark">Today's New Reports</h5>
                     <p class="text-muted h5">{{ $newreports->count() }}</p>
+                    <a href="{{route('report.index')}}" class="text-dark"> <i class="fa fa-eye" aria-hidden="true"></i> Details</a>
                 </div>
             </div>
         </div>
@@ -61,11 +63,11 @@
         <!-- Repair Reports Card -->
         <div class="col-md-4">
             <div class="card shadow-sm p-3 d-flex flex-row align-items-center h-100">
-                <div class="bg-warning text-white p-3 rounded-circle">
+                <div class="bg-warning p-3 rounded-circle">
                     <i class="fas fa-tools fa-2x"></i>
                 </div>
                 <div class="ms-3">
-                    <h5 class="fw-semibold">Today's Repair Reports</h5>
+                    <h5 class="fw-semibold text-dark">Today's Repair Reports</h5>
                     <p class="text-muted h5">{{ $repairreports->count() }}</p>
                 </div>
             </div>
@@ -74,11 +76,11 @@
         <!-- Supplier Payments Card -->
         <div class="col-md-4">
             <div class="card shadow-sm p-3 d-flex flex-row align-items-center h-100">
-                <div class="bg-info text-white p-3 rounded-circle">
+                <div class="bg-info p-3 rounded-circle">
                     <i class="fas fa-hand-holding-usd fa-2x"></i>
                 </div>
                 <div class="ms-3">
-                    <h5 class="fw-semibold">Supplier Payments</h5>
+                    <h5 class="fw-semibold text-dark">Supplier Payments</h5>
                     <p class="text-muted h5">{{ $supplier_payments->count() }}</p>
                     @php
                         $sum = 0;
@@ -94,11 +96,11 @@
         <!-- Customer Payments Card -->
         <div class="col-md-4">
             <div class="card shadow-sm p-3 d-flex flex-row align-items-center h-100">
-                <div class="bg-danger text-white p-3 rounded-circle">
+                <div class="bg-danger p-3 rounded-circle">
                     <i class="fas fa-wallet fa-2x"></i>
                 </div>
                 <div class="ms-3">
-                    <h5 class="fw-semibold">Customer Payments</h5>
+                    <h5 class="fw-semibold text-dark">Customer Payments</h5>
                     <p class="text-muted h5">{{ $customer_payments->count() }}</p>
                     @php
                         $sum = 0;

@@ -68,7 +68,7 @@
                     <span class="websetting">Web Setting</span>
                 </a>
                 @endif
-            </div>
+            </div> 
         </div>
     </nav>
 
@@ -76,7 +76,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse bg-dark text-white" id="sidebar">
+            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
                 <!-- Logo -->
                 <div class="text-center py-3 ">
                     @php
@@ -215,9 +215,9 @@
                                     <a href="{{ route('inward.return.index') }}" class="nav-link">Show Return
                                         Purchase</a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ route('inward.payment.index') }}" class="nav-link">Show Payment</a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     </li>
@@ -384,13 +384,12 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 col-sm-4 ">
+            <div class="col-lg-10 col-md-9 col-sm-4 text-white">
                 <div class="p-4">
                     @yield('content')
                 </div>
             </div>
         </div>
-        
     </div>
     <div class="text-white bg-dark" id="footer">
         {{$websetting->footer_text ?? null}}

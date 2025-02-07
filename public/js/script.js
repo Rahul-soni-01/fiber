@@ -670,23 +670,6 @@ $(document).ready(function () {
         no_results_text: "Oops, nothing found!"
     });
 
-    const menuButton = document.getElementById('menu');
-    const sidebar = document.getElementById('slidebar');
-    const mainContent = document.getElementById('special-main');
-
-    menuButton.addEventListener('click', () => {
-        // Toggle sidebar visibility
-        if (sidebar.style.display === 'none') {
-            sidebar.style.display = 'block';
-            mainContent.style.marginLeft = '15%';
-            mainContent.style.width = '85%';
-        } else {
-            sidebar.style.display = 'none';
-            mainContent.style.width = '100%';
-            mainContent.style.marginLeft = '0';
-        }
-    });
-
     $(".sub-btn").on("click", function (e) {
         $(this).next('.sub-menu').slideToggle();
     });

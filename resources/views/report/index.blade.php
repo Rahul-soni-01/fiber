@@ -1,7 +1,9 @@
-<x-layout>
-    <x-slot name="title">Show {{ auth()->user()->type }} Report</x-slot>
-    <x-slot name="main">
-        <div class="main" id="main">
+@extends('demo')
+@section('title', 'Report')
+
+@section('content')
+<h1>Report</h1>
+        <div class="text-white" id="">
 
             @if ($errors->any())
             <div style="color: red;">
@@ -59,7 +61,7 @@
             <p>No reports found.</p>
             @else
             <div id="div1" class="mt-4">
-                <table class="table  table-striped">
+                <table class="table text-white">
                     <thead>
                         <tr class="bg-dark text-white">
                             <th>ID</th>
@@ -247,5 +249,4 @@
                 }
             });
         </script>
-    </x-slot>
-</x-layout>
+@endsection

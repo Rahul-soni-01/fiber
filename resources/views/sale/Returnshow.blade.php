@@ -1,10 +1,13 @@
-<x-layout>
-    <x-slot name="title">Show Sale Return: {{$id }}</x-slot>
-    <x-slot name="main">
+
+        @extends('demo')
+@section('title', 'Sale Return {{$id }}')
+
+@section('content')
+<h1>Sale Return {{$id }}</h1>
         <div class="main" id="main">
             <a href="{{ route('sale.return') }}" class="btn btn-primary mb-2">Add Sale Return</a>
             <a href="{{ route('generate-pdf', ['sale_return' => $id]) }}" class="btn btn-primary mb-2">Download PDF</a>
-            <table class="table table-striped">
+            <table class="table text-white">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
@@ -30,5 +33,4 @@
                 </tbody>
             </table>
         </div>
-    </x-slot>
-</x-layout>
+@endsection

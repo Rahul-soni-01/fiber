@@ -1,7 +1,8 @@
-<x-layout>
-    <x-slot name="title">Show Report</x-slot>
-    <x-slot name="main">
-        <div class="main" id="main">
+@extends('demo')
+@section('title', 'Report')
+
+@section('content')
+<h1>Report</h1>
             <a href="{{ route('generate-pdf', ['report' => $report->id]) }}" class="btn btn-primary mb-3" id="download-btn1212">Download PDF</a>
             <div class="container-fluid custom-border">
                 <div class="row mt-4 ">
@@ -124,14 +125,14 @@
                     </div>
                     <div class="col-md-2">
                         <span>{{ $reportitem->watt }}</span>
-                        <span class="float-right">
+                        <span class="float-end">
                             @if($reportitem->dead_status == 0)
-                            <span class="badge badge-success">Active</span>
+                                <span class="badge bg-success">Active</span>
                             @elseif($reportitem->dead_status == 1)
-                            <span class="badge badge-danger">Dead</span>
-                            {{-- Dead Stock --}}
+                                <span class="badge bg-danger">Dead</span>
+                                {{-- Dead Stock --}}
                             @else
-                            Unknown
+                                Unknown
                             @endif
                         </span>
                     </div>
@@ -172,7 +173,4 @@
                 </form>
                 @endif
             </div>
-
-        </div>
-    </x-slot>
-</x-layout>
+@endsection
