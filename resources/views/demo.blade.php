@@ -76,7 +76,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
+            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark">
                 <!-- Logo -->
                 <div class="text-center py-3 ">
                     @php

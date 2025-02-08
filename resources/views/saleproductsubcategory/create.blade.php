@@ -1,6 +1,8 @@
-<x-layout>
-    <x-slot name="title">Insert Sale Product Sub Category</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'Sale Product SubCategory')
+
+@section('content')
+<h1>Sale Product SubCategory</h1>
         <div class="main" id="main">
             <a href="{{ route('saleproductsubcategory.index') }}" class="btn btn-primary">Back to Sale Product Sub Category</a>
             @if ($errors->any())
@@ -59,5 +61,4 @@
             
             
         </div>
-    </x-slot>
-</x-layout>
+  @endsection

@@ -25,11 +25,22 @@
             <div class="col-md-6 col-lg-4">
                 <form method="post" action="{{ route('login.post') }}" id="login" class="p-4 border rounded bg-light">
                     @csrf
-                    @if (Session('msg'))
-                        <div class="alert alert-danger">
-                            <strong>{{ Session('error') }}</strong>
-                        </div>
-                    @endif
+                    @if (session('msg'))
+                    <div class="alert alert-danger">
+                        {{ session('msg') }}
+                    </div>
+                @endif
+                
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
                     @php
                         $websetting = DB::table('web_settings')->where('id', 1)->first();
                     @endphp

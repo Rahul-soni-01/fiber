@@ -1,7 +1,9 @@
-<x-layout>
-    <x-slot name="title">Show Bank</x-slot>
-    <x-slot name="main">
-        <div class="main" id="main" style="">
+@extends('demo')
+@section('title', 'Bank')
+
+@section('content')
+<h1>Bank</h1>
+        <div class="main" id="main" >
             @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -9,7 +11,7 @@
             @endif
 
             <a href="{{ route('banks.create') }}" class="btn btn-primary mb-3">Add Bank</a>
-            <table class="table table-striped">
+            <table class="table text-white">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
@@ -66,5 +68,4 @@
                 </tbody>
             </table>
         </div>
-    </x-slot>
-</x-layout>
+@endsection

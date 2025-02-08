@@ -1,6 +1,7 @@
-<x-layout>
-    <x-slot name="title">Edit Expense</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'Expense')
+
+@section('content')
         <div class="main" id="main">
             {{-- <h3>Edit Bank</h3> --}}
             <a href="{{ route('expenses.index') }}" class="btn btn-primary">Back</a>
@@ -123,5 +124,4 @@
             </form>
 
         </div>
-    </x-slot>
-</x-layout>
+  @endsection

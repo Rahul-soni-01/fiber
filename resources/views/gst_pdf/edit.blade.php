@@ -1,6 +1,8 @@
-<x-layout>
-    <x-slot name="title">Show Gst Pdf</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'GST PDF')
+
+@section('content')
+<h1>GST PDF</h1>
         <div class="main" id="main">
             @php
             $websetting = DB::table('web_settings')->where('id', 1)->first();
@@ -504,5 +506,4 @@
                 
               </form>
         </div>
-    </x-slot>
-</x-layout>
+    @endsection

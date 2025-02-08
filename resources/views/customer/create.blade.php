@@ -1,6 +1,8 @@
-<x-layout>
-    <x-slot name="title">Add Customer</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'Customer')
+
+@section('content')
+<h1>Customer</h1>
         <div class="main1" id="main1">
             @if ($errors->any())
             <div style="color: red;">
@@ -80,5 +82,4 @@
             </form>
 
         </div>
-    </x-slot>
-</x-layout>
+@endsection

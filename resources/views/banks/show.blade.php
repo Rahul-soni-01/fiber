@@ -1,6 +1,8 @@
-<x-layout>
-    <x-slot name="title">Bank Details : {{$bank->bank_name}}</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'Bank')
+
+@section('content')
+<h1>Bank</h1>
         <div class="main" id="main">
             
             <ul class="nav nav-tabs " id="customerTab" role="tablist">
@@ -15,7 +17,7 @@
 
                 </li>
                 <li class="nav-item ml-1" role="presentation">
-                    <a class="nav-link active" id="payment-tab" data-bs-toggle="tab" href="#payment" role="tab" aria-controls="customer-payment" aria-selected="true">Payment History </a>
+                    <a class="nav-link" id="payment-tab" data-bs-toggle="tab" href="#payment" role="tab" aria-controls="customer-payment" aria-selected="true">Payment History </a>
                 </li>
                 <li class="nav-item ml-1" role="presentation">
                   <a class="nav-link" id="customer-payment-tab" data-bs-toggle="tab" href="#customer-payment" role="tab" aria-controls="customer-payment" aria-selected="true">Customer Payment</a>
@@ -26,8 +28,8 @@
             </ul>
             <div class="tab-content mt-2" id="customerTabContent">
                 <div class="tab-pane fade show active" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-                    <table class="table table-bordered datatable-remove">
-                        <thead class="table-bordered">
+                    <table class="table text-white datatable-remove">
+                        <thead class="table-dark">
                             <tr>
                                 <th width="30%" bgcolor="#E7E0EE" align="center">Particulars
                                 </th>
@@ -101,7 +103,7 @@
                     <div class="d-flex justify-content-center align-items-center">
                         <h5>Customer Payment </h5>
                     </div>
-                    <table class="table table-striped">
+                    <table class="table text-white">
                         <thead class="table-dark">
                             <tr>
                                 <th>Payment ID</th>
@@ -169,5 +171,4 @@
                 </div>
             </div>
         </div>
-    </x-slot>
-</x-layout>
+   @endsection

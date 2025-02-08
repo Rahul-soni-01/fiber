@@ -1,8 +1,9 @@
-<x-layout>
-    <x-slot name="title">Edit Customer</x-slot>
-    <x-slot name="main">
-        <div class="main" id="main">
-            <a href="{{ route('party.show') }}" class="btn btn-primary mb-2">Back to Customer</a>
+@extends('demo')
+@section('title', 'Customer')
+
+@section('content')
+<h1>Customer</h1>
+            <a href="{{ route('customer.index') }}" class="btn btn-primary mb-2">Back to Customer</a>
             @if ($errors->any())
             <div style="color: red;">
                 <ul>
@@ -85,6 +86,5 @@
                 </div>
             </form>
             
-        </div>
-    </x-slot>
-</x-layout>
+        
+@endsection

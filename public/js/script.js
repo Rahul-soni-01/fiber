@@ -307,6 +307,110 @@ document.addEventListener('DOMContentLoaded', function () {
     expenseestoggleBankDetails();
 });
 
+
+$(document).ready(function () {
+    if (typeof window.row == 'undefined') {
+        window.row = 1; // Initialize globally
+    }
+    // $('.table').DataTable();
+    $('.table').not('.datatable-remove').DataTable({
+        pageLength: 25 
+    });
+    
+    $(".chosen-select").chosen({
+        no_results_text: "Oops, nothing found!"
+    });
+
+    $(".sub-btn").on("click", function (e) {
+        $(this).next('.sub-menu').slideToggle();
+    });
+
+    $('.toggle-icon').click(function() {
+        $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
+    });
+
+    $('.select2').select2({
+        maximumInputLength: 20,
+        placeholder: "Select an option",
+        allowClear: true
+    });
+    $('#download-btn').click(function(e) {
+        e.preventDefault();
+
+        var content = $('#payment').html();
+        var currentUrl = window.location.href;
+         $.ajax({
+            url: '/generate-pdf',
+            type: 'POST',
+            data: { 
+                content: content,
+                currentUrl:currentUrl 
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+            },
+            success: function(response) {
+                const link = document.createElement('a');
+                const url = window.URL.createObjectURL(response);
+                link.href = url;
+                link.downOload = 'generated-file.pdf';
+                link.click();
+                window.URL.revokebjectURL(url);
+            },
+            error: function(error) {
+                console.error('Error downloading PDF:', error);
+            }
+        });
+    
+    });
+
+    $('#submit-button').click(function(e) {
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to submit this report?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('report-form').submit();
+            }
+        });
+    });
+
+    // $.each($('#ReadyStock'), function(index, element) {
+    $(document).on('click', '#ReadyStock', function(e) {
+        e.preventDefault();  // Prevent the default checkbox behavior if needed
+        
+        var dataId = $(this).data('id');  // Get the data-id of the clicked checkbox
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
+
+            // Perform the AJAX request
+        $.ajax({
+            url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
+            type: "POST",
+            data: {
+                "_token": csrfToken,  // CSRF token
+                "id": dataId,         // Report ID
+            },
+            
+            success: function(response) {
+                location.reload(true);
+            },
+            error: function(xhr) {
+                // Optional: Handle error
+                console.error(xhr.responseJSON.message);
+                alert("Failed to update stock status.");
+            }
+        });
+    });
+
+   
+
+});
+
 function filterOptions(event) {
     let selectName = event.target.id;
     let cnamePattern = /^data\[(\d+)\]\[cname\]$/;
@@ -659,101 +763,165 @@ function calculateTotal(element) {
     const grandTotal = subtotal + cgstAmount + sgstAmount + igstAmount;
     document.getElementById('grand_total_amt').value = grandTotal.toFixed(2);
 }
-$(document).ready(function () {
-
-    // $('.table').DataTable();
-    $('.table').not('.datatable-remove').DataTable({
-        pageLength: 25 
-    });
-    
-    $(".chosen-select").chosen({
-        no_results_text: "Oops, nothing found!"
-    });
-
-    $(".sub-btn").on("click", function (e) {
-        $(this).next('.sub-menu').slideToggle();
-    });
-
-    $('.toggle-icon').click(function() {
-        $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
-    });
-
-    $('.select2').select2({
-        maximumInputLength: 20,
-        placeholder: "Select an option",
-        allowClear: true
-    });
-    $('#download-btn').click(function(e) {
-        e.preventDefault();
-
-        var content = $('#payment').html();
-        var currentUrl = window.location.href;
-         $.ajax({
-            url: '/generate-pdf',
-            type: 'POST',
-            data: { 
-                content: content,
-                currentUrl:currentUrl 
-            },
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}' 
-            },
-            success: function(response) {
-                const link = document.createElement('a');
-                const url = window.URL.createObjectURL(response);
-                link.href = url;
-                link.downOload = 'generated-file.pdf';
-                link.click();
-                window.URL.revokebjectURL(url);
-            },
-            error: function(error) {
-                console.error('Error downloading PDF:', error);
-            }
-        });
-    
-    });
-
-    $('#submit-button').click(function(e) {
-            Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to submit this report?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, submit it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('report-form').submit();
-            }
-        });
-    });
-
-    // $.each($('#ReadyStock'), function(index, element) {
-    $(document).on('click', '#ReadyStock', function(e) {
-        e.preventDefault();  // Prevent the default checkbox behavior if needed
-        
-        var dataId = $(this).data('id');  // Get the data-id of the clicked checkbox
-        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
-
-            // Perform the AJAX request
-        $.ajax({
-            url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
-            type: "POST",
-            data: {
-                "_token": csrfToken,  // CSRF token
-                "id": dataId,         // Report ID
-            },
+function NewReportCreateRow(subcategories){
+    // console.log(subcategories,row);
+    $('#TBody').append(`
+      <div class="row mb-3 align-items-center" id="row_${row}">
+            <!-- Select Dropdown -->
+            <div class="col-12 col-md-2 d-flex">
+                <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub ml-2 form-control">
+                    <option value="" selected disabled>Select</option>
+                </select>
+            </div>
             
-            success: function(response) {
-                location.reload(true);
-            },
-            error: function(xhr) {
-                // Optional: Handle error
-                console.error(xhr.responseJSON.message);
-                alert("Failed to update stock status.");
-            }
+            <!-- Dynamic Content -->
+            <div class="col-12 col-md-10" id="col_${row}"></div>
+        </div>
+    `);
+    if (subcategories && Array.isArray(subcategories)) {
+        subcategories.forEach(sub_category => {
+            $(`#subcategory_${row}`).append(`<option value="${sub_category.id}" data-unit="${sub_category.unit}" data-sr_no="${sub_category.sr_no}">${sub_category.category.category_name} - ${sub_category.sub_category_name}</option>`);
         });
-    });
+    }
+    row++;
+}
+function tbl_stock(row_id){
+    // alert(row_id);
+    var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
 
-});
+    var subcategoryElement = document.getElementById(`subcategory_${row_id}`);
+    var Tdhtml = document.getElementById(`col_${row_id}`);
+    if (Tdhtml && Tdhtml.innerHTML.trim() !== '') {
+        Tdhtml.innerHTML= '';
+    }
+
+    var selectedOption = subcategoryElement.options[subcategoryElement.selectedIndex];
+
+    if (selectedOption && selectedOption.dataset.unit) {
+        var Datasr_no = selectedOption.dataset.sr_no;
+      if(Datasr_no === "0"){
+        Tdhtml.innerHTML += `
+        
+        </div> <!-- End previous col div -->
+        <div class="row mt-1" id="row_${row_id}">
+            <input type="hidden" name="sr_no_or_not[]" value="0">
+            <div class="col-12 col-md-3">
+                <input type="hidden" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                <datalist id="srled_${row_id}">
+                    <option value=""></option>
+                </datalist>
+                 <input type="hidden" name="srled[]" value="0">
+                 <input type="number" id="used_qty_${row_id}" name="used_qty[]" class="form-control" placeholder="Enter Qty">
+            </div>
+             
+
+            <div class="col-12 col-md-2">                     
+                <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row_id}">
+            </div>
+            <div class="col-12 col-md-2">
+                <input type="hidden" id="ampled_${row_id}" name="ampled[]" value="">
+
+                <input type="hidden" id="voltled_${row_id}" name="voltled[]" value="">
+
+                <input type="hidden" id="wattled_${row_id}" name="wattled[]" value="">
+            </div>
+            <div class="col-12 col-md-2">
+                    <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row_id})">
+
+                <lable class="m-2">Dead</lable>
+            </div>
+            <div class="col-12 col-md-2 text-right">
+                <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
+            </div>
+        </div>`;
+      }
+      else if(Datasr_no === "1"){
+            Tdhtml.innerHTML += `
+                </div> <!-- End previous col div -->
+                <div class="row" id="row_${row_id}">
+                    <input type="hidden" name="sr_no_or_not[]" value="1">
+                    <div class="col-12 col-md-3">
+                        <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                        <datalist id="srled_${row_id}">
+                            <option value=""></option>
+                        </datalist>
+                         <input type="hidden" id="used_qty_${row_id}" name="used_qty[]" class="form-control" value="1">
+                    </div>
+
+                    <div class="col-12 col-md-2">
+                        <input type="text" id="ampled_${row_id}" name="ampled[]" class="form-control" placeholder="Enter AMP">
+                    </div>
+
+                    <div class="col-12 col-md-2">
+                        <input type="text" id="voltled_${row_id}" name="voltled[]" class="form-control" placeholder="Enter VOLT">
+                    </div>
+                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row_id}">
+
+                    <div class="col-12 col-md-5 d-flex justify-content-between">
+                        
+                        <input type="text" id="wattled_${row_id}" name="wattled[]" class="form-control" placeholder="Enter WATT">
+                    
+                        <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row_id})">
+                        
+                        <lable class="m-2">Dead</lable>
+                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
+                    </div>
+                </div>
+            `;
+        } 
+       
+    }
+    
+    if (!subcategory_id) {
+        console.error(`Element with ID subcategory_${row_id} not found!`);
+        return; 
+    }
+    
+    if(!row_id){
+        console.error(`Element with ID subcategory_${row_id} not found!`);
+        return; 
+    }
+   
+    csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    $.ajax({
+        type: "POST",
+        url: "/check_stock",
+        data: {
+            _token: csrfToken,
+            subcategory_id: subcategory_id,
+        },
+        success: function (response) {
+            var data = response.data;
+            var srled = document.getElementById(`srled_${row_id}`);
+
+            if (!srled) {
+                console.error(`Element with ID 'srled_${row_id}' not found.`);
+                return;
+            }
+
+            var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
+            if (inputField) {
+                inputField.removeAttribute('value');
+            } else {
+                console.error(`Input field with list='srled_${row_id}' not found.`);
+            }
+
+            // Clear existing options
+            srled.innerHTML = '<option value="">Select</option>';
+
+            if (data.length == 0) {
+                var option = document.createElement("option");
+                option.value = "";
+                option.text = "No data available";
+                srled.appendChild(option);
+            } else {
+                data.forEach(function (item) {
+                    var option = document.createElement("option");
+                    option.value = item.serial_no;
+                    option.text = item.serial_no;
+                    srled.appendChild(option);
+                });
+            }
+         }
+    });
+}
