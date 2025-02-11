@@ -220,6 +220,8 @@
                         {{ $all_payment->supplier->party_name ?? 'N/A' }}
                         @elseif(isset($all_payment->customer_id))
                         {{ $all_payment->customer->customer_name ?? 'N/A' }}
+                        @else
+                        {{ $all_payment->name ?? 'N/A' }}
                         @endif
 
                     </td>

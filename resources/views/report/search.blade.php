@@ -5,9 +5,9 @@
 <h1>Report</h1>
 
 <form method="GET" action="{{route('report.search')}}" class="row">
-    <input type="number" name="sr_no" placeholder="Enter SR No." class="input-number form-control col-md-6"
+    <input type="text" name="sr_no" placeholder="Enter SR No." class="input-number form-control col-md-6"
         value="{{ request('sr_no') }}" required />
-    <button type="submit" class="col-md-1 btn btn-grey">Search</button>
+    <button type="submit" class="col-md-1 btn btn-info mt-2">Search</button>
 </form>
 
 <div class="row mt-4">

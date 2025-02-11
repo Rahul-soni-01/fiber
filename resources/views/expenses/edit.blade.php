@@ -114,7 +114,7 @@
                     
                     <!-- Submit Button -->
                     <div class="row">
-                        <div class="col-md-12 text-end">
+                        <div class="col-md-12 text-center">
                             <button type="submit" class="btn btn-success">Update</button>
 
                             <a href="{{ route('expenses.index') }}" class="btn btn-secondary">Cancel</a>

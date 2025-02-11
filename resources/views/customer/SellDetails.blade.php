@@ -11,12 +11,12 @@
         <a href="{{route('customer.index')}}" class="btn btn-info mb-2"> All Customer </a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link active text-dark" id="customer-payment-tab" data-bs-toggle="tab"
+        <a class="nav-link active text-info" id="customer-payment-tab" data-bs-toggle="tab"
             href="#customer-payment" role="tab" aria-controls="customer-payment" aria-selected="true">Customer
             Payment</a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link text-white bg-dark" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history"
+        <a class="nav-link text-info" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history"
             role="tab" aria-controls="customer-history" aria-selected="false">Customer Sale</a>
     </li>
 </ul>
@@ -95,8 +95,8 @@
                     <td>
                         <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
                                 class="ri-eye-fill"></i></a>
-                        <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i
-                                class="ri-pencil-line"></i></a>
+                        {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i
+                                class="ri-pencil-line"></i></a> --}}
                         {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST"
                             style="display:inline;">
                             @csrf
@@ -120,7 +120,7 @@
             <div class="ml-2">click on it..</div>
         </div>
         <div class="collapse mt-3" id="purchase-return-table">
-            <table class="table table-striped">
+            <table class="table text-white">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>

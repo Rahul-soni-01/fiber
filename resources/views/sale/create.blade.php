@@ -52,7 +52,7 @@
                                 <div class="col">
                                     <select required id="serial_no" class="form-control select2" name="serial_no[]"
                                         onchange="serial_no_append(0,event)">
-                                        <option value="">Select</option>
+                                        <option value="" disabled selected>Select</option>
                                         @foreach($serial_nos as $serial_no)
                                             <option value="{{ $serial_no->sr_no_fiber }}">{{ $serial_no->sr_no_fiber }}</option>
                                         @endforeach

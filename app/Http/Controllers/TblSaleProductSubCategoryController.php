@@ -55,7 +55,7 @@ class TblSaleProductSubCategoryController extends Controller
             'unit' => 'nullable|string|max:255',
             'sr_no' => 'nullable|integer',
         ]);
-        $validatedData['sr_no'] = $request->has('enable_sr_no') ? $request->sr_no : null;
+        $validatedData['sr_no'] = $request->has('sr_no') ? $request->sr_no : 0;
         // dd($validatedData);
 
         $subcategory->update($validatedData);

@@ -9,7 +9,7 @@
         <thead class="table-dark">
             <tr>
                 <th>#</th>
-                <th>Date</th>
+                {{-- <th>Date</th> --}}
                 <th>Customer</th>
                 <th>Price</th>
                 <th>Action</th>
@@ -17,9 +17,10 @@
         </thead>
         <tbody>
             @foreach ($sales as $index => $sale)
+            {{-- {{ dd($sale);}} --}}
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $sale->sale_date ?? 'N/A' }}</td>
+                {{-- <td>{{ $sale->sale_date ?? 'N/A' }}</td> --}}
                 <td>{{ $sale->customer_name ?? 'N/A' }}</td>
                 <td>{{ $sale->total_sale_amount ?? 0 }}</td>
                 <td>

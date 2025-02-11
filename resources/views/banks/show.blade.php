@@ -17,13 +17,13 @@
 
                 </li>
                 <li class="nav-item ml-1" role="presentation">
-                    <a class="nav-link" id="payment-tab" data-bs-toggle="tab" href="#payment" role="tab" aria-controls="customer-payment" aria-selected="true">Payment History </a>
+                    <a class="nav-link text-info" id="payment-tab" data-bs-toggle="tab" href="#payment" role="tab" aria-controls="customer-payment" aria-selected="true">Payment History </a>
                 </li>
                 <li class="nav-item ml-1" role="presentation">
-                  <a class="nav-link" id="customer-payment-tab" data-bs-toggle="tab" href="#customer-payment" role="tab" aria-controls="customer-payment" aria-selected="true">Customer Payment</a>
+                  <a class="nav-link text-info" id="customer-payment-tab" data-bs-toggle="tab" href="#customer-payment" role="tab" aria-controls="customer-payment" aria-selected="true">Customer Payment</a>
                 </li>
                 <li class="nav-item ml-1" role="presentation">
-                  <a class="nav-link" id="supplier-payment-tab" data-bs-toggle="tab" href="#supplier-payment" role="tab" aria-controls="supplier-payment" aria-selected="false">Supplier Payment</a>
+                  <a class="nav-link text-info" id="supplier-payment-tab" data-bs-toggle="tab" href="#supplier-payment" role="tab" aria-controls="supplier-payment" aria-selected="false">Supplier Payment</a>
                 </li>
             </ul>
             <div class="tab-content mt-2" id="customerTabContent">
@@ -139,7 +139,7 @@
                         <h5>Supplier Payment </h5>
                     </div>
 
-                    <table class="table table-striped">
+                    <table class="table text-white">
                         <thead class="table-dark">
                             <tr>
                                 <th>Payment ID</th>

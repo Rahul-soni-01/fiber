@@ -2,6 +2,7 @@
 @section('title', 'Sale')
 
 @section('content')
+
 <h1>Sale</h1>
 <a href="{{ route('sale.index') }}" class="btn btn-primary">Back to Sale</a>
 @if ($errors->any())

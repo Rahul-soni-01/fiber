@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css"> --}}
 </head>
 
-<body id="header">
+<body>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white">
@@ -73,10 +73,10 @@
     </nav>
 
     <!-- Sidebar and Main Content -->
-    <div class="container-fluid">
+    <div class="container-fluid" id="content">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark">
+            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
                 <!-- Logo -->
                 <div class="text-center py-3 ">
                     @php
@@ -263,7 +263,7 @@
                     <!-- Sale -->
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleMenu">
-                            <i class="ri-download-line"></i> Sale <i class="ri-arrow-down-s-line float-end"></i>
+                            <i class="fa-brands fa-sellsy"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
                         </a>
                         <div class="collapse" id="saleMenu">
                             <ul class="nav flex-column ms-3">
@@ -384,16 +384,17 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 col-sm-4 text-white">
+            <div class="col-lg-10 col-md-9 col-sm-4 text-white" >
                 <div class="p-4">
                     @yield('content')
                 </div>
             </div>
+            <div class="text-white bg-dark" id="footer">
+                {{$websetting->footer_text ?? null}}
+            </div>
         </div>
     </div>
-    <div class="text-white bg-dark" id="footer">
-        {{$websetting->footer_text ?? null}}
-    </div>
+   
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

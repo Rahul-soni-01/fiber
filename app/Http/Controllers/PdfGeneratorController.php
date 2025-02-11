@@ -18,14 +18,13 @@ class PdfGeneratorController extends Controller
             $BankController =  new TblBankController();
             $bankData = $BankController->show($bankId);  
             $data = $bankData->getData();
-
+            // dd($data);
             $html = view('banks.pdf', $data)->render(); // Create a dedicated view for PDF
             $dompdf = new \Dompdf\Dompdf();
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
         
-            // Stream PDF
             return $dompdf->stream("bank-$bankId.pdf", ['Attachment' => true]);
         }
         $invoice_no = $request->input('invoice_no'); // Retrieve the invoice_no parameter

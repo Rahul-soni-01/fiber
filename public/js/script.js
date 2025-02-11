@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    
+
     window.onload = checkQueryParams(), check_permission();
 
     // this is for only purchase rerun create time
@@ -314,9 +314,9 @@ $(document).ready(function () {
     }
     // $('.table').DataTable();
     $('.table').not('.datatable-remove').DataTable({
-        pageLength: 25 
+        pageLength: 10
     });
-    
+
     $(".chosen-select").chosen({
         no_results_text: "Oops, nothing found!"
     });
@@ -325,7 +325,7 @@ $(document).ready(function () {
         $(this).next('.sub-menu').slideToggle();
     });
 
-    $('.toggle-icon').click(function() {
+    $('.toggle-icon').click(function () {
         $(this).closest('.form-check').next('.category-list').toggle(); // Toggle the next .category-list
     });
 
@@ -334,22 +334,22 @@ $(document).ready(function () {
         placeholder: "Select an option",
         allowClear: true
     });
-    $('#download-btn').click(function(e) {
+    $('#download-btn').click(function (e) {
         e.preventDefault();
 
         var content = $('#payment').html();
         var currentUrl = window.location.href;
-         $.ajax({
+        $.ajax({
             url: '/generate-pdf',
             type: 'POST',
-            data: { 
+            data: {
                 content: content,
-                currentUrl:currentUrl 
+                currentUrl: currentUrl
             },
             headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            success: function(response) {
+            success: function (response) {
                 const link = document.createElement('a');
                 const url = window.URL.createObjectURL(response);
                 link.href = url;
@@ -357,15 +357,15 @@ $(document).ready(function () {
                 link.click();
                 window.URL.revokebjectURL(url);
             },
-            error: function(error) {
+            error: function (error) {
                 console.error('Error downloading PDF:', error);
             }
         });
-    
+
     });
 
-    $('#submit-button').click(function(e) {
-            Swal.fire({
+    $('#submit-button').click(function (e) {
+        Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to submit this report?",
             icon: 'warning',
@@ -381,13 +381,13 @@ $(document).ready(function () {
     });
 
     // $.each($('#ReadyStock'), function(index, element) {
-    $(document).on('click', '#ReadyStock', function(e) {
+    $(document).on('click', '#ReadyStock', function (e) {
         e.preventDefault();  // Prevent the default checkbox behavior if needed
-        
+
         var dataId = $(this).data('id');  // Get the data-id of the clicked checkbox
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
 
-            // Perform the AJAX request
+        // Perform the AJAX request
         $.ajax({
             url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
             type: "POST",
@@ -395,19 +395,17 @@ $(document).ready(function () {
                 "_token": csrfToken,  // CSRF token
                 "id": dataId,         // Report ID
             },
-            
-            success: function(response) {
+
+            success: function (response) {
                 location.reload(true);
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 // Optional: Handle error
                 console.error(xhr.responseJSON.message);
                 alert("Failed to update stock status.");
             }
         });
     });
-
-   
 
 });
 
@@ -455,7 +453,15 @@ function filterOptions(event) {
                     if (window.location.pathname == '/sale-create') {
                         let datasr_no = selectedOption.getAttribute('data-sr_no');
                         let datavalue = selectedOption.getAttribute('data-value');
+                        // console.log(datavalue,datasr_no);
                         if (datasr_no == 1) {
+                            let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
+                            // if its readonly then remove it.
+                            if (sr_no_input.getAttribute('readonly') == 'readonly') {
+                                sr_no_input.removeAttribute('readonly');
+                             
+                            } 
+
                             SubCategorysale_sr_no(datavalue, extractedIndex)
                         } else {
                             let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
@@ -473,9 +479,8 @@ function filterOptions(event) {
                             }
                         }
                     }
+                    $('.select2').select2();
                 }
-                // console.log(subCategorySelect);
-
             }
         } else {
             alert('Pattern did not match');
@@ -659,6 +664,7 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
 
                 // Append the new options to the select element
                 sr_noSelect.innerHTML += html;
+                $('.select2').select2();
             } else {
                 console.error('Select element not found');
             }
@@ -669,7 +675,6 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
             }
         }
     });
-
 }
 
 function items_add() {
@@ -699,7 +704,7 @@ document.addEventListener('input', (event) => {
     }
 });
 
-function expenseestoggleBankDetails(){
+function expenseestoggleBankDetails() {
     const paymentElement = document.getElementById('payment_type');
     const payment_type = paymentElement ? paymentElement.value || 0 : 0;
     const bankDetails = document.getElementById('bank_details');
@@ -722,7 +727,7 @@ function calculateTotal(element) {
     const igstPercent = parseFloat(document.getElementById('igst_per').value || 0);
 
 
-    document.getElementById('tax_rate_desc').value = cgstPercent+sgstPercent + igstPercent.toFixed(2);
+    document.getElementById('tax_rate_desc').value = cgstPercent + sgstPercent + igstPercent.toFixed(2);
     let subtotal = 0;
 
     // Loop through each row to calculate subtotal
@@ -756,14 +761,14 @@ function calculateTotal(element) {
     document.getElementById('taxable_amt_desc').value = subtotal.toFixed(2);
     total_tax_desc = cgstAmount + sgstAmount + igstAmount;
     document.getElementById('total_tax_desc').value = total_tax_desc.toFixed(2);
-    
+
 
 
     // Calculate and update the Grand Total
     const grandTotal = subtotal + cgstAmount + sgstAmount + igstAmount;
     document.getElementById('grand_total_amt').value = grandTotal.toFixed(2);
 }
-function NewReportCreateRow(subcategories){
+function NewReportCreateRow(subcategories) {
     // console.log(subcategories,row);
     $('#TBody').append(`
       <div class="row mb-3 align-items-center" id="row_${row}">
@@ -785,22 +790,22 @@ function NewReportCreateRow(subcategories){
     }
     row++;
 }
-function tbl_stock(row_id){
+function tbl_stock(row_id) {
     // alert(row_id);
     var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
 
     var subcategoryElement = document.getElementById(`subcategory_${row_id}`);
     var Tdhtml = document.getElementById(`col_${row_id}`);
     if (Tdhtml && Tdhtml.innerHTML.trim() !== '') {
-        Tdhtml.innerHTML= '';
+        Tdhtml.innerHTML = '';
     }
 
     var selectedOption = subcategoryElement.options[subcategoryElement.selectedIndex];
 
     if (selectedOption && selectedOption.dataset.unit) {
         var Datasr_no = selectedOption.dataset.sr_no;
-      if(Datasr_no === "0"){
-        Tdhtml.innerHTML += `
+        if (Datasr_no === "0") {
+            Tdhtml.innerHTML += `
         
         </div> <!-- End previous col div -->
         <div class="row mt-1" id="row_${row_id}">
@@ -834,8 +839,8 @@ function tbl_stock(row_id){
                 <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
             </div>
         </div>`;
-      }
-      else if(Datasr_no === "1"){
+        }
+        else if (Datasr_no === "1") {
             Tdhtml.innerHTML += `
                 </div> <!-- End previous col div -->
                 <div class="row" id="row_${row_id}">
@@ -868,20 +873,20 @@ function tbl_stock(row_id){
                     </div>
                 </div>
             `;
-        } 
-       
+        }
+
     }
-    
+
     if (!subcategory_id) {
         console.error(`Element with ID subcategory_${row_id} not found!`);
-        return; 
+        return;
     }
-    
-    if(!row_id){
+
+    if (!row_id) {
         console.error(`Element with ID subcategory_${row_id} not found!`);
-        return; 
+        return;
     }
-   
+
     csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.ajax({
         type: "POST",
@@ -922,6 +927,215 @@ function tbl_stock(row_id){
                     srled.appendChild(option);
                 });
             }
-         }
+        }
     });
 }
+
+var count = 1;
+function BtnAdd(categories, subCategories) {
+    if (window.location.pathname == '/sale-create') {
+        $('#TBody').append(`        
+        <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
+                <div class="col custom-col">
+                    <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
+                        <option value="" disabled selected class="0" >Choose a Category</option>
+                    </select>
+                </div>
+                <div class="col custom-col">
+                    <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
+                        <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
+                    </select>
+                </div>
+                <div class="col custom-col">
+                    <select id="data[${count}][unit]" name="unit[]"
+                        class="form-control">
+                        <option value="" disabled>Select</option>
+                        <option value="Pic">Pic</option>
+                        <option value="Mtr">Mtr</option>
+                    </select>
+                </div>
+                <div class="col custom-col" id="sr_no_div_${count}" style="display:none;">
+                    <select id="data[${count}][sr_no]" name="sr_no[]" placeholder="Plz dont write here"
+                        class="form-control select2">
+                        <option value="" disabled>Select Sr No</option>
+                    </select>
+                </div>
+                <div class="col custom-col" id="col_div_${count}">
+                    <input type="text" name="sr_no[]" class="form-control" id="sr_no_${count}" placeholder="Plz dont write here">
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
+                        class="form-control" onchange="total()">
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
+                        class="form-control" onchange="total()">
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
+                        class="form-control" disabled>
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
+                    step="0.01" class="form-control">
+                </div>
+                <div class="col custom-col">
+                    <button type="button" class="btn btn-info" onclick="BtnDel(this)">Delete</button>
+                </div>
+            </div>
+     `);
+
+        if (categories && Array.isArray(categories)) {
+            categories.forEach(category => {
+                $(`#data\\[${count}\\]\\[cname\\]`).append(`
+                <option value="${category.id}">${category.name}</option>`);
+            });
+        }
+
+        // Append subcategories
+        if (subCategories && Array.isArray(subCategories)) {
+            subCategories.forEach(subCategory => {
+                $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.spcid}" data-unit="${subCategory.unit}" data-sr_no="${subCategory.sr_no}"  data-value="${subCategory.name}" >${subCategory.name}</option>`);
+            });
+        }
+    }
+    else {
+        $('#TBody').append(`
+            <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
+                <div class="col custom-col">
+                    <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
+                        <option value="" disabled selected class="0" >Choose a Category</option>
+                    </select>
+                </div>
+                <div class="col custom-col">
+                    <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
+                        <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
+                    </select>
+                </div>
+                <div class="col custom-col">
+                    <select id="data[${count}][unit]" name="unit[]"
+                        class="form-control">
+                        <option value="">Select</option>
+                        <option value="Pic">Pic</option>
+                        <option value="Mtr">Mtr</option>
+                    </select>
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
+                        class="form-control" onchange="total()">
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
+                        class="form-control" onchange="total()">
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
+                        class="form-control" disabled>
+                </div>
+                <div class="col custom-col">
+                    <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
+                    step="0.01" class="form-control">
+                </div>
+                <div class="col custom-col">
+                    <button type="button" class="btn btn-grey" onclick="BtnDel(this)">Delete</button>
+                </div>
+            </div>
+        `);
+
+        // Append categories
+        if (categories && Array.isArray(categories)) {
+            categories.forEach(category => {
+                $(`#data\\[${count}\\]\\[cname\\]`).append(`
+                <option value="${category.id}">${category.category_name}</option>`);
+            });
+        }
+
+        // Append subcategories
+        if (subCategories && Array.isArray(subCategories)) {
+            subCategories.forEach(subCategory => {
+                $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.cid}" data-unit="${subCategory.unit}" >${subCategory.sub_category_name}</option>`);
+            });
+        }
+    }
+
+    count++;
+}
+
+function BtnDel(button) {
+    $(button).closest('.custom-row').remove();
+    // count--;
+    total();
+}
+function total() {
+    for (var i = 0; i < count; i++) {
+        var qtyElement = document.getElementById(`data[${i}][qty]`);
+        if (qtyElement) {
+            var qty = parseFloat(qtyElement.value) || 0;
+            var rate = parseFloat(document.getElementById(`data[${i}][rate]`).value) || 0;
+            var p_tax = parseFloat(document.getElementById(`data[${i}][p_tax]`).value) || 0;
+            // console.log(i, 'qty:', qty, 'rate:', rate, 'p_tax:', p_tax);
+            var amount_d = parseFloat(document.getElementById(`amount_d`).value) || 0;
+
+            var total = qty * rate;
+            var taxAmount = (total * p_tax) / 100;
+            total += taxAmount;
+
+            document.getElementById(`data[${i}][tax]`).value = taxAmount.toFixed(2);
+            document.getElementById(`data[${i}][total]`).value = total.toFixed(2);
+        }
+    }
+    sub_total();
+    // calculateshipping();
+}
+function sub_total() {
+    var subtotal = 0;
+    for (var i = 0; i < count; i++) {
+        var totalElement = document.getElementById(`data[${i}][total]`);
+        if (totalElement) {
+            var total = parseFloat(document.getElementById(`data[${i}][total]`).value) || 0;
+            subtotal += total;
+        }
+    }
+    document.getElementById("amount_d").value = subtotal.toFixed(2);
+    // var rate_r = document.getElementById(`rate_r`).value;
+    var rate_r = parseFloat(document.getElementById(`rate_r`).value) || 0;
+    if (isNaN(rate_r) || isNaN(subtotal)) {
+        console.error("Invalid input: rate_r or subtotal is not a number.");
+    } else {
+        let rate = rate_r * subtotal;
+        // console.log("Rate:", rate);
+
+        document.getElementById("amount_r").value = rate.toFixed(2);
+        document.getElementById("sub_total").value = rate.toFixed(2);
+    }
+
+    calculateAmount();
+}
+function calculateAmount() {
+    var subtotal = parseFloat(document.getElementById("sub_total").value) || 0;
+    var roundAmount = parseFloat(document.getElementById("round_total").value) || 0;
+    var amount = subtotal - roundAmount;
+    document.getElementById("amount").value = amount.toFixed(2);
+
+    calculateshipping();
+}
+function calculateshipping() {
+    var amount = parseFloat(document.getElementById(`amount_r`).value) || 0;
+    var shipping_cost = parseFloat(document.getElementById(`shipping_cost`).value) || 0;
+    var round_total = parseFloat(document.getElementById(`round_total`).value) || 0;
+
+    var total = shipping_cost + amount;
+
+    document.getElementById(`sub_total`).value = total.toFixed(2);
+    var aftertotal = total - round_total;
+
+    document.getElementById(`amount`).value = aftertotal.toFixed(2);
+
+}
+
