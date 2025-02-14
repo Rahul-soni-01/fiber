@@ -409,6 +409,68 @@ $(document).ready(function () {
 
 });
 
+function GetInvoiceData(user,selectId){
+    const selectedId = document.getElementById(selectId).value;
+
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    if(user === 'supplier'){
+        var url = "/get-invoice-details";
+        const party = document.getElementById('supplier_select').value;
+        var data = {
+            _token: csrfToken,
+            invoice_no: selectedId,
+            party: party,
+            status: 1,
+        };
+    }
+    else{
+       var url = "/get-invoice-sell-details"; 
+       const customer = document.getElementById('customer_select').value;
+       var data = {
+            _token: csrfToken,
+            invoice_no: selectedId,
+            customer: customer,
+            status: 1,
+        };
+    }
+    
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: data,
+        success: function (response) {
+            if(user === 'supplier'){
+                $('#supplier_paid_total').val(response.data[0].amount); 
+            }else if(user === 'customer'){
+                $('#customer_amount').val(response.data[0].total_amount); 
+            }
+        }
+    });
+}
+
+
+function toggleBankDetails(user) {
+    if( user ==='customer'){
+        const paymentMethod = document.getElementById('payment_method').value;
+        const bankDetails = document.getElementById('bank_details');
+
+        if (paymentMethod === 'Bank') {
+            bankDetails.style.display = 'block';
+        } else {
+            bankDetails.style.display = 'none';
+        }
+    } else if(user ==='supplier'){
+        const paymentMethod = document.getElementById('supplier_payment_method').value;
+        const bankDetails = document.getElementById('supplier_bank_details');
+
+        if (paymentMethod === 'Bank') {
+            bankDetails.style.display = 'block';
+        } else {
+            bankDetails.style.display = 'none';
+        }
+    }
+}
+
 function filterOptions(event) {
     let selectName = event.target.id;
     let cnamePattern = /^data\[(\d+)\]\[cname\]$/;

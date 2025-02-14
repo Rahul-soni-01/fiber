@@ -30,7 +30,7 @@
                 <td>
                     <!-- Edit Button -->
                     <a href="{{ route('expenses.edit', $expense->id) }}" class="btn btn-sm btn-warning">
-                        <i class="ri-pencil-fill"></i> Edit
+                        <i class="ri-pencil-fill"></i> 
                     </a>
                     <!-- Delete Form -->
                     <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST" style="display:inline;">
@@ -38,7 +38,7 @@
                         @method('DELETE')
                         <button type="submit" onclick="return confirm('Are you sure you want to delete this expense?');"
                             class="btn btn-sm btn-danger">
-                            <i class="ri-delete-bin-fill"></i> Delete
+                            <i class="ri-delete-bin-fill"></i> 
                         </button>
                     </form>
                 </td>

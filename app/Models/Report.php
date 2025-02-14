@@ -65,7 +65,7 @@ class Report extends Model
     }
     public function tbl_type() // Singular, since it's a belongsTo relationship
     {
-        return $this->belongsTo(TblType::class, 'type', 'id');
+        return $this->belongsTo(Tbltype::class, 'type', 'id');
     }
 
 }

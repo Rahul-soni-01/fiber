@@ -60,11 +60,11 @@
                         <td>{{$party->telephone_no}}</td>
                         <td>{{$party->sender_name}}</td>
                         <td>
-                            <a href="{{ route('party.edit', ['party_id' => $party->id]) }}"><i class="ri-eye-fill"></i></a>  
-                            <form action="{{ route('party.destroy', $party->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('party.edit', ['party_id' => $party->id]) }}" class="btn btn-sm btn-warning"><i class="ri-pencil-fill"></i></a>  
+                            <form action="{{ route('party.destroy', $party->id) }}" method="POST" style="display:inline;" class="">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this Supplier?');" class="btn "> <i class="ri-delete-bin-fill"></i></button>
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this Supplier?');" class="btn btn-sm text-white bg-danger"> <i class="ri-delete-bin-fill"></i></button>
                             </form> 
                             <button class="btn"> <a href="{{ route('party.purchase.details', ['party_id' => $party->id]) }}"> Supplier History </a></button>  
                         </td>
