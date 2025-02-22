@@ -1,11 +1,7 @@
 @extends('demo')
 @section('title', 'Customer')
-
 @section('content')
 <h1>Customer</h1>
-
-
-
 <ul class="nav nav-tabs" id="customerTab" role="tablist">
     <li class="nav-item" role="presentation">
         <a href="{{route('customer.index')}}" class="btn btn-info mb-2"> All Customer </a>
@@ -20,12 +16,17 @@
             role="tab" aria-controls="customer-history" aria-selected="false">Customer Sale</a>
     </li>
 </ul>
+
 <div class="tab-content" id="customerTabContent">
 
     {{-- @if(request()->has('payment')) --}}
+
     {{-- <a href="{{route('customer.index')}}" class="btn btn-primary mb-2"> All Customer </a>
+
     <a href="{{ route('customer.sell.details', ['customer_id' =>  $CustomerPayments[0]->customer->id ]) }}"
+
         class="btn btn-info mb-2"> Customer Sell Details </a> --}}
+
     <div class="tab-pane fade show active" id="customer-payment" role="tabpanel" aria-labelledby="customer-payment-tab">
         <div class="d-flex justify-content-center align-items-center mt-3">
             <h5>Sell Payment </h5>
@@ -41,7 +42,6 @@
                     <th>Transaction Type</th>
                     <th>Bank Name</th>
                     <th>Account Holder Name</th>
-
                     <th>Notes</th>
                 </tr>
             </thead>
@@ -66,15 +66,12 @@
             </tbody>
         </table>
     </div>
-
     {{-- @else --}}
     <div class="tab-pane fade" id="customer-history" role="tabpanel" aria-labelledby="customer-history-tab">
-
         {{-- <a href="?payment" class="btn btn-info mb-2">Customer Payment</a> --}}
         <div class="d-flex justify-content-center align-items-center">
             <h5>Sell Details </h5>
         </div>
-
         <table class="table text-white">
             <thead class="table-dark">
                 <tr>
@@ -95,15 +92,25 @@
                     <td>
                         <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
                                 class="ri-eye-fill"></i></a>
+
                         {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i
+
                                 class="ri-pencil-line"></i></a> --}}
+
                         {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST"
+
                             style="display:inline;">
+
                             @csrf
+
                             @method('DELETE')
+
                             <button type="submit"
+
                                 onclick="return confirm('Are you sure you want to delete this sale?');" class="btn"><i
+
                                     class="ri-delete-bin-fill"></i></button>
+
                         </form> --}}
                     </td>
                 </tr>
@@ -119,6 +126,7 @@
             </h5>
             <div class="ml-2">click on it..</div>
         </div>
+
         <div class="collapse mt-3" id="purchase-return-table">
             <table class="table text-white">
                 <thead class="table-dark">
@@ -131,7 +139,6 @@
                 </thead>
                 <tbody>
                     @foreach ($salereturns as $salereturn)
-
                     <tr>
                         <td>{{$salereturn->id}}</td>
                         <td>{{$salereturn->date}}</td>
@@ -145,4 +152,5 @@
     </div>
     {{-- @endif --}}
 </div>
+
 @endsection

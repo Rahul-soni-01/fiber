@@ -37,15 +37,16 @@
             <td>{{ $customer->telephone_no }}</td>
             <td>{{ $customer->receiver_name }}</td>
             <td class="d-flex">
-                <button class="btn">
-                    <a href="{{ route('customer.edit', ['customer_id' => $customer->id]) }}"><i
-                            class="ri-eye-fill"></i></a>
-                </button>
-                <form action="{{ route('customer.destroy', $customer->id) }}" method="POST" style="display:inline;">
+                {{-- <button class=""> --}}
+                    <a href="{{ route('customer.edit', ['customer_id' => $customer->id]) }}" class="btn btn-sm btn-primary"><i
+                        class="ri-eye-fill"></i></a>
+                {{-- </button> --}}
+             
+                <form action="{{ route('customer.destroy', $customer->id) }}" method="POST" style="display:inline;" class="text-white">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Are you sure you want to delete this customer?');"
-                        class="btn">
+                        class="btn btn-sm text-white bg-danger">
                         <i class="ri-delete-bin-fill"></i>
                     </button>
                 </form>
