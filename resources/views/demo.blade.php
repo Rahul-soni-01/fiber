@@ -114,17 +114,11 @@
 
     </nav>
 
-
-
     <!-- Sidebar and Main Content -->
-
     <div class="container-fluid" id="content">
-
         <div class="row">
-
             <!-- Sidebar -->
-
-            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
+            <div class="col-lg-2 col-md-3 col-sm-12 sidebar collapse show bg-dark" id="sidebar">
 
                 <!-- Logo -->
 
@@ -736,28 +730,16 @@
 
             </div>
 
-
-
             <!-- Main Content -->
-
-            <div class="col-lg-10 col-md-9 col-sm-4 text-white" >
-
+            <div class="col-lg-10 col-md-9 col-sm-12 text-white" >
                 <div class="p-2">
-
                     @yield('content')
-
                 </div>
-
             </div>
-
             <div class="text-white bg-dark" id="footer">
-
                 {{$websetting->footer_text ?? null}}
-
             </div>
-
         </div>
-
     </div>
 
    

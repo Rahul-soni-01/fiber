@@ -15,6 +15,7 @@
 </div>
 @endif
 <a href="{{ route('customer.create') }}" class="btn btn-primary mb-3">Add customer</a>
+<div class="table-responsive">
 <table class="table text-white">
     <thead class="table-dark">
         <tr>
@@ -57,5 +58,5 @@
         @endforeach
     </tbody>
 </table>
-
+</div>
 @endsection

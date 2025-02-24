@@ -305,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });*/
     expenseestoggleBankDetails();
+
 });
 
 
@@ -314,7 +315,14 @@ $(document).ready(function () {
     }
     // $('.table').DataTable();
     $('.table').not('.datatable-remove').DataTable({
-        pageLength: 10
+        pageLength: 10,
+        responsive: true,
+        // autoWidth: true, 
+        paging: true,
+        ordering: true
+        // info: true,
+        // scrollY: true,
+        // scrollX: true,
     });
 
     $(".chosen-select").chosen({
@@ -448,6 +456,9 @@ function GetInvoiceData(user,selectId){
     });
 }
 
+function NewremoveRow(buttonId){
+    $(buttonId).closest('.align-items-center').remove();
+}
 
 function toggleBankDetails(user) {
     if( user ==='customer'){
@@ -1105,7 +1116,7 @@ function BtnAdd(categories, subCategories) {
                     step="0.01" class="form-control">
                 </div>
                 <div class="col custom-col">
-                    <button type="button" class="btn btn-grey" onclick="BtnDel(this)">Delete</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="BtnDel(this)"><i class="ri-delete-bin-fill"></i></button>
                 </div>
             </div>
         `);

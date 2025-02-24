@@ -7,7 +7,7 @@
     <a href="{{ route('payment.create') }}" class="btn btn-primary">Add payment</a>
 
 
-
+<div class="table-responsive">
     <table class="table table-bordered datatable-remove">
 
         <thead class="table-light">
@@ -198,7 +198,7 @@
         </tbody>
 
     </table>
-
+</div>
 
 
     {{-- <div class="d-flex justify-content-center align-items-center">
