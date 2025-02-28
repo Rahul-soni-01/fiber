@@ -19,6 +19,7 @@ use App\Models\SaleItem;
 use App\Models\Sale;
 use App\Models\TblReportItem;
 use App\Models\Tbltype;
+use App\Models\SelectedInvoice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -70,7 +71,6 @@ class ReportController extends Controller
             $startDate = Carbon::parse($request->query('s_date'))->startOfDay();
             $endDate = Carbon::parse($request->query('e_date'))->endOfDay();
             $reports->whereBetween('created_at', [$startDate, $endDate]);
-
         }
 
         if ($request->query('sr_no') !== null) {
@@ -130,7 +130,7 @@ class ReportController extends Controller
             $customers = TblCustomer::all();
 
             // return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('types', 'all_sub_categories', 'customers' ));
+            return view("report.createNew", compact('types', 'all_sub_categories', 'customers'));
         }
         return redirect('/unauthorized');
     }
@@ -500,7 +500,6 @@ class ReportController extends Controller
             $startDate = Carbon::parse($request->query('s_date'))->startOfDay();
             $endDate = Carbon::parse($request->query('e_date'))->endOfDay();
             $reports->whereBetween('created_at', [$startDate, $endDate]);
-
         }
 
         if ($request->query('sr_no') !== null) {
@@ -555,17 +554,17 @@ class ReportController extends Controller
     public function ready(Request $request)
     {
         $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
-        ->where('part', 0)
-        ->where('sale_status', 0)
-        ->where('status', 1);
-        
-        if($request->id){
+            ->where('part', 0)
+            ->where('sale_status', 0)
+            ->where('status', 1);
+
+        if ($request->id) {
             $report = Report::find($request->id);
             if ($report) {
                 // Update the stock_status field
                 $report->stock_status = $report->stock_status == 1 ? 0 : 1;
                 $report->save();
-        
+
                 return response()->json([
                     'status' => 200,
                     'message' => 'Stock status updated successfully.',
@@ -580,7 +579,6 @@ class ReportController extends Controller
             $startDate = Carbon::parse($request->query('s_date'))->startOfDay();
             $endDate = Carbon::parse($request->query('e_date'))->endOfDay();
             $reports->whereBetween('created_at', [$startDate, $endDate]);
-
         }
 
         if ($request->query('sr_no') !== null) {
@@ -594,9 +592,9 @@ class ReportController extends Controller
         $reports = $reports->get();
         $ready = 1;
         $tbl_parties = tbl_party::all();
-        return view("report.index", compact('reports', 'tbl_parties','ready'));
+        return view("report.index", compact('reports', 'tbl_parties', 'ready'));
     }
-    
+
 
     public function edit($id)
     {
@@ -1205,7 +1203,6 @@ class ReportController extends Controller
                 return redirect()->back()->with('error', 'Failed to Update the report. Please try again.');
             }
         }
-
     }
     public function reject(Request $request)
     {
@@ -1215,8 +1212,48 @@ class ReportController extends Controller
         }
         return redirect('/unauthorized');
     }
-    public function stock()
+    public function stock(Request $request)
     {
+        $scid = $request->query('scid');
+
+        if ($scid) {
+            $subcategory = tbl_sub_category::findOrFail($scid);
+            $purchaseResults = tbl_purchase_item::where('scid', $scid)
+            ->selectRaw('
+                invoice_no,
+                scid,
+                cid,
+                COALESCE(SUM(qty), 0) as total_purchase_qty,
+                COALESCE(SUM(total), 0) as total_purchase
+            ')->with('category', 'subCategory')
+            ->groupBy('invoice_no', 'scid', 'cid')
+            ->get();
+        
+            $stockResults = TblStock::where('scid', $scid)->select(
+                'scid',
+                DB::raw('SUM(qty) as total_qty'),
+                DB::raw('SUM(CASE WHEN status = 0 THEN qty ELSE 0 END) as qty_status_0'),
+                DB::raw('SUM(CASE WHEN status = 1 THEN qty ELSE 0 END) as qty_status_1')
+            )->with('category', 'subCategory')->  groupBy('scid')->get()->keyBy('scid'); 
+    
+            $reportResults = TblReportItem::
+            where('scid', $scid)
+            ->select('scid',
+                DB::raw('COUNT(*) as total_count'),
+                // DB::raw('SUM(dead_status) as total_dead_stock'),
+                DB::raw('SUM(used_qty) as total_used_stock'),
+                DB::raw('SUM(CASE WHEN dead_status = 1 THEN used_qty ELSE 0 END) as dead_status_used_qty'),
+                DB::raw('GROUP_CONCAT(DISTINCT report_id) as report_ids') 
+            )->with('tbl_sub_category')
+            ->groupBy('scid')
+            ->get();
+            // ->keyBy('scid');   
+            // dd($reportResults);
+            
+            
+            return view('report.scwisestock', compact('subcategory', 'purchaseResults', 'stockResults', 'reportResults'));
+        }
+
         $categories = tbl_category::all();
         $subcategories = tbl_sub_category::all();
 
@@ -1224,10 +1261,7 @@ class ReportController extends Controller
             'scid',
             DB::raw('SUM(qty) as total_purchase_qty'),
             DB::raw('SUM(total) as total_purchase')
-        )
-            ->groupBy('scid')
-            ->get()
-            ->keyBy('scid'); // Group by scid for easy lookup
+        )->groupBy('scid')->get()->keyBy('scid'); // Group by scid for easy lookup
 
         $totalPurchase = tbl_purchase_item::sum('total');
 
@@ -1236,22 +1270,15 @@ class ReportController extends Controller
             DB::raw('SUM(qty) as total_qty'),
             DB::raw('SUM(CASE WHEN status = 0 THEN qty ELSE 0 END) as qty_status_0'),
             DB::raw('SUM(CASE WHEN status = 1 THEN qty ELSE 0 END) as qty_status_1')
-        )
-            ->groupBy('scid')
-            ->get()
-            ->keyBy('scid'); // Group by scid for easy lookup
+        )->groupBy('scid')->get()->keyBy('scid'); // Group by scid for easy lookup
 
-            $reportResults = TblReportItem::select(
-                'scid',
-                DB::raw('COUNT(*) as total_count'),
-                DB::raw('SUM(dead_status) as total_dead_stock'),
-                DB::raw('SUM(used_qty) as total_used_stock'),
-                DB::raw('SUM(CASE WHEN dead_status = 1 THEN used_qty ELSE 0 END) as dead_status_used_qty')
-
-            )
-            ->groupBy('scid')
-            ->get()
-            ->keyBy('scid'); // Group by scid for easy lookup
+        $reportResults = TblReportItem::select(
+            'scid',
+            DB::raw('COUNT(*) as total_count'),
+            DB::raw('SUM(dead_status) as total_dead_stock'),
+            DB::raw('SUM(used_qty) as total_used_stock'),
+            DB::raw('SUM(CASE WHEN dead_status = 1 THEN used_qty ELSE 0 END) as dead_status_used_qty')
+        )->groupBy('scid')->get()->keyBy('scid'); // Group by scid for easy lookup
 
         // dd($reportResults);
         // Combine all data with subcategories
@@ -1412,7 +1439,9 @@ class ReportController extends Controller
                         $party = tbl_party::where('party_name', 'opening stock')->first();
                         $party_id = $party->id;
                         $invoice = tbl_purchase::where('pid', $party_id)->first();
+        
                         $invoice_no = $invoice->invoice_no;
+                        
                         $date = $invoice->date;
                         $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
                             ->where('scid', $request->sub_category[$index])
@@ -1459,16 +1488,44 @@ class ReportController extends Controller
                         }
                     }
                 } elseif ($sr_no_or_not == 0) {
-
-                    $existingRecord = TblStock::where('serial_no', $serial_no)
-                        ->where('status', 0)
+                    $invoice_no = SelectedInvoice::first()->invoice_no;
+                    $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
+                    // $invoice_no = $SelectedInvoice;
+                    
+                    $date = $invoice->date;
+                    $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
+                    ->where('scid', $request->sub_category[$index])
                         ->first();
+                    $cid = $invoice_data->cid;
+
+                    $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
+                        ->where('scid', $request->sub_category[$index])
+                        ->where('cid', $cid)
+                        ->where('serial_no', $serial_no)
+                        ->count();
+                    $existingRecord = TblStock::firstOrCreate(
+                        [
+                            'invoice_no' => $invoice_no, // Search criteria
+                            'serial_no' => $serial_no, 
+                            'status' => 0
+                        ],
+                            [
+                                'date' => $date,
+                                'invoice_no' => $invoice_no,
+                                'cid' => $cid,
+                                'scid' => $request->sub_category[$index],
+                                'qty' => $invoice_data->qty,
+                                'price' => $invoice_data->total,
+                                'priceofUnit' =>$invoice_data->price,
+                                'status' => 0, 
+                            ]
+                        );
+                        // dd($sr_no_or_not, $dead,$invoice,$date,$existingRecord);
                     if ($existingRecord) {
                         $amount += $existingRecord->priceofUnit;
-                        
+
                         if ($dead == 1) {
                             $existingRecord->dead_status = 1;
-                          
                         }
                         $existingRecord->save();
                     } else {
@@ -1498,7 +1555,9 @@ class ReportController extends Controller
                 } else if ($sr_no_or_not == 0) {
                     $unit = 'Mtr';
                 }
-                $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
+                $tbl_stock_id = TblStock::where('serial_no', $serial_no)
+                ->where('invoice_no', $invoice_no)
+                ->value('id');
 
                 $TblReportItem = new TblReportItem();
                 $TblReportItem->scid = $request->sub_category[$index];
@@ -1513,7 +1572,6 @@ class ReportController extends Controller
                 $TblReportItem->used_qty = $request->used_qty[$index];
                 try {
                     $TblReportItem->save();
-
                 } catch (\Exception $e) {
                     return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
                 }
@@ -1600,7 +1658,6 @@ class ReportController extends Controller
                                 $existingRecord->dead_status = 1;
                             }
                             $existingRecord->save();
-
                         } else {
                             $avalabile = 1;
                             $party = tbl_party::where('party_name', 'opening stock')->first();
@@ -1703,7 +1760,6 @@ class ReportController extends Controller
                     $TblReportItem->watt = $request->wattled[$index] ?? null;
                     try {
                         $TblReportItem->save();
-
                     } catch (\Exception $e) {
                         return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
                     }
@@ -1739,18 +1795,18 @@ class ReportController extends Controller
     {
         if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
 
-            if( Auth()->user()->type === 'user'){
+            if (Auth()->user()->type === 'user') {
                 $validator = Validator::make(
                     $request->all(),
                     [
                         'sr_no_fiber' => 'required|string|max:255',
                         'type' => 'required|string|max:255',
-                        ]
-                    );
-                    if ($validator->fails()) {
-                        $firstErrorMessage = $validator->errors()->first();
-                        return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
-                    }
+                    ]
+                );
+                if ($validator->fails()) {
+                    $firstErrorMessage = $validator->errors()->first();
+                    return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+                }
             }
             // dd($request->all());
             $report = Report::find($id);
@@ -1807,7 +1863,7 @@ class ReportController extends Controller
                 foreach ($request->srled as $index => $serial_no) {
                     $sub_cat = tbl_sub_category::where('id', $sub_category[$index])->first();
                     $dead = $request->dead[$index];
-                    
+
                     $existingRecord = TblStock::where('serial_no', $serial_no)
                         ->where('scid', $sub_category[$index])
                         ->first();
@@ -1857,7 +1913,7 @@ class ReportController extends Controller
                                 'status' => 1,
                                 'dead_status' => $dead,
                             ]);
-                            
+
                             $reportitem = new TblReportItem();
                             $reportitem->report_id = $id;
                             $reportitem->scid = $sub_category[$index];

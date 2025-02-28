@@ -15,6 +15,7 @@
             <th>Total Used Qty In Reports</th>
             <th>Total Dead Stock</th>
             <th>Total Purchase Price</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -35,12 +36,18 @@
             </td>
             <td>{{ number_format($data['dead_status_used_qty'], 2) }}</td>
             <td>{{ number_format($data['total_purchase'], 2) }}</td>
+            <td>
+                <a class="btn" href="{{ route('report.stock', ['scid' =>  $data['subcategory']->id]) }}">
+                <i class="ri-eye-line"></i>
+                </a>
+            </td>
         </tr>
         @endforeach
     </tbody>
     <tfoot class="table-dark">
         <tr>
             <td><strong>Totals</strong></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

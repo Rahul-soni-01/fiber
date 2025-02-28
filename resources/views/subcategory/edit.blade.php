@@ -1,6 +1,7 @@
-<x-layout>
-    <x-slot name="title">Edit Subcategory</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'Report')
+
+@section('content')
         <div class="main" id="main">
             <a href="{{ route('subcategory.index') }}" class="btn btn-primary">Back to Subcategory</a>
             
@@ -66,5 +67,4 @@
                 </div>
             </form>
         </div>
-    </x-slot>
-</x-layout>
+ @endsection

@@ -95,7 +95,7 @@
                         <h5>ITEM</h5>
                     </div>
                     <div class="col-md-2">
-                        <h5>SR</h5>
+                        <h5>SR / Qty</h5>
                     </div>
                     <div class="col-md-2">
                         <h5>AMP</h5>
@@ -115,7 +115,7 @@
                         <strong>{{ $reportitem->tbl_sub_category->category->category_name}} - {{ $reportitem->tbl_sub_category->sub_category_name }}</strong>
                     </div>
                     <div class="col-md-2">
-                        <span>{{ $reportitem->sr_no }}</span>
+                        <span>{{ $reportitem->sr_no }} / {{ $reportitem->used_qty }}</span>
                     </div>
                     <div class="col-md-2">
                         <span>{{ $reportitem->amp }}</span>

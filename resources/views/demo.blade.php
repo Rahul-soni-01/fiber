@@ -75,8 +75,8 @@
     <!-- Sidebar and Main Content -->
     <div class="container-fluid" id="content">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
+                <!-- Sidebar -->
+                <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
                 <!-- Logo -->
                 <div class="text-center py-3 ">
                     @php
@@ -229,6 +229,7 @@
                         </a>
                         <div class="collapse" id="reportMenu">
                             <ul class="nav flex-column ms-3">
+                                <li class="nav-item"><a href="{{ route('invoices.index') }}" id="view" class="nav-link">Select Invoice</a></li>
                                 @if(in_array(auth()->user()->type, ['admin', 'user', 'account', 'cavity', 'electric']))
                                 <li class="nav-item">
                                     <a href="{{ route('report.index') }}" class="nav-link">Show Report</a>
@@ -263,7 +264,7 @@
                     <!-- Sale -->
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleMenu">
-                            <i class="fa-brands fa-sellsy"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
+                            <i class="fa-brands fa-sellsy me-1"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
                         </a>
                         <div class="collapse" id="saleMenu">
                             <ul class="nav flex-column ms-3">

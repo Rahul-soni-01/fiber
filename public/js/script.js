@@ -1200,4 +1200,26 @@ function calculateshipping() {
     document.getElementById(`amount`).value = aftertotal.toFixed(2);
 
 }
+function rate() {
+    var amount1 = parseFloat(document.getElementById(`amount_d`).value) || 0;
+    var rate1 = parseFloat(document.getElementById(`rate_r`).value) || 0;
 
+    var amount = amount1 * rate1;
+
+    document.getElementById(`sub_total`).value = amount.toFixed(2);
+    document.getElementById(`amount_r`).value = amount.toFixed(2);
+    document.getElementById(`amount`).value = amount.toFixed(2);
+    sub_total();
+}
+
+function NewremoveRow(buttonId){
+    $(buttonId).closest('.align-items-center').remove();
+}
+function syncHiddenInput(checkbox, rowId) {
+    const hiddenInput = document.querySelector(`.hidden-dead-${rowId}`);
+    if (checkbox.checked) {
+        hiddenInput.disabled = true; // Disable the hidden input if the checkbox is checked
+    } else {
+        hiddenInput.disabled = false; // Enable the hidden input if the checkbox is unchecked
+    }
+}

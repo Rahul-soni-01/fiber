@@ -1,6 +1,7 @@
-<x-layout>
-    <x-slot name="title">Show Sub Category</x-slot>
-    <x-slot name="main">
+@extends('demo')
+@section('title', 'Report')
+
+@section('content')
         <div class="main" id="main">
             @if ($errors->any())
             <div style="color: red;">
@@ -22,7 +23,7 @@
             @endif
 
             <a href="{{ route('subcategory.create') }}" class="btn btn-primary">Add Sub Category</a>
-            <table class="table table-striped">
+            <table class="table text-white">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
@@ -59,5 +60,4 @@
                 </tbody>
             </table>
         </div>
-    </x-slot>
-</x-layout>
+  @endsection

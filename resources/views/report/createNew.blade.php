@@ -12,7 +12,6 @@
     @csrf
     <div class="container-fluid">
         <div class="row mb-3">
-
             @if( auth()->user()->type === 'godown')
             <div class="col-12 col-md-2">
                 <h5>Supplier Name</h5>

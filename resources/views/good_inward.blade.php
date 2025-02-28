@@ -198,7 +198,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-sm-2 offset-sm-11">
-                    <button class="btn btn-success">Save</button>
+                    <button class="btn btn-success" type="submit">Save</button>
                 </div>
             </div>
         </div>

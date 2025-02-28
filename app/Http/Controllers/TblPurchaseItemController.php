@@ -6,6 +6,7 @@ use App\Models\tbl_purchase_item;
 use App\Models\tbl_purchase;
 use App\Models\TblPurchaseReturnItem;
 use App\Models\TblPayment;
+use App\Models\SelectedInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,9 +21,20 @@ class TblPurchaseItemController extends Controller
 
     public function index()
     {
-        //
+        $invoices = tbl_purchase::with('party')->get();
+        $SelectedInvoice = SelectedInvoice::all();
+        // dd($SelectedInvoice);
+        return view('inward.PurInvoiceindex', compact('invoices', 'SelectedInvoice'));
     }
+    public function select(Request $request)
+    {
+        
+        $request->validate(['invoice_no' => 'required']);
+        SelectedInvoice::query()->delete(); // Clear previous selection
+        SelectedInvoice::create(['invoice_no' => $request->invoice_no]);
 
+        return redirect()->route('invoices.index')->with('success', 'Invoice selected successfully');
+    }    
     public function create(Request $request)
     {
         // dd($request->all());

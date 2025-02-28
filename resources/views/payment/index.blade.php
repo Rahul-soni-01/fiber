@@ -5,7 +5,7 @@
 <div class="main" id="main">
     <a href="{{ route('payment.create') }}" class="btn btn-primary">Add payment</a>
 
-    <table class="table datatable-remove">
+    <table class="table text-white datatable-remove">
         <thead class="table-light">
             <tr>
                 <th>ID</th>

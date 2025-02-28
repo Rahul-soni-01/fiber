@@ -173,6 +173,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('inward-payment', [TblPurchaseController::class, 'paymentindex'])->name('inward.payment.index');
 
+    Route::get('/invoices', [TblPurchaseItemController::class, 'index'])->name('invoices.index'); // Show list of invoices
+    Route::post('/invoices-select', [TblPurchaseItemController::class, 'select'])->name('invoices.select'); // Select invoice for report
     // inward crud
     Route::get('inward-return-show-{invoice_no}', [TblPurchaseController::class, 'Return_show_id'])->name('inward.return.show');
     Route::get('inward-return', [TblPurchaseController::class, 'ReturnIndex'])->name('inward.return.index');

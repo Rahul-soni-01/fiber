@@ -1,5 +1,5 @@
 @extends('demo')
-@section('title', 'Supplier')
+@section('title', 'Supplier Payment')
 
 @section('content')
 @if (session('error'))

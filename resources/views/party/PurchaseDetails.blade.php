@@ -38,11 +38,11 @@
         <a href="{{route('party.show')}}" class="btn btn-info mb-2"> All Supplier </a>
     </li>
     <li class="nav-item ml-5" role="presentation">
-        <a class="nav-link active" id="supplier-payment-tab" data-bs-toggle="tab" href="#supplier-payment" role="tab"
+        <a class="nav-link active text-info" id="supplier-payment-tab" data-bs-toggle="tab" href="#supplier-payment" role="tab"
             aria-controls="supplier-payment" aria-selected="true">Supplier Payment</a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="supplier-history-tab" data-bs-toggle="tab" href="#supplier-history" role="tab"
+        <a class="nav-link text-info" id="supplier-history-tab" data-bs-toggle="tab" href="#supplier-history" role="tab"
             aria-controls="supplier-history" aria-selected="false">Supplier Purchase</a>
     </li>
 </ul>
@@ -59,7 +59,7 @@
             <h5>Payment Details </h5>
         </div>
 
-        <table class="table table-striped">
+        <table class="table text-white">
             <thead class="table-dark">
                 <tr>
                     <th>Payment ID</th>
@@ -104,7 +104,7 @@
             <h5>Purchase Details </h5>
         </div>
 
-        <table class="table table-striped" id="inwardTable">
+        <table class="table text-white" id="inwardTable">
             <thead class="table-dark">
                 <tr>
                     <th>#</th>
@@ -149,7 +149,7 @@
             <div class="ml-2">click on it..</div>
         </div>
         <div class="collapse mt-3" id="purchase-return-table">
-            <table class="table table-striped">
+            <table class="table text-white">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
