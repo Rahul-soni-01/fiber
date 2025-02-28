@@ -40,7 +40,6 @@
                         </ul>
                     </div>
                 @endif
-                
                     @php
                         $websetting = DB::table('web_settings')->where('id', 1)->first();
                     @endphp
