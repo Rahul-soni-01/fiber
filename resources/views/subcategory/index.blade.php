@@ -1,9 +1,4 @@
 @extends('demo')
-<<<<<<< HEAD
-@section('title', 'Report')
-
-@section('content')
-=======
 
 @section('title', 'Supplier Payment')
 
@@ -11,7 +6,6 @@
 
 @section('content')
 
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
         <div class="main" id="main">
 
             @if ($errors->any())
@@ -53,13 +47,9 @@
 
 
             <a href="{{ route('subcategory.create') }}" class="btn btn-primary">Add Sub Category</a>
-<<<<<<< HEAD
-            <table class="table text-white">
-=======
             <div class="table-responsive">
             <table class="table text-white">
 
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
                 <thead class="table-dark">
 
                     <tr>
@@ -133,9 +123,5 @@
             
 
         </div>
-<<<<<<< HEAD
-  @endsection
-=======
 
 @endsection
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c

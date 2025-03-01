@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">-->
+    <link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">
     <title>@yield('title', 'Admin Dashboard')</title>
-    <script src="/public/js/jquery-3.7.1.min.js"></script> 
-    <script src="/public/js/script.js"></script>
+    {{-- <script src="/public/js/jquery-3.7.1.min.js"></script> --}}
+    {{-- <script src="/public/js/script.js"></script> --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="css/style.css">-->
-    <!--<script src="js/jquery-3.7.1.min.js"></script>-->
-    <!--<script src="{{ asset('js/script.js') }}"></script>-->
-    <link rel="shortcut icon" href="public/storage/favicon.ico"> 
-    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
+    {{--
+    <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
+    {{--
+    <link rel="stylesheet" href="public/css/style.css"> --}}
     <!--<link rel="stylesheet" href="public/css/bootstrap.min.css"> -->
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
 
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script> --}}
 
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -27,7 +32,8 @@
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
         integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
 
@@ -52,10 +58,19 @@
 
     <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
 
-    {{-- <link rel="stylesheet" href="css/bootstrap.min.css"> --}}
-
+    {{--
+    <link rel="stylesheet" href="css/bootstrap.min.css"> --}}
 </head>
-
+<script>   
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar && sidebar.style.display === 'none') {
+                sidebar.style.display = '';
+            }
+        }, 500);
+    });
+</script>
 
 
 <body>
@@ -108,41 +123,31 @@
 
                 @endif
 
-            </div> 
+            </div>
 
         </div>
 
     </nav>
 
+    <div id="loading-spinner" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+
     <!-- Sidebar and Main Content -->
     <div class="container-fluid" id="content">
         <div class="row">
-<<<<<<< HEAD
-                <!-- Sidebar -->
-                <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
-=======
             <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 col-sm-12 sidebar collapse show bg-dark" id="sidebar">
-
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
+            <div class="col-lg-2 col-md-3 col-sm-12 sidebar collapse show bg-dark" id="sidebar"
+                style="display: unset !important;">
                 <!-- Logo -->
-
-                <div class="text-center py-3 ">
-
+                <div class="text-center py-3">
                     @php
-
                     $websetting = DB::table('web_settings')->where('id', 1)->first();
-
                     @endphp
-
-                    <img src="{{ asset($websetting->logo ?? 'storage/default_logo.jpg') }}" alt="Logo" class="img-fluid">
-
+                    <img src="{{ asset($websetting->logo ?? 'storage/default_logo.jpg') }}" alt="Logo"
+                        class="img-fluid">
                     {{-- <img src="{{ asset('storage/logo.jpg')}}" alt="Logo" class="img-fluid"> --}}
-
                 </div>
-
-
-
                 <!-- Sidebar Content -->
 
                 <ul class="nav flex-column">
@@ -156,7 +161,6 @@
                             <i class="ri-home-2-line"></i> Home
 
                         </a>
-
                     </li>
 
 
@@ -428,11 +432,8 @@
                         <div class="collapse" id="reportMenu">
 
                             <ul class="nav flex-column ms-3">
-<<<<<<< HEAD
-                                <li class="nav-item"><a href="{{ route('invoices.index') }}" id="view" class="nav-link">Select Invoice</a></li>
-=======
-
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
+                                <li class="nav-item"><a href="{{ route('invoices.index') }}" id="view"
+                                        class="nav-link">Select Invoice</a></li>
                                 @if(in_array(auth()->user()->type, ['admin', 'user', 'account', 'cavity', 'electric']))
 
                                 <li class="nav-item">
@@ -492,21 +493,13 @@
                         </div>
 
                     </li>
-
-
-
                     <!-- Sale -->
-
                     <li class="nav-item">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleMenu">
-<<<<<<< HEAD
-                            <i class="fa-brands fa-sellsy me-1"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
-=======
 
                             <i class="fa-brands fa-sellsy me-1"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
 
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
                         </a>
 
                         <div class="collapse" id="saleMenu">
@@ -656,7 +649,6 @@
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#expenseMenu">
 
                             <i class="ri-money-dollar-circle-line"></i> Expense <i
-
                                 class="ri-arrow-down-s-line float-end"></i>
 
                         </a>
@@ -692,7 +684,6 @@
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleProductMenu">
 
                             <i class="ri-money-dollar-circle-line"></i> Sale Product List <i
-
                                 class="ri-arrow-down-s-line float-end"></i>
 
                         </a>
@@ -744,7 +735,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 col-sm-12 text-white" >
+            <div class="col-lg-10 col-md-9 col-sm-12 text-white">
                 <div class="p-2">
                     @yield('content')
                 </div>
@@ -755,12 +746,12 @@
         </div>
     </div>
 
-   
+
 
     <!-- Bootstrap JS -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+
 
 </body>
 

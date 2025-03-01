@@ -44,22 +44,20 @@ body {
 
 }
 
-
-
 .sidebar .nav-link:hover {
-
     background-color: rgba(255, 255, 255, 0.2);
-
 }
 
 #sidebar{
-
     z-index: 1;
-
     padding-bottom: 10px; 
-
 }
-
+#loading-spinner {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    z-index: 1;
+}
 #content {
 
     background: linear-gradient(45deg, #09203F, #537895);
