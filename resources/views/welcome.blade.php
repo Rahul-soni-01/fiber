@@ -26,7 +26,7 @@
                 <form method="post" action="{{ route('login.post') }}" id="login" class="p-4 border rounded bg-light">
                     @csrf
                     @if (session('msg'))
-                    <div class="alert alert-success">
+                    <div class="alert alert-danger">
                         {{ session('msg') }}
                     </div>
                 @endif

@@ -20,10 +20,6 @@ class TblStockController extends Controller
             'scid' => 'required',
             'qty' => 'required|integer',
             'price' => 'required|numeric',
-            'serial_no' => ['nullable', 'array'],
-            'serial_no.*' => ['nullable', 'regex:/^[A-Za-z]{6}\d{4}$/'],
-        ], [
-            'serial_no.*.regex' => 'Each serial number must be 6 alphabetic characters followed by 4 numeric characters.',
         ]);
 
         if ($validator->fails()) {

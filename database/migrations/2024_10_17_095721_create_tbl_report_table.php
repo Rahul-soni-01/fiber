@@ -49,7 +49,7 @@ return new class extends Migration
             $table->text('note2')->nullable();        //Any note for fiber
             $table->text('remark')->nullable();        //Any remark for fiber at reject time
             $table->integer('status')->nullable();               
-            $table->string('temp')->nullable();        
+            $table->integer('temp')->nullable();        
             $table->integer('r_status')->nullable();        
             $table->integer('party_name')->nullable();
             $table->string('sale_status')->nullable();

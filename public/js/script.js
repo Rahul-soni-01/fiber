@@ -310,11 +310,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 $(document).ready(function () {
-    
-    setTimeout(function () {
-        $('#loading-spinner').hide();
-      }, 1000); 
-
     if (typeof window.row == 'undefined') {
         window.row = 1; // Initialize globally
     }
