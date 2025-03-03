@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function append_fields() {
         var qty = document.getElementById("qty").value;
         for (var i = 0; i < qty; i++) {
-            $('.append_fields').append('<div class="col-sm-1">' + (i + 1) + '</div> <div class="col-sm-11 mt-2"> <input type="number" class="form-control" required name="serial_no[]"  id="sr_' + i + '" /></div>');
+            $('.append_fields').append('<div class="col-sm-1">' + (i + 1) + '</div> <div class="col-sm-11 mt-2"> <input type="text" class="form-control" required name="serial_no[]" placeholder="Enter Sr No." id="sr_' + i + '" /><div class="text-danger" id="error_sr_' + i + '"></div></div>');
         }
     }
 
@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function check_permission() {
         csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        // alert("deni");
         $.ajax({
             type: "POST",
             url: "/check_permission",
@@ -147,18 +148,18 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             success: function (response) {
                 data = response.permissions;
-                admin = response.type;
-                if (admin !== 'admin') {
-                    $('.sidebar').css('display', 'none');
-                    $('.sub-item').css('display', 'none');
+                type = response.type;
+                if (type !== 'admin') {
+                    // $('ul.nav.flex-column').css('display', 'none');
+                    $('.nav-item').css('display', 'none');
                     Object.entries(data).forEach(function ([key, value]) {
-                        var menuItems = $('.sidebar');
+                        var menuItems = $('.nav-item');
                         menuItems.each(function () {
                             var itemId = $(this).attr('id');
                             if (key === itemId) {
                                 $(this).css('display', 'block');
                                 value.forEach(function (permission) {
-                                    var submenu = $('.sub-item');
+                                    var submenu = $('.nav-sub-item');
                                     submenu.each(function () {
                                         var permission_id = $(this).attr('id');
                                         if (value.includes(permission_id) || permission === permission_id) {
@@ -310,6 +311,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 $(document).ready(function () {
+    
+    setTimeout(function () {
+        $('#loading-spinner').fadeOut(); // Fade out the spinner
+      }, 1000);
+
     if (typeof window.row == 'undefined') {
         window.row = 1; // Initialize globally
     }

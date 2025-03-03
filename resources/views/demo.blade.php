@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">-->
+    <link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">
     <title>@yield('title', 'Admin Dashboard')</title>
-    <script src="/public/js/jquery-3.7.1.min.js"></script> 
-    <script src="/public/js/script.js"></script>
+    {{-- <script src="/public/js/jquery-3.7.1.min.js"></script> --}}
+    {{-- <script src="/public/js/script.js"></script> --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="css/style.css">-->
-    <!--<script src="js/jquery-3.7.1.min.js"></script>-->
-    <!--<script src="{{ asset('js/script.js') }}"></script>-->
-    <link rel="shortcut icon" href="public/storage/favicon.ico"> 
-    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="{{asset('css/style.css') }}">
+    <script src={{ asset("js/jquery-3.7.1.min.js")}}></script>
+    <script src="{{ asset('js/script.js') }}"></script>
+    {{--
+    <link rel="shortcut icon" href="public/storage/favicon.ico"> --}}
+    {{--
+    <link rel="stylesheet" href="public/css/style.css"> --}}
     <!--<link rel="stylesheet" href="public/css/bootstrap.min.css"> -->
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
 
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script> --}}
 
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -27,7 +32,8 @@
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
         integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
 
@@ -52,15 +58,31 @@
 
     <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
 
-    {{-- <link rel="stylesheet" href="css/bootstrap.min.css"> --}}
+    {{--
+    <link rel="stylesheet" href="css/bootstrap.min.css"> --}}
 
 </head>
 
+<script>
+    window.addEventListener('load', function () {
+  setTimeout(function () {
+    const sidebar = document.getElementById('sidebar');
 
+    if (sidebar && sidebar.style.display === 'none') {
+      sidebar.style.display = ''; // Remove display: none
+      sidebar.classList.add('visible'); // Add visible class for transition
+    }
+  }, 500); // 500 milliseconds = 0.5 seconds
+});
+</script>
 
 <body>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <div id="loading-spinner" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
 
     <!-- Header -->
 
@@ -108,7 +130,7 @@
 
                 @endif
 
-            </div> 
+            </div>
 
         </div>
 
@@ -116,15 +138,10 @@
 
     <!-- Sidebar and Main Content -->
     <div class="container-fluid" id="content">
-        <div class="row">
-<<<<<<< HEAD
-                <!-- Sidebar -->
-                <div class="col-lg-2 col-md-3 col-sm-4 sidebar collapse show bg-dark" id="sidebar">
-=======
+        <div class="row h-100">
             <!-- Sidebar -->
             <div class="col-lg-2 col-md-3 col-sm-12 sidebar collapse show bg-dark" id="sidebar">
 
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
                 <!-- Logo -->
 
                 <div class="text-center py-3 ">
@@ -135,7 +152,8 @@
 
                     @endphp
 
-                    <img src="{{ asset($websetting->logo ?? 'storage/default_logo.jpg') }}" alt="Logo" class="img-fluid">
+                    <img src="{{ asset($websetting->logo ?? 'storage/default_logo.jpg') }}" alt="Logo"
+                        class="img-fluid">
 
                     {{-- <img src="{{ asset('storage/logo.jpg')}}" alt="Logo" class="img-fluid"> --}}
 
@@ -144,72 +162,39 @@
 
 
                 <!-- Sidebar Content -->
-
                 <ul class="nav flex-column">
-
                     <!-- Home -->
-
                     <li class="nav-item">
-
                         <a href="{{ route('home') }}" class="nav-link">
-
                             <i class="ri-home-2-line"></i> Home
-
                         </a>
-
                     </li>
-
-
-
                     <!-- Supplier -->
-
-                    <li class="nav-item">
-
+                    <li class="nav-item" id="Party">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#supplierMenu">
-
                             <i class="ri-user-star-line"></i> Supplier <i class="ri-arrow-down-s-line float-end"></i>
-
                         </a>
 
                         <div class="collapse" id="supplierMenu">
-
                             <ul class="nav flex-column ms-3">
-
-                                <li class="nav-item">
-
+                                <li class="nav-item nav-sub-item" id="add">
                                     <a href="{{ route('party.create') }}" class="nav-link">Add Supplier</a>
-
                                 </li>
-
-                                <li class="nav-item">
-
+                                <li class="nav-item nav-sub-item" id="view">
                                     <a href="{{ route('party.show') }}" class="nav-link">Show Supplier</a>
-
                                 </li>
-
-                                <li class="nav-item">
-
+                                <li class="nav-item nav-sub-item" id="add">
                                     <a href="{{ route('payment.create') }}" class="nav-link">Add Payment</a>
-
                                 </li>
-
-                                <li class="nav-item">
-
+                                <li class="nav-item nav-sub-item" id="view">
                                     <a href="{{ route('payment.index') }}" class="nav-link">Supplier Payment</a>
-
                                 </li>
-
                             </ul>
-
                         </div>
-
                     </li>
-
-
-
                     <!-- Departments -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Department">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#departmentMenu">
 
@@ -221,13 +206,13 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item">
 
                                     <a href="{{ route('departments.index') }}" class="nav-link">Show Departments</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item">
 
                                     <a href="{{ route('departments.create') }}" class="nav-link">Add Departments</a>
 
@@ -238,12 +223,9 @@
                         </div>
 
                     </li>
-
-
-
                     <!-- Types -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Type">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#typeMenu">
 
@@ -255,13 +237,13 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('type.index') }}" class="nav-link">Show Types</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('type.create') }}" class="nav-link">Add Types</a>
 
@@ -279,7 +261,7 @@
 
                     @if(auth()->user()->type === 'admin')
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Permission">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#permissionMenu">
 
@@ -291,25 +273,25 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('user.index') }}" class="nav-link">Show User</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('user.create') }}" class="nav-link">Add User</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('manage.permissions') }}" class="nav-link">Show Permission</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('manage.permissions.create') }}" class="nav-link">Add
 
@@ -329,7 +311,7 @@
 
                     <!-- Category -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Category">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#categoryMenu">
 
@@ -341,19 +323,19 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('category.create') }}" class="nav-link">Add Category</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('category.index') }}" class="nav-link">Show Category</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('subcategory.index') }}" class="nav-link">Show Sub Category</a>
 
@@ -369,7 +351,7 @@
 
                     <!-- Inward -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Inward">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#inwardMenu">
 
@@ -381,19 +363,19 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('inward.good.view') }}" class="nav-link">Add Good Inward</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('inward.index') }}" class="nav-link">Show Inward</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('inward.return.index') }}" class="nav-link">Show Return
 
@@ -417,7 +399,7 @@
 
                     <!-- Report -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Report">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#reportMenu">
 
@@ -428,14 +410,12 @@
                         <div class="collapse" id="reportMenu">
 
                             <ul class="nav flex-column ms-3">
-<<<<<<< HEAD
-                                <li class="nav-item"><a href="{{ route('invoices.index') }}" id="view" class="nav-link">Select Invoice</a></li>
-=======
-
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
+                                <li class="nav-item nav-sub-item" id="view">
+                                    <a href="{{ route('invoices.index') }}" id="view"
+                                        class="nav-link">Select Invoice</a></li>
                                 @if(in_array(auth()->user()->type, ['admin', 'user', 'account', 'cavity', 'electric']))
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('report.index') }}" class="nav-link">Show Report</a>
 
@@ -445,7 +425,7 @@
 
                                 @if(in_array(auth()->user()->type, ['admin', 'electric', 'godown']))
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('report.create') }}" class="nav-link">Add Report</a>
 
@@ -455,7 +435,7 @@
 
                                 @if(auth()->user()->type === 'user')
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('report.reject') }}" class="nav-link">Rejected Report</a>
 
@@ -463,25 +443,25 @@
 
                                 @endif
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('report.search') }}" class="nav-link">Search Report</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('report.new') }}" class="nav-link">All Report</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('report.stock') }}" class="nav-link">Stock Report</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('report.ready') }}" class="nav-link">Ready Report</a>
 
@@ -497,35 +477,31 @@
 
                     <!-- Sale -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Sale">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleMenu">
-<<<<<<< HEAD
-                            <i class="fa-brands fa-sellsy me-1"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
-=======
 
                             <i class="fa-brands fa-sellsy me-1"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
 
->>>>>>> ea54726d603dd3242362ea685c12407738eea24c
                         </a>
 
                         <div class="collapse" id="saleMenu">
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('sale.create') }}" class="nav-link">Add Sale</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('sale.index') }}" class="nav-link">Show Sale</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('sale.return.index') }}" class="nav-link">Sale Return</a>
 
@@ -541,7 +517,7 @@
 
                     <!-- Customer -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Customer">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#customerMenu">
 
@@ -553,25 +529,25 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('customer.create') }}" class="nav-link">Add Customer</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('customer.index') }}" class="nav-link">Show Customer</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('payment.customer.create') }}" class="nav-link">Add Payment</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('payment.customer.index') }}" class="nav-link">Customer
 
@@ -589,7 +565,7 @@
 
                     <!-- Pre Account -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Account">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#accountMenu">
 
@@ -601,7 +577,7 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('gst-pdf.index') }}" class="nav-link">GST PDF Invoice</a>
 
@@ -617,7 +593,7 @@
 
                     <!-- Bank -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Bank">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#bankMenu">
 
@@ -629,13 +605,13 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('banks.create') }}" class="nav-link">Add Bank</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('banks.index') }}" class="nav-link">Show Bank</a>
 
@@ -651,12 +627,11 @@
 
                     <!-- Expense -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Expense">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#expenseMenu">
 
                             <i class="ri-money-dollar-circle-line"></i> Expense <i
-
                                 class="ri-arrow-down-s-line float-end"></i>
 
                         </a>
@@ -665,13 +640,13 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('expenses.create') }}" class="nav-link">Add Expense</a>
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('expenses.index') }}" class="nav-link">Show Expense</a>
 
@@ -687,12 +662,11 @@
 
                     <!-- Sale Product List -->
 
-                    <li class="nav-item">
+                    <li class="nav-item" id="Sale Product List">
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleProductMenu">
 
                             <i class="ri-money-dollar-circle-line"></i> Sale Product List <i
-
                                 class="ri-arrow-down-s-line float-end"></i>
 
                         </a>
@@ -701,7 +675,7 @@
 
                             <ul class="nav flex-column ms-3">
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('saleproductcategory.create') }}" class="nav-link">Add Sale
 
@@ -709,7 +683,7 @@
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('saleproductcategory.index') }}" class="nav-link">Show Sale
 
@@ -717,7 +691,7 @@
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="add">
 
                                     <a href="{{ route('saleproductsubcategory.create') }}" class="nav-link">Add Sale
 
@@ -725,7 +699,7 @@
 
                                 </li>
 
-                                <li class="nav-item">
+                                <li class="nav-item nav-sub-item" id="view">
 
                                     <a href="{{ route('saleproductsubcategory.index') }}" class="nav-link">Show Sale
 
@@ -744,23 +718,23 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 col-sm-12 text-white" >
+            <div class="col-lg-10 col-md-9 col-sm-12 text-white">
                 <div class="p-2">
                     @yield('content')
                 </div>
             </div>
-            <div class="text-white bg-dark" id="footer">
-                {{$websetting->footer_text ?? null}}
-            </div>
+           
         </div>
     </div>
+    <div class="text-white bg-dark" id="footer">
+        {{$websetting->footer_text ?? null}}
+    </div>
 
-   
 
     <!-- Bootstrap JS -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+
 
 </body>
 

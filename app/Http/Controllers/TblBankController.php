@@ -11,14 +11,26 @@ use App\Models\TblExpense;
 
 class TblBankController extends Controller
 {
-    public function index()
+
+    private function checkPermission(Request $request, $action)
     {
-        $banks = TblBank::all(); // Fetch all banks
-        return view('banks.index', compact('banks')); // Assuming a Blade template exists
+        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Party ?? [];
+        return in_array($action, $permissions);
     }
-    public function create()
+    public function index(Request $request)
     {
-        return view('banks.create'); // Assuming a Blade template exists
+        if ($this->checkPermission($request, 'view')) {
+            $banks = TblBank::all(); // Fetch all banks
+            return view('banks.index', compact('banks')); // Assuming a Blade template exists
+        }
+        return redirect('/unauthorized');
+    }
+    public function create(Request $request)
+    {
+        if ($this->checkPermission($request, 'add')) {
+            return view('banks.create'); // Assuming a Blade template exists
+        }
+        return redirect('/unauthorized');
     }
 
     public function store(Request $request)
@@ -37,64 +49,71 @@ class TblBankController extends Controller
 
         return redirect()->route('banks.index')->with('success', 'Bank created successfully!');
     }
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        $bank = TblBank::findOrFail($id);
-        return view('banks.edit', compact('bank'));
+        if ($this->checkPermission($request()->all(), 'edit')) {
+            $bank = TblBank::findOrFail($id);
+            return view('banks.edit', compact('bank'));
+        }
+        return redirect('/unauthorized');
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $bank = TblBank::findOrFail($id);
-        $opening = $bank->opening_balance;
+        if ($this->checkPermission($request, 'view')) {
 
-        $total_expenses_payments = 0;
-        $expenses_payments = TblExpense::where('bank_id', $id)
-            ->get()
-            ->map(function ($expense) {
-                $expense->payment_date = $expense->date;
-                $expense->type = 'expense'; // Add a type identifier
-                return $expense;
+            $bank = TblBank::findOrFail($id);
+            $opening = $bank->opening_balance;
+
+            $total_expenses_payments = 0;
+            $expenses_payments = TblExpense::where('bank_id', $id)
+                ->get()
+                ->map(function ($expense) {
+                    $expense->payment_date = $expense->date;
+                    $expense->type = 'expense'; // Add a type identifier
+                    return $expense;
+                });
+
+            foreach ($expenses_payments as $payment) {
+                $total_expenses_payments += $payment->amount;
+            }
+
+            $customer_payments = CustomerPayment::with('customer')
+                ->where('bank_id', $id)
+                ->get()
+                ->map(function ($payment) {
+                    $payment->type = 'customer_payment'; // Add a type identifier
+                    return $payment;
+                });
+            $total_customer_payment = 0;
+            foreach ($customer_payments as $payment) {
+                $total_customer_payment += $payment->amount_paid;
+            }
+
+            $supplier_payments = TblPayment::with('supplier')
+                ->where('bank_id', $id)
+                ->get()
+                ->map(function ($payment) {
+                    $payment->type = 'supplier_payment'; // Add a type identifier
+                    return $payment;
+                });
+            $total_supplier_payment = 0;
+            foreach ($supplier_payments as $payment) {
+                $total_supplier_payment += $payment->amount_paid;
+            }
+
+            $all_payments = collect($expenses_payments)
+                ->merge($customer_payments)
+                ->merge($supplier_payments);
+
+            $all_payments = $all_payments->sortBy(function ($payment) {
+                return $payment->payment_date ?? $payment->date; // Sort by `payment_date`
             });
+            // dd($expenses_payments, $customer_payments, $supplier_payments,$all_payments);
 
-        foreach ($expenses_payments as $payment) {
-            $total_expenses_payments += $payment->amount;
+            return view('banks.show', compact('bank', 'customer_payments', 'supplier_payments', 'total_customer_payment', 'total_supplier_payment', 'id', 'all_payments'));
         }
-
-        $customer_payments = CustomerPayment::with('customer')
-            ->where('bank_id', $id)
-            ->get()
-            ->map(function ($payment) {
-                $payment->type = 'customer_payment'; // Add a type identifier
-                return $payment;
-            });
-        $total_customer_payment = 0;
-        foreach ($customer_payments as $payment) {
-            $total_customer_payment += $payment->amount_paid;
-        }
-
-        $supplier_payments = TblPayment::with('supplier')
-            ->where('bank_id', $id)
-            ->get()
-            ->map(function ($payment) {
-                $payment->type = 'supplier_payment'; // Add a type identifier
-                return $payment;
-            });
-        $total_supplier_payment = 0;
-        foreach ($supplier_payments as $payment) {
-            $total_supplier_payment += $payment->amount_paid;
-        }
-
-        $all_payments = collect($expenses_payments)
-            ->merge($customer_payments)
-            ->merge($supplier_payments);
-
-        $all_payments = $all_payments->sortBy(function ($payment) {
-            return $payment->payment_date ?? $payment->date; // Sort by `payment_date`
-        });
-        // dd($expenses_payments, $customer_payments, $supplier_payments,$all_payments);
-
-        return view('banks.show', compact('bank', 'customer_payments', 'supplier_payments', 'total_customer_payment', 'total_supplier_payment', 'id', 'all_payments'));
+        return redirect('/unauthorized');
     }
 
     public function update(Request $request, $id)
@@ -115,11 +134,14 @@ class TblBankController extends Controller
         return redirect()->route('banks.index')->with('success', 'Bank updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $bank = TblBank::findOrFail($id);
-        $bank->delete();
+        if ($this->checkPermission($request, 'delete')) {
+            $bank = TblBank::findOrFail($id);
+            $bank->delete();
 
-        return redirect()->route('banks.index')->with('success', 'Bank deleted successfully!');
+            return redirect()->route('banks.index')->with('success', 'Bank deleted successfully!');
+        }
+        return redirect('/unauthorized');
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('f_status')->nullable();        
             // $table->integer('warranty')->nullable(); 
             $table->string('worker_name')->nullable();
-            $table->string('sr_no_fiber')->nullable();
+            $table->integer('sr_no_fiber')->nullable();
             $table->string('m_j')->nullable();
             $table->string('type')->nullable();
             $table->string('sr_card')->nullable();

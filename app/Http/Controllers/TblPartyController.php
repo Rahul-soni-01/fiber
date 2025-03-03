@@ -55,10 +55,10 @@ class TblPartyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'party_name' => 'required|string|max:255',
+            'party_name' => 'required|string|max:255|alpha',
             'address' => 'required|string|max:255',
             'tele_no' => 'required|numeric',
-            'contact_person_name' => 'required|string|max:255',
+            'contact_person_name' => 'required|string|max:255|alpha',
         ]);
     
         // Create new tbl_party instance
@@ -100,10 +100,10 @@ class TblPartyController extends Controller
     public function update(Request $request, tbl_party $tbl_party, $id)
     {
         $request->validate([
-            'party_name' => 'required|string|max:255',
+            'party_name' => 'required|string|max:255|alpha',
             'address' => 'required|string|max:255',
             'tele_no' => 'required|numeric',
-            'contact_person_name' => 'required|string|max:255',
+            'contact_person_name' => 'required|string|max:255|alpha',
         ]);
     
         $party = tbl_party::findOrFail($id); 

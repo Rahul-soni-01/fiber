@@ -19,7 +19,7 @@
                             $sum += $sale->amount;
                         }
                     @endphp
-                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
                     <a href="{{route('sale.index')}}" class="text-dark"><i class="fa fa-eye"></i> Details</a>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                             $sum += $purchase->inr_amount;
                         }
                     @endphp
-                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
                     <a href="{{route('inward.index')}}" class="text-dark"><i class="fa fa-eye"></i> Details</a>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                             $sum += $supplier_payment->amount_paid;
                         }
                     @endphp
-                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@
                             $sum += $customer_payment->amount_paid;
                         }
                     @endphp
-                    <p class="text-muted h5">💲{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
                 </div>
             </div>
         </div>

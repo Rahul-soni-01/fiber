@@ -90,7 +90,7 @@ class TblUserController extends Controller
     public function permission(Request $request)
     {
         $permissions = $this->check();
-
+        // dd($permissions);
         $type = auth()->user()->type;
         return response()->json(['permissions' => $permissions, 'type' => $type]);
 
