@@ -114,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     function checkQueryParams() {
         if (window.location.pathname === '/add_sr_no') {
             urlParams = new URLSearchParams(window.location.search);
@@ -307,14 +306,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });*/
     expenseestoggleBankDetails();
 
+    // Add event listeners for Bootstrap's collapse events
+    document.getElementById('sidebar').addEventListener('hidden.bs.collapse', function () {
+        const mainContent = document.getElementById('maincontent');
+        mainContent.classList.remove('col-lg-10', 'col-md-9', 'col-sm-12');
+        mainContent.classList.add('col-lg-12', 'col-md-12', 'col-sm-12');
+    });
+
+    document.getElementById('sidebar').addEventListener('shown.bs.collapse', function () {
+        const mainContent = document.getElementById('maincontent');
+        mainContent.classList.remove('col-lg-12', 'col-md-12', 'col-sm-12');
+        mainContent.classList.add('col-lg-10', 'col-md-9', 'col-sm-12');
+    })
 });
 
-
 $(document).ready(function () {
-    
+
     setTimeout(function () {
         $('#loading-spinner').fadeOut(); // Fade out the spinner
-      }, 1000);
+    }, 1000);
 
     if (typeof window.row == 'undefined') {
         window.row = 1; // Initialize globally
@@ -423,11 +433,11 @@ $(document).ready(function () {
 
 });
 
-function GetInvoiceData(user,selectId){
+function GetInvoiceData(user, selectId) {
     const selectedId = document.getElementById(selectId).value;
 
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    if(user === 'supplier'){
+    if (user === 'supplier') {
         var url = "/get-invoice-details";
         const party = document.getElementById('supplier_select').value;
         var data = {
@@ -437,37 +447,37 @@ function GetInvoiceData(user,selectId){
             status: 1,
         };
     }
-    else{
-       var url = "/get-invoice-sell-details"; 
-       const customer = document.getElementById('customer_select').value;
-       var data = {
+    else {
+        var url = "/get-invoice-sell-details";
+        const customer = document.getElementById('customer_select').value;
+        var data = {
             _token: csrfToken,
             invoice_no: selectedId,
             customer: customer,
             status: 1,
         };
     }
-    
+
     $.ajax({
         url: url,
         type: "POST",
         data: data,
         success: function (response) {
-            if(user === 'supplier'){
-                $('#supplier_paid_total').val(response.data[0].amount); 
-            }else if(user === 'customer'){
-                $('#customer_amount').val(response.data[0].total_amount); 
+            if (user === 'supplier') {
+                $('#supplier_paid_total').val(response.data[0].amount);
+            } else if (user === 'customer') {
+                $('#customer_amount').val(response.data[0].total_amount);
             }
         }
     });
 }
 
-function NewremoveRow(buttonId){
+function NewremoveRow(buttonId) {
     $(buttonId).closest('.align-items-center').remove();
 }
 
 function toggleBankDetails(user) {
-    if( user ==='customer'){
+    if (user === 'customer') {
         const paymentMethod = document.getElementById('payment_method').value;
         const bankDetails = document.getElementById('bank_details');
 
@@ -476,7 +486,7 @@ function toggleBankDetails(user) {
         } else {
             bankDetails.style.display = 'none';
         }
-    } else if(user ==='supplier'){
+    } else if (user === 'supplier') {
         const paymentMethod = document.getElementById('supplier_payment_method').value;
         const bankDetails = document.getElementById('supplier_bank_details');
 
@@ -538,8 +548,8 @@ function filterOptions(event) {
                             // if its readonly then remove it.
                             if (sr_no_input.getAttribute('readonly') == 'readonly') {
                                 sr_no_input.removeAttribute('readonly');
-                             
-                            } 
+
+                            }
 
                             SubCategorysale_sr_no(datavalue, extractedIndex)
                         } else {
@@ -1146,6 +1156,7 @@ function BtnAdd(categories, subCategories) {
     count++;
 }
 
+
 function BtnDel(button) {
     $(button).closest('.custom-row').remove();
     // count--;
@@ -1229,7 +1240,7 @@ function rate() {
     sub_total();
 }
 
-function NewremoveRow(buttonId){
+function NewremoveRow(buttonId) {
     $(buttonId).closest('.align-items-center').remove();
 }
 function syncHiddenInput(checkbox, rowId) {

@@ -93,13 +93,8 @@
             <!-- Toggle Button -->
 
             <button class="navbar-toggler d-block" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
-
                 <span class="navbar-toggler-icon"></span>
-
             </button>
-
-
-
             <!-- ADMIN & LogOut Button -->
 
             <div class="ms-auto d-flex align-items-center justify-content-center">
@@ -198,7 +193,7 @@
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#departmentMenu">
 
-                            <i class="ri-user-line"></i> Departments <i class="ri-arrow-down-s-line float-end"></i>
+                            <i class="ri-building-line"></i> Departments <i class="ri-arrow-down-s-line float-end"></i>
 
                         </a>
 
@@ -718,7 +713,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 col-sm-12 text-white">
+            <div class="col-lg-10 col-md-9 col-sm-12 text-white" id="maincontent">
                 <div class="p-2">
                     @yield('content')
                 </div>

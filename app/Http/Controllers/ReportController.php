@@ -1487,6 +1487,8 @@ class ReportController extends Controller
                             return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
                         }
                     }
+                    $tbl_stock_id = TblStock::where('serial_no', $serial_no)
+                    ->value('id');
                 } elseif ($sr_no_or_not == 0) {
                     $invoice_no = SelectedInvoice::first()->invoice_no;
                     $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
@@ -1545,6 +1547,9 @@ class ReportController extends Controller
                         }
                         return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
                     }
+                    $tbl_stock_id = TblStock::where('serial_no', $serial_no)
+                    ->where('invoice_no', $invoice_no)
+                    ->value('id');
                 } else {
                     return redirect()->back()->with('error', 'Please try again later, Failed to store the report.');
                 }
@@ -1555,9 +1560,7 @@ class ReportController extends Controller
                 } else if ($sr_no_or_not == 0) {
                     $unit = 'Mtr';
                 }
-                $tbl_stock_id = TblStock::where('serial_no', $serial_no)
-                ->where('invoice_no', $invoice_no)
-                ->value('id');
+                
 
                 $TblReportItem = new TblReportItem();
                 $TblReportItem->scid = $request->sub_category[$index];
@@ -1886,10 +1889,8 @@ class ReportController extends Controller
                         $reportitem->tblstock_id = $existingRecord->id;
                         $reportitem->save();
                     } else {
-                        $party = tbl_party::where('party_name', 'opening stock')->first();
-                        $party_id = $party->id;
-                        $invoice = tbl_purchase::where('pid', $party_id)->first();
-                        $invoice_no = $invoice->invoice_no;
+                        $invoice_no = SelectedInvoice::first()->invoice_no;
+                        $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
                         $date = $invoice->date;
                         $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
                             ->where('scid', $request->sub_category[$index])
@@ -1907,10 +1908,10 @@ class ReportController extends Controller
                                 'cid' => $cid,
                                 'scid' => $request->sub_category[$index],
                                 'serial_no' => $serial_no,
-                                'qty' => 1,
-                                'price' => 1,
-                                'priceofUnit' => 1,
-                                'status' => 1,
+                                'qty' => $invoice_data->qty,
+                                'price' => $invoice_data->total,
+                                'priceofUnit' =>$invoice_data->price,
+                                'status' => 0, 
                                 'dead_status' => $dead,
                             ]);
 

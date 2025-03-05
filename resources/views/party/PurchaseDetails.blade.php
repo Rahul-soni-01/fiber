@@ -34,10 +34,10 @@
 --}}
 
 <ul class="nav nav-tabs" id="supplierTab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <a href="{{route('party.show')}}" class="btn btn-info mb-2"> All Supplier </a>
+    <li class="nav-item me-2" role="presentation">
+        <a href="{{route('party.show')}}" class="btn btn-info"> All Supplier </a>
     </li>
-    <li class="nav-item ml-5" role="presentation">
+    <li class="nav-item me-2" role="presentation">
         <a class="nav-link active text-info" id="supplier-payment-tab" data-bs-toggle="tab" href="#supplier-payment" role="tab"
             aria-controls="supplier-payment" aria-selected="true">Supplier Payment</a>
     </li>
@@ -141,7 +141,7 @@
 
         <div class="d-flex justify-content-center align-items-center mt-5">
             <h5>
-                <a href="#purchase-return-table" class="text-decoration-none" data-bs-toggle="collapse"
+                <a href="#purchase-return-table" class="text-decoration-none me-2" data-bs-toggle="collapse"
                     aria-expanded="false" aria-controls="purchase-return-table">
                     Purchase Return Details
                 </a>

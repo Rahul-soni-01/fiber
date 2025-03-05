@@ -67,10 +67,9 @@ class TblSubCategoryController extends Controller
         // dd($request->all());
         $sellable = $request->has('is_sellable') ? $request->is_sellable : 0;
         $cid = tbl_category::where('category_name',$request->category)->first()->id;
-        $spcid = TblSaleProductCategory::where('name',$request->category)->first()->id;
+        $spcid = TblSaleProductCategory::where('name',$request->category)->first()->id ?? null;
         // dd($spcid);
 
-        
         $subcategory = new tbl_sub_category();
         $subcategory->cid = $cid;
         $subcategory->sub_category_name = $request->sub_category;

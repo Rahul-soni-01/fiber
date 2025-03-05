@@ -82,11 +82,10 @@ body {
 }
 
 #content {
-
     background: linear-gradient(45deg, #09203F, #537895);
-
+    min-height: max-content;
     height: 100%;
-
+    overflow-y: auto;
 }
 
 .dataTables_wrapper .dataTables_length select {
@@ -361,7 +360,7 @@ body {
 
 #footer {
 
-    /*position: fixed;*/
+    /* position: fixed; */
 
     /* background: #E0E0E0; */
 

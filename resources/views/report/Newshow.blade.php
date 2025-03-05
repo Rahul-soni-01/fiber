@@ -50,7 +50,7 @@
 
                     <div class="col-md-3">
 
-                        <h5>WORKER NAME</h5>
+                        <h5>Employee Name</h5>
 
                     </div>
 

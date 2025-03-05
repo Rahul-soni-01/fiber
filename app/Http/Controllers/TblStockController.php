@@ -15,6 +15,7 @@ class TblStockController extends Controller
 {
     public function store(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'cid' => 'required',
             'scid' => 'required',
@@ -27,20 +28,50 @@ class TblStockController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
-    
 
         $invoice_no = $request->invoice_no;
-        $inwards = tbl_purchase::with('party')
-            ->where('invoice_no', $invoice_no)
-            ->first();
-
+        $inwards = tbl_purchase::with('party')->where('invoice_no', $invoice_no)->first();
 
         $price = $request->price / $request->qty;
         $serial_no_list = $request->serial_no ?? ['0'];
+
+        if($request->sr_no != null){
+            $serialNumbers = explode("\n", $request->sr_no);
+            $serial_no_list = array_map('trim', $serialNumbers);
+            $serial_no_list = array_filter($serial_no_list); // Remove empty values
+            $errors = [];
+            if (empty($serial_no_list)) {
+                $errors['sr_no'] = 'Please enter at least one valid serial number.';
+            }
+           
+            foreach ($serial_no_list as $serial) {
+                if (!preg_match('/^[A-Za-z]{6}\d{4}$/', $serial)) {
+                    $errors['sr_no'] = 'Each serial number must have exactly 6 letters followed by 4 digits (e.g., ABCDEF1234).';
+                    break;
+                }
+            
+                // Check uniqueness in tbl_stock table
+                if (\DB::table('tbl_stock')->where('serial_no', $serial)->exists()) {
+                    $errors['sr_no'] = "The serial number '$serial' already exists in stock.";
+                    break;
+                }
+            }
+
+            $qty = (int) $request->qty;
+            if (count($serial_no_list) !== $qty) {
+                $errors['qty'] = "The quantity ($qty) must match the number of serial numbers (" .count($serial_no_list) . ").";
+            }
+            
+            if (!empty($errors)) {
+                return back()->withErrors($errors)->withInput();
+            }
+            
+            foreach ($serialNumbers as $item) {
+                $serial_no_list[] = trim($item);
+            }
+        }
         foreach ($serial_no_list as $item) {
 
             $existingRecord = TblStock::where('invoice_no', $invoice_no)
