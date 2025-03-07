@@ -1797,7 +1797,7 @@ class ReportController extends Controller
     public function Latestupdate(Request $request, $id)
     {
         if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
-
+            
             if (Auth()->user()->type === 'user') {
                 $validator = Validator::make(
                     $request->all(),
@@ -1882,6 +1882,7 @@ class ReportController extends Controller
                         $reportitem->scid = $sub_category[$index];
                         $reportitem->unit = $sub_cat->unit;
                         $reportitem->sr_no = $request->srled[$index];
+                        $reportitem->used_qty = $request->srled[$index];
                         $reportitem->amp = $request->ampled[$index];
                         $reportitem->volt = $request->voltled[$index];
                         $reportitem->watt = $request->wattled[$index];

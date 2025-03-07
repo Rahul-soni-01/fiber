@@ -108,9 +108,12 @@ class TblPurchaseController extends Controller
     public function create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
-
             $partyname = tbl_party::all();
             $inwards = tbl_category::all();
+            $main_category = $request->query('main_category');
+            if($main_category){
+                $inwards = tbl_category::where('main_category', $main_category)->get();
+            }
             $items = tbl_sub_category::all();
             return view('good_inward', compact('partyname', 'inwards', 'items'));
         }

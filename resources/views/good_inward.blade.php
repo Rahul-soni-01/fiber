@@ -16,25 +16,40 @@
     @endif
     <div class="container">
         <div class="row">
+            <div class="col">Primary Category</div>
             <div class="col">Invoice No.</div>
             <div class="col">Date</div>
             <div class="col">Party Name</div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <input type="number" id="invoice_no" name="invoice_no" class="form-control"
-                    placeholder="Enter Invoice no." required>
-            </div>
-            <div class="col-md-4">
-                {{-- <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date" required>
-                --}}
-                <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
-                    value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+
+        <div class="row g-3">
+            <!-- Added g-3 for spacing -->
+            <div class="col-md-6 col-lg-3">
+                <select class="form-select" id="main_category" name="main_category" required
+                    onchange="filterSecoundryCategory(event)">
+                    <option value="" disabled {{ request('main_category') ? '' : 'selected' }}>Choose a category
+                    </option>
+                    <option value="Electronic" {{ request('main_category')=='Electronic' ? 'selected' : '' }}>Electronic
+                    </option>
+                    <option value="Optical" {{ request('main_category')=='Optical' ? 'selected' : '' }}>Optical</option>
+                    <option value="Mechanical" {{ request('main_category')=='Mechanical' ? 'selected' : '' }}>Mechanical
+                    </option>
+                    <option value="Consumable" {{ request('main_category')=='Consumable' ? 'selected' : '' }}>Consumable
+                    </option>
+                    <option value="Others" {{ request('main_category')=='Others' ? 'selected' : '' }}>Others</option>
+                </select>
 
             </div>
-            <div class="col-md-4">
-                <select id="party_name" name="party_name" class="form-control" placeholder="Select Supplier Name"
-                    required>
+            <div class="col-md-6 col-lg-3">
+                <input type="number" id="invoice_no" name="invoice_no" class="form-control"
+                    placeholder="Enter Invoice No." required>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <input type="date" id="date" name="date" class="form-control"
+                    value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <select id="party_name" name="party_name" class="form-select" required>
                     <option value="" disabled selected>Choose a Supplier</option>
                     @foreach($partyname as $party)
                     <option value="{{ $party->id }}">{{ $party->party_name }}</option>
@@ -42,6 +57,7 @@
                 </select>
             </div>
         </div>
+
 
         <!-- Product Details Section -->
         <div class="cus-container mt-2">
@@ -116,7 +132,6 @@
                 </div>
 
                 <div class="col custom-col">
-                    <label for="" class="form-label"></label>
                     <button type="button" class="btn btn-primary"
                         onclick="BtnAdd({{ json_encode($inwards)}},{{ json_encode($items)}})">Add</button>
                 </div>

@@ -43,6 +43,7 @@ class TblCategoryController extends Controller
             $request->validate([
                 'category_name' => 'required|string|unique:tbl_categories,category_name|max:255',
                 'sr_no' => 'nullable|integer',
+                'main_category' => 'required|string|max:255', // Added main_category validation
             ]);
             $sellable = $request->has('is_sellable') ? $request->is_sellable : 0;
             if($sellable == '1'){
@@ -56,11 +57,10 @@ class TblCategoryController extends Controller
             }
             $category = new tbl_category();
             $category->category_name = $request->category_name;
-            // $category->is_sellable = $Salecategory->new id();
+            $category->main_category = $request->main_category; // Assigning main_category
+            $category->is_sellable = $sellable; // Saving is_sellable field
             $result = $category->save();
-
-            // dd($sellable);
-            
+                    
             if ($result) {
                 return redirect()->route('category.index')->with('success', 'Category added successfully.');
             } else {
@@ -83,29 +83,42 @@ class TblCategoryController extends Controller
             }
         return redirect('/unauthorized');
     }
-    public function update(Request $request, tbl_category $tbl_category,$id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'category_name' => 'required|string|max:255',
+            'main_category' => 'required|string|max:255', // Added main_category validation
         ]);
-        
-        $sellable = $request->has('is_sellable') ? $request->is_sellable : null;
-
+    
+        $sellable = $request->has('is_sellable') ? 1 : 0; // Ensuring it is stored as 1 or 0
+    
+        // Find category by ID
         $category = tbl_category::findOrFail($id);
         $category->category_name = $request->category_name;
+        $category->main_category = $request->main_category; // Assigning main_category
+        $category->is_sellable = $sellable; // Updating is_sellable status
         $result = $category->save();
-
-        if($sellable == '1'){
-            $Salecategory = new TblSaleProductCategory();
-            $Salecategory->name =  $request->category_name;
-            $Salecategory->save();
+    
+        // If sellable, ensure it's also added to TblSaleProductCategory
+        if ($sellable) {
+            $existingSaleCategory = TblSaleProductCategory::where('name', $request->category_name)->first();
+            if (!$existingSaleCategory) { // Avoid duplicate entries
+                $saleCategory = new TblSaleProductCategory();
+                $saleCategory->name = $request->category_name;
+                $saleCategory->save();
+            }
+        } else {
+            // Optionally, remove from TblSaleProductCategory if unchecked
+            TblSaleProductCategory::where('name', $request->category_name)->delete();
         }
+    
         if ($result) {
             return redirect()->route('category.index')->with('success', 'Category updated successfully.');
         } else {
             return redirect()->back()->with('error', 'Failed to update category.');
         }
     }
+    
 
     public function destroy(tbl_category $tbl_category,$id,Request $request)
     {

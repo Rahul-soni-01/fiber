@@ -20,21 +20,7 @@ class TblSubCategoryController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-
-            $subCategories = tbl_sub_category::with('category')
-                ->get() 
-                ->map(function ($subCategory) {
-                    return [
-                        'id' => $subCategory->id,
-                        'category_date' => $subCategory->category->created_at->toDateString(), 
-                        'category_name' => $subCategory->category->category_name, 
-                        'sub_category_date' => $subCategory->created_at->toDateString(),
-                        'sub_category_name' => $subCategory->sub_category_name,
-                        'unit' => $subCategory->unit,
-                        'sr_no' => $subCategory->sr_no,
-                    ];
-                });
-
+            $subCategories = tbl_sub_category::with('category')->get();
             return view('subcategory.index', ['subCategories' => $subCategories]);
         }
         return redirect('/unauthorized');

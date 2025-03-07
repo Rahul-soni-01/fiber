@@ -497,6 +497,12 @@ function toggleBankDetails(user) {
         }
     }
 }
+function filterSecoundryCategory(event){
+    const selectedCategory = event.target.value;
+    if (selectedCategory) {
+        window.location.href = `?main_category=${encodeURIComponent(selectedCategory)}`;
+    }
+}
 
 function filterOptions(event) {
     let selectName = event.target.id;

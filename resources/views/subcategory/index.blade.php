@@ -86,7 +86,7 @@
 
                         {{-- <td>{{$subCategory['category_date']}}</td> --}}
 
-                        <td>{{$subcategory['category_name']}}</td>
+                        <td>{{$subcategory['category']->category_name ?? 'N/A'}}</td>
 
                          {{-- <td>{{$subCategory['sub_category_date']}}</td> --}}
 
