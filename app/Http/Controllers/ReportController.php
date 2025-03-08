@@ -540,7 +540,7 @@ class ReportController extends Controller
     {
         if ($request->sr_no) {
 
-            $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber', $request->sr_no)->get();
+            $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category','tbl_type')->where('sr_no_fiber', $request->sr_no)->get();
             $reportIds = $reports->pluck('id');
 
             $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')
