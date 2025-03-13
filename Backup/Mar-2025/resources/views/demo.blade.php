@@ -230,15 +230,15 @@
                     <!-- Inward -->
                     <li class="nav-item" id="Inward">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#inwardMenu">
-                            <i class="ri-download-line"></i> Inward <i class="ri-arrow-down-s-line float-end"></i>
+                            <i class="ri-download-line"></i> Purchase <i class="ri-arrow-down-s-line float-end"></i>
                         </a>
                         <div class="collapse" id="inwardMenu">
                             <ul class="nav flex-column ms-3">
                                 <li class="nav-item nav-sub-item" id="add">
-                                    <a href="{{ route('inward.good.view') }}" class="nav-link">Add Good Inward</a>
+                                    <a href="{{ route('inward.good.view') }}" class="nav-link">Add Purchase</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
-                                    <a href="{{ route('inward.index') }}" class="nav-link">Show Inward</a>
+                                    <a href="{{ route('inward.index') }}" class="nav-link">Show Purchase</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
                                     <a href="{{ route('inward.return.index') }}" class="nav-link">Show Return

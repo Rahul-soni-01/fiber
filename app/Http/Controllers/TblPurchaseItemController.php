@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\tbl_purchase_item;
 use App\Models\tbl_purchase;
 use App\Models\TblPurchaseReturnItem;
-use App\Models\TblPayment;
+use App\Models\tbl_sub_category;
 use App\Models\SelectedInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -22,16 +22,40 @@ class TblPurchaseItemController extends Controller
     public function index()
     {
         $invoices = tbl_purchase::with('party')->get();
-        $SelectedInvoice = SelectedInvoice::all();
-        // dd($SelectedInvoice);
-        return view('inward.PurInvoiceindex', compact('invoices', 'SelectedInvoice'));
+        $selectedInvoices = SelectedInvoice::pluck('invoice_no', 'scid')->toArray(); 
+
+        $subcategories = tbl_sub_category::all();
+        // dd($selectedInvoices);
+        return view('inward.PurInvoiceindex', compact('invoices', 'selectedInvoices','subcategories'));
     }
     public function select(Request $request)
     {
-        
-        $request->validate(['invoice_no' => 'required']);
-        SelectedInvoice::query()->delete(); // Clear previous selection
-        SelectedInvoice::create(['invoice_no' => $request->invoice_no]);
+       
+        if ($request->selectAll == 0) {
+            // Validate that scid (subcategories) and invoice_no are arrays and required
+            $request->validate([
+                'scid' => 'required|array',
+                'scid.*' => 'exists:tbl_sub_categories,id',
+                'invoice_no' => 'required|array',
+                'invoice_no.*' => 'exists:tbl_purchases,invoice_no',
+            ]);
+            SelectedInvoice::query()->truncate();
+            foreach ($request->scid as $key => $scid) {
+                SelectedInvoice::create(['invoice_no' => $request->invoice_no[$key],'scid' => $scid]);
+            }
+        } elseif ($request->selectAll == 1) {
+            // Validate that a single invoice is selected
+            $request->validate([
+                'invoice_no' => 'required|exists:tbl_purchases,invoice_no',
+            ]);
+            SelectedInvoice::query()->truncate();
+            $subcategories = tbl_sub_category::all();
+            foreach ($subcategories as $subcategory) {
+                SelectedInvoice::create(['invoice_no' => $request->invoice_no,'scid' => $subcategory->id]);
+            }
+        }
+       
+        // SelectedInvoice::create(['invoice_no' => $request->invoice_no]);
 
         return redirect()->route('invoices.index')->with('success', 'Invoice selected successfully');
     }    

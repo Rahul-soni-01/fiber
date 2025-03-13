@@ -96,7 +96,7 @@ class TblPurchaseItemController extends Controller
                     'qty' => $request->qty[$i],
                     'unit' => $request->unit[$i],
                     'tax' => $request->p_tax[$i],
-                    'price' => $request->rate[$i],
+                    'price' => $request->rate[$i] ?? 0,
                     'total' => $request->total[$i],
                 ]);
 

@@ -1406,12 +1406,12 @@ class ReportController extends Controller
         }
 
         try {
-            $report->save();
+            // $report->save();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
         }
 
-        $report_id = $report->id;
+        // $report_id = $report->id;
 
         $avalabile = 0;
         $sub_category = $request->input('sub_category');

@@ -357,7 +357,7 @@ class ReportController extends Controller
                     ->first();
                 if ($existingRecord) {
                     $amount += $existingRecord->priceofUnit;
-                    // $invoice_no =$existingRecord->invoice_no;
+                    // $invoice_no =$existingRecord->invoice_no;  
                     $existingRecord->status = 1;
                     $existingRecord->save();
                 } else {
