@@ -663,6 +663,7 @@ function getDataForReturn(event) {
                         html += '<div class="col"><b>Unit</b></div>';
                         html += '<div class="col"><b>Qty</b></div>';
                         html += '<div class="col"><b>Alraedy Return</b></div>';
+                        html += '<div class="col"><b>Used Qty</b></div>';
                         html += '<div class="col"><b>Price</b></div>';
                         html += '<div class="col"><b>Total</b></div>';
                         html += '</div>';
@@ -675,6 +676,7 @@ function getDataForReturn(event) {
                             html += '<div class="col">' + item.unit + '</div>'; // unit property
                             html += '<div class="col">' + item.qty + '</div>'; // qty property
                             html += '<div class="col">' + item.return + '</div>'; // return property
+                            html += '<div class="col">' + item.report_qty + '</div>'; // return property
                             html += '<div class="col">' + item.rate + '</div>'; // price property
                             html += '<div class="col">' + item.total + '</div>'; // total property
                             html += '</div>';
@@ -711,6 +713,7 @@ function getDataForReturn(event) {
                         html += '<div class="col"><b>Unit</b></div>';
                         html += '<div class="col"><b>Qty</b></div>';
                         html += '<div class="col"><b>Alraedy Return</b></div>';
+                        html += '<div class="col"><b>Used Qty</b></div>';
                         html += '<div class="col"><b>Price</b></div>';
                         html += '<div class="col"><b>Total</b></div>';
                         html += '</div>';
@@ -721,6 +724,7 @@ function getDataForReturn(event) {
                             html += '<div class="col">' + item.unit + '</div>'; // unit property
                             html += '<div class="col">' + item.qty + '</div>'; // qty property
                             html += '<div class="col">' + item.return + '</div>'; // return property
+                            html += '<div class="col">' + item.report_qty + '</div>'; // return property
                             html += '<div class="col">' + item.price + '</div>'; // price property
                             html += '<div class="col">' + item.total + '</div>'; // total property
                             html += '</div>';

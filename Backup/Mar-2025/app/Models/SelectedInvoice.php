@@ -8,5 +8,5 @@ class SelectedInvoice extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['invoice_no'];
+    protected $fillable = ['invoice_no','scid'];
 }

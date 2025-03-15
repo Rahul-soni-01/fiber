@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Report;
 use App\Models\tbl_purchase_item;
 use App\Models\tbl_purchase;
 use App\Models\TblPurchaseReturnItem;
-use App\Models\TblPayment;
+use App\Models\tbl_sub_category;
 use App\Models\SelectedInvoice;
+use App\Models\TblReportItem;
+use App\Models\TblStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,16 +25,40 @@ class TblPurchaseItemController extends Controller
     public function index()
     {
         $invoices = tbl_purchase::with('party')->get();
-        $SelectedInvoice = SelectedInvoice::all();
-        // dd($SelectedInvoice);
-        return view('inward.PurInvoiceindex', compact('invoices', 'SelectedInvoice'));
+        $selectedInvoices = SelectedInvoice::pluck('invoice_no', 'scid')->toArray();
+
+        $subcategories = tbl_sub_category::all();
+        // dd($selectedInvoices);
+        return view('inward.PurInvoiceindex', compact('invoices', 'selectedInvoices', 'subcategories'));
     }
     public function select(Request $request)
     {
-        
-        $request->validate(['invoice_no' => 'required']);
-        SelectedInvoice::query()->delete(); // Clear previous selection
-        SelectedInvoice::create(['invoice_no' => $request->invoice_no]);
+
+        if ($request->selectAll == 0) {
+            // Validate that scid (subcategories) and invoice_no are arrays and required
+            $request->validate([
+                'scid' => 'required|array',
+                'scid.*' => 'exists:tbl_sub_categories,id',
+                'invoice_no' => 'required|array',
+                'invoice_no.*' => 'exists:tbl_purchases,invoice_no',
+            ]);
+            SelectedInvoice::query()->truncate();
+            foreach ($request->scid as $key => $scid) {
+                SelectedInvoice::create(['invoice_no' => $request->invoice_no[$key], 'scid' => $scid]);
+            }
+        } elseif ($request->selectAll == 1) {
+            // Validate that a single invoice is selected
+            $request->validate([
+                'invoice_no' => 'required|exists:tbl_purchases,invoice_no',
+            ]);
+            SelectedInvoice::query()->truncate();
+            $subcategories = tbl_sub_category::all();
+            foreach ($subcategories as $subcategory) {
+                SelectedInvoice::create(['invoice_no' => $request->invoice_no, 'scid' => $subcategory->id]);
+            }
+        }
+
+        // SelectedInvoice::create(['invoice_no' => $request->invoice_no]);
 
         return redirect()->route('invoices.index')->with('success', 'Invoice selected successfully');
     }
@@ -111,7 +138,6 @@ class TblPurchaseItemController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Some purchase items could not be saved.');
             }
-
         } else {
             return redirect()->back()->with('error', 'Failed to save purchase.');
         }
@@ -123,28 +149,45 @@ class TblPurchaseItemController extends Controller
             $data = tbl_purchase::with('party')->where('pid', $request->party)->where('invoice_no', $request->invoice_no)->get();
 
             if (count($data) > 0) {
-                
+
                 $inwardsItems = tbl_purchase_item::with(['category', 'subCategory'])
                     ->where('invoice_no', $request->invoice_no)
                     ->get();
 
-                    foreach($inwardsItems as $inwardsItem){
-                        $cid = $inwardsItem->cid;
-                        $scid = $inwardsItem->scid;
-                        $invoice_no = $inwardsItem->invoice_no;
-                
-                        $returns = TblPurchaseReturnItem::where('cid',$cid)->where('scid', $scid)->where('invoice_no', $invoice_no)->get();
-                        $qty = 0;
-                        foreach($returns as $return){
-                            $qty += $return->qty;
-                        }
-                        $inwardsItem['return'] = $qty;
+                foreach ($inwardsItems as $inwardsItem) {
+                    $cid = $inwardsItem->cid;
+                    $scid = $inwardsItem->scid;
+                    $invoice_no = $inwardsItem->invoice_no;
+
+                    $returns = TblPurchaseReturnItem::where('cid', $cid)->where('scid', $scid)->where('invoice_no', $invoice_no)->get();
+                    $returnqty = 0;
+                    foreach ($returns as $return) {
+                        $returnqty += $return->qty;
                     }
-                $response = [
-                    'status' => 'success',
-                    'data' => $data,
-                    'inwardsItems' => $inwardsItems,
-                ];
+
+                    $inwardsItem['return'] = $returnqty;
+                    
+                    $TblStockdata = TblStock::where('scid', $scid)->where('invoice_no', $invoice_no)->get();
+
+                    [$report_qty, $dead_report_qty] = $TblStockdata->flatMap(function ($TblStock) {
+                        return TblReportItem::where('tblstock_id', $TblStock->id)->get();
+                    })->reduce(function ($carry, $usedinreport) {
+                        $carry[0] += $usedinreport->used_qty;
+                        if ($usedinreport->dead_status == 1) {
+                            $carry[1] += $usedinreport->used_qty;
+                        }
+                        return $carry;
+                    }, [0, 0]);
+
+                    $inwardsItem['dead_report_qty'] = $dead_report_qty;
+                    $inwardsItem['report_qty'] = $report_qty;
+                }
+
+                    $response = [
+                        'status' => 'success',
+                        'data' => $data,
+                        'inwardsItems' => $inwardsItems,
+                    ];
             } else {
                 $response = [
                     'status' => 'error',
@@ -202,7 +245,7 @@ class TblPurchaseItemController extends Controller
             ->get();
 
         // Combine the two collections
-        return view('inward.invoice', compact('inwards', 'inwardsItems','invoice_no'));
+        return view('inward.invoice', compact('inwards', 'inwardsItems', 'invoice_no'));
     }
 
 

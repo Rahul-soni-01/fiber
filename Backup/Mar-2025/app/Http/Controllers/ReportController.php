@@ -1323,7 +1323,7 @@ class ReportController extends Controller
                                 'priceofUnit' => $invoice_data->price,
                                 'status' => 0,
                             ]);
-                            $amount += 1;
+                            $amount +=  $invoice_data->price;
                             $TblStockinsertedIds[] = $newStock->id;
                         } else {
                             $avalabile = 1;
@@ -1342,10 +1342,10 @@ class ReportController extends Controller
                             return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
                         }
                     }
-                    $tbl_stock_id = TblStock::where('serial_no', $serial_no)
-                        ->value('id');
+                    $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
                 } elseif ($sr_no_or_not == 0) {
-                    $invoice_no = SelectedInvoice::first()->invoice_no;
+                    $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
+                   
                     $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
                     // $invoice_no = $SelectedInvoice;
                     $date = $invoice->date;
@@ -1358,6 +1358,7 @@ class ReportController extends Controller
                         ->where('cid', $cid)
                         ->where('serial_no', $serial_no)
                         ->count();
+                        // dd($request->all(),$invoice_no,$invoice_data,$serial_no_card_count);
                     $existingRecord = TblStock::firstOrCreate(
                         [
                             'invoice_no' => $invoice_no, // Search criteria
@@ -1379,7 +1380,7 @@ class ReportController extends Controller
                     if ($existingRecord) {
                         $amount += $existingRecord->priceofUnit;
                         if ($dead == 1) {
-                            $existingRecord->dead_status = 1;
+                            // $existingRecord->dead_status = 1;
                         }
                         $existingRecord->save();
                     } else {
@@ -1404,11 +1405,11 @@ class ReportController extends Controller
                 } else {
                     return redirect()->back()->with('error', 'Please try again later, Failed to store the report.');
                 }
-                if ($sr_no_or_not == 1) {
-                    $unit = 'Pic';
-                } else if ($sr_no_or_not == 0) {
-                    $unit = 'Mtr';
-                }
+
+                // make a find query for subcategory 
+                $unit = tbl_sub_category::where('id', $request->sub_category[$index])->first()->unit ?? null;
+                // dd($unit);
+               
                 $TblReportItem = new TblReportItem();
                 $TblReportItem->scid = $request->sub_category[$index];
                 $TblReportItem->unit = $unit;
@@ -1688,66 +1689,122 @@ class ReportController extends Controller
             }
             if ($sub_category) {
                 foreach ($request->srled as $index => $serial_no) {
+                    $sr_no_or_not = $request->sr_no_or_not[$index];
                     $sub_cat = tbl_sub_category::where('id', $sub_category[$index])->first();
                     $dead = $request->dead[$index];
-                    $existingRecord = TblStock::where('serial_no', $serial_no)
+                    if ($sr_no_or_not == 1) {
+                        $existingRecord = TblStock::where('serial_no', $serial_no)
                         ->where('scid', $sub_category[$index])
                         ->first();
-                    if ($existingRecord) {
-                        $amount += $existingRecord->priceofUnit;
-                        $existingRecord->status = 1;
-                        $existingRecord->dead_status = $dead;
-                        $existingRecord->save();
-                        $reportitem = new TblReportItem();
-                        $reportitem->report_id = $id;
-                        $reportitem->scid = $sub_category[$index];
-                        $reportitem->unit = $sub_cat->unit;
-                        $reportitem->sr_no = $request->srled[$index];
-                        $reportitem->used_qty = $request->used_qty[$index];
-                        $reportitem->amp = $request->ampled[$index];
-                        $reportitem->volt = $request->voltled[$index];
-                        $reportitem->watt = $request->wattled[$index];
-                        $reportitem->dead_status = $request->dead[$index];
-                        $reportitem->tblstock_id = $existingRecord->id;
-                        $reportitem->save();
-                    } else {
-                        $invoice_no = SelectedInvoice::first()->invoice_no;
+                        if ($existingRecord) {
+                            $amount += $existingRecord->priceofUnit;
+                            $existingRecord->status = 1;
+                            $existingRecord->dead_status = $dead;
+                            $existingRecord->save();
+    
+                            $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
+
+                        } else {
+                            $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
+                            
+                            $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
+                            $date = $invoice->date;
+                            $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
+                                ->where('scid', $request->sub_category[$index])
+                                ->first();
+                            $cid = $invoice_data->cid;
+                            $serial_no_count = TblStock::where('invoice_no', $invoice_no)
+                                ->where('scid', $request->sub_category[$index])
+                                ->where('serial_no', $serial_no)
+                                ->count();
+                            if ($serial_no_count === 0) {
+                                $newStock = TblStock::create([
+                                    'date' => $date,
+                                    'invoice_no' => $invoice_no,
+                                    'cid' => $cid,
+                                    'scid' => $request->sub_category[$index],
+                                    'serial_no' => $serial_no,
+                                    'qty' => $invoice_data->qty,
+                                    'price' => $invoice_data->total,
+                                    'priceofUnit' => $invoice_data->price,
+                                    'status' => 0,
+                                    'dead_status' => $dead,
+                                ]);
+                                // $reportitem = new TblReportItem();
+                                // $reportitem->report_id = $id;
+                                // $reportitem->scid = $sub_category[$index];
+                                // $reportitem->unit = $sub_cat->unit;
+                                // $reportitem->sr_no = $request->srled[$index];
+                                // $reportitem->amp = $request->ampled[$index];
+                                // $reportitem->volt = $request->voltled[$index];
+                                // $reportitem->watt = $request->wattled[$index];
+                                // $reportitem->dead_status = $request->dead[$index];
+                                // $reportitem->tblstock_id = $newStock->id;
+                                // $reportitem->save();
+                            }
+                        }
+                    }elseif($sr_no_or_not == 0){
+                        $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
+                   
                         $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
+                        // $invoice_no = $SelectedInvoice;
                         $date = $invoice->date;
                         $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
-                            ->where('scid', $request->sub_category[$index])
-                            ->first();
+                        ->where('scid', $request->sub_category[$index])
+                        ->first();
                         $cid = $invoice_data->cid;
                         $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
-                            ->where('scid', $request->sub_category[$index])
-                            ->where('serial_no', $serial_no)
-                            ->count();
-                        if ($serial_no_card_count === 0) {
-                            $newStock = TblStock::create([
-                                'date' => $date,
-                                'invoice_no' => $invoice_no,
-                                'cid' => $cid,
-                                'scid' => $request->sub_category[$index],
-                                'serial_no' => $serial_no,
-                                'qty' => $invoice_data->qty,
-                                'price' => $invoice_data->total,
-                                'priceofUnit' => $invoice_data->price,
-                                'status' => 0,
-                                'dead_status' => $dead,
-                            ]);
-                            $reportitem = new TblReportItem();
-                            $reportitem->report_id = $id;
-                            $reportitem->scid = $sub_category[$index];
-                            $reportitem->unit = $sub_cat->unit;
-                            $reportitem->sr_no = $request->srled[$index];
-                            $reportitem->amp = $request->ampled[$index];
-                            $reportitem->volt = $request->voltled[$index];
-                            $reportitem->watt = $request->wattled[$index];
-                            $reportitem->dead_status = $request->dead[$index];
-                            $reportitem->tblstock_id = $newStock->id;
-                            $reportitem->save();
+                        ->where('scid', $request->sub_category[$index])
+                        ->where('cid', $cid)
+                        ->where('serial_no', $serial_no)
+                        ->count();
+                        // dd($request->all(),$invoice_no,$invoice_data,$serial_no_card_count);
+                        $existingRecord = TblStock::firstOrCreate(
+                        [
+                            'invoice_no' => $invoice_no, // Search criteria
+                            'serial_no' => $serial_no,
+                            'status' => 0
+                        ],
+                        [
+                            'date' => $date,
+                            'invoice_no' => $invoice_no,
+                            'cid' => $cid,
+                            'scid' => $request->sub_category[$index],
+                            'qty' => $invoice_data->qty,
+                            'price' => $invoice_data->total,
+                            'priceofUnit' => $invoice_data->price,
+                            'status' => 0,
+                        ]);
+                        if ($existingRecord) {
+                            $amount += $existingRecord->priceofUnit;
+                            if ($dead == 1) {
+                                // $existingRecord->dead_status = 1;
+                            }
+                            $existingRecord->save();
+                        } else {
+                            $avalabile = 1;
+                            try {
+                                TblStock::whereIn('id', $TblStockinsertedIds)->delete();
+                            } catch (\Exception $e) {
+                                return redirect()->back()->with('error', 'Failed to delete inserted records: ' . $e->getMessage());
+                            }
+                            if ($TblReportiteminsertedIds) {
+                                TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
+                            }
+                            $Record_delete = Report::where('id', $report_id)->first();
+                            if ($Record_delete) {
+                                $Record_delete->delete();
+                            }
+                            return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
                         }
+                        $tbl_stock_id = TblStock::where('serial_no', $serial_no)
+                            ->where('invoice_no', $invoice_no)
+                            ->value('id');
+                    }else {
+                        return redirect()->back()->with('error', 'Please try again later, Failed to store the report.');
                     }
+                    
+                    
                 }
                 $Record_update_final_amount = Report::where('id', $report_id)->first();
                 $Record_update_final_amount->final_amount = $amount;
