@@ -85,7 +85,7 @@
                     <label for="data[0][unit]" class="form-label">Unit</label>
                     <select id="data[0][unit]" name="unit[]" class="form-control">
                         <option value="">Select</option>
-                        <option value="Pic">Pic</option>
+                        <option value="Pic">Pcs</option>
                         <option value="Mtr">Mtr</option>
                     </select>
                 </div>

@@ -68,14 +68,20 @@
          </thead>
          <tbody>
              @foreach($reportResults as $report)
+             {{-- {{ dd($report);}} --}}
                  <tr>
                      <td>{{ $report->tbl_sub_category->sub_category_name }}</td>
                      <td>{{ $report->total_count }}</td>
                      <td>
-                        @foreach(explode(',', $report->report_ids) as $report_id)
-                            <a href="{{ route('report.show', $report_id) }}" class="btn btn-sm btn-primary"> <i class="ri-eye-fill"></i> {{ $report_id }}
-                            </a>
-                        @endforeach
+                        @foreach($report->report_ids as $index => $reportData)
+                        <a href="{{ route('report.show', $reportData['id']) }}" class="btn btn-sm mt-1 btn-primary">
+                            <i class="ri-eye-fill"></i> {{ $reportData['sr_no_fiber'] }}
+                        </a>
+                        @if(($index + 1) % 4 === 0)  <!-- Break after every 4 items -->
+                        <br>
+                        @endif
+
+                    @endforeach
                     </td>
                     
                      <td>{{ $report->total_used_stock }}</td>

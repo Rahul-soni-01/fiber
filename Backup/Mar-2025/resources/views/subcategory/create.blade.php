@@ -103,7 +103,7 @@
 
                     <option value="" disabled selected>Select Unit</option>
 
-                    <option value="Pic">Pic</option>
+                    <option value="Pic">Pcs</option>
 
                     <option value="Mtr">Mtr</option>
 

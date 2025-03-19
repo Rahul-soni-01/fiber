@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     $('.nav-item').css('display', 'none');
                     Object.entries(data).forEach(function ([key, value]) {
                         var menuItems = $('.nav-item');
-                        console.log(menuItems);
+                        // console.log(menuItems);
                         menuItems.each(function () {
                             var itemId = $(this).attr('id');
                             if (key === itemId) {
@@ -962,10 +962,10 @@ function tbl_stock(row_id) {
                 <div class="row" id="row_${row_id}">
                     <input type="hidden" name="sr_no_or_not[]" value="1">
                     <div class="col-12 col-md-3">
-                        <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                        <datalist id="srled_${row_id}">
-                            <option value=""></option>
-                        </datalist>
+                        <select name="srled[]" class="form-control" id="srled_${row_id}" required>
+                            <option value="" disabled selected>Select or enter a new sr no, Small Alpha Plz</option>
+                          
+                        </select>
                          <input type="hidden" id="used_qty_${row_id}" name="used_qty[]" class="form-control" value="1">
                     </div>
 
@@ -1013,36 +1013,34 @@ function tbl_stock(row_id) {
         },
         success: function (response) {
             var data = response.data;
-            var srled = document.getElementById(`srled_${row_id}`);
-
-            if (!srled) {
+            var selectElement = document.getElementById(`srled_${row_id}`); // Get the <select> element
+        
+            if (!selectElement) {
                 console.error(`Element with ID 'srled_${row_id}' not found.`);
                 return;
             }
-
-            var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
-            if (inputField) {
-                inputField.removeAttribute('value');
-            } else {
-                console.error(`Input field with list='srled_${row_id}' not found.`);
-            }
-
+        
             // Clear existing options
-            srled.innerHTML = '<option value="">Select</option>';
-
+            selectElement.innerHTML = '<option value="" disabled selected >Select</option>';
+        
             if (data.length == 0) {
+                // If no data is available, add a "No data available" option
                 var option = document.createElement("option");
                 option.value = "";
                 option.text = "No data available";
-                srled.appendChild(option);
+                selectElement.appendChild(option);
             } else {
+                // Populate the <select> with options from the response data
                 data.forEach(function (item) {
                     var option = document.createElement("option");
                     option.value = item.serial_no;
                     option.text = item.serial_no;
-                    srled.appendChild(option);
+                    selectElement.appendChild(option);
                 });
             }
+            setTimeout(function () {
+                $('.select2').select2();
+            }, 500);
         }
     });
 }
@@ -1066,7 +1064,7 @@ function BtnAdd(categories, subCategories) {
                     <select id="data[${count}][unit]" name="unit[]"
                         class="form-control">
                         <option value="" disabled>Select</option>
-                        <option value="Pic">Pic</option>
+                        <option value="Pic">Pcs</option>
                         <option value="Mtr">Mtr</option>
                     </select>
                 </div>
@@ -1135,7 +1133,7 @@ function BtnAdd(categories, subCategories) {
                     <select id="data[${count}][unit]" name="unit[]"
                         class="form-control">
                         <option value="">Select</option>
-                        <option value="Pic">Pic</option>
+                        <option value="Pic">Pcs</option>
                         <option value="Mtr">Mtr</option>
                     </select>
                 </div>
@@ -1276,4 +1274,23 @@ function syncHiddenInput(checkbox, rowId) {
     } else {
         hiddenInput.disabled = false; // Enable the hidden input if the checkbox is unchecked
     }
+}
+
+function filterInvoices() {
+    const selectedSupplierId = document.getElementById('supplier_select').value;
+
+    const invoiceSelect = document.getElementById('invoice_select');
+    // const invoiceOptions = invoiceSelect.querySelectorAll('option');
+
+    $(invoiceSelect).find('option').each(function () {
+        const supplierId = $(this).data('supplier');
+        if (supplierId == selectedSupplierId || !supplierId) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+
+    $(invoiceSelect).val([]); // Reset selection
+    $(invoiceSelect).trigger("chosen:updated");
 }

@@ -45,7 +45,13 @@
                         <td>{{$subcategory['category']->category_name ?? 'N/A'}}</td>
                          {{-- <td>{{$subCategory['sub_category_date']}}</td> --}}
                         <td>{{$subcategory['sub_category_name']}}</td>
-                        <td>{{$subcategory['unit']}}</td>
+                        <td>
+                            @if ($subcategory['unit'] == 'Pic')
+                                Pcs
+                            @else
+                                {{ $subcategory['unit'] }}
+                            @endif
+                        </td>
                         <td>
                             @if($subcategory['sr_no'] == 1)
                                 <p class="badge bg-success">Available</p>

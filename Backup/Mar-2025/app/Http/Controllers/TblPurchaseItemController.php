@@ -27,8 +27,8 @@ class TblPurchaseItemController extends Controller
         $invoices = tbl_purchase::with('party')->get();
         $selectedInvoices = SelectedInvoice::pluck('invoice_no', 'scid')->toArray();
 
-        $subcategories = tbl_sub_category::all();
-        // dd($selectedInvoices);
+        $subcategories = tbl_sub_category::with('category')->get();
+        // dd($subcategories);
         return view('inward.PurInvoiceindex', compact('invoices', 'selectedInvoices', 'subcategories'));
     }
     public function select(Request $request)
