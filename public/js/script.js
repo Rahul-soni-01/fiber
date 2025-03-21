@@ -751,6 +751,9 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
             let sr_noSelect = document.querySelector(`#sr_no_div_${extractedIndex} select[id="data[${extractedIndex}][sr_no]"]`);
 
             if (sr_noSelect) {
+                    // Clear all existing options
+                sr_noSelect.innerHTML = '';
+
                 // Create the HTML for the options
                 let html = '';
                 response.forEach(function (item) {

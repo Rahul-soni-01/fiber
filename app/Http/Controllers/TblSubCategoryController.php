@@ -20,7 +20,10 @@ class TblSubCategoryController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
+
             $subCategories = tbl_sub_category::with('category')->get();
+            // dd($subCategories);
+
             return view('subcategory.index', ['subCategories' => $subCategories]);
         }
         return redirect('/unauthorized');
@@ -54,8 +57,8 @@ class TblSubCategoryController extends Controller
         $sellable = $request->has('is_sellable') ? $request->is_sellable : 0;
         $cid = tbl_category::where('category_name',$request->category)->first()->id;
         $spcid = TblSaleProductCategory::where('name',$request->category)->first()->id ?? null;
-        // dd($spcid);
-
+        // dd($spcid); 
+        
         $subcategory = new tbl_sub_category();
         $subcategory->cid = $cid;
         $subcategory->sub_category_name = $request->sub_category;

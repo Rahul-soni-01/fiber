@@ -7,6 +7,7 @@ use App\Models\TblStock;
 use App\Models\tbl_sub_category;
 use App\Models\tbl_category;
 use App\Models\tbl_purchase;
+use App\Models\tbl_purchase_item;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -15,12 +16,13 @@ class TblStockController extends Controller
 {
     public function store(Request $request)
     {
-        // dd($request->all());
+        
         $validator = Validator::make($request->all(), [
             'cid' => 'required',
             'scid' => 'required',
             'qty' => 'required|integer',
             'price' => 'required|numeric',
+            'sr_no' => 'required',
             'serial_no' => ['nullable', 'array'],
             'serial_no.*' => ['nullable', 'regex:/^[A-Za-z]{6}\d{4}$/'],
         ], [
@@ -30,14 +32,35 @@ class TblStockController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
-        $invoice_no = $request->invoice_no;
+        // dd($request->all());
+        $invoice_no = $request->invoice_no; 
         $inwards = tbl_purchase::with('party')->where('invoice_no', $invoice_no)->first();
+        $existingrecord = TblStock::where('invoice_no', $invoice_no)
+        ->where('cid', $request->cid)
+        ->where('scid', $request->scid)
+        ->count();
+        
+        $inwardsItems = tbl_purchase_item::with(['category', 'subCategory'])
+        ->where('invoice_no', $invoice_no)
+        ->where('cid', $request->cid)
+        ->where('scid', $request->scid)
+        ->get();
+        $totalQty = 0;
+        $totalprice = 0;
 
-        $price = $request->price / $request->qty;
-        $serial_no_list = $request->serial_no ?? ['0'];
+        foreach ($inwardsItems as $item) {
+            $totalQty += $item->qty;
+            $totalprice += $item->total;
+        }
+        $finalqty =  $request->qty + $existingrecord;
+        // dd($inwardsItems, $totalQty, $finalqty);
+        if( $totalQty < $finalqty){
+            return redirect()->back()->withErrors("Error: You cannot enter more than the available quantity ($totalQty).")->withInput();
+        }
+        $price = $totalprice / $totalQty;
+        $serial_no_list = $request->serial_no ?? [0];
 
-        if($request->sr_no != null){
+        if($request->sr_no != null && $request->sr_no != 0){    
             $serialNumbers = explode("\n", $request->sr_no);
             $serial_no_list = array_map('trim', $serialNumbers);
             $serial_no_list = array_filter($serial_no_list); // Remove empty values
@@ -73,28 +96,27 @@ class TblStockController extends Controller
             }
         }
         foreach ($serial_no_list as $item) {
-
+            // dd($item);
             $existingRecord = TblStock::where('invoice_no', $invoice_no)
                 ->where('cid', $request->cid)
                 ->where('scid', $request->scid)
                 ->where('serial_no', $item)
                 ->first();
-
-            if (!$existingRecord) {
+               
+            if ($existingRecord == null) {
+                // dd("if");
                 TblStock::create([
                     'date' => $inwards['date'],
                     'invoice_no' => $invoice_no,
                     'cid' => $request->cid,
                     'scid' => $request->scid,
                     'serial_no' => $item,
-                    'qty' => $item === 0 ? 1 : $request->qty,
+                    'qty' => $item === 0 ? $request->qty : 1, // Updated condition
                     'price' => $request->price,
                     'priceofUnit' => $price,
                     'status' => 0,
                 ]);
-            } else {
-                return redirect()->back()->withErrors("Invoice No or Serial No already exists")->withInput();
-            }
+            } 
         }
         return redirect()->route('report.stock');
 

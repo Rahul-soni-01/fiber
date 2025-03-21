@@ -25,22 +25,8 @@ class TblPurchaseController extends Controller
     {
         if ($this->checkPermission($request, 'view')) {
 
-            $inwards = tbl_purchase::with('party')
-                ->select('date', 'invoice_no', 'amount', 'inr_rate', 'inr_amount', 'shipping_cost', 'pid')
-                ->orderBy('id', 'asc')
-                ->get()
-                ->map(function ($purchase) {
-                    return [
-                        'date' => $purchase->date,
-                        'invoice_no' => $purchase->invoice_no,
-                        'party_name' => $purchase->party->party_name,
-                        'amount' => $purchase->amount,
-                        'inr_rate' => $purchase->inr_rate,
-                        'inr_amount' => $purchase->inr_amount,
-                        'shipping_cost' => $purchase->shipping_cost,
-                    ];
-                });
-
+            $inwards = tbl_purchase::with('party')->get();
+            
             $SubCategories = tbl_sub_category::all();
             $Categories = tbl_category::all();
             $tbl_parties = tbl_party::all();
@@ -60,10 +46,11 @@ class TblPurchaseController extends Controller
         $p_name = $request->get('p_name');
         $amount = $request->get('amount');
         $amount_inr = $request->get('amount_inr');
+        $main_category = $request->get('main_category');
 
         // Query with filters
         $inwards = tbl_purchase::with('party')
-            ->select('date', 'invoice_no', 'amount', 'inr_rate', 'inr_amount', 'shipping_cost', 'pid')
+            // ->select('date', 'invoice_no', 'amount', 'inr_rate', 'inr_amount', 'shipping_cost', 'pid')
             ->when($s_date, function ($query, $s_date) {
                 return $query->where('date', '>=', $s_date);
             })
@@ -84,30 +71,22 @@ class TblPurchaseController extends Controller
             ->when($amount_inr, function ($query, $amount_inr) {
                 return $query->where('inr_amount', $amount_inr);
             })
-            ->orderBy('id', 'asc')
-            ->get()
-            ->map(function ($purchase) {
-                return [
-                    'date' => $purchase->date,
-                    'invoice_no' => $purchase->invoice_no,
-                    'party_name' => $purchase->party->party_name,
-                    'amount' => $purchase->amount,
-                    'inr_rate' => $purchase->inr_rate,
-                    'inr_amount' => $purchase->inr_amount,
-                    'shipping_cost' => $purchase->shipping_cost,
-                ];
-            });
+            ->when($main_category, function ($query, $main_category) {
+                return $query->where('main_category', $main_category); // Filter by main category
+            })
+            ->orderBy('id', 'asc')->get();
 
         $SubCategories = tbl_sub_category::all();
         $Categories = tbl_category::all();
         $tbl_parties = tbl_party::all();
-        // dd($tbl_parties);
+        // dd($inwards);
         return view('show_inward', ['inwards' => $inwards, 'Categories' => $Categories, 'tbl_parties' => $tbl_parties, 'SubCategories' => $SubCategories]);
     }
 
     public function create(Request $request)
     {
         if ($this->checkPermission($request, 'add')) {
+
             $partyname = tbl_party::all();
             $inwards = tbl_category::all();
             $main_category = $request->query('main_category');
@@ -154,11 +133,17 @@ class TblPurchaseController extends Controller
         $Categories = tbl_category::all();
         $tbl_parties = tbl_party::all();
         if ($invoice_no) {
+            $SubCategoy = tbl_sub_category::where('id', $req_subcategory)->first();
             $inwardsItems = tbl_purchase_item::with(['category', 'subCategory'])
                 ->where('invoice_no', $invoice_no)
                 ->where('cid', $req_category)
                 ->where('scid', $req_subcategory)
                 ->get();
+            $totalQty = 0;
+
+            foreach ($inwardsItems as $item) {
+                $totalQty += $item->qty;
+            }
             foreach ($inwardsItems as $item) {
                 $sr_no = $item->subCategory->sr_no;
             }
@@ -171,9 +156,9 @@ class TblPurchaseController extends Controller
                 ->where('cid', $req_category)
                 ->where('scid', $req_subcategory)
                 ->get();
+                // ->when($SubCategoy->sr_no == 0, fn($query) => $query->first(), fn($query) => $query->get());
 
-            // dd($existingrecord);
-            return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories', 'invoice_no', 'req_category', 'req_subcategory', 'req_qty', 'req_price', 'req_unit', 'sr_no', 'existingrecord', 'getsr_nos'));
+            return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories', 'invoice_no', 'req_category', 'req_subcategory', 'req_qty', 'req_price', 'req_unit', 'sr_no', 'existingrecord', 'getsr_nos','totalQty','SubCategoy'));
         }
         return view('add_srno', compact('inwards', 'tbl_parties', 'Categories', 'SubCategories'));
     }

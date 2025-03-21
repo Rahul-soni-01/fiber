@@ -8,28 +8,16 @@ use App\Models\TblBank;
 
 class TblExpenseController extends Controller
 {
-    private function checkPermission(Request $request, $action)
+    public function index()
     {
-        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Party ?? [];
-        return in_array($action, $permissions);
+        $expenses = TblExpense::all();
+        return view('expenses.index', compact('expenses'));
     }
 
-    public function index(Request $request)
+    public function create()
     {
-        if ($this->checkPermission($request, 'view')) {
-            $expenses = TblExpense::all();
-            return view('expenses.index', compact('expenses'));
-        }
-        return redirect('/unauthorized');
-    }
-
-    public function create(Request $request)
-    {
-        if ($this->checkPermission($request, 'add')) {
-            $banks = TblBank::all();
-            return view('expenses.create', compact('banks'));
-        }
-        return redirect('/unauthorized');
+        $banks = TblBank::all();
+        return view('expenses.create',compact('banks'));
     }
     public function store(Request $request)
     {
@@ -43,34 +31,32 @@ class TblExpenseController extends Controller
             'cheque_no' => 'nullable|string|max:255',
             'notes' => 'nullable|string|max:255',
         ]);
-
-        $data = $request->only(['date', 'name', 'amount', 'payment_type', 'notes']); // Always include these fields
-
+        
+        $data = $request->only(['date','name', 'amount', 'payment_type', 'notes']); // Always include these fields
+        
         // Only add these fields if payment_type is 'Bank'
         if ($request->payment_type == 'Bank') {
             $data['bank_id'] = $request->bank_id;
             $data['transaction_type'] = $request->transaction_type;
             $data['cheque_no'] = $request->cheque_no;
         }
+        
         TblExpense::create($data);
+        
+
+
         return redirect()->route('expenses.index')->with('success', 'Expense created successfully.');
     }
-    public function show($id, Request $request)
+    public function show($id)
     {
-        if ($this->checkPermission($request, 'view')) {
-            $expense = TblExpense::findOrFail($id);
-            return view('expenses.show', compact('expense'));
-        }
-        return redirect('/unauthorized');
+        $expense = TblExpense::findOrFail($id);
+        return view('expenses.show', compact('expense'));
     }
-    public function edit($id, Request $request)
+    public function edit($id)
     {
-        if ($this->checkPermission($request, 'edit')) {
-            $expense = TblExpense::findOrFail($id);
-            $banks = TblBank::all();
-            return view('expenses.edit', compact('expense', 'banks'));
-        }
-        return redirect('/unauthorized');
+        $expense = TblExpense::findOrFail($id);
+        $banks = TblBank::all();
+        return view('expenses.edit', compact('expense','banks'));
     }
 
     public function update(Request $request, $id)
@@ -84,11 +70,11 @@ class TblExpenseController extends Controller
             'cheque_no' => 'nullable|string|max:255',
             'notes' => 'nullable|string|max:255',
         ]);
-
+        
         $expense = TblExpense::findOrFail($id);
-
+        
         $data = $request->only(['name', 'amount', 'payment_type', 'notes']); // Always include these fields
-
+        
         if ($request->payment_type == 'Bank') {
             $data['bank_id'] = $request->bank_id;
             $data['transaction_type'] = $request->transaction_type;
@@ -98,19 +84,17 @@ class TblExpenseController extends Controller
             $data['transaction_type'] = null;
             $data['cheque_no'] = null;
         }
-
+        
         $expense->update($data);
 
         return redirect()->route('expenses.index')->with('success', 'Expense updated successfully.');
     }
 
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
-        if ($this->checkPermission($request, 'add')) {
         $expense = TblExpense::findOrFail($id);
         $expense->delete();
+
         return redirect()->route('expenses.index')->with('success', 'Expense deleted successfully.');
-        }
-        return redirect('/unauthorized');
     }
 }

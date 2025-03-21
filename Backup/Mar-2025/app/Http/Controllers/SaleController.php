@@ -185,6 +185,7 @@ class SaleController extends Controller
         return redirect('/unauthorized');
 
     }
+    
     public function store(Request $request)
     {
         // dd($request->all());

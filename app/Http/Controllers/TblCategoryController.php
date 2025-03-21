@@ -60,7 +60,9 @@ class TblCategoryController extends Controller
             $category->main_category = $request->main_category; // Assigning main_category
             $category->is_sellable = $sellable; // Saving is_sellable field
             $result = $category->save();
-                    
+
+            // dd($sellable);
+            
             if ($result) {
                 return redirect()->route('category.index')->with('success', 'Category added successfully.');
             } else {
@@ -118,7 +120,6 @@ class TblCategoryController extends Controller
             return redirect()->back()->with('error', 'Failed to update category.');
         }
     }
-    
 
     public function destroy(tbl_category $tbl_category,$id,Request $request)
     {

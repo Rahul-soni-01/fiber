@@ -80,7 +80,7 @@ class SaleController extends Controller
     }
     public function return(Request $request)
     {
-        if ($this->checkPermission($request, 'add')) {
+        if ($this->checkPermission($request, 'view')) {
             $sales = Sale::with('customer')->get();
 
             $customers = TblCustomer::all();
