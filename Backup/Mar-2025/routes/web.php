@@ -222,6 +222,7 @@ Route::middleware('auth')->group(function () {
     Route::post('sale-return-store', [SaleController::class, 'return_store'])->name('sale.return.store');
     Route::get('sale', [SaleController::class, 'index'])->name('sale.index');
     Route::get('sale-create', [SaleController::class, 'create'])->name('sale.create');
+    Route::get('sale-repair-create', [SaleController::class, 'repaircreate'])->name('sale.repair.create');
     Route::post('sale-store', [SaleController::class, 'store'])->name('sale.store');
     Route::get('show-sale-{sale_id}', [SaleController::class, 'show'])->name(('sale.show'));
     Route::get('edit-sale-{sale_id}', [SaleController::class, 'edit'])->name(('sale.edit'));

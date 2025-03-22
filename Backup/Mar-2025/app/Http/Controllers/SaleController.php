@@ -185,7 +185,23 @@ class SaleController extends Controller
         return redirect('/unauthorized');
 
     }
-    
+    public function repaircreate(Request $request)
+    {
+        if ($this->checkPermission($request, 'add')) {
+            $customers = TblCustomer::all();
+            $inwards = tbl_category::all();
+            $items = tbl_sub_category::all();
+            $sale_product_categories = TblSaleProductCategory::all();
+            $sale_product_subcategories = TblSaleProductSubCategory::all();
+            $serial_nos = Report::where('status', '1')->where('sale_status', '!=', '1')->where('part', '0')->get()->sortBy('sr_no_fiber');
+            $types = Tbltype::orderBy('id', 'asc')->get();
+            // dd($serial_nos);
+            // return view('sale.create', compact('customers', 'inwards', 'items', 'serial_nos'));
+            return view('sale.repaircreate', compact('sale_product_categories', 'sale_product_subcategories', 'types', 'customers', 'inwards', 'items', 'serial_nos'));
+        }
+        return redirect('/unauthorized');
+
+    }
     public function store(Request $request)
     {
         // dd($request->all());
@@ -194,6 +210,7 @@ class SaleController extends Controller
             'date' => 'required|date',
             'cid' => 'required',
             'amount_r' => 'required|numeric',
+            'repair_status' => 'required|numeric',
             'shipping_cost' => 'required|numeric',
             'round_total' => 'required|numeric',
             'amount' => 'required|numeric',
@@ -225,6 +242,7 @@ class SaleController extends Controller
         $sale = new Sale();
         $sale->sale_id = $request->sale_id;
         $sale->customer_id = $request->cid;
+        $sale->repair_status = $request->repair_status;
         $sale->sale_date = $request->date;
         $sale->amount_r = $request->amount_r;
         $sale->shipping_cost = $request->shipping_cost;

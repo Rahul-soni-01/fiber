@@ -27,7 +27,7 @@
 
         class="btn btn-info mb-2"> Customer Sell Details </a> --}}
 
-    <div class="tab-pane fade show active" id="customer-payment" role="tabpanel" aria-labelledby="customer-payment-tab">
+    <div class="tab-pane fade" id="customer-payment" role="tabpanel" aria-labelledby="customer-payment-tab">
         <div class="d-flex justify-content-center align-items-center mt-3">
             <h5>Sell Payment </h5>
         </div>
@@ -67,7 +67,7 @@
         </table>
     </div>
     {{-- @else --}}
-    <div class="tab-pane fade" id="customer-history" role="tabpanel" aria-labelledby="customer-history-tab">
+    <div class="tab-pane fade show active" id="customer-history" role="tabpanel" aria-labelledby="customer-history-tab">
         {{-- <a href="?payment" class="btn btn-info mb-2">Customer Payment</a> --}}
         <div class="d-flex justify-content-center align-items-center">
             <h5>Sell Details </h5>

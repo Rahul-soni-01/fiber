@@ -7,7 +7,7 @@
     {{ session('error') }}
 </div>
 @endif
-<form action="{{route('report.stockReport')}}" method="post">
+<form action="{{route('report.stockReport')}}" method="post" id="report-form">
     @csrf
     <div class="container-fluid">
         <div class="row mb-3">

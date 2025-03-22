@@ -75,6 +75,7 @@
 
                             @if(auth()->user()->type === 'electric')
                             <th>Part</th>
+                            <th>SR(FIBER) / Temp No</th>
                             <th>Note</th>
                             <th>Action</th>
                             @endif
@@ -87,15 +88,15 @@
 
                             @if(auth()->user()->type === 'user')
                             <th>Part</th>
-                            <th>SR(FIBER)</th>
-                            <th>Temp No.</th>
+                            <th>SR(FIBER) / Temp No</th>
                             <th>M.J</th>
                             <th>Type</th>
                             <th>Action</th>
                             @endif
                             
                             @if(auth()->user()->type === 'account')
-                            <th>SR(FIBER)</th>
+                            <th>Part</th>
+                            <th>SR(FIBER) / Temp No.</th>
                             <th>Type</th>
                             <th>Action</th>
                             @endif
@@ -120,6 +121,7 @@
                             <td>{{ $report->created_at->format('d-m-Y') }}</td>
                             @if ($type === 'electric')
                             <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
+                            <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                             <td>{{ $report->note1 }}</td>
                             <td> @if ($type === 'electric')
                                 <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
@@ -136,8 +138,7 @@
                             @endif
                             @if($type === 'user')
                             <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
-                            {{-- <td>{{ $report->sr_no_fiber ?? $report->temp }}</td> --}}
-                            <td>{{ $report->temp }}</td>
+                            <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                             <td>{{ $report->m_j }}</td>
                             <td>{{ $report->tbl_type->name ?? null}}</td>
                             <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
@@ -194,8 +195,9 @@
                             </td>
                             @endif
                             @if(auth()->user()->type === 'account')
-                            <td>{{ $report->sr_no_fiber }}</td>
-                            <td>{{ $report->tbl_type->name ?? null }}</td>
+                            <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
+                            <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
+                            <td>{{ $report->tbl_type->name ?? 'N/A' }}</td>
                             <td> <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary"> <i class="ri-eye-fill"></i></a>
                             </td>
                             @endif

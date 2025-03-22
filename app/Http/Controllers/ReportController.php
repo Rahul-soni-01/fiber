@@ -49,7 +49,12 @@ class ReportController extends Controller
             $types = Tbltype::with('reports')->get(); // Use 'tbl_type' (singular) as defined in the model
             if (auth()->user()->type === 'godown') {
                 // dd("de");
-                $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')->where('sale_status', '0')->get();
+                $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')
+                    // ->where('sale_status' , null)
+                    // $report->sale_status = 0;
+                    // ->where('stock_status', 1)
+                    ->get();
+
                 return view("report.godownindex", compact('reports'));
             }
             return view("report.indexNew", compact('types'));
@@ -1300,6 +1305,7 @@ class ReportController extends Controller
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
+        $report->party_name = $request->input('party_name');
         if (Auth()->user()->type === 'electric') {
             // $report->r_status = 0;
             $report->f_status = 0;

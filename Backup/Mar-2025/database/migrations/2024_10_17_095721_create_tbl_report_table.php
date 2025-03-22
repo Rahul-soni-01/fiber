@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('tbl_reports', function (Blueprint $table) {
             $table->id();
-            $table->integer('part')->nullable();  // new - repair
-            $table->integer('f_status')->nullable();   // 0 = 
+            $table->integer('part')->nullable(); 
+            $table->integer('f_status')->nullable();        
             // $table->integer('warranty')->nullable(); 
             $table->string('worker_name')->nullable();
-            $table->integer('sr_no_fiber')->nullable();
+            $table->string('sr_no_fiber')->nullable();
             $table->string('m_j')->nullable();
             $table->string('type')->nullable();
             $table->string('sr_card')->nullable();
@@ -48,13 +48,13 @@ return new class extends Migration
             $table->text('note1')->nullable();        //Any note for fiber
             $table->text('note2')->nullable();        //Any note for fiber
             $table->text('remark')->nullable();        //Any remark for fiber at reject time
-            $table->integer('status')->nullable();               // account varify , not verified
-            $table->integer('temp')->nullable();         
-            $table->integer('r_status')->nullable();        // repair status 0-1-2 process godown (1), ele (1), cavity(2), user(0),  
+            $table->integer('status')->nullable();               
+            $table->integer('temp')->nullable();        
+            $table->integer('r_status')->nullable();        
             $table->integer('party_name')->nullable();
-            $table->string('sale_status')->nullable();      // sell thai gyo k nai
-            $table->string('stock_status')->nullable()->default('0'); // stock ma 6e ke nai
-            $table->integer('final_amount')->nullable(); 
+            $table->string('sale_status')->nullable();
+            $table->string('stock_status')->nullable()->default('0');
+            $table->integer('final_amount')->nullable();
             $table->timestamps();
         });
     }

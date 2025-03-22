@@ -10,7 +10,7 @@
 
             <a href="{{ route('generate-pdf', ['report' => $report->id]) }}" class="btn btn-primary mb-3" id="download-btn1212">Download PDF</a>
 
-            <div class="container-fluid custom-border">
+            <div class="container-fluid  custom-border">
 
                 <div class="row mt-4 ">
 
@@ -219,6 +219,7 @@
 
 
                 @foreach($reportitems as $reportitem)
+                @if(!empty($reportitem))
 
                 {{-- {{dd($reportitem)}} --}}
 
@@ -226,7 +227,7 @@
 
                     <div class="col-md-3">
 
-                        <strong>{{ $reportitem->tbl_sub_category->category->category_name}} - {{ $reportitem->tbl_sub_category->sub_category_name }}</strong>
+                        <strong>{{ $reportitem->tbl_sub_category->category->category_name ?? 'NA'}} - {{ $reportitem->tbl_sub_category->sub_category_name ?? 'NA' }}</strong>
 
                     </div>
 
@@ -275,7 +276,7 @@
                     </div>
 
                 </div>
-
+                @endif
                 @endforeach
 
 

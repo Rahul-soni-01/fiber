@@ -466,7 +466,8 @@ class ReportController extends Controller
     public function get_sc_sr_no(Request $request)
     {
         $type = $request->type;
-        $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
+        if($request->url == 'sale-repair-create'){
+            $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
             ->where('part', 0)
             ->where('sale_status', 0)
             ->where('stock_status', 1)
@@ -475,6 +476,19 @@ class ReportController extends Controller
             })
             ->get()
             ->pluck('sr_no_fiber');
+        }elseif($request->url == 'sale-create'){
+            $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
+            ->where('part', 1)
+            ->where('part', 1)
+            ->where('sale_status', 0)
+            ->where('stock_status', 1)
+            ->whereHas('tbl_type', function ($query) use ($type) {
+                $query->where('name', $type);
+            })
+            ->get()
+            ->pluck('sr_no_fiber');
+        }
+        
         // dd($reports);
         return response()->json($reports, 200);
         // dd(count($reports),$reports);
@@ -1138,7 +1152,7 @@ class ReportController extends Controller
 
                     return $item;
                 });
-                // dd($reportResults);
+            // dd($reportResults);
             return view('report.scwisestock', compact('subcategory', 'purchaseResults', 'stockResults', 'reportResults'));
         }
         $categories = tbl_category::all();
@@ -1287,8 +1301,9 @@ class ReportController extends Controller
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
+        $report->party_name = $request->input('party_name');
         if (Auth()->user()->type === 'electric') {
-            // $report->r_status = 0;
+            $report->r_status = 0;
             $report->f_status = 0;
         } elseif (Auth()->user()->type === 'admin') {
             $report->r_status = 1;
@@ -1360,7 +1375,7 @@ class ReportController extends Controller
                             if ($TblReportiteminsertedIds) {
                                 TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
                             }
-                            if($TblStockupdateIds){
+                            if ($TblStockupdateIds) {
                                 TblStock::whereIn('id', $TblStockupdateIds)->update(['status' => 0]);
                             }
                             $Record_delete = Report::where('id', $report_id)->first();
@@ -1697,288 +1712,260 @@ class ReportController extends Controller
     }
     public function Latestupdate(Request $request, $id)
     {
-        if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
-            // dd($request->all());
-            if (Auth()->user()->type === 'user') {
-                $validator = Validator::make(
-                    $request->all(),
-                    [
-                        'sr_no_fiber' => 'required|string|max:255',
-                        'type' => 'required|string|max:255',
-                    ]
-                );
-                if ($validator->fails()) {
-                    $firstErrorMessage = $validator->errors()->first();
-                    return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+        // dd($request->all());
+        // Step 1: Backup old report items
+        $oldReportItems = TblReportItem::where('report_id', $id)->get();
+        // Step 2: Back in stock old sr_no items
+        foreach($oldReportItems as $oldReportItem){
+            if($oldReportItem->sr_no != 0){
+                $existingRecord = TblStock::where('serial_no', $oldReportItem->sr_no)
+                ->first();
+                if ($existingRecord) {
+                    $existingRecord->status = 0;
+                    $existingRecord->save();
                 }
             }
-            $report = Report::find($id);
-            if ($request->filled('worker_name'))
-                $report->worker_name = $request->worker_name;
-            if ($request->filled('sr_hr'))
-                $report->sr_hr = $request->sr_hr;
-            if ($request->filled('note1'))
-                $report->note1 = $request->note1;
-            if ($request->filled('note2'))
-                $report->note2 = $request->note2;
-            if ($request->filled('sr_no_fiber'))
-                $report->sr_no_fiber = $request->sr_no_fiber;
-            if ($request->filled('m_j'))
-                $report->m_j = $request->m_j;
-            if ($request->filled('temp'))
-                $report->temp = $request->temp;
-            if ($request->filled('type'))
-                $report->type = $request->type;
-            if ($request->filled('remark'))
-                $report->remark = $request->remark;
-            if (Auth()->user()->type === 'user') {
-                $report->temp = 0;
-            }
-            $report->status = 0;
-            $report->sale_status = 0;
-            if ($request->part == 1) {
-                $report->r_status = 0;
-            }
-            // $report->status = null;
-            $report->save();
-            $amount = $report->final_amount;
-            $report_id = $id;
-            $avalabile = 0;
-            $sub_category = $request->input('sub_category');
-            $TblStockinsertedIds = [];
-            $TblStockupdateIds = [];
-            $TblReportiteminsertedIds = [];
-            $stock_items = TblReportItem::where('report_id', $report_id)->get();
-            foreach ($stock_items as $item) {
-                if ($item->sr_no != 0) {
-                    $tblexistingRecord = TblStock::where('serial_no', $item->sr_no)
-                        ->where('id', $item->tblstock_id)
-                        ->first();
-                    $tblexistingRecord->status = 0;
-                    $tblexistingRecord->dead_status = 0;
-                    $tblexistingRecord->save();
-                }
-                $delete_stock = TblReportItem::where('id', $item->id)->delete();
-            }
-            if ($sub_category) {
-                foreach ($request->srled as $index => $serial_no) {
-                    $sr_no_or_not = $request->sr_no_or_not[$index];
-                    $sub_cat = tbl_sub_category::where('id', $sub_category[$index])->first();
-                    $dead = $request->dead[$index];
-                    if ($sr_no_or_not == 1) {
-                        $existingRecord = TblStock::where('serial_no', $serial_no)
-                            ->where('scid', $sub_category[$index])
-                            ->first();
-                        if ($existingRecord) {
-                            $amount += $existingRecord->priceofUnit;
-                            $existingRecord->status = 1;
-                            $existingRecord->dead_status = $dead;
-                            $existingRecord->save();
-                            $TblStockupdateIds[] = $existingRecord->id;
-                            $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
-                        } else {
-                            $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
+        }
 
+        // Step 3: Delete old report items
+        TblReportItem::where('report_id', $id)->delete();
+        // $ReportItems =  TblReportItem::where('report_id', $id)->get();
+        // dd($ReportItems,$oldReportItems);
+        try {
+            // Check user type
+            if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
+                // Validation for 'user' type
+                if (Auth()->user()->type === 'user') {
+                    $validator = Validator::make(
+                        $request->all(),
+                        [
+                            'sr_no_fiber' => 'required|string|max:255',
+                            'type' => 'required|string|max:255',
+                        ]
+                    );
+                    if ($validator->fails()) {
+                        $firstErrorMessage = $validator->errors()->first();
+                        throw new \Exception($firstErrorMessage); // Throw exception with the first error message
+
+                        // return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+                    }
+                }
+
+                // Find the report
+                $report = Report::find($id);
+
+                // Update report fields based on request data
+                if ($request->filled('worker_name')) $report->worker_name = $request->worker_name;
+                if ($request->filled('part')) $report->part = $request->part;
+                if ($request->filled('sr_hr')) $report->sr_hr = $request->sr_hr;
+                if ($request->filled('note1')) $report->note1 = $request->note1;
+                if ($request->filled('note2')) $report->note2 = $request->note2;
+                if ($request->filled('sr_no_fiber')) $report->sr_no_fiber = $request->sr_no_fiber;
+                if ($request->filled('m_j')) $report->m_j = $request->m_j;
+                if ($request->filled('temp')) $report->temp = $request->temp;
+                if ($request->filled('type')) $report->type = $request->type;
+                if ($request->filled('remark')) $report->remark = $request->remark;
+
+                // Additional logic for 'user' type
+                if (Auth()->user()->type === 'user') {
+                    $report->temp = 0;
+                }
+
+                // Set report status
+                $report->status = 0;
+                $report->sale_status = 0;
+                if ($request->part == 1) {
+                    $report->r_status = 0;
+                }elseif(Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity'){
+                    $report->r_status = 1;
+                }
+
+                // Save the report
+                $report->save();
+                throw new \Exception($report);
+                // Initialize variables
+                $amount = $report->final_amount;
+                $report_id = $id;
+                $avalabile = 0;
+                $sub_category = $request->input('sub_category');
+                $TblStockinsertedIds = [];
+                $TblStockupdateIds = [];
+                $TblReportiteminsertedIds = [];
+
+                // Process new report items
+                if ($sub_category) {
+                    foreach ($request->srled as $index => $serial_no) {
+                        $sr_no_or_not = $request->sr_no_or_not[$index];
+                        $sub_cat = tbl_sub_category::where('id', $sub_category[$index])->first();
+                        $dead = $request->dead[$index];
+
+                        // Handle items with serial numbers
+                        if ($sr_no_or_not == 1) {
+                            $existingRecord = TblStock::where('serial_no', $serial_no)
+                                ->where('scid', $sub_category[$index])
+                                ->first();
+
+                            if ($existingRecord) {
+                                $amount += $existingRecord->priceofUnit;
+                                $existingRecord->status = 1;
+                                $existingRecord->dead_status = $dead;
+                                $existingRecord->save();
+                                $TblStockupdateIds[] = $existingRecord->id;
+                                $tbl_stock_id = $existingRecord->id;
+                            } else {
+                                $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
+                                $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
+                                $date = $invoice->date;
+                                $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
+                                    ->where('scid', $request->sub_category[$index])
+                                    ->first();
+                                $cid = $invoice_data->cid;
+
+                                $serial_no_count = TblStock::where('invoice_no', $invoice_no)
+                                    ->where('scid', $request->sub_category[$index])
+                                    ->where('serial_no', $serial_no)
+                                    ->count();
+
+                                if ($serial_no_count === 0) {
+                                    $newStock = TblStock::create([
+                                        'date' => $date,
+                                        'invoice_no' => $invoice_no,
+                                        'cid' => $cid,
+                                        'scid' => $request->sub_category[$index],
+                                        'serial_no' => $serial_no,
+                                        'qty' => $invoice_data->qty,
+                                        'price' => $invoice_data->total,
+                                        'priceofUnit' => $invoice_data->price,
+                                        'status' => 0,
+                                        'dead_status' => $dead,
+                                    ]);
+                                    $TblStockinsertedIds[] = $newStock->id;
+                                    $tbl_stock_id = $newStock->id;
+                                }
+                            }
+                        }
+                        // Handle items without serial numbers
+                        elseif ($sr_no_or_not == 0) {
+                            $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
                             $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
                             $date = $invoice->date;
                             $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
                                 ->where('scid', $request->sub_category[$index])
                                 ->first();
+
+                            if ($invoice_data == null) {
+                                throw new \Exception('No purchase found in stock. Please select a valid invoice number.');
+                            }
+
                             $cid = $invoice_data->cid;
-                            $serial_no_count = TblStock::where('invoice_no', $invoice_no)
-                                ->where('scid', $request->sub_category[$index])
-                                ->where('serial_no', $serial_no)
-                                ->count();
-                            if ($serial_no_count === 0) {
-                                $newStock = TblStock::create([
+                            $existingRecord = TblStock::firstOrCreate(
+                                [
+                                    'invoice_no' => $invoice_no,
+                                    'serial_no' => $serial_no,
+                                    'scid' => $request->sub_category[$index],
+                                    'cid' => $cid,
+                                ],
+                                [
                                     'date' => $date,
                                     'invoice_no' => $invoice_no,
                                     'cid' => $cid,
                                     'scid' => $request->sub_category[$index],
-                                    'serial_no' => $serial_no,
                                     'qty' => $invoice_data->qty,
                                     'price' => $invoice_data->total,
                                     'priceofUnit' => $invoice_data->price,
                                     'status' => 0,
-                                    'dead_status' => $dead,
-                                ]);
-                                $TblStockinsertedIds[] = $newStock->id;
-                                // $reportitem = new TblReportItem();
-                                // $reportitem->report_id = $id;
-                                // $reportitem->scid = $sub_category[$index];
-                                // $reportitem->unit = $sub_cat->unit;
-                                // $reportitem->sr_no = $request->srled[$index];
-                                // $reportitem->amp = $request->ampled[$index];
-                                // $reportitem->volt = $request->voltled[$index];
-                                // $reportitem->watt = $request->wattled[$index];
-                                // $reportitem->dead_status = $request->dead[$index];
-                                // $reportitem->tblstock_id = $newStock->id;
-                                // $reportitem->save();
+                                ]
+                            );
+
+                            if ($existingRecord) {
+                                $tbl_stock_id = $existingRecord->id;
+                                $report_used_qty = $request->used_qty[$index] ?? 0;
+                                $report_used_qty_counts = TblReportItem::where('tblstock_id', $tbl_stock_id)->get();
+
+                                foreach ($report_used_qty_counts as $report_used_qty_count) {
+                                    $report_used_qty += $report_used_qty_count->used_qty;
+                                }
+
+                                if ($report_used_qty > $existingRecord->qty) {
+
+                                    $scid = $request->sub_category[$index];
+                                    $subCat = tbl_sub_category::find($sub_category[$index]); 
+                                    $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
+                                    
+                                    $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
+                                    $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
+                                    try {
+                                        TblStock::whereIn('id', $TblStockinsertedIds)->delete();
+                                    } catch (\Exception $e) {
+                                        return redirect()->back()->with('error', 'Failed to delete inserted records: ' . $e->getMessage());
+                                    }
+                                    if ($TblReportiteminsertedIds) {
+                                        TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
+                                    }
+                                    if($TblStockupdateIds){
+                                        TblStock::whereIn('id', $TblStockupdateIds)->update(['status' => 0]);
+                                    }
+                                    
+                                    throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
+                                    
+                                } elseif ($report_used_qty == $existingRecord->qty) {
+                                    $existingRecord->status = 1;
+                                }
+
+                                $amount += $existingRecord->priceofUnit;
+                                $existingRecord->save();
+                            } else {
+                                throw new \Exception('Same serial number found. Failed to store the report.');
                             }
-                        }
-                    } elseif ($sr_no_or_not == 0) {
-                        
-                        $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
-                        $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
-                        // $invoice_no = $SelectedInvoice;
-                        $date = $invoice->date;
-                        $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
-                        ->where('scid', $request->sub_category[$index])
-                        ->first();
-                                                
-                        if ($invoice_data == null) {
-                            $avalabile = 1;
-                            try {
-                                TblStock::whereIn('id', $TblStockinsertedIds)->delete();
-                            } catch (\Exception $e) {
-                                return redirect()->back()->with('error', 'Failed to delete inserted records: ' . $e->getMessage());
-                            }
-                            if ($TblReportiteminsertedIds) {
-                                TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
-                            }
-                            $Record_delete = Report::where('id', $report_id)->first();
-                            if ($Record_delete) {
-                                $Record_delete->delete();
-                            }
-                            return redirect()->back()->with('error', '!! No purchase Found in Stock, Please Select Valid Invoice No for Stock !!.');
-                        }
-                        $cid = $invoice_data->cid;
-                        $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
-                            ->where('scid', $request->sub_category[$index])
-                            ->where('cid', $cid)
-                            ->where('serial_no', $serial_no)
-                            ->count();
-                        // dd($request->all(),$invoice_no,$invoice_data,$serial_no_card_count);
-                        $existingRecord = TblStock::firstOrCreate(
-                            [
-                                'invoice_no' => $invoice_no, // Search criteria
-                                'serial_no' => $serial_no,
-                                'scid' => $request->sub_category[$index],
-                                'cid' => $cid,
-                            ],
-                            [
-                                'date' => $date,
-                                'invoice_no' => $invoice_no,
-                                'cid' => $cid,
-                                'scid' => $request->sub_category[$index],
-                                'qty' => $invoice_data->qty,
-                                'price' => $invoice_data->total,
-                                'priceofUnit' => $invoice_data->price,
-                                'status' => 0,
-                            ]
-                        );
-                       
-                        if ($existingRecord) {
+
                             $tbl_stock_id = $existingRecord->id;
-                            $report_used_qty_counts = TblReportItem::where('tblstock_id', $tbl_stock_id)->get();
-                            $report_used_qty = $request->used_qty[$index] ?? 0;
-                            
-                            foreach ($report_used_qty_counts as $report_used_qty_count) {
-                                $report_used_qty += $report_used_qty_count->used_qty;
-                            }
-
-                            if ($report_used_qty > $existingRecord->qty) {
-                                // dd($report_used_qty, $existingRecord->qty);
-                                $avalabile = 1;
-                                try {
-                                    TblStock::whereIn('id', $TblStockinsertedIds)->delete();
-                                } catch (\Exception $e) {
-                                    return redirect()->back()->with('error', 'Failed to delete inserted records: ' . $e->getMessage());
-                                }
-                                if ($TblReportiteminsertedIds) {
-                                    TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
-                                }
-                                if($TblStockupdateIds){
-                                    TblStock::whereIn('id', $TblStockupdateIds)->update(['status' => 0]);
-                                }
-                                $Record_delete = Report::where('id', $report_id)->first();
-                                if ($Record_delete) {
-                                    // $Record_delete->delete();
-                                }
-                                return redirect()->back()->with('error', 'Failed to store the report. You Not have a enough quantity in Stock, Please Check Your Stock Report.');
-                            } elseif ($report_used_qty = $existingRecord->qty) {
-                                $existingRecord->status = 1;
-                            }
-                            $amount += $existingRecord->priceofUnit;
-                            if ($dead == 1) {
-                                // $existingRecord->dead_status = 1;
-                            }
-                            $existingRecord->save();
                         } else {
-                            $avalabile = 1;
-                            try {
-                                TblStock::whereIn('id', $TblStockinsertedIds)->delete();
-                            } catch (\Exception $e) {
-                                return redirect()->back()->with('error', 'Failed to delete inserted records: ' . $e->getMessage());
-                            }
-                            if ($TblReportiteminsertedIds) {
-                                TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
-                            }
-                            if($TblStockupdateIds){
-                                TblStock::whereIn('id', $TblStockupdateIds)->update(['status' => 0]);
-                            }
-                            $Record_delete = Report::where('id', $report_id)->first();
-                            if ($Record_delete) {
-                                $Record_delete->delete();
-                            }
-                            return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
+                            throw new \Exception('Invalid request. Please try again.');
                         }
-                        $tbl_stock_id = TblStock::where('serial_no', $serial_no)
-                                        ->where('scid', $request->sub_category[$index])
-                                        ->where('invoice_no', $invoice_no)
-                                        ->value('id');
-                    } else {
-                        return redirect()->back()->with('error', 'Please try again later, Failed to store the report.');
+
+                        // Create a new report item
+                        $unit = tbl_sub_category::where('id', $request->sub_category[$index])->first()->unit ?? null;
+                        $TblReportItem = new TblReportItem();
+                        $TblReportItem->scid = $request->sub_category[$index];
+                        $TblReportItem->unit = $unit;
+                        $TblReportItem->report_id = $report_id;
+                        $TblReportItem->tblstock_id = $tbl_stock_id;
+                        $TblReportItem->dead_status = $dead;
+                        $TblReportItem->sr_no = $request->srled[$index];
+                        $TblReportItem->amp = $request->ampled[$index] ?? null;
+                        $TblReportItem->volt = $request->voltled[$index] ?? null;
+                        $TblReportItem->watt = $request->wattled[$index] ?? null;
+                        $TblReportItem->used_qty = ($request->srled[$index] == '0') ? $request->used_qty[$index] : 1;
+                        $TblReportItem->save();
                     }
 
-                    $unit = tbl_sub_category::where('id', $request->sub_category[$index])->first()->unit ?? null;
-                    
-                    $TblReportItem = new TblReportItem();
-                    $TblReportItem->scid = $request->sub_category[$index];
-                    $TblReportItem->unit = $unit;
-                    $TblReportItem->report_id = $report_id;
-                    $TblReportItem->tblstock_id = $tbl_stock_id;
-                    $TblReportItem->dead_status = $dead;
-                    $TblReportItem->sr_no = $request->srled[$index];
-                    $TblReportItem->amp = $request->ampled[$index] ?? null;
-                    $TblReportItem->volt = $request->voltled[$index] ?? null;
-                    $TblReportItem->watt = $request->wattled[$index] ?? null;
-                    if ($request->srled[$index] == '0') {
-                        $TblReportItem->used_qty = $request->used_qty[$index];
-                    } else {
-                        $TblReportItem->used_qty = 1;
-                    }
-                    try {
-                        $TblReportItem->save();
-                    } catch (\Exception $e) {
-                        return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
-                    }
-                }
-                $Record_update_final_amount = Report::where('id', $report_id)->first();
-                $Record_update_final_amount->final_amount = $amount;
-                $Record_update_final_amount->save();
-                if ($report->save()) {
+                    // Update the final amount of the report
+                    $Record_update_final_amount = Report::where('id', $report_id)->first();
+                    $Record_update_final_amount->final_amount = $amount;
+                    $Record_update_final_amount->save();
+
                     return redirect()->route('report.index')->with('success', 'Report added successfully.');
-                } else {
-                    return redirect()->back()->with('error', 'Failed to store the report. Please try again.');
                 }
-            }
-            return redirect()->route('report.index')->with('success', 'Report added successfully.');
-        } elseif (Auth()->user()->type === 'account') {
-            // dd($request->all());
-            $report = Report::find($id);
-            $report->status =  $request->status;
-            if ($request->status == 1) {
-                $report->sale_status = 0;
-                $report->stock_status = 1;
-            }
-            $report->remark = $request->remark;
-            $report->save();
-            if ($report->save()) {
+            } elseif (Auth()->user()->type === 'account') {
+                // Handle account user logic
+                $report = Report::find($id);
+                $report->status = $request->status;
+                if ($request->status == 1) {
+                    $report->sale_status = 0;
+                    $report->stock_status = 1;
+                }
+                $report->remark = $request->remark;
+                $report->save();
+
                 return redirect()->route('report.index')->with('success', 'Report updated successfully.');
-            } else {
-                return redirect()->back()->with('error', 'Failed to Update the report. Please try again.');
             }
+        } catch (\Exception $e) {
+            // If an error occurs, restore the old report items
+            TblReportItem::where('report_id', $id)->delete();
+            foreach ($oldReportItems as $item) {
+                TblReportItem::create($item->toArray());
+            }
+            return redirect()->back()->with('error', 'Failed to update the report: ' . $e->getMessage());
         }
     }
 }

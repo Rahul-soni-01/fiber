@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 type = response.type;
                 if (type !== 'admin') {
                     // $('ul.nav.flex-column').css('display', 'none');
-                    $('.nav-item').css('display', 'none');
+                    $('#sidebar .nav-item').css('display', 'none');
                     Object.entries(data).forEach(function ([key, value]) {
                         var menuItems = $('.nav-item');
                         // console.log(menuItems);
@@ -427,7 +427,7 @@ $(document).ready(function () {
 
         // Perform the AJAX request
         $.ajax({
-            url: "{{ route('report.ready.update') }}",  // Laravel route for updating the status
+            url: "/report-ready",  // Laravel route for updating the status
             type: "POST",
             data: {
                 "_token": csrfToken,  // CSRF token
@@ -559,7 +559,7 @@ function filterOptions(event) {
                     let selectedSubCategory = subCategorySelect.value;
                     let selectedOption = subCategorySelect.options[subCategorySelect.selectedIndex];
                     let dataUnit = selectedOption.getAttribute('data-unit');
-                    if (window.location.pathname == '/sale-create') {
+                    if (window.location.pathname == '/sale-create' || window.location.pathname == '/sale-repair-create') {
                         let datasr_no = selectedOption.getAttribute('data-sr_no');
                         let datavalue = selectedOption.getAttribute('data-value');
                         // console.log(datavalue,datasr_no);
@@ -668,7 +668,7 @@ function getDataForReturn(event) {
                         html += '<div class="col"><b>Total</b></div>';
                         html += '</div>';
                         response.inwardsItems.forEach(function (item) {
-                            console.log(item);
+                            // console.log(item);
                             html += '<div class="row mt-2">';
                             html += '<div class="col">' + item.category.name + '</div>'; // category_name property
                             html += '<div class="col">' + item.sub_category.name + '</div>'; // sub_category_name property
@@ -747,17 +747,21 @@ function getDataForReturn(event) {
 
 function SubCategorysale_sr_no(datavalue, extractedIndex) {
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    console.log(datavalue, extractedIndex);
+    // console.log(datavalue, extractedIndex);
     var data = {
         _token: csrfToken,
         type: datavalue,
+        url:'sale-create',
     };
+    if (window.location.pathname == '/sale-repair-create') {
+        data.url = 'sale-repair-create';
+    }
     $.ajax({
         url: "/get-sc-sr-no",
         type: "POST",
         data: data,
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             let srNoDiv = document.querySelector(`#sr_no_div_${extractedIndex}`);
             let colDiv = document.querySelector(`#col_div_${extractedIndex}`);
             let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
@@ -772,6 +776,9 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
             let sr_noSelect = document.querySelector(`#sr_no_div_${extractedIndex} select[id="data[${extractedIndex}][sr_no]"]`);
 
             if (sr_noSelect) {
+                // Clear all existing options
+                sr_noSelect.innerHTML = '';
+
                 // Create the HTML for the options
                 let html = '';
                 response.forEach(function (item) {
