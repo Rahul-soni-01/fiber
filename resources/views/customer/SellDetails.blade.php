@@ -90,27 +90,12 @@
                     {{-- <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td> --}}
                     <td>{{$sale->amount}}</td>
                     <td>
-                        <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
-                                class="ri-eye-fill"></i></a>
-
-                        {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i
-
-                                class="ri-pencil-line"></i></a> --}}
-
-                        {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST"
-
-                            style="display:inline;">
-
+                        <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i class="ri-eye-fill"></i></a>
+                        {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i class="ri-pencil-line"></i></a> --}}
+                        {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST" style="display:inline;">
                             @csrf
-
                             @method('DELETE')
-
-                            <button type="submit"
-
-                                onclick="return confirm('Are you sure you want to delete this sale?');" class="btn"><i
-
-                                    class="ri-delete-bin-fill"></i></button>
-
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this sale?');" class="btn"><i class="ri-delete-bin-fill"></i></button>
                         </form> --}}
                     </td>
                 </tr>

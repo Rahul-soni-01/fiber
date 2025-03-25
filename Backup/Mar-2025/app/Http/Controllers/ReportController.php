@@ -19,6 +19,7 @@ use App\Models\SaleItem;
 use App\Models\Sale;
 use App\Models\SelectedInvoice;
 use App\Models\TblReportItem;
+use App\Models\TblSaleReturn;
 use App\Models\Tbltype;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +50,10 @@ class ReportController extends Controller
             $types = Tbltype::with('reports')->get(); // Use 'tbl_type' (singular) as defined in the model
             if (auth()->user()->type === 'godown') {
                 // dd("de");
-                $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')->where('sale_status', '0')->get();
+                $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')
+                    ->where('sale_status', '0')
+                    ->orWhere('part', 1)
+                    ->get();
                 return view("report.godownindex", compact('reports'));
             }
             return view("report.indexNew", compact('types'));
@@ -466,29 +470,28 @@ class ReportController extends Controller
     public function get_sc_sr_no(Request $request)
     {
         $type = $request->type;
-        if($request->url == 'sale-repair-create'){
+        if ($request->url == 'sale-repair-create') {
             $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
-            ->where('part', 0)
-            ->where('sale_status', 0)
-            ->where('stock_status', 1)
-            ->whereHas('tbl_type', function ($query) use ($type) {
-                $query->where('name', $type);
-            })
-            ->get()
-            ->pluck('sr_no_fiber');
-        }elseif($request->url == 'sale-create'){
+                ->where('part', 1)
+                ->where('sale_status', 0)
+                ->where('stock_status', 1)
+                ->whereHas('tbl_type', function ($query) use ($type) {
+                    $query->where('name', $type);
+                })
+                ->get()
+                ->pluck('sr_no_fiber');
+        } elseif ($request->url == 'sale-create') {
             $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
-            ->where('part', 1)
-            ->where('part', 1)
-            ->where('sale_status', 0)
-            ->where('stock_status', 1)
-            ->whereHas('tbl_type', function ($query) use ($type) {
-                $query->where('name', $type);
-            })
-            ->get()
-            ->pluck('sr_no_fiber');
+                ->where('part', 0)
+                ->where('sale_status', 0)
+                ->where('stock_status', 1)
+                ->whereHas('tbl_type', function ($query) use ($type) {
+                    $query->where('name', $type);
+                })
+                ->get()
+                ->pluck('sr_no_fiber');
         }
-        
+
         // dd($reports);
         return response()->json($reports, 200);
         // dd(count($reports),$reports);
@@ -496,19 +499,59 @@ class ReportController extends Controller
     public function search(Request $request)
     {
         if ($request->sr_no) {
-            $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')->where('sr_no_fiber', $request->sr_no)->get();
-            $reportIds = $reports->pluck('id');
-            $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')
-                ->whereIn('report_id', $reportIds)
+            // $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')->where('sr_no_fiber', $request->sr_no)->get();
+            // $reportIds = $reports->pluck('id');
+            // $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')
+            //     ->whereIn('report_id', $reportIds)
+            //     ->get();
+
+            $sr_no = $request->input('sr_no');
+    
+            $results = collect();
+            // tbl_reports
+            $reports = Report::where('sr_no_fiber', $sr_no)
+                ->select('id', 'part', 'sr_no_fiber as sr_no', 'created_at as date', DB::raw("'tbl_reports' as table_name"))
                 ->get();
-            return view('report.search', compact('reports', 'reportitems'));
+            $results = $results->merge($reports);
+
+            // tbl_stock (Uses date instead of created_at)
+            $stock = TblStock::where('serial_no', $sr_no)
+                ->select('id', 'serial_no as sr_no', 'date', DB::raw("'tbl_stock' as table_name"))
+                ->get();
+            $results = $results->merge($stock);
+
+            // tbl_sales_items (Uses date instead of created_at)
+            $salesItems = SaleItem::where('sr_no',$sr_no )
+                ->with('sale', 'sale.customer')
+                ->get();
+            // Attach customer name and invoice number to each item
+            $salesItems->each(function ($item) {
+                $item->customer_name = $item->sale->customer->customer_name ?? 'N/A';
+                $item->invoice_no = $item->sale->sale_id ?? 'N/A';
+            });
+
+                // Merge with results
+            $results = $results->merge($salesItems);
+
+            // dd($salesItems);
+            // tbl_sale_returns (Uses created_at)
+            $saleReturns = TblSaleReturn::where('sr_no', $sr_no)
+                ->select('id', 'sr_no', 'created_at as date', DB::raw("'tbl_sale_returns' as table_name"))
+                ->get();
+            $results = $results->merge($saleReturns);
+
+            // Sort results by created_at timestamp (latest first)
+            $sortedResults = $results->sortBy('created_at')->values();
+            // dd($sortedResults);
+            // return view('report.search', compact('reports', 'reportitems'));
+            return view('report.search', compact('sortedResults'));
         }
         return view('report.search');
     }
     public function ready(Request $request)
     {
         $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
-            ->where('part', 0)
+            // ->where('part', 0)
             ->where('sale_status', 0)
             ->where('status', 1);
         if ($request->id) {
@@ -540,6 +583,7 @@ class ReportController extends Controller
         $reports = $reports->get();
         $ready = 1;
         $tbl_parties = tbl_party::all();
+        // dd($reports,"Ctrl");
         return view("report.index", compact('reports', 'tbl_parties', 'ready'));
     }
     public function edit($id)
@@ -1270,41 +1314,41 @@ class ReportController extends Controller
             $report->part = 1;
             $report->status = 0;
         }
-        // $report->f_status = $request->input('warranty');
+        $report->f_status = $request->input('warranty') !== null ? $request->input('warranty') : 1;
         $report->worker_name = $request->input('worker_name');
         $report->sr_no_fiber = $request->input('sr_no_fiber');
         $report->m_j = $request->input('m_j');
         $report->type = $request->input('type');
-        $report->sr_isolator = $request->input('sr_isolator');
-        $report->sr_aom_qswitch = $request->input('sr_aom_qswitch');
-        $report->amp_aom_qswitch = $request->input('amp_aom_qswitch');
-        $report->volt_aom_qswitch = $request->input('volt_aom_qswitch');
-        $report->watt_aom_qswitch = $request->input('watt_aom_qswitch');
-        $report->sr_cavity_nani = $request->input('sr_cavity_nani');
-        $report->sr_cavity_moti = $request->input('sr_cavity_moti');
-        $report->sr_combiner_3_1 = $request->input('sr_combiner_3_1');
-        $report->amp_combiner_3_1 = $request->input('amp_combiner_3_1');
-        $report->volt_combiner_3_1 = $request->input('volt_combiner_3_1');
-        $report->watt_combiner_3_1 = $request->input('watt_combiner_3_1');
-        $report->sr_couplar_2_2 = $request->input('sr_couplar_2_2');
-        $report->amp_couplar_2_2 = $request->input('amp_couplar_2_2');
-        $report->volt_couplar_2_2 = $request->input('volt_couplar_2_2');
-        $report->watt_couplar_2_2 = $request->input('watt_couplar_2_2');
-        $report->sr_hr = $request->input('sr_hr');
-        $report->sr_fiber_nano = $request->input('sr_fiber_nano');
-        $report->sr_fiber_moto = $request->input('sr_fiber_moto');
-        $report->output_amp = $request->input('output_amp');
-        $report->output_volt = $request->input('output_volt');
-        $report->output_watt = $request->input('output_watt');
-        $report->nani_cavity = $request->input('nani_cavity');
-        $report->final_cavity = $request->input('final_cavity');
+        /*    $report->sr_isolator = $request->input('sr_isolator');
+            $report->sr_aom_qswitch = $request->input('sr_aom_qswitch');
+            $report->amp_aom_qswitch = $request->input('amp_aom_qswitch');
+            $report->volt_aom_qswitch = $request->input('volt_aom_qswitch');
+            $report->watt_aom_qswitch = $request->input('watt_aom_qswitch');
+            $report->sr_cavity_nani = $request->input('sr_cavity_nani');
+            $report->sr_cavity_moti = $request->input('sr_cavity_moti');
+            $report->sr_combiner_3_1 = $request->input('sr_combiner_3_1');
+            $report->amp_combiner_3_1 = $request->input('amp_combiner_3_1');
+            $report->volt_combiner_3_1 = $request->input('volt_combiner_3_1');
+            $report->watt_combiner_3_1 = $request->input('watt_combiner_3_1');
+            $report->sr_couplar_2_2 = $request->input('sr_couplar_2_2');
+            $report->amp_couplar_2_2 = $request->input('amp_couplar_2_2');
+            $report->volt_couplar_2_2 = $request->input('volt_couplar_2_2');
+            $report->watt_couplar_2_2 = $request->input('watt_couplar_2_2');
+            $report->sr_hr = $request->input('sr_hr');
+            $report->sr_fiber_nano = $request->input('sr_fiber_nano');
+            $report->sr_fiber_moto = $request->input('sr_fiber_moto');
+            $report->output_amp = $request->input('output_amp');
+            $report->output_volt = $request->input('output_volt');
+            $report->output_watt = $request->input('output_watt');
+            $report->nani_cavity = $request->input('nani_cavity');
+            $report->final_cavity = $request->input('final_cavity'); */
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
         $report->party_name = $request->input('party_name');
         if (Auth()->user()->type === 'electric') {
             $report->r_status = 0;
-            $report->f_status = 0;
+            // $report->f_status = 0;
         } elseif (Auth()->user()->type === 'admin') {
             $report->r_status = 1;
         }
@@ -1715,25 +1759,27 @@ class ReportController extends Controller
         // dd($request->all());
         // Step 1: Backup old report items
         $oldReportItems = TblReportItem::where('report_id', $id)->get();
-        // Step 2: Back in stock old sr_no items
-        foreach($oldReportItems as $oldReportItem){
-            if($oldReportItem->sr_no != 0){
-                $existingRecord = TblStock::where('serial_no', $oldReportItem->sr_no)
-                ->first();
-                if ($existingRecord) {
-                    $existingRecord->status = 0;
-                    $existingRecord->save();
-                }
-            }
-        }
-
-        // Step 3: Delete old report items
-        TblReportItem::where('report_id', $id)->delete();
         // $ReportItems =  TblReportItem::where('report_id', $id)->get();
         // dd($ReportItems,$oldReportItems);
         try {
             // Check user type
             if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
+
+                // Step 2: Back in stock old sr_no items
+                foreach ($oldReportItems as $oldReportItem) {
+                    if ($oldReportItem->sr_no != 0) {
+                        $existingRecord = TblStock::where('serial_no', $oldReportItem->sr_no)
+                            ->first();
+                        if ($existingRecord) {
+                            $existingRecord->status = 0;
+                            $existingRecord->save();
+                        }
+                    }
+                }
+
+                // Step 3: Delete old report items
+                TblReportItem::where('report_id', $id)->delete();
+
                 // Validation for 'user' type
                 if (Auth()->user()->type === 'user') {
                     $validator = Validator::make(
@@ -1765,6 +1811,7 @@ class ReportController extends Controller
                 if ($request->filled('temp')) $report->temp = $request->temp;
                 if ($request->filled('type')) $report->type = $request->type;
                 if ($request->filled('remark')) $report->remark = $request->remark;
+                if ($request->filled('warranty')) $report->f_status  = $request->input('warranty') !== null ? $request->input('warranty') : 1;
 
                 // Additional logic for 'user' type
                 if (Auth()->user()->type === 'user') {
@@ -1776,13 +1823,13 @@ class ReportController extends Controller
                 $report->sale_status = 0;
                 if ($request->part == 1) {
                     $report->r_status = 0;
-                }elseif(Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity'){
+                } elseif (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity') {
                     $report->r_status = 1;
                 }
 
                 // Save the report
                 $report->save();
-                throw new \Exception($report);
+                // throw new \Exception($report);
                 // Initialize variables
                 $amount = $report->final_amount;
                 $report_id = $id;
@@ -1889,9 +1936,9 @@ class ReportController extends Controller
                                 if ($report_used_qty > $existingRecord->qty) {
 
                                     $scid = $request->sub_category[$index];
-                                    $subCat = tbl_sub_category::find($sub_category[$index]); 
+                                    $subCat = tbl_sub_category::find($sub_category[$index]);
                                     $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
-                                    
+
                                     $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
                                     $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
                                     try {
@@ -1902,12 +1949,11 @@ class ReportController extends Controller
                                     if ($TblReportiteminsertedIds) {
                                         TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
                                     }
-                                    if($TblStockupdateIds){
+                                    if ($TblStockupdateIds) {
                                         TblStock::whereIn('id', $TblStockupdateIds)->update(['status' => 0]);
                                     }
-                                    
+
                                     throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
-                                    
                                 } elseif ($report_used_qty == $existingRecord->qty) {
                                     $existingRecord->status = 1;
                                 }

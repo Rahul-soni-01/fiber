@@ -676,7 +676,8 @@ function getDataForReturn(event) {
                             html += '<div class="col">' + item.unit + '</div>'; // unit property
                             html += '<div class="col">' + item.qty + '</div>'; // qty property
                             html += '<div class="col">' + item.return + '</div>'; // return property
-                            html += '<div class="col">' + item.report_qty + '</div>'; // return property
+                            html += '<div class="col">' + (item.report_qty !== undefined ? item.report_qty : 0) + '</div>';
+                            // return property
                             html += '<div class="col">' + item.rate + '</div>'; // price property
                             html += '<div class="col">' + item.total + '</div>'; // total property
                             html += '</div>';
@@ -1054,20 +1055,20 @@ function tbl_stock(row_id) {
 
 var count = 1;
 function BtnAdd(categories, subCategories) {
-    if (window.location.pathname == '/sale-create') {
+    if (window.location.pathname == '/sale-create' ||window.location.pathname == '/sale-repair-create' ) {
         $('#TBody').append(`        
         <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
-                <div class="col custom-col">
+                <div class="col">
                     <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
                         <option value="" disabled selected class="0" >Choose a Category</option>
                     </select>
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
                         <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
                     </select>
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <select id="data[${count}][unit]" name="unit[]"
                         class="form-control">
                         <option value="" disabled>Select</option>
@@ -1075,35 +1076,35 @@ function BtnAdd(categories, subCategories) {
                         <option value="Mtr">Mtr</option>
                     </select>
                 </div>
-                <div class="col custom-col" id="sr_no_div_${count}" style="display:none;">
+                <div class="col" id="sr_no_div_${count}" style="display:none;">
                     <select id="data[${count}][sr_no]" name="sr_no[]" placeholder="Plz dont write here"
                         class="form-control select2">
                         <option value="" disabled>Select Sr No</option>
                     </select>
                 </div>
-                <div class="col custom-col" id="col_div_${count}">
+                <div class="col" id="col_div_${count}">
                     <input type="text" name="sr_no[]" class="form-control" id="sr_no_${count}" placeholder="Plz dont write here">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
                         class="form-control" onchange="total()">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
                         class="form-control" onchange="total()">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
                         class="form-control" disabled>
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
                     step="0.01" class="form-control">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <button type="button" class="btn btn-danger text-white" onclick="BtnDel(this)"><i class="ri-delete-bin-fill"></i></button>
                 </div>
             </div>

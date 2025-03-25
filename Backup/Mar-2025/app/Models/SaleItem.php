@@ -26,7 +26,7 @@ class SaleItem extends Model
     ];
     public function sale()
     {
-        return $this->belongsTo(Sale::class, 'sale_id', 'id');
+        return $this->belongsTo(Sale::class, 'sale_id', 'sale_id');
     }
 
     public function report()

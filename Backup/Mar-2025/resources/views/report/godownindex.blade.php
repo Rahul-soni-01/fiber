@@ -29,14 +29,13 @@
     <div id="div1">
         <table class="table text-white">
             <thead>
-                <tr class="bg-warning">
+                <tr class="bg-dark">
                     <th>ID</th>
+                    <th>Part</th>
                     <th>Date</th>
-                    @if(auth()->user()->type === 'godown')
                     <th>SR(FIBER)</th>
                     <th>Type</th>
                     <th>Action</th>
-                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -48,16 +47,16 @@
                 $part = $report->part;
 
                 if ($status != 0 && $type == 'godown') {
-                continue;
+                    continue;
                 }
                 @endphp
                 <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
                     <td style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}"> {{ $report->id }}</td>
+                    <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
                     <td>{{ $report->created_at->format('d-m-Y') }}</td>
-                    <td>{{ $report->sr_no_fiber }}</td>
-                    <td>{{ $report->tbl_type->name }}</td>
-                    <td><a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i
-                                class="ri-eye-fill"></i></a>
+                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
+                    <td>{{ $report->tbl_type->name ?? 'N/A' }}</td>
+                    <td><a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Show <i class="ri-eye-fill"></i></a>
                     </td>
                 </tr>
                 @endforeach

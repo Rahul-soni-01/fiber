@@ -18,6 +18,7 @@
         @endif
     </div>
 </div>
+{{--
 @if(isset($reports) && $reports->isNotEmpty())
 @foreach($reports as $report)
 <div class="container-fluid border mt-3">
@@ -93,9 +94,9 @@
         </div>
         <div class="col-md-2">
             <span>
-                @if($report->r_status == 0)
+                @if($report->f_status == 0)
                 No warranty
-                @elseif($report->r_status == 1)
+                @elseif($report->f_status == 1)
                 In Warranty
                 @else
                 Unknown
@@ -134,7 +135,6 @@
     <p>No items found for this report.</p>
     @else
     @foreach($itemsForReport as $reportitem)
-    {{-- {{dd($reportitem)}} --}}
     <div class="row mt-4 ">
         <div class="col-md-3">
             <strong>{{ $reportitem->tbl_sub_category->category->category_name}} - {{
@@ -153,12 +153,11 @@
             <span>{{ $reportitem->watt }}</span>
             <span class="float-end">
                 @if($reportitem->dead_status == 0)
-                    <span class="badge bg-success">Active</span>
+                <span class="badge bg-success">Active</span>
                 @elseif($reportitem->dead_status == 1)
-                    <span class="badge bg-danger">Dead</span>
-                    {{-- Dead Stock --}}
+                <span class="badge bg-danger">Dead</span>
                 @else
-                    Unknown
+                Unknown
                 @endif
             </span>
         </div>
@@ -177,5 +176,51 @@
     </div>
 </div>
 @endforeach
+@endif
+--}}
+@if($sortedResults->isEmpty())
+<div class="alert alert-warning">No records found for the given Serial Number.</div>
+@else
+<table class="table table-bordered text-white">
+    <thead class="bg-dark">
+        <tr>
+            <th>#</th>
+            <th>SR No</th>
+            <th>Part</th> <!-- Show Part column only if 'tbl_reports' exists -->
+            <th>Date</th>
+            <th>Action</th>
+            {{-- <th>Table Name</th> --}}
+        </tr>
+    </thead>
+    <tbody>
+        {{-- {{dd($sortedResults);}} --}}
+        @foreach($sortedResults as $key => $result)
+        <tr>
+            <td>{{ $key + 1 }}</td>
+            <td>{{ $result->sr_no }}</td>
+            <td>
+                @if($result->table_name === 'tbl_reports')
+                {{ $result->part === 0 ? 'New :- Manufacturing' : ($result->part == 1 ? 'Repair' : '') }}  
+                @elseif($result->table_name === 'tbl_sales_items')
+                    {{$result->sale->customer->customer_name ?? 'sales item' }}
+                @elseif($result->table_name === 'tbl_sale_returns')
+                tbl_sale_returns
+                @elseif($result->table_name === 'tbl_stock')
+                tbl_stock
+                @endif
+            </td>
+            <td>{{ \Carbon\Carbon::parse($result->date)->format('d-M-Y') }}</td>
+            <td>
+                @if($result->table_name === 'tbl_reports')
+                <a href="{{ route('report.show', $result->id) }}" class="btn btn-sm btn-primary">
+                    <i class="ri-eye-fill"></i>
+                </a>
+                @endif
+            </td>
+            {{-- <td>{{ ucwords(str_replace('_', ' ', $result->table_name)) }}</td> --}}
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 @endif
 @endsection

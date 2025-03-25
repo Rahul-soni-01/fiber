@@ -106,7 +106,7 @@
                     <div class="col">
                         <label for="data[0][unit]" class="form-label">Unit</label>
                         <select id="data[0][unit]" name="unit[]" class="form-control">
-                            <option value="">Select</option>
+                            <option value="" disabled selected>Select</option>
                             <option value="Pic">Pic</option>
                             <option value="Mtr">Mtr</option>
                         </select>
@@ -236,7 +236,7 @@
                 </div>
 
                 <div class="row mt-3">
-                    <div class="col-sm-2 offset-sm-11">
+                    <div class="col-sm-2 offset-sm-10">
                         <button class="btn btn-success">Save</button>
                     </div>
                 </div>

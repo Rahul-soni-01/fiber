@@ -18,9 +18,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
-
-
-
 class SaleController extends Controller
 {
     private function checkPermission(Request $request, $action)
@@ -255,7 +252,7 @@ class SaleController extends Controller
             $count = count($request->sr_no);
             for ($i = 0; $i < $count; $i++) {
                 $report_id = $request->sr_no[$i];
-                $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber', $report_id)->where('part', '0')->first();
+                $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber', $report_id)->first();
                 // dd($report);
                 if ($report) {
                     // Update sale_status to 1
