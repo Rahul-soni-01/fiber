@@ -330,6 +330,8 @@ class SaleController extends Controller
         return redirect('/unauthorized');
     }
 
+   
+
     public function history(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
