@@ -293,18 +293,18 @@
                     <!-- Sale -->
                     <li class="nav-item" id="Sale">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleMenu">
-                            <i class="fa-brands fa-sellsy me-1"></i>Sale <i class="ri-arrow-down-s-line float-end"></i>
+                            <i class="fa-brands fa-sellsy me-1"></i>Sale/ Product Out-In <i class="ri-arrow-down-s-line float-end"></i>
                         </a>
                         <div class="collapse" id="saleMenu">
                             <ul class="nav flex-column ms-3">
                                 <li class="nav-item nav-sub-item" id="add">
-                                    <a href="{{ route('sale.create') }}" class="nav-link">Add Sale</a>
+                                    <a href="{{ route('sale.create') }}" class="nav-link">Add Sale/Product Out</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="add">
-                                    <a href="{{ route('sale.repair.create') }}" class="nav-link">Add Repair Sale </a>
+                                    <a href="{{ route('sale.repair.create') }}" class="nav-link">Add Repair/ Product Out </a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
-                                    <a href="{{ route('sale.index') }}" class="nav-link">Show Sale</a>
+                                    <a href="{{ route('sale.index') }}" class="nav-link">Show Product Out</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
                                     <a href="{{ route('sale.return.index') }}" class="nav-link">Sale Return</a>

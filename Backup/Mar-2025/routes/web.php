@@ -229,6 +229,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/sale-{id}', [SaleController::class, 'update'])->name('sale.update');
     Route::delete('/sale-{sale_id}', [SaleController::class, 'destroy'])->name('sale.destroy');
 
+    Route::get('/sale-convert-{sale_id}', [SaleController::class, 'edit'])->name('sale.convert');
+
     Route::post('/get-invoice-sell-details', [SaleController::class, 'getInvoiceDetails'])->name('invoice.sell.details');
 
     // invoice to tbl stock 

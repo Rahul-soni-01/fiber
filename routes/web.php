@@ -232,7 +232,6 @@ Route::middleware('auth')->group(function () {
     // invoice to tbl stock 
     Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');
     Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
-
     // Customer Crud
 
     Route::get('customer-create', [TblCustomerController::class, 'create'])->name('customer.create');

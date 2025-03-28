@@ -17,6 +17,7 @@ class Sale extends Model
         'sale_id',
         'sale_date',
         'customer_id',
+        'status',
         'repair_status',
         'amount_r',
         'shipping_cost',

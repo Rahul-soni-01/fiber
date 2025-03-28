@@ -36,8 +36,8 @@
         <div class="container mt-4">
             <h1>Product Details</h1>
             <div class="row">
-                <div class="col-sm-1"><label>Category Name</label></div>
-                <div class="col-sm-1"><label>Sub Category Name</label></div>
+                <div class="col-sm-1"><label>Category</label></div>
+                <div class="col-sm-1"><label style="white-space:nowrap;">Sub Category</label></div>
                 <div class="col-sm-1"><label>Unit</label></div> 
                 <div class="col-sm-2"><label>SR No</label></div> 
                 <div class="col-sm-1"><label>Qty</label></div>

@@ -1,8 +1,8 @@
 @extends('demo')
-@section('title', 'Sale')
+@section('title', 'Out')
 @section('content')
-<h1>Sale</h1>
-<a href="{{ route('sale.index') }}" class="btn btn-primary">Back to Sale</a>
+<h1>Product Out</h1>
+<a href="{{ route('sale.index') }}" class="btn btn-primary">Show Out Data</a>
 @if ($errors->any())
 <div style="color: red;">
     <ul>
@@ -17,26 +17,39 @@
         @csrf
         <input type="hidden" name="repair_status" value="0">
         <div class="container">
-            <div class="row">
-                <div class="col">Invoice No.</div>
-                <div class="col">Date</div>
-                <div class="col">Customer Name</div>
+            <div class="row d-none d-md-flex fw-bold">
+                <div class="col-md-3 col-sm-6">Invoice No.</div>
+                <div class="col-md-3 col-sm-6">Date</div>
+                <div class="col-md-3 col-sm-6">Customer Name</div>
+                <div class="col-md-3 col-sm-6">Status</div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <input type="text" id="invoice_no" name="sale_id" class="form-control"
-                        placeholder="Enter Invoice no." required>
+            
+            <div class="row align-items-center">
+                <div class="col-md-3 col-sm-6 col-12">
+                    <label class="d-md-none fw-bold">Invoice No.</label>
+                    <input type="text" id="invoice_no" name="sale_id" class="form-control" placeholder="Enter Invoice No." required>
                 </div>
-                <div class="col-md-4">
-                    <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
+                <div class="col-md-3 col-sm-6 col-12">
+                    <label class="d-md-none fw-bold">Date</label>
+                    <input type="date" id="date" name="date" class="form-control"
                         value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                 </div>
-                <div class="col-md-4">
-                    <select id="party_name" name="cid" class="form-control" placeholder="Enter Party Name" required>
+                <div class="col-md-3 col-sm-6 col-12">
+                    <label class="d-md-none fw-bold">Customer Name</label>
+                    <select id="party_name" name="cid" class="form-control" required>
                         <option value="" disabled selected>Choose a Customer</option>
                         @foreach($customers as $customer)
                         <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
                         @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12">
+                    <label class="d-md-none fw-bold">Status</label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="0">Sale</option>
+                        <option value="1">Demo</option>
+                        <option value="2">Standby</option>
+                        <option value="3">Replacement</option>
                     </select>
                 </div>
             </div>

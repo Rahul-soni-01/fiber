@@ -77,7 +77,7 @@
                 <tr>
                     <th>#</th>
                     <th>Date</th>
-                    {{-- <th>Customer</th> --}}
+                    <th>Status</th>
                     <th>Price</th>
                     <th>Action</th>
                 </tr>
@@ -87,12 +87,32 @@
                 <tr>
                     <td>{{$sale->sale_id}}</td>
                     <td>{{$sale->sale_date}}</td>
-                    {{-- <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td> --}}
+                    <td> @switch($sale->status)
+                        @case(0)
+                            <span class="badge bg-success">Sale</span>
+                            @break
+                        @case(1)
+                            <span class="badge bg-primary">Demo</span>
+                            @break
+                        @case(2)
+                            <span class="badge bg-warning text-dark">Standby</span>
+                            @break
+                        @case(3)
+                            <span class="badge bg-danger">Replacement</span>
+                            @break
+                        @default
+                            <span class="badge bg-secondary">Unknown</span>
+                    @endswitch</td>
                     <td>{{$sale->amount}}</td>
                     <td>
-                        <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
+                        <a class="btn btn-sm btn-info" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
                                 class="ri-eye-fill"></i></a>
 
+                        @if($sale->status == 1)
+                            <a class="btn btn-sm btn-success" href="{{ route('sale.convert', ['sale_id' => $sale->id]) }}">
+                                Convert to Sale
+                            </a>
+                        @endif
                         {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i
 
                                 class="ri-pencil-line"></i></a> --}}

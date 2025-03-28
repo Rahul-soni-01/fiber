@@ -206,8 +206,9 @@ class SaleController extends Controller
             'sale_id' => 'required|unique:tbl_sales,sale_id',
             'date' => 'required|date',
             'cid' => 'required',
+            'status' => 'required',
             'amount_r' => 'required|numeric',
-            'repair_status' => 'required|numeric',
+            // 'repair_status' => 'required|numeric',
             'shipping_cost' => 'required|numeric',
             'round_total' => 'required|numeric',
             'amount' => 'required|numeric',
@@ -239,6 +240,7 @@ class SaleController extends Controller
         $sale = new Sale();
         $sale->sale_id = $request->sale_id;
         $sale->customer_id = $request->cid;
+        $sale->status = $request->status;
         $sale->repair_status = $request->repair_status;
         $sale->sale_date = $request->date;
         $sale->amount_r = $request->amount_r;
@@ -312,6 +314,11 @@ class SaleController extends Controller
             return redirect()->back()->with('error', 'Failed to insert sale: ' . $e->getMessage());
         }
     }
+
+    public function convertToSale(Request $request){
+
+    }
+
     public function show(TblCustomer $tblCustomer, $id, Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
@@ -331,7 +338,8 @@ class SaleController extends Controller
             $customers = TblCustomer::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
-
+            $sale_product_categories = TblSaleProductCategory::all();
+            $sale_product_subcategories = TblSaleProductSubCategory::all();
             $serial_nos = Report::where(function ($query) use ($sale) {
                 $query->where('status', '1')
                     ->where('part', '0')
@@ -341,11 +349,87 @@ class SaleController extends Controller
                     });
             })->get()->sortBy('sr_no_fiber');
             // dd($sale);
-            return view('sale.edit', compact('sale', 'customers', 'inwards', 'items', 'serial_nos'));
+            return view('sale.edit', compact('sale', 'customers', 'inwards', 'items', 'serial_nos','sale_product_categories','sale_product_subcategories'));
         }
         return redirect('/unauthorized');
     }
+    public function update(Request $request, $id){
+        if ($this->checkPermission($request, 'edit')) {
+          
+            $oldsaleItems = SaleItem::where('sid', $id)->get();
+            try {
+                foreach ($oldsaleItems as $oldsaleItem) {
+                    $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('id', $oldsaleItem->report_id)->first();
+                    $report->sale_status = 0;
+                    $report->save();
+                }
+                SaleItem::where('sid', $id)->delete();
 
+                $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);
+                $sale->sale_id = $request->sale_id;
+                $sale->customer_id = $request->cid;
+                $sale->status = $request->status;
+                $sale->repair_status = $request->repair_status ?? 0;
+                $sale->sale_date = $request->date;
+                $sale->amount_r = $request->amount_r;
+                $sale->shipping_cost = $request->shipping_cost;
+                $sale->round_total = $request->round_total;
+                $sale->amount = $request->amount;
+                $sale->notes = $request->note; 
+                $sale->save();
+                $count = count($request->sr_no);
+                for ($i = 0; $i < $count; $i++) {
+                    $sr = $request->sr_no[$i];
+                    // dd($request->all(),$sale, $sr,$report);
+                    $report = Report::where('sr_no_fiber', $sr)
+                    ->where('part', 0)
+                    ->where('sale_status', 0)
+                    ->first();
+                
+                    if (!$report) {
+                        throw new \Exception("No available report found for SR No: $sr");
+                    }
+                    $report->sale_status = 1;
+                    $report->save();
+                    $report_id = $report->id;
+                    try {
+                        $itemResult = SaleItem::create([
+                            'sid' => $sale->id,
+                            'sale_id' => $request->sale_id,
+                            // 'serial_no' => $serial_no,
+                            'report_id' => $report_id, // Report ID
+                            'cname' => $request->cname[$i],
+                            'scname' => $request->scname[$i],
+                            'unit' => $request->unit[$i],
+                            'sr_no' => $request->sr_no[$i],
+                            'qty' => $request->qty[$i],
+                            'rate' => $request->rate[$i],
+                            'p_tax' => $request->p_tax[$i],
+                            'total' => $request->total[$i],
+                        ]);
+                        // dd($itemResult);
+                        if (!$itemResult) {
+                            // return redirect()->back()->with('error', 'Failed to insert sale');
+                            throw new \Exception('Failed to insert sale Item');
+                        }
+                    } catch (\Exception $e) {
+                        // Catch any other exceptions and display a general error
+                        throw new \Exception('No purchase found in stock. Please select a valid invoice number.');
+                    }
+                }
+
+                return redirect()->route('sale.index')->with('success', 'Sale created successfully.');
+
+            }catch (\Exception $e) {
+                // If an error occurs, restore the old report items
+                SaleItem::where('report_id', $id)->delete();
+                foreach ($oldsaleItems as $item) {
+                    SaleItem::create($item->toArray());
+                }
+                return redirect()->back()->with('error', 'Failed to update the report: ' . $e->getMessage());
+            }
+        }
+    }
     public function history(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {

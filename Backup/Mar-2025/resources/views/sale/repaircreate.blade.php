@@ -1,8 +1,8 @@
 @extends('demo')
-@section('title', 'Sale')
+@section('title', 'Repair Sale')
 @section('content')
-<h1>Sale</h1>
-<a href="{{ route('sale.index') }}" class="btn btn-primary">Back to Sale</a>
+<h1>Repair Sale Invoice</h1>
+<a href="{{ route('sale.index') }}" class="btn btn-primary mb-3">Back</a>
 @if ($errors->any())
 <div style="color: red;">
     <ul>
@@ -153,8 +153,8 @@
                     </div>
                     <div class="col">
                         <label for="" class="form-label"></label>
-                        <button type="button" class="btn btn-primary"
-                            onclick="BtnAdd({{ json_encode($sale_product_categories)}},{{ json_encode($sale_product_subcategories)}})">Add</button>
+                        <button type="button" class="btn btn-primary btn-sm"
+                            onclick="BtnAdd({{ json_encode($sale_product_categories)}},{{ json_encode($sale_product_subcategories)}})">+</button>
                     </div>
                 </div>
                 <div class="" id="TBody"></div>

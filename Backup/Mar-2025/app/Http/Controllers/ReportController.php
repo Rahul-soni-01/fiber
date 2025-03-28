@@ -510,39 +510,54 @@ class ReportController extends Controller
             $results = collect();
             // tbl_reports
             $reports = Report::where('sr_no_fiber', $sr_no)
-                ->select('id', 'part', 'sr_no_fiber as sr_no', 'created_at as date', DB::raw("'tbl_reports' as table_name"))
+                ->select('*', 'sr_no_fiber as sr_no', 'created_at as date', DB::raw("'tbl_reports' as table_name"))
                 ->get();
             $results = $results->merge($reports);
 
             // tbl_stock (Uses date instead of created_at)
             $stock = TblStock::where('serial_no', $sr_no)
-                ->select('id', 'serial_no as sr_no', 'date', DB::raw("'tbl_stock' as table_name"))
+                ->with('category','subCategory')
+                ->select('*', 'serial_no as sr_no', 'date', DB::raw("'tbl_stock' as table_name"))
                 ->get();
+            $stock->each(function ($item) {  
+                $item->category_name = $item->category->category_name ?? 'N/A';
+                $item->sub_category_name = $item->subCategory->sub_category_name ?? 'N/A';
+            });
             $results = $results->merge($stock);
 
-            // tbl_sales_items (Uses date instead of created_at)
+            $report_items = TblReportItem::where('sr_no', $sr_no)
+                    ->with('report') // Eager load relationship
+                    ->select('*', DB::raw('created_at as date'), DB::raw("'tbl_report_items' as table_name"))
+                    ->get();
+
+            
+            $results = $results->merge($report_items);
+
             $salesItems = SaleItem::where('sr_no',$sr_no )
                 ->with('sale', 'sale.customer')
                 ->get();
             // Attach customer name and invoice number to each item
             $salesItems->each(function ($item) {
                 $item->customer_name = $item->sale->customer->customer_name ?? 'N/A';
-                $item->invoice_no = $item->sale->sale_id ?? 'N/A';
+                $item->status = $item->sale->status ?? 'N/A';
+                $item->invoice_no = $item->sale->id ?? 'N/A';
+                $item->date = $item->sale->sale_date ?? 'N/A';
+                $item->table_name = 'tbl_sales_items'; 
             });
 
-                // Merge with results
+            // Merge with results
             $results = $results->merge($salesItems);
 
-            // dd($salesItems);
             // tbl_sale_returns (Uses created_at)
             $saleReturns = TblSaleReturn::where('sr_no', $sr_no)
-                ->select('id', 'sr_no', 'created_at as date', DB::raw("'tbl_sale_returns' as table_name"))
+                ->with('customer')
+                ->select('id', 'sale_id','sr_no', 'created_at as date', DB::raw("'tbl_sale_returns' as table_name"))
                 ->get();
             $results = $results->merge($saleReturns);
 
             // Sort results by created_at timestamp (latest first)
             $sortedResults = $results->sortBy('created_at')->values();
-            // dd($sortedResults);
+            // dd($sortedResults);  
             // return view('report.search', compact('reports', 'reportitems'));
             return view('report.search', compact('sortedResults'));
         }

@@ -936,11 +936,11 @@ function tbl_stock(row_id) {
             <input type="hidden" name="sr_no_or_not[]" value="0">
             <div class="col-12 col-md-3">
                 <input type="hidden" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                <datalist id="srled_${row_id}">
+                <datalist>
                     <option value=""></option>
                 </datalist>
                  <input type="hidden" name="srled[]" value="0">
-                 <input type="number" id="used_qty_${row_id}" name="used_qty[]" class="form-control" placeholder="Enter Qty">
+                 <input type="number" id="used_qty_${row_id}" name="used_qty[]" class="form-control select2" placeholder="Enter Qty">
             </div>
              
 
@@ -974,7 +974,7 @@ function tbl_stock(row_id) {
                             <option value="" disabled selected>Select or enter a new sr no, Small Alpha Plz</option>
                           
                         </select>
-                         <input type="hidden" id="used_qty_${row_id}" name="used_qty[]" class="form-control" value="1">
+                         <input type="hidden" id="used_qty_${row_id}" name="used_qty[]" class="form-control select2" value="1">
                     </div>
 
                     <div class="col-12 col-md-2">
@@ -1046,9 +1046,10 @@ function tbl_stock(row_id) {
                     selectElement.appendChild(option);
                 });
             }
-            setTimeout(function () {
-                $('.select2').select2();
-            }, 500);
+            
+            $(`#srled_${row_id}`).select2({
+                width: '100%' // Adjust width to prevent styling issues
+            });
         }
     });
 }

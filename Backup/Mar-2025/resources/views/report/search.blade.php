@@ -178,9 +178,7 @@
 @endforeach
 @endif
 --}}
-@if($sortedResults->isEmpty())
-<div class="alert alert-warning">No records found for the given Serial Number.</div>
-@else
+@if(!empty($sortedResults) && $sortedResults->isNotEmpty())
 <table class="table table-bordered text-white">
     <thead class="bg-dark">
         <tr>
@@ -195,6 +193,7 @@
     <tbody>
         {{-- {{dd($sortedResults);}} --}}
         @foreach($sortedResults as $key => $result)
+        {{-- {{dd($sortedResults);}} --}}
         <tr>
             <td>{{ $key + 1 }}</td>
             <td>{{ $result->sr_no }}</td>
@@ -202,11 +201,28 @@
                 @if($result->table_name === 'tbl_reports')
                 {{ $result->part === 0 ? 'New :- Manufacturing' : ($result->part == 1 ? 'Repair' : '') }}  
                 @elseif($result->table_name === 'tbl_sales_items')
-                    {{$result->sale->customer->customer_name ?? 'sales item' }}
+                    Invoice No:- {{ $result->sale_id}}, @switch($result->status)
+                    @case(0)
+                        <span class="badge bg-success">Sale</span>
+                        @break
+                    @case(1)
+                        <span class="badge bg-primary">Demo</span>
+                        @break
+                    @case(2)
+                        <span class="badge bg-warning text-dark">Standby</span>
+                        @break
+                    @case(3)
+                        <span class="badge bg-danger">Replacement</span>
+                        @break
+                    @default
+                        <span class="badge bg-secondary">Unknown</span>
+                @endswitch:- {{$result->customer_name ?? 'sales item' }}
                 @elseif($result->table_name === 'tbl_sale_returns')
-                tbl_sale_returns
+                    Sale Return:- Invoice No:- {{ $result->sale_id}}
                 @elseif($result->table_name === 'tbl_stock')
-                tbl_stock
+                    {{$result->category_name}} || {{ $result->sub_category_name}}
+                @elseif($result->table_name === 'tbl_report_items')
+                  Fiber SR NO:-   {{ $result->report->sr_no_fiber ?? $result->report->temp ?? 'N/A'}}
                 @endif
             </td>
             <td>{{ \Carbon\Carbon::parse($result->date)->format('d-M-Y') }}</td>
@@ -215,6 +231,16 @@
                 <a href="{{ route('report.show', $result->id) }}" class="btn btn-sm btn-primary">
                     <i class="ri-eye-fill"></i>
                 </a>
+                @elseif($result->table_name === 'tbl_sales_items')
+                <a class="btn btn-sm btn-primary" href="{{ route('sale.show', ['sale_id' => $result->invoice_no]) }}"><i
+                    class="ri-eye-fill"></i></a>
+
+                @elseif($result->table_name === 'tbl_sale_returns')
+                    <a class="btn btn-sm btn-primary" href="" ><i class="ri-eye-fill"></i></a>
+                @elseif($result->table_name === 'tbl_stock')
+                    <a class="btn btn-sm btn-primary" href="{{ route('add_sr_no', ['invoice_no' => $result->invoice_no,'category' => $result->cid,'subcategory' => $result->scid,'unit' =>$result->unit,'qty' =>$result->qty,'price'=>$result->price]) }}" ><i class="ri-eye-fill"></i></a>
+                @elseif($result->table_name === 'tbl_report_items')
+                    <a class="btn btn-sm btn-primary" href="{{ route('report.show', $result->report_id) }}" ><i class="ri-eye-fill"></i></a>
                 @endif
             </td>
             {{-- <td>{{ ucwords(str_replace('_', ' ', $result->table_name)) }}</td> --}}
