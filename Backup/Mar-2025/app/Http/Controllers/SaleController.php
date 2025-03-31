@@ -12,6 +12,7 @@ use App\Models\Report;
 use App\Models\TblCustomer;
 use App\Models\Tbltype;
 use App\Models\TblSaleReturn;
+use App\Models\Replacement;
 use App\Models\TblSaleProductCategory;
 use App\Models\TblSaleProductSubCategory;
 use Illuminate\Support\Facades\Validator;
@@ -91,7 +92,6 @@ class SaleController extends Controller
         }
         return redirect('/unauthorized');
     }
-
     public function return_store(Request $request)
     {
         // dd($request->all());
@@ -315,10 +315,42 @@ class SaleController extends Controller
         }
     }
 
-    public function convertToSale(Request $request){
-
+    public function replacement(Request $request){
+        if ($this->checkPermission($request, 'edit')) {
+            $customers = TblCustomer::all();
+            $inwards = tbl_category::all();
+            $items = tbl_sub_category::all();
+            $sale_product_categories = TblSaleProductCategory::all();
+            $sale_product_subcategories = TblSaleProductSubCategory::all();
+            $serial_nos = Report::where('status', '1')->where('sale_status', 1)->where('part', '0')->get()->sortBy('sr_no_fiber');
+            $types = Tbltype::orderBy('id', 'asc')->get();
+            $sales = Sale::with('items')->where('status', 0)->get();
+            if ($request->query('cid') !== null) {
+                $sales = Sale::with('items')->where('customer_id',$request->query('cid') )->get();
+                // dd($sale);
+            }
+            // return view('sale.replacement');
+            return view('sale.replacement', compact('sale_product_categories', 'sale_product_subcategories', 'types', 'customers', 'inwards', 'items', 'serial_nos','sales'));
+        }
     }
 
+    public function ItemReplacement(Request $request, $id){
+        $saleItem = SaleItem::with('sale','report')->find($id);
+        $serial_nos = Report::where('status', '1')->where('sale_status', '!=', '1')->where('part', '0')->get()->sortBy('sr_no_fiber');
+        return view('sale.ItemReplacement',compact('saleItem','serial_nos'));
+    }
+
+    public function replacementstore(Request $request){
+      
+        $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->findOrFail($request->report_id);
+        // dd($report);
+        if ($report) {
+            // Update sale_status to 1
+            $report->sale_status = 1;
+            $report->stock= 1;
+            $report->save();
+        }
+    }
     public function show(TblCustomer $tblCustomer, $id, Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
@@ -328,6 +360,56 @@ class SaleController extends Controller
             return view('sale.show', compact('sale'));
         }
         return redirect('/unauthorized');
+    }
+
+    public function standby(TblCustomer $tblCustomer, $id, Request $request){
+        if ($this->checkPermission($request, 'view')) {
+            $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);
+            $customers = TblCustomer::all();
+            $inwards = tbl_category::all();
+            $items = tbl_sub_category::all();
+            $sale_product_categories = TblSaleProductCategory::all();
+            $sale_product_subcategories = TblSaleProductSubCategory::all();
+            $serial_nos = Report::where(function ($query) use ($sale) {
+                $query->where('status', '1')
+                    ->where('part', '0')
+                    ->where(function ($q) use ($sale) {
+                        $q->where('sale_status', 0) // Include unsold serial numbers
+                            ->orWhereIn('id', $sale->items->pluck('report.sale_id'));
+                    });
+            })->get()->sortBy('sr_no_fiber');
+            // dd($sale,$customers,$inwards,$items,$serial_nos);
+            return view('sale.standbyreturn', compact('sale', 'customers', 'inwards', 'items', 'serial_nos','sale_product_categories','sale_product_subcategories','id'));
+        }
+        return redirect('/unauthorized');
+    }
+
+    public function standbystore(Request $request, $id){
+        // dd($id,$request->all());
+        if ($this->checkPermission($request, 'edit')) {
+            $oldsaleItems = SaleItem::where('sid', $id)->get();
+            try {
+                foreach ($oldsaleItems as $oldsaleItem) {
+                    $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('id', $oldsaleItem->report_id)->first();
+                    $report->sale_status = 0;
+                    $report->stock_status = 1;
+                    $report->save();
+                }
+                $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);
+                $sale->status = $request->status;
+                $sale->repair_status = $request->repair_status ?? 0;
+                $sale->sale_date = $request->date;
+                $sale->notes = $request->note; 
+                $sale->save();
+                return redirect()->route('sale.index')->with('success', 'Stock Update successfully.');
+            }catch (\Exception $e) {
+                SaleItem::where('report_id', $id)->delete();
+                foreach ($oldsaleItems as $item) {
+                    SaleItem::create($item->toArray());
+                }
+                return redirect()->back()->with('error', 'Failed to update the report: ' . $e->getMessage());
+            }
+        }
     }
 
     public function edit(TblCustomer $tblCustomer, $id, Request $request)
@@ -353,6 +435,7 @@ class SaleController extends Controller
         }
         return redirect('/unauthorized');
     }
+
     public function update(Request $request, $id){
         if ($this->checkPermission($request, 'edit')) {
           
@@ -430,6 +513,7 @@ class SaleController extends Controller
             }
         }
     }
+
     public function history(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {

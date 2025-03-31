@@ -1,5 +1,5 @@
 @extends('demo')
-@section('title', 'Out')
+@section('title', 'Product Out')
 @section('content')
 <h1>Product Out</h1>
 <a href="{{ route('sale.index') }}" class="btn btn-primary">Show Out Data</a>

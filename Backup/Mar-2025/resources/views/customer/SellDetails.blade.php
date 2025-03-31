@@ -87,22 +87,28 @@
                 <tr>
                     <td>{{$sale->sale_id}}</td>
                     <td>{{$sale->sale_date}}</td>
-                    <td> @switch($sale->status)
-                        @case(0)
-                            <span class="badge bg-success">Sale</span>
-                            @break
-                        @case(1)
-                            <span class="badge bg-primary">Demo</span>
-                            @break
-                        @case(2)
-                            <span class="badge bg-warning text-dark">Standby</span>
-                            @break
-                        @case(3)
-                            <span class="badge bg-danger">Replacement</span>
-                            @break
-                        @default
-                            <span class="badge bg-secondary">Unknown</span>
-                    @endswitch</td>
+                    <td> 
+                        @switch($sale->status)
+                            @case(0)
+                                <span class="badge bg-success">Sale</span>
+                                @break
+                            @case(1)
+                                <span class="badge bg-primary">Demo</span>
+                                @break
+                            @case(2)
+                                <span class="badge bg-warning text-dark">Standby</span>
+                                @break
+                            @case(3)
+                                <span class="badge bg-danger">Replacement</span>
+                                @break
+                            @case(4)
+                                <span class="badge bg-info text-dark">Standby Return</span>
+                                @break
+                            @default
+                                <span class="badge bg-secondary">Unknown</span>
+                        @endswitch
+                    </td>
+                    
                     <td>{{$sale->amount}}</td>
                     <td>
                         <a class="btn btn-sm btn-info" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
@@ -113,24 +119,19 @@
                                 Convert to Sale
                             </a>
                         @endif
+                        @if($sale->status == 2)
+                            <a class="btn btn-sm btn-success" href="{{ route('standby.return', ['sale_id' => $sale->id]) }}">
+                                Standby Returned 
+                            </a>
+                        @endif
                         {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i
-
                                 class="ri-pencil-line"></i></a> --}}
-
                         {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST"
-
                             style="display:inline;">
-
                             @csrf
-
                             @method('DELETE')
-
-                            <button type="submit"
-
-                                onclick="return confirm('Are you sure you want to delete this sale?');" class="btn"><i
-
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this sale?');" class="btn"><i
                                     class="ri-delete-bin-fill"></i></button>
-
                         </form> --}}
                     </td>
                 </tr>
@@ -144,7 +145,7 @@
                     Sell Return Details
                 </a>
             </h5>
-            <div class="ml-2">click on it..</div>
+            <div class="ms-1">click on it..</div>
         </div>
 
         <div class="collapse mt-3" id="purchase-return-table">

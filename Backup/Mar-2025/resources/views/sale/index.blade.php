@@ -1,5 +1,5 @@
 @extends('demo')
-@section('title', 'Out')
+@section('title', 'Product Out')
 @section('content')
 <h1>Product Out</h1>
 <div class="main" id="main">

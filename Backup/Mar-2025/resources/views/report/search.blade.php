@@ -214,6 +214,9 @@
                     @case(3)
                         <span class="badge bg-danger">Replacement</span>
                         @break
+                    @case(4)
+                        <span class="badge bg-info text-dark">Standby Return</span>
+                        @break
                     @default
                         <span class="badge bg-secondary">Unknown</span>
                 @endswitch:- {{$result->customer_name ?? 'sales item' }}

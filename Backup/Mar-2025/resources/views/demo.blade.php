@@ -303,6 +303,9 @@
                                 <li class="nav-item nav-sub-item" id="add">
                                     <a href="{{ route('sale.repair.create') }}" class="nav-link">Add Repair/ Product Out </a>
                                 </li>
+                                <li class="nav-item nav-sub-item" id="add">
+                                    <a href="{{ route('replacement.create') }}" class="nav-link">Replacement </a>
+                                </li>
                                 <li class="nav-item nav-sub-item" id="view">
                                     <a href="{{ route('sale.index') }}" class="nav-link">Show Product Out</a>
                                 </li>
