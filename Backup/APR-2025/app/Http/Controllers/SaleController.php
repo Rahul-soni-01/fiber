@@ -276,7 +276,7 @@ class SaleController extends Controller
                     try {
                         $itemResult = SaleItem::create([
                             'sid' => $sale->id,
-                            'sale_id' => $request->sale_id,
+                            'sale_id' => $sale->sale_id,
                             // 'serial_no' => $serial_no,
                             'report_id' => $report_id, // Report ID
                             'cname' => $request->cname[$i],
@@ -311,6 +311,7 @@ class SaleController extends Controller
                             'rate' => $request->rate[$i],
                             'p_tax' => $request->p_tax[$i],
                             'total' => $request->total[$i],
+                            'status' => 0,
                         ]);
                     } catch (\Exception $e) {
                         // Catch any other exceptions and display a general error
@@ -357,6 +358,9 @@ class SaleController extends Controller
         $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->findOrFail($request->report_id);
         // dd($report->sr_no_fiber);
         if($saleItem){
+
+            $saleItem->status = 1;
+            $saleItem->save();
             $itemResult = SaleItem::create([
                 'sid' => $saleItem->sid,
                 'sale_id' => $saleItem->sale_id,
@@ -395,7 +399,7 @@ class SaleController extends Controller
         if ($report) {
             $report->sale_status = 1;
             $report->stock_status = 1;
-            $report->section = 0;
+            $report->section = 4;
             $report->save();
         }
 
@@ -406,7 +410,15 @@ class SaleController extends Controller
     {
         if ($this->checkPermission($request, 'view')) {
 
-            $sale = Sale::with(['items', 'customer', 'items.report', 'items.category', 'items.subCategory'])->findOrFail($id);
+            $sale = Sale::with([
+                'items' => function ($query) {
+                    $query->where('status', 0); // Exclude replaced items
+                },
+                'customer',
+                'items.report',
+                'items.category',
+                'items.subCategory'
+            ])->findOrFail($id);
             // dd($sale);
             return view('sale.show', compact('sale'));
         }

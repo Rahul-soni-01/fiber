@@ -16,6 +16,7 @@ use App\Models\tbl_sub_category;
 use App\Models\tbl_category;
 use App\Models\TblCustomer;
 use App\Models\SaleItem;
+use App\Models\Replacement;
 use App\Models\Sale;
 use App\Models\SelectedInvoice;
 use App\Models\TblReportItem;
@@ -507,60 +508,90 @@ class ReportController extends Controller
             // $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')
             //     ->whereIn('report_id', $reportIds)
             //     ->get();
-
             $sr_no = $request->input('sr_no');
-    
+
             $results = collect();
+            
+            // Helper function to format dates consistently
+            $formatDate = function ($item) {
+                if (isset($item->date) && $item->date instanceof \DateTime) {
+                    $item->formatted_date = $item->date->format('d-M-Y');
+                } else {
+                    $item->formatted_date = 'N/A';
+                }
+                return $item;
+            };
+            
             // tbl_reports
             $reports = Report::where('sr_no_fiber', $sr_no)
                 ->select('*', 'sr_no_fiber as sr_no', 'created_at as date', DB::raw("'tbl_reports' as table_name"))
-                ->get();
+                ->get()
+                ->map($formatDate);
             $results = $results->merge($reports);
-
-            // tbl_stock (Uses date instead of created_at)
-            $stock = TblStock::where('serial_no', $sr_no)
-                ->with('category','subCategory')
-                ->select('*', 'serial_no as sr_no', 'date', DB::raw("'tbl_stock' as table_name"))
-                ->get();
-            $stock->each(function ($item) {  
-                $item->category_name = $item->category->category_name ?? 'N/A';
-                $item->sub_category_name = $item->subCategory->sub_category_name ?? 'N/A';
-            });
-            $results = $results->merge($stock);
-
-            $report_items = TblReportItem::where('sr_no', $sr_no)
-                    ->with('report') // Eager load relationship
-                    ->select('*', DB::raw('created_at as date'), DB::raw("'tbl_report_items' as table_name"))
-                    ->get();
-
             
+            // tbl_stock
+            $stock = TblStock::where('serial_no', $sr_no)
+                ->with('category', 'subCategory')
+                ->select('*', 'serial_no as sr_no', 'created_at as date', DB::raw("'tbl_stock' as table_name"))
+                ->get()
+                ->map(function ($item) use ($formatDate) {
+                    $item->category_name = $item->category->category_name ?? 'N/A';
+                    $item->sub_category_name = $item->subCategory->sub_category_name ?? 'N/A';
+                    return $formatDate($item);
+                });
+            $results = $results->merge($stock);
+            
+            // tbl_report_items
+            $report_items = TblReportItem::where('sr_no', $sr_no)
+                ->with('report')
+                ->select('*', DB::raw('created_at as date'), DB::raw("'tbl_report_items' as table_name"))
+                ->get()
+                ->map($formatDate);
             $results = $results->merge($report_items);
-
-            $salesItems = SaleItem::where('sr_no',$sr_no )
+            
+            // tbl_sales_items
+            $salesItems = SaleItem::where('sr_no', $sr_no)
                 ->with('sale', 'sale.customer')
-                ->get();
-            // Attach customer name and invoice number to each item
-            $salesItems->each(function ($item) {
-                $item->customer_name = $item->sale->customer->customer_name ?? 'N/A';
-                $item->status = $item->sale->status ?? 'N/A';
-                $item->invoice_no = $item->sale->id ?? 'N/A';
-                $item->date = $item->sale->sale_date ?? 'N/A';
-                $item->table_name = 'tbl_sales_items'; 
-            });
-
-            // Merge with results
+                ->get()
+                ->map(function ($item) use ($formatDate) {
+                    $item->customer_name = $item->sale->customer->customer_name ?? 'N/A';
+                    $item->status = $item->sale->status ?? 'N/A';
+                    $item->invoice_no = $item->sale->id ?? 'N/A';
+                    $item->date = $item->sale->created_at ?? 'N/A';
+                    $item->table_name = 'tbl_sales_items';
+                    return $formatDate($item);
+                });
             $results = $results->merge($salesItems);
-
-            // tbl_sale_returns (Uses created_at)
+            
+            // tbl_sale_returns
             $saleReturns = TblSaleReturn::where('sr_no', $sr_no)
                 ->with('customer')
-                ->select('id', 'sale_id','sr_no', 'created_at as date', DB::raw("'tbl_sale_returns' as table_name"))
-                ->get();
+                ->select('id', 'sale_id', 'sr_no', 'created_at as date', DB::raw("'tbl_sale_returns' as table_name"))
+                ->get()
+                ->map($formatDate);
             $results = $results->merge($saleReturns);
 
-            // Sort results by created_at timestamp (latest first)
-            $sortedResults = $results->sortBy('created_at')->values();
-            // dd($sortedResults);  
+            $replacements = Replacement::where('old_sr_no', $sr_no)
+                    ->orWhere('new_sr_no', $sr_no)
+                    ->get()
+                    ->map(function ($item) use ($formatDate) {
+                        $item->table_name = 'replacements';
+                        $item->action = $item->old_sr_no == $item->sr_no ? 'Replaced' : 'Replacement Received';
+                        return $formatDate($item);
+                    });
+            $results = $results->merge($replacements);
+            
+            // Sort results by date (ascending order)
+            $sortedResults = $results->sortBy(function ($item) {
+                return $item->date ?? now(); // Use current time if date is null
+            })->values();
+            
+            // If you need descending order (newest first), use sortByDesc instead:
+            // $sortedResults = $results->sortByDesc(function ($item) {
+            //     return $item->date ?? now();
+            // })->values();
+            
+          
             // return view('report.search', compact('reports', 'reportitems'));
             return view('report.search', compact('sortedResults'));
         }
@@ -610,17 +641,19 @@ class ReportController extends Controller
     {
         $reports = Report::with('tbl_type')
                 ->where('section', 0)
-                ->where('stock_status', 1)
-                ->get();
+                ->where('part', 0)
+                ->get()
+                ->groupBy('sr_no_fiber');
         return view('sections.mainstore', compact('reports'));
     }
 
     public function manufactur(Request $request)
     {
-        $reports = Report::with('tbl_type')->where('sale_status', 0)
+        $reports = Report::with('tbl_type')
                 ->where('section', 1)
-                ->where('stock_status', 0)
-                ->get();
+                ->where('part', 0)
+                ->get()
+                ->groupBy('sr_no_fiber');
         return view('sections.manufactur', compact('reports'));
     }
 
@@ -632,20 +665,28 @@ class ReportController extends Controller
         ->get()
         ->groupBy('sr_no_fiber'); // Ensures unique sr_no_fiber values
 
-        dd($reports);
+        // dd($reports);
 
         return view('sections.repair', compact('reports'));
     }
 
     public function baddesk(Request $request)
     {
-        $reports = Report::with('tbl_type')->where('section', 3)->get();
+        $reports = Report::with('tbl_type')
+                ->where('section', 3)
+                ->where('part', 0)
+                ->get()
+                ->groupBy('sr_no_fiber');
         return view('sections.baddesk',compact('reports'));
     }
 
     public function sell(Request $request)
     {
-        $reports = Report::with('tbl_type')->where('section', 4)->get();
+        $reports = Report::with('tbl_type')
+        ->where('section', 4)
+        ->where('part', 0)
+        ->get()
+        ->groupBy('sr_no_fiber');
         return view('sections.sell',compact('reports'));
     }
 
@@ -1388,15 +1429,16 @@ class ReportController extends Controller
         $report->sale_status = 0;
         if($request->input('part') == 1){
             $report->section = 2;
+            $report->r_status = 1;
         }elseif($request->input('part') == 0){
             $report->section = 1;
+            $report->r_status = 0;
         }
         $report->party_name = $request->input('party_name');
         if (Auth()->user()->type === 'electric') {
-            $report->r_status = 0;
             // $report->f_status = 0;
         } elseif (Auth()->user()->type === 'admin') {
-            $report->r_status = 1;
+            // $report->r_status = 1;
         }
         try {
             $report->save();
@@ -1494,6 +1536,7 @@ class ReportController extends Controller
                         ->first();
 
                     if ($invoice_data == null) {
+                        // dd( $request->sub_category[$index]);
                         $avalabile = 1;
                         try {
                             TblStock::whereIn('id', $TblStockinsertedIds)->delete();
@@ -1507,7 +1550,10 @@ class ReportController extends Controller
                         if ($Record_delete) {
                             $Record_delete->delete();
                         }
-                        return redirect()->back()->with('error', '!! No purchase Found in Stock, Please Select Valid Invoice No for Stock !!.');
+                        $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
+                        $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
+                        return redirect()->back()->with('error',"Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
+                        // return redirect()->back()->with('error', '!! No purchase Found in Stock, Please Select Valid Invoice No for Stock !!.');
                     }
                     $cid = $invoice_data->cid;
                     $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
@@ -1557,7 +1603,10 @@ class ReportController extends Controller
                             if ($Record_delete) {
                                 $Record_delete->delete();
                             }
-                            return redirect()->back()->with('error', 'Failed to store the report. You Not have a enough quantity in Stock, Please Check Your Stock Report.');
+                            // return redirect()->back()->with('error', 'Failed to store the report. You Not have a enough quantity in Stock, Please Check Your Stock Report.');
+                            $invoiceNo = $invoice_no ? $invoice_no->invoice_no : 'N/A';
+                            $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
+                            return redirect()->back()->with('error',"Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                         } elseif ($report_used_qty = $existingRecord->qty) {
                             $existingRecord->status = 1;
                         }

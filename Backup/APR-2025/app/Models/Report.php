@@ -44,4 +44,8 @@ class Report extends Model
         return $this->belongsTo(Tbltype::class, 'type', 'id');
     }
 
+    public function reportItems()
+    {
+        return $this->hasMany(TblReportItem::class, 'report_id', 'id');
+    }
 }

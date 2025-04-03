@@ -226,7 +226,9 @@
                     {{$result->category_name}} || {{ $result->sub_category_name}}
                 @elseif($result->table_name === 'tbl_report_items')
                   Fiber SR NO:-   {{ $result->report->sr_no_fiber ?? $result->report->temp ?? 'N/A'}}
-                  
+                  @elseif($result->table_name === 'replacements')
+                    <span class="badge bg-warning">Replaced</span>
+                    ({{ $result->old_sr_no }} → {{ $result->new_sr_no }})
                 @endif
             </td>
             <td>{{ \Carbon\Carbon::parse($result->date)->format('d-M-Y') }}</td>

@@ -23,6 +23,7 @@ class SaleItem extends Model
         'rate',
         'p_tax',
         'total',
+        'status',
     ];
     public function sale()
     {
@@ -41,5 +42,8 @@ class SaleItem extends Model
     public function subCategory()
     {
         return $this->belongsTo(TblSaleProductSubCategory::class, 'scname', 'id');
+    }
+    public function replacement(){
+        return $this->belongsTo(Replacement::class,'id','old_item_id');
     }
 }

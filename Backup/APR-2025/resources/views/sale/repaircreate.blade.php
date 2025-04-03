@@ -17,6 +17,7 @@
         @csrf
         <div class="container">
             <input type="hidden" name="repair_status" value="1">
+            <input type="hidden" name="status" value="0">
             <div class="row">
                 <div class="col">Invoice No.</div>
                 <div class="col">Date</div>
@@ -25,7 +26,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <input type="number" id="invoice_no" name="sale_id" class="form-control"
-                        placeholder="Enter Invoice no." required>
+                        placeholder="Enter Invoice no.">
                 </div>
                 <div class="col-md-4">
                     <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"

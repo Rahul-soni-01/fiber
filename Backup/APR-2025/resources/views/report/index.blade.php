@@ -116,9 +116,10 @@
                 $sale_status = $report->sale_status;
                 $part = $report->part;
                 if (in_array($type, ['electric', 'cavity', 'user']) && $status == '1') {
-                continue;
+                    continue;
                 }
-                if ($sale_status == 1 && $type == 'account') {
+                // dd($sale_status);
+                if ($sale_status == 1) {
                     continue;
                 }
                 

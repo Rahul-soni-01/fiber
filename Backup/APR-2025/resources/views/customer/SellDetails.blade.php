@@ -107,6 +107,17 @@
                             @default
                                 <span class="badge bg-secondary">Unknown</span>
                         @endswitch
+
+                        @switch($sale->repair_status)
+                            @case(0)
+                            
+                                @break
+                            @case(1)
+                                <span class="badge bg-primary">Repair</span>
+                                @break
+                            @default
+                                <span class="badge bg-secondary">Unknown</span>
+                        @endswitch
                     </td>
                     
                     <td>{{$sale->amount}}</td>

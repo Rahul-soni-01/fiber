@@ -221,6 +221,8 @@ Route::middleware('auth')->group(function () {
     Route::get('repair-section', [ReportController::class, 'repair'])->name('Repair.section');
     Route::get('baddesk-section', [ReportController::class, 'baddesk'])->name('baddesk.section');
     Route::get('sell-section', [ReportController::class, 'sell'])->name('sell.section');
+
+    Route::get('baddesk-create-{id}', [PermissionController::class, 'create'])->name('baddesk.create');
     
     // Sale Crud
     Route::get('sale-return-show-{sale_id}', [SaleController::class, 'return_show'])->name('sale.return.show');
