@@ -1303,3 +1303,54 @@ function filterInvoices() {
     $(invoiceSelect).val([]); // Reset selection
     $(invoiceSelect).trigger("chosen:updated");
 }
+
+function deadstatus(selectElement){
+    const itemId = selectElement.getAttribute('data-id');
+    const newStatus = selectElement.value;
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    
+    const badge = document.getElementById(`badge-${itemId}`);
+    
+    // Update badge immediately
+    badge.className = 'badge ' + (
+        newStatus == 0 ? 'bg-success' : 
+        newStatus == 1 ? 'bg-danger' : 'bg-secondary'
+    );
+    badge.textContent = selectElement.options[selectElement.selectedIndex].text;
+
+    $.ajax({
+        url: '/update-status', // Your update endpoint
+        method: 'POST',
+        data: {
+            id: itemId,
+            status: newStatus,
+            _token: csrfToken,
+        },
+        success: function(response) {
+            toastr.success(response.message || 'Status updated successfully');
+                
+                // Update the select styling
+                $(selectElement)
+                    .find('option')
+                    .removeClass('text-success text-danger text-secondary')
+                    .filter(':selected')
+                    .addClass(
+                        newStatus == 0 ? 'text-success' : 
+                        newStatus == 1 ? 'text-danger' : 'text-secondary'
+                    );
+                
+                // Additional visual feedback
+                $(selectElement)
+                    .removeClass('is-invalid')
+                    .addClass('is-valid');
+                
+                setTimeout(() => {
+                    $(selectElement).removeClass('is-valid');
+                }, 2000);
+            },
+        error: function(xhr) {
+            toastr.error('Error updating status');
+        }
+    });
+}

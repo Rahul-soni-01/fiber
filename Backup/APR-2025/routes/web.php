@@ -191,6 +191,7 @@ Route::middleware('auth')->group(function () {
     // Route::view('add_report', 'add_report')->name('report.add');
     Route::post('/stockReport', [ReportController::class, 'stockReport'])->name('report.stockReport');
     Route::get('report-stock', [ReportController::class, 'stock'])->name('report.stock');
+   
 
     //get sub category wise sr no report list
     Route::post('/get-sc-sr-no', [ReportController::class, 'get_sc_sr_no'])->name('report.get_sc_sr_no');
@@ -223,6 +224,7 @@ Route::middleware('auth')->group(function () {
     Route::get('sell-section', [ReportController::class, 'sell'])->name('sell.section');
 
     Route::get('baddesk-create-{id}', [PermissionController::class, 'create'])->name('baddesk.create');
+    Route::post('baddesk-store', [PermissionController::class, 'store'])->name('baddesk.store');
     
     // Sale Crud
     Route::get('sale-return-show-{sale_id}', [SaleController::class, 'return_show'])->name('sale.return.show');
@@ -250,6 +252,9 @@ Route::middleware('auth')->group(function () {
     // invoice to tbl stock 
     Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');
     Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
+    
+    Route::get('sr-no-stock', [TblStockController::class, 'sr_no'])->name('sr_no.index');
+    Route::post('update-status', [TblStockController::class, 'update'])->name('update.status');
 
     // Customer Crud
     Route::get('customer-create', [TblCustomerController::class, 'create'])->name('customer.create');

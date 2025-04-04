@@ -200,6 +200,17 @@
             <td>
                 @if($result->table_name === 'tbl_reports')
                 {{ $result->part === 0 ? 'New :- Manufacturing' : ($result->part == 1 ? 'Repair' : '') }}  
+                    @if($result->part === 0)
+                    | Current Section: <strong class="bg-primary"> @switch($result->section)
+                        @case(0) Mainstore @break
+                        @case(1) Manufactur @break
+                        @case(2) Repair @break
+                        @case(3) Baddesk @break
+                        @case(4) Sell @break
+                        @default Unknown
+                        @endswitch
+                    </strong>
+                    @endif
                 @elseif($result->table_name === 'tbl_sales_items')
                     Invoice No:- {{ $result->sale_id}}, @switch($result->status)
                     @case(0)
@@ -226,6 +237,17 @@
                     {{$result->category_name}} || {{ $result->sub_category_name}}
                 @elseif($result->table_name === 'tbl_report_items')
                   Fiber SR NO:-   {{ $result->report->sr_no_fiber ?? $result->report->temp ?? 'N/A'}}
+                  @if($result->report->part === 0)
+                    | Current Section: <strong class="bg-primary"> @switch($result->section)
+                        @case(0) Mainstore @break
+                        @case(1) Manufactur @break
+                        @case(2) Repair @break
+                        @case(3) Baddesk @break
+                        @case(4) Sell @break
+                        @default Unknown
+                        @endswitch
+                    </strong>
+                    @endif
                   @elseif($result->table_name === 'replacements')
                     <span class="badge bg-warning">Replaced</span>
                     ({{ $result->old_sr_no }} → {{ $result->new_sr_no }})
@@ -249,7 +271,7 @@
                     <a class="btn btn-sm btn-primary" href="{{ route('report.show', $result->report_id) }}" ><i class="ri-eye-fill"></i></a>
                 @endif
             </td>
-            {{-- <td>{{ ucwords(str_replace('_', ' ', $result->table_name)) }}</td> --}}
+            
         </tr>
         @endforeach
     </tbody>

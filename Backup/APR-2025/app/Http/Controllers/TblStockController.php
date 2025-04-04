@@ -138,6 +138,25 @@ class TblStockController extends Controller
         return response()->json(['error' => 'Subcategory ID not provided'], 400);
     }
 
+    public function sr_no(Request $request){
+        $serial_no_list = TblStock::with('subCategory','category','purchase')->get()->groupBy('invoice_no');
+        // dd($serial_no_list->keys()); // This should list all invoice numbers
+        return view('show_srno',compact('serial_no_list'));
+    }
+
+    public function update(Request $request){
+        $id = $request->id;
+        $existingRecord = TblStock::find($id);
+
+        if($existingRecord){
+            $existingRecord->update([
+                'dead_status' => $request->status,
+            ]);
+
+            return response()->json(['message' => 'Record updated successfully']);
+        }
+    }
+    
     public function datainsert()
     {
 

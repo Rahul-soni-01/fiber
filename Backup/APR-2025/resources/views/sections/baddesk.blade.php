@@ -7,11 +7,18 @@
     <div style="color: red;">
         <ul>
             @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
+                <li>{{ $error }}</li>
             @endforeach
         </ul>
     </div>
-    @endif
+@endif
+
+@if (session('success'))
+    <div style="color: green;">
+        {{ session('success') }}
+    </div>
+@endif
+
 
     @if ($reports->isEmpty())
     <p>No reports found.</p>
@@ -27,16 +34,16 @@
                     <th>Serial No.</th>
                     <th>Type</th>
                     <th>Worker Name</th>
-                    <th>Final Amount</th>
-                    <th>Sale</th>
-                    <th>Stock</th>
+                    {{-- <th>Final Amount</th> --}}
+                    {{-- <th>Sale</th> --}}
+                    {{-- <th>Stock</th> --}}
                     <th>Action</th>
             </thead>
             <tbody>
                 @foreach ($reports as $sr_no_fiber => $reportGroup)
+                {{-- {{ dd($reports);}} --}}
                 @foreach ($reportGroup as $report)
-                <tr
-                    class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
+                <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
                     <td>{{ $report->id }}</td>
                     <td>
                         @if($report->part == 0)
@@ -52,7 +59,8 @@
                     <td>{{ $sr_no_fiber }}</td>
                     <td>{{ $report->tbl_type->name ?? ($report->type ?? 'N/A') }}</td>
                     <td>{{ $report->worker_name ?? 'N/A' }}</td>
-                    <td>{{ $report->final_amount ? '₹'.number_format($report->final_amount, 2) : 'N/A' }}</td>
+                    {{-- <td>{{ $report->final_amount ? '₹'.number_format($report->final_amount, 2) : 'N/A' }}</td> --}}
+                    {{--
                     <td>
                         @if($report->sale_status)
                         <span class="badge badge-success">Sold</span>
@@ -67,20 +75,12 @@
                         <span class="badge badge-light">Out of Stock</span>
                         @endif
                     </td>
+                    --}}
                     <td>
                         <div class="btn-group">
                             <a href="{{ route('report.search', ['sr_no' => $sr_no_fiber]) }}"
                                 class="btn btn-sm btn-info"><i class="ri-eye-fill"></i></a>
-                            {{-- Route::get('/report-search', [ReportController::class,
-                            'search'])->name('report.search'); --}}
-                            {{-- <a href="{{ route('reports.edit', $report->id) }}"
-                                class="btn btn-sm btn-primary">Edit</a> --}}
-                            {{-- <form action="{{ route('reports.destroy', $report->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Are you sure?')">Delete</button>
-                            </form> --}}
+                           
                         </div>
                     </td>
                 </tr>

@@ -33,4 +33,8 @@ class TblStock extends Model
     {
         return $this->belongsTo(tbl_sub_category::class, 'scid', 'id');
     }
+    public function purchase()
+    {
+        return $this->belongsTo(tbl_purchase::class, 'invoice_no', 'id');
+    }
 }
