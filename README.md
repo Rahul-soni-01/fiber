@@ -16,7 +16,7 @@ This is a Laravel project for managing fiber-related operations. It includes fea
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/fiber.git
+   git clone https://github.com/Rahul-soni-01/fiber.git
    cd fiber
 
 2. Install the dependencies:
