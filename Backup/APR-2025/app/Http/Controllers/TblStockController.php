@@ -139,8 +139,14 @@ class TblStockController extends Controller
     }
 
     public function sr_no(Request $request){
-        $serial_no_list = TblStock::with('subCategory','category','purchase')->get()->groupBy('invoice_no');
-        // dd($serial_no_list->keys()); // This should list all invoice numbers
+        $query = TblStock::with('subCategory','category','purchase');
+        
+        if ($request->filled('invoice_no')) {
+            $query->where('invoice_no', $request->invoice_no);
+        }
+        $serial_no_list = $query->get()
+                          ->groupBy('invoice_no')
+                          ->reject(fn($group, $invoiceNo) => empty($invoiceNo));
         return view('show_srno',compact('serial_no_list'));
     }
 

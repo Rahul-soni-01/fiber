@@ -163,6 +163,7 @@
                     </td>
                     @endif
                     @if ($type === 'cavity')
+
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->note1 }}</td>
                     <td>

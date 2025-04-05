@@ -2,6 +2,29 @@
 @section('title', 'Serial No List')
 @section('content')
 <h1>Serial No List</h1>
+
+<form action="" method="get">
+    <div class="container-fluid">
+        <div class="row g-3">
+           
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                <select name="invoice_no" id="invoice_no" class="form-control">
+                    <option value="" >All</option>
+                    @foreach($serial_no_list->keys() as $invoice_no)
+                        <option value="{{ $invoice_no }}" {{ request('invoice_no') == $invoice_no ? 'selected' : '' }}>
+                            {{ $invoice_no }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-grid">
+                <button type="submit" class="btn btn-primary btn-sm">Search</button>
+            </div>
+        </div>
+    </div>
+</form>
+
 <table class="table text-white">
     <thead class=" bg-dark">
         <tr>

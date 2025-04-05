@@ -48,7 +48,10 @@ class ReportController extends Controller
     public function indexNew(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $types = Tbltype::with('reports')->get(); // Use 'tbl_type' (singular) as defined in the model
+            $types = Tbltype::with(['reports' => function ($query) {
+                $query->where('sale_status', 0);
+            }])->get();
+             // Use 'tbl_type' (singular) as defined in the model
             // $reports = Report::with('tbl_type')->get()->groupBy('type');
             // dd($types,$reports);
             if (auth()->user()->type === 'godown') {
@@ -287,7 +290,14 @@ class ReportController extends Controller
         $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
             // ->where('part', 0)
             ->where('sale_status', 0)
-            ->where('r_status', 0)
+            // ->where('r_status', 0)
+            ->where(function($query) {
+                $query->where('part', 0)
+                      ->orWhere(function($q) {
+                          $q->where('part', 1)
+                            ->where('f_status', 0);
+                      });
+            })
             ->where('status', 1);
         if ($request->id) {
             $report = Report::find($request->id);
@@ -326,7 +336,13 @@ class ReportController extends Controller
     {
         $reports = Report::with('tbl_type')
                 ->where('section', 0)
-                ->where('part', 0)
+                ->where(function($query) {
+                    $query->where('part', 0)
+                          ->orWhere(function($q) {
+                              $q->where('part', 1)
+                                ->where('f_status', 0);
+                          });
+                })
                 ->get()
                 ->groupBy('sr_no_fiber');
         return view('sections.mainstore', compact('reports'));
@@ -344,9 +360,15 @@ class ReportController extends Controller
 
     public function repair(Request $request)
     {
-        $reports = Report::with('tbl_type')->where('section', 2)
-        // ->where('sr_no_fiber', '!=', 0)
-        ->where('part', 0)
+        $reports = Report::with('tbl_type')
+        ->where('section', 2)
+        ->where(function($query) {
+            $query->where('part', 0)
+                  ->orWhere(function($q) {
+                      $q->where('part', 1)
+                        ->where('f_status', 0);
+                  });
+        })
         ->get()
         ->groupBy('sr_no_fiber'); // Ensures unique sr_no_fiber values
 
@@ -369,7 +391,13 @@ class ReportController extends Controller
     {
         $reports = Report::with('tbl_type')
         ->where('section', 4)
-        ->where('part', 0)
+        ->where(function($query) {
+            $query->where('part', 0)
+                  ->orWhere(function($q) {
+                      $q->where('part', 1)
+                        ->where('f_status', 0);
+                  });
+        })
         ->get()
         ->groupBy('sr_no_fiber');
         return view('sections.sell',compact('reports'));
@@ -721,6 +749,9 @@ class ReportController extends Controller
                         if ($Record_delete) {
                             $Record_delete->delete();
                         }
+                        $scid = $request->sub_category[$index];
+                        $subCat = tbl_sub_category::find($sub_category[$index]);
+                        $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
                         $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
                         $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
                         return redirect()->back()->with('error',"Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
@@ -998,7 +1029,14 @@ class ReportController extends Controller
                                 ->first();
 
                             if ($invoice_data == null) {
-                                throw new \Exception('No purchase found in stock. Please select a valid invoice number.');
+                                // dd($request->sub_category[$index], $invoice_no, $invoice, $invoice_data);
+                                // throw new \Exception('No purchase found in stock. Please select a valid invoice number.');
+                                $scid = $request->sub_category[$index];
+                                $subCat = tbl_sub_category::find($sub_category[$index]);
+                                $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
+                                $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
+                                $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
+                               throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                             }
 
                             $cid = $invoice_data->cid;
