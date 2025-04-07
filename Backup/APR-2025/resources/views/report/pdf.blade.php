@@ -1,37 +1,18 @@
 <!DOCTYPE html>
-
 <html>
-
-
-
 <head>
-
     <title>Report Details</title>
-
-
-
     <link rel="stylesheet" href="/public/css/style.css">
-
     <link rel="stylesheet" href="/public/css/bootstrap.min.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <script src="public/js/script.js"></script>
-
     <script src="/public/js/jquery-3.7.1.min.js"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-
     </script>
-
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -199,13 +180,8 @@
         }
     }
 </style>
-
 </head>
-
-
-
 <body>
-
     <div class="main">
         <div class="header">
             <table class="header-content" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -334,58 +310,28 @@
                 </div>
             </div>
         </div>
-
-
-
         <div class="footer">
             <table class="footer-content" border="0" cellspacing="0" cellpadding="0">
-
                 <tr>
-
                     <td class="footer-left">
-
                         <br><br><br><br>
-
                         <span>hello@maktech.com</span><br>
-
                         <span>555 444 6666</span>
-
                     </td>
-
                     <td class="footer-center">
-
                         <br><br><br><br>
-
                         <span>!! Thank You !!</span>
-
                     </td>
-
                     <td class="footer-right">
-
                         <span>Authorized Signatory</span><br>
-
                         <br>
-
                         <div class="denis"> </div> <br>
-
                         <span>&nbsp;</span>
-
                     </td>
-
                 </tr>
-
             </table>
-
         </div>
-
-
-
         <p style="margin-bottom:0px; font-size:8px;">Time: {{ \Carbon\Carbon::now() }} by {{ auth()->user()->email}}</p>
-
     </div>
-
 </body>
-
-
-
 </html>

@@ -1,9 +1,9 @@
 @extends('demo')
-@section('title', 'Report')
+@section('title', 'Report Stock')
 @section('content')
 
-<h1>Report</h1>
-<a href="{{ route('sr_no.index') }}" class="btn btn-primary">All Sr No</a>
+<h1>Report Stock</h1>
+<a href="{{ route('sr_no.index') }}" class="btn btn-primary mb-2">All Sr No</a>
 @php
     $bgColors = ['bg-secondary', 'bg-warning text-dark', 'bg-info', 'bg-light text-dark']; // Define 4 background colors
     $index = 0; // Initialize index

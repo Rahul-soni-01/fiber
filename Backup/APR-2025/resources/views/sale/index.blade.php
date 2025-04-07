@@ -3,7 +3,14 @@
 @section('content')
 <h1>Product Out</h1>
 <div class="main" id="main">
-    <a href="{{ route('sale.create') }}" class="btn btn-primary mb-2">Add Product Out   </a>
+<div class="d-flex align-items-center flex-wrap gap-1 m-1">
+    <a href="{{ route('sale.create') }}" class="btn btn-primary m-1">Add Product Out</a>
+    
+    <a href="?status=0" class="btn btn-success m-1">Sale</a>
+    <a href="?status=1" class="btn btn-info m-1">Demo</a>
+    <a href="?status=2" class="btn btn-warning m-1">Standby</a>
+    <a href="?status=3" class="btn btn-danger m-1">Replacement</a>
+</div>
     
     @if (session('success'))
     <div class="alert alert-success">

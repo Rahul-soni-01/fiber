@@ -326,9 +326,9 @@ class ReportController extends Controller
             $reports->where('worker_name', 'like', '%' . $request->query('worker_name') . '%');
         }
         $reports = $reports->get();
-        $ready = 1;
+        $ready = 1; // stock Avalible or Not
         $tbl_parties = tbl_party::all();
-        // dd($reports,"Ctrl");
+        // dd($reports);
         return view("report.index", compact('reports', 'tbl_parties', 'ready'));
     }
 
@@ -629,6 +629,12 @@ class ReportController extends Controller
         if($request->input('part') == 1){
             $report->section = 2;
             $report->r_status = 1;
+
+            $mainreport = Report::where('sr_no_fiber', $request->input('sr_no_fiber'))->where('part', 0)->first();
+            if($mainreport){
+                $mainreport->section = 2;
+                $mainreport->save();
+            }
         }elseif($request->input('part') == 0){
             $report->section = 1;
             $report->r_status = 0;
@@ -641,13 +647,6 @@ class ReportController extends Controller
         }
         try {
             $report->save();
-
-            $mainreport = Report::where('sr_no_fiber', $request->input('sr_no_fiber'))->where('part', 0)->first();
-            if($mainreport){
-                $mainreport->section = 2;
-                $mainreport->save();
-            }
-
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
         }

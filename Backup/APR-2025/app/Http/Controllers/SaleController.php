@@ -29,9 +29,26 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            // $sales = Sale::with('customer')->get()->groupBy('customer_id');
+            // $sales = Sale::with('customer')->get();
+
+            if ($request->has('status')) {
+                $status = $request->status;
+                
+                // Special case for Replacement (status 3)
+                if ($status == 3) {
+                    $replacements = Replacement::with('sale', 'item')->get();
+                    return view('sale.onlysale', ['sales' => $replacements, 'isReplacement' => true]);
+                }
+                
+                // Regular status filtering
+                $sales = Sale::with('customer')
+                            ->where('status', $status)
+                            ->get();
+                
+                return view('sale.onlysale', ['sales' => $sales, 'isReplacement' => false]);
+            }
             $sales = TblCustomer::with('sales')->get();
-            // i want to make total sale amount for each customer
+           
             $sales = $sales->filter(function ($customer) {
                 return $customer->sales->isNotEmpty(); // Keep only customers with sales
             })->map(function ($customer) {

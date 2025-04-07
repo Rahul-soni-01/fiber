@@ -1,7 +1,7 @@
 @extends('demo')
-@section('title', 'Report')
+@section('title', 'All Report')
 @section('content')
-<h1>Report</h1>
+<h1>All Report</h1>
 <div class="text-white">
     @if ($errors->any())
     <div style="color: red;">
@@ -47,14 +47,17 @@
     </form>
 
     @if(!isset($ready))
-    <p class="mt-4">New reports Filter.</p>
+    <p class="mt-2">New reports Filter.</p>
     <label class="switch">
         <input type="checkbox" id="toggleSwitch">
         <span class="slider"></span>
     </label>
     @endif
     @if ($reports->isEmpty())
-    <p>No reports found.</p>
+     <div class="d-flex justify-content-center align-items-center flex-column mt-4 text-muted">
+        <i class="fas fa-exclamation-circle fa-5x mb-2 text-warning"></i>
+        <p class="text-white">No reports found.</p>
+    </div>
     @else
     <div id="div1" class="table-responsive mt-4">
         <table class="table text-white">
@@ -65,14 +68,14 @@
                     <th>W/N.W.</th>
                     <th>Date</th>
                     <th>Section</th>
+
                     @if(auth()->user()->type === 'admin')
                     <th>Serial No.</th>
                     <th>Type</th>
                     <th>Worker Name</th>
-
                     <th>Final Amount</th>
                     <th>Sale</th>
-                    @if(isset($ready) && $ready == 1)
+                    @if(isset($ready) && $ready == 1) // for stock route
                     <th>Stock</th>
                     @endif
                     <th>Action</th>
@@ -116,13 +119,13 @@
                 $sale_status = $report->sale_status;
                 $part = $report->part;
                 if (in_array($type, ['electric', 'cavity', 'user']) && $status == '1') {
-                    continue;
+                continue;
                 }
                 // dd($sale_status);
                 if ($sale_status == 1) {
-                    continue;
+                continue;
                 }
-                
+
                 @endphp
                 <tr
                     class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
@@ -171,40 +174,40 @@
                     </td>
                     @endif
                     @if($type === 'user')
-                        <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
-                        <td>{{ $report->m_j }}</td>
-                        <td>{{ $report->tbl_type->name ?? null}}</td>
-                        <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
-                        </td>
+                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
+                    <td>{{ $report->m_j }}</td>
+                    <td>{{ $report->tbl_type->name ?? null}}</td>
+                    <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                    </td>
                     @endif
                     @if ($type === 'admin' )
-                        <td>{{ $report->sr_no_fiber }}</td>
-                        <td>{{ $report->tbl_type->name ?? 0 }}</td>
-                        <td>{{ $report->worker_name }}</td>
-                        <td>{{ $report->final_amount }}</td>
-                        <td>
-                            @if ($report->sale_status == 0)
-                                No sale 
-                                @if ($report->r_status == 1)
-                                    - Repair
-                                @endif
-                            @elseif ($report->sale_status == 1)
-                            Sale
-                            @else
-                            Unknown
-                            @endif
-                        </td>
-                        @if(isset($ready) && $ready == 1)
-                        <td>
-                            <label class="switch">
-                                <input type="checkbox" {{ $report->stock_status == 1 ? 'checked' : '' }}
-                                id="ReadyStock" data-id="{{ $report->id}}">
-                                <span class="slider round"></span>
-                            </label>
-                            <div class="row-spinner spinner-border" role="status" style="display: none;">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </td>
+                    <td>{{ $report->sr_no_fiber }}</td>
+                    <td>{{ $report->tbl_type->name ?? 0 }}</td>
+                    <td>{{ $report->worker_name }}</td>
+                    <td>{{ $report->final_amount }}</td>
+                    <td>
+                        @if ($report->sale_status == 0)
+                        No sale
+                        @if ($report->r_status == 1)
+                        - Repair
+                        @endif
+                        @elseif ($report->sale_status == 1)
+                        Sale
+                        @else
+                        Unknown
+                        @endif
+                    </td>
+                    @if(isset($ready) && $ready == 1)
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" {{ $report->stock_status == 1 ? 'checked' : '' }}
+                            id="ReadyStock" data-id="{{ $report->id}}">
+                            <span class="slider round"></span>
+                        </label>
+                        <div class="row-spinner spinner-border" role="status" style="display: none;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </td>
                     @endif
                     <td>
                         <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-primary"><i

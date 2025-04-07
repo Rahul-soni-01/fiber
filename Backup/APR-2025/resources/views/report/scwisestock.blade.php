@@ -1,5 +1,5 @@
 @extends('demo')
-@section('title', 'Report')
+@section('title', 'Report Stock')
 @section('content')
 
 <div class="container">
