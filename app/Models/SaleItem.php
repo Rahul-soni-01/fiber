@@ -1,4 +1,4 @@
- <?php
+<?php
 
 namespace App\Models;
 
@@ -23,10 +23,11 @@ class SaleItem extends Model
         'rate',
         'p_tax',
         'total',
+        'status',
     ];
     public function sale()
     {
-        return $this->belongsTo(Sale::class, 'sale_id', 'id');
+        return $this->belongsTo(Sale::class, 'sale_id', 'sale_id');
     }
 
     public function report()
@@ -41,5 +42,8 @@ class SaleItem extends Model
     public function subCategory()
     {
         return $this->belongsTo(TblSaleProductSubCategory::class, 'scname', 'id');
+    }
+    public function replacement(){
+        return $this->belongsTo(Replacement::class,'id','old_item_id');
     }
 }

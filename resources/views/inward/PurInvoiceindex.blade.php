@@ -45,12 +45,12 @@
             @if($subcategories->isNotEmpty())
             <div class="row mb-3">
                 @foreach($subcategories as $subcategory)
-                    <div class="col-md-1 mb-2">
-                        <label for="scid" class="form-label fw-bold">{{ $subcategory['sub_category_name'] }}</label>
+                    <div class="col-md-2 mb-2">
+                        <label for="scid" class="form-label fw-bold">{{ $subcategory['category']['category_name'] }}- {{ $subcategory['sub_category_name'] }}</label>
                         <input type="hidden" name="scid[]" value="{{ $subcategory['id'] }}">
                     </div>
     
-                    <div class="col-md-5 mb-2">
+                    <div class="col-md-4 mb-2">
                             {{-- <label for="invoice_no" class="form-label fw-bold">Choose an Invoice:</label> --}}
                         <select name="invoice_no[]" id="invoice_no" class="form-select" required>
                             <option value="" disabled selected>Select Invoice</option>

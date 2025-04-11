@@ -7,12 +7,12 @@
         <a href="{{route('customer.index')}}" class="btn btn-info mb-2"> All Customer </a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link active text-info" id="customer-payment-tab" data-bs-toggle="tab"
+        <a class="nav-link text-info" id="customer-payment-tab" data-bs-toggle="tab"
             href="#customer-payment" role="tab" aria-controls="customer-payment" aria-selected="true">Customer
             Payment</a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link text-info" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history"
+        <a class="nav-link active text-info" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history"
             role="tab" aria-controls="customer-history" aria-selected="false">Customer Sale</a>
     </li>
 </ul>
@@ -27,7 +27,7 @@
 
         class="btn btn-info mb-2"> Customer Sell Details </a> --}}
 
-    <div class="tab-pane fade show active" id="customer-payment" role="tabpanel" aria-labelledby="customer-payment-tab">
+    <div class="tab-pane fade" id="customer-payment" role="tabpanel" aria-labelledby="customer-payment-tab">
         <div class="d-flex justify-content-center align-items-center mt-3">
             <h5>Sell Payment </h5>
         </div>
@@ -67,7 +67,7 @@
         </table>
     </div>
     {{-- @else --}}
-    <div class="tab-pane fade" id="customer-history" role="tabpanel" aria-labelledby="customer-history-tab">
+    <div class="tab-pane fade show active" id="customer-history" role="tabpanel" aria-labelledby="customer-history-tab">
         {{-- <a href="?payment" class="btn btn-info mb-2">Customer Payment</a> --}}
         <div class="d-flex justify-content-center align-items-center">
             <h5>Sell Details </h5>
@@ -77,7 +77,7 @@
                 <tr>
                     <th>#</th>
                     <th>Date</th>
-                    {{-- <th>Customer</th> --}}
+                    <th>Status</th>
                     <th>Price</th>
                     <th>Action</th>
                 </tr>
@@ -87,15 +87,62 @@
                 <tr>
                     <td>{{$sale->sale_id}}</td>
                     <td>{{$sale->sale_date}}</td>
-                    {{-- <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td> --}}
+                    <td> 
+                        @switch($sale->status)
+                            @case(0)
+                                <span class="badge bg-success">Sale</span>
+                                @break
+                            @case(1)
+                                <span class="badge bg-primary">Demo</span>
+                                @break
+                            @case(2)
+                                <span class="badge bg-warning text-dark">Standby</span>
+                                @break
+                            @case(3)
+                                <span class="badge bg-danger">Replacement</span>
+                                @break
+                            @case(4)
+                                <span class="badge bg-info text-dark">Standby Return</span>
+                                @break
+                            @default
+                                <span class="badge bg-secondary">Unknown</span>
+                        @endswitch
+
+                        @switch($sale->repair_status)
+                            @case(0)
+                            
+                                @break
+                            @case(1)
+                                <span class="badge bg-primary">Repair</span>
+                                @break
+                            @default
+                                <span class="badge bg-secondary">Unknown</span>
+                        @endswitch
+                    </td>
+                    
                     <td>{{$sale->amount}}</td>
                     <td>
-                        <a class="btn" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i class="ri-eye-fill"></i></a>
-                        {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i class="ri-pencil-line"></i></a> --}}
-                        {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST" style="display:inline;">
+                        <a class="btn btn-sm btn-info" href="{{ route('sale.show', ['sale_id' => $sale->id]) }}"><i
+                                class="ri-eye-fill"></i></a>
+
+                        @if($sale->status == 1)
+                            <a class="btn btn-sm btn-success" href="{{ route('sale.convert', ['sale_id' => $sale->id]) }}">
+                                Convert to Sale
+                            </a>
+                        @endif
+                        @if($sale->status == 2)
+                            <a class="btn btn-sm btn-success" href="{{ route('standby.return', ['sale_id' => $sale->id]) }}">
+                                Standby Returned 
+                            </a>
+                        @endif
+                        {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}"><i
+                                class="ri-pencil-line"></i></a> --}}
+                        {{-- <form action="{{ route('sale.destroy', $sale->id) }}" method="POST"
+                            style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('Are you sure you want to delete this sale?');" class="btn"><i class="ri-delete-bin-fill"></i></button>
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this sale?');" class="btn"><i
+                                    class="ri-delete-bin-fill"></i></button>
                         </form> --}}
                     </td>
                 </tr>
@@ -109,7 +156,7 @@
                     Sell Return Details
                 </a>
             </h5>
-            <div class="ml-2">click on it..</div>
+            <div class="ms-1">click on it..</div>
         </div>
 
         <div class="collapse mt-3" id="purchase-return-table">

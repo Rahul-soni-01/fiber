@@ -100,7 +100,7 @@
 
                             <option value="" disabled>Select Unit</option>
 
-                            <option value="Pic" {{ $subcategory->unit == 'Pic' ? 'selected' : '' }}>Pic</option>
+                            <option value="Pic" {{ $subcategory->unit == 'Pic' ? 'selected' : '' }}>Pcs</option>
 
                             <option value="Mtr" {{ $subcategory->unit == 'Mtr' ? 'selected' : '' }}>Mtr</option>
 

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Replacement extends Model
 {
@@ -11,12 +13,12 @@ class Replacement extends Model
     //
     protected $fillable = [
         'sale_id',
-        'item_id',
+        'old_item_id',
+        'new_item_id',
         'date',
         'old_sr_no',
         'new_sr_no',
         'note',
-        'user_id'
     ];
 
     protected $casts = [

@@ -24,9 +24,11 @@ class TblStockController extends Controller
             'price' => 'required|numeric',
             'sr_no' => 'required',
             'serial_no' => ['nullable', 'array'],
-            'serial_no.*' => ['nullable', 'regex:/^[A-Za-z]{6}\d{4}$/'],
+            // 'serial_no.*' => ['nullable', 'regex:/^[A-Za-z]{6}\d{4}$/'],
+            'serial_no.*' => ['nullable', 'string'], // Just ensure it's a string
+
         ], [
-            'serial_no.*.regex' => 'Each serial number must be 6 alphabetic characters followed by 4 numeric characters.',
+            'serial_no.*.regex' => 'Each Serial Number Must Be String Format.',
         ]);
 
         if ($validator->fails()) {
@@ -70,10 +72,10 @@ class TblStockController extends Controller
             }
            
             foreach ($serial_no_list as $serial) {
-                if (!preg_match('/^[A-Za-z]{6}\d{4}$/', $serial)) {
-                    $errors['sr_no'] = 'Each serial number must have exactly 6 letters followed by 4 digits (e.g., ABCDEF1234).';
-                    break;
-                }
+                // if (!preg_match('/^[A-Za-z]{6}\d{4}$/', $serial)) {
+                //     $errors['sr_no'] = 'Each serial number must have exactly 6 letters followed by 4 digits (e.g., ABCDEF1234).';
+                //     break;
+                // }
             
                 // Check uniqueness in tbl_stock table
                 if (\DB::table('tbl_stock')->where('serial_no', $serial)->exists()) {
@@ -118,7 +120,8 @@ class TblStockController extends Controller
                 ]);
             } 
         }
-        return redirect()->route('report.stock');
+        // return redirect()->route('report.stock');
+        return back()->with('success', 'Stock Added successfully!');
 
     }
 
@@ -138,6 +141,31 @@ class TblStockController extends Controller
         return response()->json(['error' => 'Subcategory ID not provided'], 400);
     }
 
+    public function sr_no(Request $request){
+        $query = TblStock::with('subCategory','category','purchase');
+        
+        if ($request->filled('invoice_no')) {
+            $query->where('invoice_no', $request->invoice_no);
+        }
+        $serial_no_list = $query->get()
+                          ->groupBy('invoice_no')
+                          ->reject(fn($group, $invoiceNo) => empty($invoiceNo));
+        return view('show_srno',compact('serial_no_list'));
+    }
+
+    public function update(Request $request){
+        $id = $request->id;
+        $existingRecord = TblStock::find($id);
+
+        if($existingRecord){
+            $existingRecord->update([
+                'dead_status' => $request->status,
+            ]);
+
+            return response()->json(['message' => 'Record updated successfully']);
+        }
+    }
+    
     public function datainsert()
     {
 

@@ -1,13 +1,28 @@
 @extends('demo')
-@section('title', 'Report')
+@section('title','Report')
 @section('content')
 <h1>Report</h1>
+@if ($errors->any())
+<div style="color: red;">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 <div class="main" id="main">
     <form action="{{ route('report.update', $report->id) }}" method="POST" id="report-form">
         @csrf
         @method('PUT')
+        @if (session('error'))
+        <div  class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         @if ($errors->any())
-        <div style="color: red;">
+        <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -40,7 +55,7 @@
                 </div>
                 <div class="col-md-2">
                     @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
-                    <h5>WORKER NAME</h5>
+                    <h5>EMPLOYEE NAME</h5>
                     @endif
                 </div>
                 <div class="col-md-3">
@@ -159,6 +174,7 @@
                     </div>
                 </div>
             </div>
+            {{-- {{ dd($reportitems)}} --}}
             @foreach($reportitems as $index => $reportitem)
             <div class="row mt-4 align-items-center" id="row_{{$index+1}}">
                 <div class="col-12 col-md-2 d-flex">
@@ -169,7 +185,7 @@
                         <option value="{{$sub_category->id}}" data-unit="{{$sub_category->unit}}"
                             data-sr_no="{{$sub_category->sr_no}}" @if($sub_category->id == $reportitem->scid)
                             selected @endif>
-                            {{$sub_category->category->category_name ?? 'NA'}} - {{$sub_category->sub_category_name ?? 'NA'}}
+                            {{$sub_category->category->category_name}} - {{$sub_category->sub_category_name}}
                         </option>
                         @endforeach
                     </select>
@@ -179,12 +195,17 @@
                         <input type="hidden" name="sr_no_or_not[]" value="{{$reportitem->tbl_sub_category->sr_no}}">
                         <div class="col-12 col-md-3">
                             @if($reportitem->sr_no != 0)
-                            <input type="text" name="srled[]" list="srled_{{$index+1}}" class="form-control"
+                            <input type="hidden" name="used_qty[]" value="1">
+                            {{-- <input type="text" name="srled[]" list="srled_{{$index+1}}" class="form-control"
                                 placeholder="Select or enter a new sr no, Small Alpha Plz" required
                                 value="{{$reportitem->sr_no}}">
                             <datalist id="srled_{{$index+1}}">
                                 <option value="{{$reportitem->sr_no}}" selected>{{$reportitem->sr_no}} </option>
-                            </datalist>
+                            </datalist> --}}
+                            <select name="srled[]" class="form-control select2" id="srled_{{$index+1}}" required>
+                                <option value="{{$reportitem->sr_no}}" selected>{{$reportitem->sr_no}}</option>
+                                <!-- Add more options here if needed -->
+                            </select>
                             @else
                             <input type="hidden" name="srled[]" value="0">
                             <input type="number" id="used_qty_{{$index+1}}" value="{{$reportitem->used_qty}}"
@@ -260,5 +281,7 @@
             @endif
         </div>
         <button type="button" id="submit-button" class="btn btn-success">SUBMIT</button>
+
 </div>
+
 @endsection

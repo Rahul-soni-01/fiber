@@ -1,16 +1,16 @@
 @extends('demo')
-@section('title', 'Report')
+@section('title', 'Report Type')
 @section('content')
-<h1>Report</h1>
+<h1>Report Type</h1>
 <div class="text-white">
     @if ($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div style="color: red;">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
     {{-- <p>New reports Fillter.</p>
     <label class="switch">
@@ -28,7 +28,6 @@
                     <th>Type</th>
                     <th>Total Qty.</th>
                     <th>Action</th>
-                </tr>
             </thead>
             <tbody>
                 @foreach($types as $key => $type)

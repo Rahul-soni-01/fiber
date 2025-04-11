@@ -1,7 +1,7 @@
 @extends('demo')
 @section('title', 'Dashboard')
-
 @section('content')
+
 <div class="container py-4">
     <div class="row g-4">
         <!-- Sales Card -->
@@ -19,7 +19,7 @@
                             $sum += $sale->amount;
                         }
                     @endphp
-                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5"><i class="fa fa-inr" aria-hidden="true"></i>{{ number_format($sum, 2) }}</p>
                     <a href="{{route('sale.index')}}" class="text-dark"><i class="fa fa-eye"></i> Details</a>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                             $sum += $purchase->inr_amount;
                         }
                     @endphp
-                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5"><i class="fa fa-inr" aria-hidden="true"></i>{{ number_format($sum, 2) }}</p>
                     <a href="{{route('inward.index')}}" class="text-dark"><i class="fa fa-eye"></i> Details</a>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="ms-md-3 mt-3 mt-md-0">
                     <h5 class="fw-semibold text-dark">Today's New Reports</h5>
-                    <p class="text-muted h5">{{ $newreports->count() }}</p>
+                    <p class="text-muted h5">{{ $repairreports->count() }}</p>
                     <a href="{{route('report.index')}}" class="text-dark"><i class="fa fa-eye"></i> Details</a>
                 </div>
             </div>
@@ -68,7 +68,8 @@
                 </div>
                 <div class="ms-md-3 mt-3 mt-md-0">
                     <h5 class="fw-semibold text-dark">Today's Repair Reports</h5>
-                    <p class="text-muted h5">{{ $repairreports->count() }}</p>
+                    <p class="text-muted h5">{{ $newreports->count() }}</p>
+                    <a href="{{route('report.index')}}" class="text-dark"><i class="fa fa-eye"></i> Details</a>
                 </div>
             </div>
         </div>
@@ -88,7 +89,7 @@
                             $sum += $supplier_payment->amount_paid;
                         }
                     @endphp
-                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5"><i class="fa fa-inr" aria-hidden="true"></i>{{ number_format($sum, 2) }}</p>
                 </div>
             </div>
         </div>
@@ -108,7 +109,7 @@
                             $sum += $customer_payment->amount_paid;
                         }
                     @endphp
-                    <p class="text-muted h5">{{ number_format($sum, 2) }}</p>
+                    <p class="text-muted h5"><i class="fa fa-inr" aria-hidden="true"></i>{{ number_format($sum, 2) }}</p>
                 </div>
             </div>
         </div>

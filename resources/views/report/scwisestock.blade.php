@@ -1,12 +1,12 @@
 @extends('demo')
-@section('title', 'Report')
+@section('title', 'Report Stock')
 @section('content')
 
 <div class="container">
      <h2>Stock Report for {{ $subcategory->sub_category_name }}</h2> <!-- Display subcategory name -->
  
      <!-- Purchase Table -->
-     <h4 class="bg-dark d-flex justify-content-center">Purchase Summary</h4>
+     <h4 class="d-flex justify-content-center">Purchase Summary</h4>
      <table class="table text-white">
          <thead class="bg-dark">
              <tr>
@@ -32,19 +32,18 @@
      </table>
  
      <!-- Stock Table -->
-     <h4 class="bg-dark d-flex justify-content-center">Stock Summary</h4>
+     <h4 class="d-flex justify-content-center">Stock Summary</h4>
      <table class="table text-white">
          <thead class="bg-dark">
              <tr>
                  <th>SCID</th>
                  <th>Total Stock Qty</th>
-                 <th>Qty Status 0</th>
-                 <th>Qty Status 1</th>
+                 <th>Not Used</th>
+                 <th>Used</th>
              </tr>
          </thead>
          <tbody>
              @foreach($stockResults as $stock)
-             {{-- {{ dd($stock);}} --}}
                  <tr>
                      <td>{{ $stock->subCategory->sub_category_name }}</td>
                      <td>{{ $stock->total_qty }}</td>
@@ -56,7 +55,7 @@
      </table>
  
      <!-- Report Table -->
-     <h4 class="bg-primary d-flex justify-content-center">Report Summary</h4>
+     <h4 class="d-flex justify-content-center">Report Summary</h4>
      <table class="table text-white">
          <thead class="bg-dark">
              <tr>
@@ -69,15 +68,20 @@
          </thead>
          <tbody>
              @foreach($reportResults as $report)
+             {{-- {{ dd($report);}} --}}
                  <tr>
                      <td>{{ $report->tbl_sub_category->sub_category_name }}</td>
                      <td>{{ $report->total_count }}</td>
                      <td>
-                        @foreach(explode(',', $report->report_ids) as $report_id)
-                            <a href="{{ route('report.show', $report_id) }}" class="btn btn-sm btn-primary">
-                                <i class="ri-eye-fill"></i> {{ $report_id }}
-                            </a>
-                        @endforeach
+                        @foreach($report->report_ids as $index => $reportData)
+                        <a href="{{ route('report.show', $reportData['id']) }}" class="btn btn-sm mt-1 btn-primary">
+                            <i class="ri-eye-fill"></i> {{ $reportData['sr_no_fiber'] }}
+                        </a>
+                        @if(($index + 1) % 4 === 0)  <!-- Break after every 4 items -->
+                        <br>
+                        @endif
+
+                    @endforeach
                     </td>
                     
                      <td>{{ $report->total_used_stock }}</td>

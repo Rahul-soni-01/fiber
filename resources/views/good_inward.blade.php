@@ -1,8 +1,8 @@
 @extends('demo')
 @section('title', 'Good Inwards')
-
 @section('content')
 <h1>Good Inwards</h1>
+<a href="{{ route('inward.index') }}" class="btn btn-primary mb-3">Show Inwards</a>
 <form action="{{route('inward.good')}}" method="post">
     @csrf
     @if ($errors->any())
@@ -21,7 +21,6 @@
             <div class="col">Date</div>
             <div class="col">Party Name</div>
         </div>
-
         <div class="row g-3">
             <!-- Added g-3 for spacing -->
             <div class="col-md-6 col-lg-3">
@@ -57,12 +56,9 @@
                 </select>
             </div>
         </div>
-
-
         <!-- Product Details Section -->
         <div class="cus-container mt-2">
             <h1>Product Details</h1>
-
             <div class="row custom-row g-2 align-items-center">
                 <!-- Category Name -->
                 <div class="col custom-col">
@@ -74,7 +70,6 @@
                         @endforeach
                     </select>
                 </div>
-
                 <!-- Sub Category Name -->
                 <div class="col custom-col">
                     <label for="data[0][scname]" class="form-label" style="white-space:nowrap;">Sub Category </label>
@@ -86,63 +81,54 @@
                         @endforeach
                     </select>
                 </div>
-
                 <!-- Unit -->
                 <div class="col custom-col">
                     <label for="data[0][unit]" class="form-label">Unit</label>
                     <select id="data[0][unit]" name="unit[]" class="form-control">
                         <option value="">Select</option>
-                        <option value="Pic">Pic</option>
+                        <option value="Pic">Pcs</option>
                         <option value="Mtr">Mtr</option>
                     </select>
                 </div>
-
                 <!-- Quantity -->
                 <div class="col custom-col">
                     <label for="data[0][qty]" class="form-label">Qty</label>
                     <input type="number" id="data[0][qty]" name="qty[]" class="form-control" placeholder="Quantity"
                         onchange="total()">
                 </div>
-
                 <!-- Rate -->
                 <div class="col custom-col">
                     <label for="data[0][rate]" class="form-label">Rate</label>
                     <input type="number" id="data[0][rate]" name="rate[]" class="form-control" placeholder="Rate"
                         onchange="total()">
                 </div>
-
                 <!-- Tax Percentage -->
                 <div class="col custom-col">
                     <label for="data[0][p_tax]" class="form-label">Tax(%)</label>
                     <input type="number" id="data[0][p_tax]" name="p_tax[]" step="0.01" placeholder="Tax"
                         class="form-control" onchange="total()" value="0">
                 </div>
-
                 <!-- Tax Amount -->
                 <div class="col custom-col">
                     <label for="data[0][tax]" class="form-label">Tax</label>
                     <input type="number" id="data[0][tax]" name="tax[]" step="0.01" class="form-control" disabled>
                 </div>
-
                 <!-- Total Amount -->
                 <div class="col custom-col">
                     <label for="data[0][total]" class="form-label">Total</label>
                     <input type="number" id="data[0][total]" name="total[]" step="0.01" placeholder="Total"
                         class="form-control">
                 </div>
-
                 <div class="col custom-col">
+                    <label for="" class="form-label"></label>
                     <button type="button" class="btn btn-primary"
                         onclick="BtnAdd({{ json_encode($inwards)}},{{ json_encode($items)}})">Add</button>
                 </div>
             </div>
-
             <div class="" id="TBody"></div>
         </div>
-
         <!-- Summary Section -->
         <div class="container">
-
             <div class="row mt-3">
                 <div class="col-sm-2 offset-sm-8">Amount ($/¥)</div>
                 <div class="col-sm-2">
@@ -150,7 +136,6 @@
                         class="form-control" onchange="rate()">
                 </div>
             </div>
-
             <div class="row mt-3">
                 <div class="col-sm-2 offset-sm-8">Rate (₹)</div>
                 <div class="col-sm-2">
@@ -200,7 +185,6 @@
                     </select>
                 </div>
             </div>
-
             <div class="row mt-3">
                 <div class="col-sm-2 offset-sm-8">Due/Reamining Amount</div>
                 <div class="col-sm-2"><input type="number" id="remaining_amount" step="0.01" value="0"
@@ -212,7 +196,7 @@
                         readonly></div>
             </div>
             <div class="row mt-3">
-                <div class="col-sm-2 offset-sm-11">
+                <div class="col-sm-2 offset-sm-10">
                     <button class="btn btn-success" type="submit">Save</button>
                 </div>
             </div>

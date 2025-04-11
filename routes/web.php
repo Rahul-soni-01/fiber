@@ -194,7 +194,6 @@ Route::middleware('auth')->group(function () {
     //get sub category wise sr no report list
     Route::post('/get-sc-sr-no', [ReportController::class, 'get_sc_sr_no'])->name('report.get_sc_sr_no');
 
-
     // Route::get('report', [ReportController::class, 'index'])->name('report.index');
     Route::get('report', [ReportController::class, 'indexNew'])->name('report.index');
     Route::get('report-new', [ReportController::class, 'ReportNew'])->name('report.new');
@@ -213,6 +212,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/report-{sale_id}', [ReportController::class, 'destroy'])->name('report.destroy');
     
     Route::get('/serial-history', [SaleController::class, 'history'])->name('serial.history');
+
+    // Section 
+    Route::get('mainstore-section', [ReportController::class, 'mainstore'])->name('mainstore.section');
+    Route::get('manufactur-section', [ReportController::class, 'manufactur'])->name('Manufactur.section');
+    Route::get('repair-section', [ReportController::class, 'repair'])->name('Repair.section');
+    Route::get('baddesk-section', [ReportController::class, 'baddesk'])->name('baddesk.section');
+    Route::get('sell-section', [ReportController::class, 'sell'])->name('sell.section');
+
+    Route::get('baddesk-create-{id}', [PermissionController::class, 'create'])->name('baddesk.create');
+    Route::post('baddesk-store', [PermissionController::class, 'store'])->name('baddesk.store');
     
     // Sale Crud
     Route::get('sale-return-show-{sale_id}', [SaleController::class, 'return_show'])->name('sale.return.show');
@@ -221,19 +230,30 @@ Route::middleware('auth')->group(function () {
     Route::post('sale-return-store', [SaleController::class, 'return_store'])->name('sale.return.store');
     Route::get('sale', [SaleController::class, 'index'])->name('sale.index');
     Route::get('sale-create', [SaleController::class, 'create'])->name('sale.create');
+    Route::get('sale-repair-create', [SaleController::class, 'repaircreate'])->name('sale.repair.create');
     Route::post('sale-store', [SaleController::class, 'store'])->name('sale.store');
     Route::get('show-sale-{sale_id}', [SaleController::class, 'show'])->name(('sale.show'));
     Route::get('edit-sale-{sale_id}', [SaleController::class, 'edit'])->name(('sale.edit'));
     Route::put('/sale-{id}', [SaleController::class, 'update'])->name('sale.update');
     Route::delete('/sale-{sale_id}', [SaleController::class, 'destroy'])->name('sale.destroy');
-
+    
+    Route::get('/sale-convert-{sale_id}', [SaleController::class, 'edit'])->name('sale.convert');
+    Route::get('/standby-return-{sale_id}', [SaleController::class, 'standby'])->name('standby.return');
+    Route::put('/standby-return-store-{sale_id}', [SaleController::class, 'standbystore'])->name('standby.update');
+    Route::get('/replacement-create', [SaleController::class, 'replacement'])->name('replacement.create');
+    Route::get('/replacement-item-{id}', [SaleController::class, 'ItemReplacement'])->name('item-replacement');
+    Route::post('/replacement-store', [SaleController::class, 'replacementstore'])->name('item-replacement.store');
+    
     Route::post('/get-invoice-sell-details', [SaleController::class, 'getInvoiceDetails'])->name('invoice.sell.details');
 
     // invoice to tbl stock 
     Route::get('add_sr_no', [TblPurchaseController::class, 'add_sr_no'])->name('add_sr_no');
     Route::post('add_sr_no_store', [TblStockController::class, 'store'])->name('add_sr_no_store');
-    // Customer Crud
+    
+    Route::get('sr-no-stock', [TblStockController::class, 'sr_no'])->name('sr_no.index');
+    Route::post('update-status', [TblStockController::class, 'update'])->name('update.status');
 
+    // Customer Crud
     Route::get('customer-create', [TblCustomerController::class, 'create'])->name('customer.create');
     Route::get('customer', [TblCustomerController::class, 'index'])->name('customer.index');
     Route::post('customer-store', [TblCustomerController::class, 'store'])->name('customer.store');

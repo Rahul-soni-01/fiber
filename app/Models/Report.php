@@ -15,31 +15,7 @@ class Report extends Model
         'sr_no_fiber',
         'm_j',
         'type',
-        'sr_card',
-        // 'sr_led',
-        'sr_isolator',
-        'sr_aom_qswitch',
-        'amp_aom_qswitch',
-        'volt_aom_qswitch',
-        'watt_aom_qswitch',
-        'sr_cavity_nani',
-        'sr_cavity_moti',
-        'sr_combiner_3_1',
-        'amp_combiner_3_1',
-        'volt_combiner_3_1',
-        'watt_combiner_3_1',
-        'sr_couplar_2_2',
-        'amp_couplar_2_2',
-        'volt_couplar_2_2',
-        'watt_couplar_2_2',
-        'sr_hr',
-        'sr_fiber_nano',
-        'sr_fiber_moto',
-        'output_amp',
-        'output_volt',
-        'output_watt',
-        'nani_cavity',
-        'final_cavity',
+        'section',
         'note1',
         'note2',
         'remark',
@@ -68,4 +44,8 @@ class Report extends Model
         return $this->belongsTo(Tbltype::class, 'type', 'id');
     }
 
+    public function reportItems()
+    {
+        return $this->hasMany(TblReportItem::class, 'report_id', 'id');
+    }
 }

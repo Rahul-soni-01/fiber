@@ -225,7 +225,6 @@
                 <a class="sub-btn" id="sub-btn-show"><i class="ri-file-chart-line"></i>Report <i
                         class="ri-arrow-down-s-line"></i></a>
                 <ul class="sub-menu">
-                    <li><a href="{{ route('invoices.index') }}" id="view" class="sub-item">Select Invoice</a></li>
                     @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user' || auth()->user()->type ===
                     'account' || auth()->user()->type === 'cavity' || auth()->user()->type === 'electric' )
                     <li><a href="{{ route('report.index') }}" id="view" class="sub-item">Show Report</a></li>
