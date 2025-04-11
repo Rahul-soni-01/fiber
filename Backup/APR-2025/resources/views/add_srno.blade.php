@@ -134,20 +134,43 @@ isset($getsr_nos[0]) && $getsr_nos[0]->qty < $totalQty) || $getsr_nos->isEmpty()
         };
     </script>
     @endif
-    @foreach($getsr_nos as $getsr_no)
-    <div class="row">
-        <div class="col-md-3 mt-3 offset-md-2">
-            Serial No
-        </div>
-        <div class="col mt-3">
-            {{ $getsr_no->serial_no}}
-        </div>
-        <div class="col mt-3">
-            Qty.
-        </div>
-        <div class="col mt-3">
-            {{ $getsr_no->qty}}
-        </div>
+    @if($getsr_nos->count())
+    <div class="table-responsive mt-3">
+        <table class="table text-white table-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Serial No</th>
+                    <th>Qty</th>
+                    <th>Used</th>
+                    <th>Dead</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($getsr_nos as $index => $getsr_no)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $getsr_no->serial_no }}</td>
+                    <td>{{ $getsr_no->qty }}</td>
+                    <td>{{ $getsr_no->status == 0 ? 'No Use' : ($getsr_no->status == 1 ? 'Used' : 'Unknown') }}</td>
+                    <td>
+                        <div class="me-2">
+                            @if($getsr_no->dead_status == 0)
+                            <span class="badge bg-success">Active</span>
+                            @elseif($getsr_no->dead_status == 1)
+                            <span class="badge bg-danger">Dead</span>
+                            @else
+                            <span class="badge bg-secondary">Unknown</span>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    @endforeach
+    @else
+    <p class="text-muted">No serial numbers found.</p>
+    @endif
+
     @endsection

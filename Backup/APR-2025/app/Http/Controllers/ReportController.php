@@ -365,15 +365,14 @@ class ReportController extends Controller
         ->where(function($query) {
             $query->where('part', 0)
                   ->orWhere(function($q) {
-                      $q->where('part', 1)
-                        ->where('f_status', 0);
+                      $q->where('part', 1);
+                        // ->where('f_status', 0);
                   });
         })
         ->get()
         ->groupBy('sr_no_fiber'); // Ensures unique sr_no_fiber values
 
         // dd($reports);
-
         return view('sections.repair', compact('reports'));
     }
 
@@ -557,7 +556,7 @@ class ReportController extends Controller
 
     public function stockReport(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         $validator = Validator::make(
             $request->all(),
             [
@@ -624,7 +623,7 @@ class ReportController extends Controller
         $report->type = $request->input('type');
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
-        $report->type = $request->input('type');
+        $report->temp = $request->input('temp');
         $report->sale_status = 0;
         if($request->input('part') == 1){
             $report->section = 2;
@@ -695,10 +694,10 @@ class ReportController extends Controller
                                 'cid' => $cid,
                                 'scid' => $request->sub_category[$index],
                                 'serial_no' => $serial_no,
-                                'qty' => $invoice_data->qty,
+                                'qty' => 1,
                                 'price' => $invoice_data->total,
                                 'priceofUnit' => $invoice_data->price,
-                                'status' => 0,
+                                'status' => 1,
                             ]);
                             $amount +=  $invoice_data->price;
                             $TblStockinsertedIds[] = $newStock->id;
@@ -1007,10 +1006,10 @@ class ReportController extends Controller
                                         'cid' => $cid,
                                         'scid' => $request->sub_category[$index],
                                         'serial_no' => $serial_no,
-                                        'qty' => $invoice_data->qty,
+                                        'qty' => 1,
                                         'price' => $invoice_data->total,
                                         'priceofUnit' => $invoice_data->price,
-                                        'status' => 0,
+                                        'status' => 1,
                                         'dead_status' => $dead,
                                     ]);
                                     $TblStockinsertedIds[] = $newStock->id;

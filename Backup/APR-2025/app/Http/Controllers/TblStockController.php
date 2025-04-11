@@ -24,9 +24,11 @@ class TblStockController extends Controller
             'price' => 'required|numeric',
             'sr_no' => 'required',
             'serial_no' => ['nullable', 'array'],
-            'serial_no.*' => ['nullable', 'regex:/^[A-Za-z]{6}\d{4}$/'],
+            // 'serial_no.*' => ['nullable', 'regex:/^[A-Za-z]{6}\d{4}$/'],
+            'serial_no.*' => ['nullable', 'string'], // Just ensure it's a string
+
         ], [
-            'serial_no.*.regex' => 'Each serial number must be 6 alphabetic characters followed by 4 numeric characters.',
+            'serial_no.*.regex' => 'Each Serial Number Must Be String Format.',
         ]);
 
         if ($validator->fails()) {
@@ -70,10 +72,10 @@ class TblStockController extends Controller
             }
            
             foreach ($serial_no_list as $serial) {
-                if (!preg_match('/^[A-Za-z]{6}\d{4}$/', $serial)) {
-                    $errors['sr_no'] = 'Each serial number must have exactly 6 letters followed by 4 digits (e.g., ABCDEF1234).';
-                    break;
-                }
+                // if (!preg_match('/^[A-Za-z]{6}\d{4}$/', $serial)) {
+                //     $errors['sr_no'] = 'Each serial number must have exactly 6 letters followed by 4 digits (e.g., ABCDEF1234).';
+                //     break;
+                // }
             
                 // Check uniqueness in tbl_stock table
                 if (\DB::table('tbl_stock')->where('serial_no', $serial)->exists()) {
@@ -118,7 +120,8 @@ class TblStockController extends Controller
                 ]);
             } 
         }
-        return redirect()->route('report.stock');
+        // return redirect()->route('report.stock');
+        return back()->with('success', 'Stock Added successfully!');
 
     }
 

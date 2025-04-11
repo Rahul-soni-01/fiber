@@ -1,6 +1,7 @@
 @extends('demo')
 @section('title', 'Show Inward')
 @section('content')
+<a href="{{ route('inward.good.view') }}" class="btn btn-primary mb-3">Add Inwards</a>
 
 <h1>Show Purchase</h1>
 <form action="{{ route('inward.search') }}" method="get">

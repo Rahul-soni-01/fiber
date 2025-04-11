@@ -2,6 +2,7 @@
 @section('title', 'Good Inwards')
 @section('content')
 <h1>Good Inwards</h1>
+<a href="{{ route('inward.index') }}" class="btn btn-primary mb-3">Show Inwards</a>
 <form action="{{route('inward.good')}}" method="post">
     @csrf
     @if ($errors->any())

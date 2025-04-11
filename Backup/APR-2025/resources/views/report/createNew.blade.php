@@ -122,10 +122,10 @@
                 </div>
                 <!-- Type Dropdown -->
                 <div class="col-12 col-md-3">
-                    <select id="type" name="type" required class="form-control">
+                    <select id="type" name="type" data-type="{{ json_encode($all_sub_categories) }}" required class="form-control">
                         <option value="" disabled selected>Select Type</option>
                         @foreach($types as $type)
-                        <option value="{{$type->id}}">{{$type->name}}</option>
+                        <option value="{{$type->id}}" data-value="{{$type->name}}">{{$type->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -160,7 +160,7 @@
                     </div>
                     <!-- AMP. -->
                     <div class="col-12 col-md-2">
-                        <h5>AMP.</h5>
+                        <h5>WATT</h5>
                     </div>
                     <!-- VOLT -->
                     <div class="col-12 col-md-2">
@@ -168,7 +168,7 @@
                     </div>
                     <!-- WATT -->
                     <div class="col-12 col-md-3">
-                        <h5>WATT</h5>
+                        <h5>AMP.</h5>
                     </div>
                     <div class="col-12 col-md-2">
                         <h5>Action</h5>
