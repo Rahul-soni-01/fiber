@@ -26,6 +26,8 @@ use App\Http\Controllers\GstPdfTableController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PdfGeneratorController;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\ManufactureReportLayoutController;
+
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
 
@@ -270,7 +272,15 @@ Route::middleware('auth')->group(function () {
     Route::put('gst-pdf/{id}', [GstPdfTableController::class, 'update'])->name('gst-pdf.update');
     Route::get('gst-pdf-show-{id}', [GstPdfTableController::class, 'show'])->name(('gst-pdf.show'));
 
-
+    // Route::prefix('layouts')->name('layouts.')->group(function () {
+        Route::get('layouts', [ManufactureReportLayoutController::class, 'index'])->name('layouts.index');
+        Route::get('layouts-create', [ManufactureReportLayoutController::class, 'create'])->name('layouts.create');
+        Route::post('/layouts', [ManufactureReportLayoutController::class, 'store'])->name('layouts.store');
+        Route::get('layouts-{id}-edit', [ManufactureReportLayoutController::class, 'edit'])->name('layouts.edit');
+        Route::put('layouts-{id}', [ManufactureReportLayoutController::class, 'update'])->name('layouts.update');
+        Route::get('layouts-preview-{id}', [ManufactureReportLayoutController::class, 'show'])->name('layouts.show');
+        Route::delete('layouts-{id}', [ManufactureReportLayoutController::class, 'destroy'])->name('layouts.destroy');
+    // });
 });
 
 Route::get('/unauthorized', function () {

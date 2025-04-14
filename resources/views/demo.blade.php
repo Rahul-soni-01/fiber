@@ -147,10 +147,10 @@
             <button class="navbar-toggler d-block" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
                 <i class="fa-solid fa-angles-right"></i>
             </button>
-            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <!-- Main Menu -->
+            {{-- <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <!-- Main Menu -->
             <div class="collapse navbar-collapse bg-dark" id="mainNavbar">
                 <ul class="navbar-nav me-auto">
                     <!-- Company -->
@@ -352,7 +352,7 @@
                         </ul>
                     </li>
                 </ul>
-            </div>
+            </div> --}}
 
             <!-- ADMIN & LogOut Button -->
             <div class="ms-auto d-flex align-items-center justify-content-center">
@@ -516,6 +516,21 @@
                                     <a href="{{ route('inward.payment.index') }}" class="nav-link">Show Payment</a>
                                 </li> --}}
                             </ul>
+                        </div>
+                    </li>
+                     <!-- Report Layout-->
+                    <li class="nav-item" id="Inward">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#ReportLayout">
+                            <i class="ri-download-line"></i> Report Layout <i class="ri-arrow-down-s-line float-end"></i>
+                        </a>
+                        <div class="collapse" id="ReportLayout">
+                            <ul class="nav flex-column ms-3">
+                                <li class="nav-item nav-sub-item" id="add">
+                                    <a href="{{ route('layouts.create') }}" class="nav-link">Add Report Layout</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="view">
+                                    <a href="{{ route('layouts.index') }}" class="nav-link">Show Report Layout</a>
+                                </li>
                         </div>
                     </li>
                     <!-- Report -->
