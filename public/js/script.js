@@ -335,6 +335,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    const readonlyFields = document.querySelectorAll('.readonly-field');
+
+    readonlyFields.forEach(field => {
+        field.addEventListener('click', function(e) {
+            e.preventDefault();
+            showToast('You cannot change this field');
+        });
+        
+        field.addEventListener('keydown', function(e) {
+            e.preventDefault();
+            showToast('You cannot change this field');
+        });
+    });
+
+    function showToast(message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'warning',
+            title: message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+    }
 });
 
 

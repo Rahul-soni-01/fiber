@@ -45,30 +45,49 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody id="field-body">
+           <tbody id="field-body">
                 @php
                 $defaultFields = [
-                ['field_key' => 'part', 'label' => 'Part'],
-                ['field_key' => 'temp_no', 'label' => 'Temp no.'],
-                ['field_key' => 'employee_name', 'label' => 'EMPLOYEE NAME'],
-                ['field_key' => 'sr_fiber', 'label' => 'SR (FIBER)'],
-                ['field_key' => 'mj', 'label' => 'M.J'],
-                ['field_key' => 'warranty', 'label' => 'Warranty'],
-                ['field_key' => 'type', 'label' => 'Type'],
+                    ['field_key' => 'part', 'label' => 'Part'],
+                    ['field_key' => 'temp_no', 'label' => 'Temp no.'],
+                    ['field_key' => 'employee_name', 'label' => 'EMPLOYEE NAME'],
+                    ['field_key' => 'sr_fiber', 'label' => 'SR (FIBER)'],
+                    ['field_key' => 'mj', 'label' => 'M.J'],
+                    ['field_key' => 'warranty', 'label' => 'Warranty'],
+                    ['field_key' => 'type', 'label' => 'Type'],
                 ];
                 @endphp
 
-                @foreach ($defaultFields as $index => $field)
+               @php
+                $allFields = array_merge(
+                    $defaultFields,
+                    $sub_categories->map(function($item) {
+                        return [
+                            'is_subcategory' => true,
+                            'id' => $item['id'],
+                            'field_key' => $item['category']['category_name'].' '.$item['sub_category_name'],
+                            'label' => ucwords($item['category']['category_name']).'-'.ucwords($item['sub_category_name'])
+                        ];
+                    })->toArray()
+                );
+                @endphp
+
+                @foreach ($allFields as $index => $field)
                 <tr>
-                    <td><input type="text" name="fields[{{ $index }}][field_key]" class="form-control"
-                            value="{{ $field['field_key'] }}" required></td>
+                    <td>
+                        <input type="text" name="fields[{{ $index }}][field_key]" class="form-control"
+                            value="{{ $field['field_key'] }}" readonly>
+                        @if(isset($field['is_subcategory']))
+                            <input type="hidden" name="fields[{{ $index }}][is_subcategory]" value="{{ $field['id'] }}">
+                            <input type="hidden" name="fields[{{ $index }}][field_key]" class="form-control"
+                            value="{{ $field['id'] }}" required>
+                        @endif
+                    </td>
                     <td><input type="text" name="fields[{{ $index }}][label]" class="form-control"
                             value="{{ $field['label'] }}" required></td>
-                    <td class="text-center"><input type="checkbox" name="fields[{{ $index }}][visible]" value="1"
-                            checked></td>
-                    <td><input type="number" name="fields[{{ $index }}][sort_order]" class="form-control"
-                            value="{{ $index + 1 }}"></td>
-                    <td><button type="button" class="btn btn-danger btn-sm" disabled>X</button></td>
+                    <td class="text-center"><input type="checkbox" name="fields[{{ $index }}][visible]" value="1" checked></td>
+                    <td><input type="number" name="fields[{{ $index }}][sort_order]" class="form-control" value="{{ $index + 1 }}"></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-row" @empty($field['is_subcategory']) disabled @endempty>X</button></td>
                 </tr>
                 @endforeach
             </tbody>
@@ -122,7 +141,7 @@
 {{-- Script to handle dynamic field rows --}}
 
 <script>
-    let fieldIndex = {{ count($defaultFields) }};
+    let fieldIndex = {{ count($defaultFields) }}+ {{ count($sub_categories)}};
  
     document.getElementById('add-field').addEventListener('click', function () {
          const tbody = document.getElementById('field-body');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ManufactureReportLayout;
 use App\Models\tbl_user;
+use App\Models\tbl_sub_category;
 use App\Models\ManufactureReportLayoutField;
 
 class ManufactureReportLayoutController extends Controller
@@ -16,17 +17,18 @@ class ManufactureReportLayoutController extends Controller
 
     public function create()
     {
-        return view('layouts.create');
+        $sub_categories = tbl_sub_category::with('category')->get();
+        return view('layouts.create',compact('sub_categories'));
     }
 
     public function store(Request $request)
     {
 
-        // dd(Auth()->user()->id);
+        // dd($request->all());
         $request->validate([
             'name' => 'required|string|max:255',
             'fields' => 'required|array|min:1',
-            'fields.*.field_key' => 'required|string|max:255',
+            'fields.*.field_key' => 'required|max:255',
             'fields.*.label' => 'required|string|max:255',
             'fields.*.sort_order' => 'nullable|integer',
         ]);
@@ -53,8 +55,10 @@ class ManufactureReportLayoutController extends Controller
 
     public function edit($id)
     {
+        $sub_categories = tbl_sub_category::with('category')->get();
         $layout = ManufactureReportLayout::with('fields')->findOrFail($id);
-        return view('layouts.edit', compact('layout'));
+        // dd($layout, $sub_categories);
+        return view('layouts.edit', compact('layout','sub_categories'));
     }
     public function show($id)
     {
