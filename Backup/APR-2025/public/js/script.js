@@ -334,7 +334,31 @@ document.addEventListener('DOMContentLoaded', function () {
             mainContent.classList.add('col-lg-10', 'col-md-9', 'col-sm-12');
         }
     });
+    const readonlyFields = document.querySelectorAll('.readonly-field');
 
+    readonlyFields.forEach(field => {
+        field.addEventListener('click', function(e) {
+            e.preventDefault();
+            showToast('You cannot change this field');
+        });
+        
+        field.addEventListener('keydown', function(e) {
+            e.preventDefault();
+            showToast('You cannot change this field');
+        });
+    });
+
+    function showToast(message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'warning',
+            title: message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+    }
 });
 
 
@@ -453,7 +477,9 @@ $(document).ready(function () {
             const dataValue = $('#type').find('option:selected').data('value');
             // console.log("Raw value:", dataValue, typeof dataValue); // Always a string initially
             if (part == 0) {
-                switch (dataValue) {
+                window.location.href = '?type=' + encodeURIComponent(type);
+
+               /* switch (dataValue) {
                     case 15:
                         $.each(allSubCategories, function (index, allSubCategory) {
                             let dynamicContent;
@@ -793,7 +819,7 @@ $(document).ready(function () {
                         // Handle other cases
                         console.log("No specific handler for dataValue:", dataValue);
                         // Your default logic here
-                }
+                }*/
             }
         }
     });

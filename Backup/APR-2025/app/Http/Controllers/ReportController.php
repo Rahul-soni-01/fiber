@@ -22,8 +22,11 @@ use App\Models\SelectedInvoice;
 use App\Models\TblReportItem;
 use App\Models\TblSaleReturn;
 use App\Models\Tbltype;
+use App\Models\ManufactureReportLayout;
+use App\Models\ManufactureReportLayoutField;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+
 
 class ReportController extends Controller
 {
