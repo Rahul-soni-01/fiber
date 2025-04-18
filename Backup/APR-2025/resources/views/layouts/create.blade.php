@@ -32,6 +32,16 @@
             </select>
         </div>
         <div class="mb-3">
+            <label for="name" class="form-label">Select Part</label>
+
+        <select id="part" name="part" required class="form-control">
+            <option value="" selected disabled>Select Part</option>
+            <option value="0">New</option>
+            <option value="1">Repairing</option>
+        </select>
+    </div>
+
+        <div class="mb-3">
             <label for="description" class="form-label">Layout Description</label>
             <textarea name="description" class="form-control" placeholder="Enter description (optional)"></textarea>
         </div>

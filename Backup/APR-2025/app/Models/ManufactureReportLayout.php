@@ -10,6 +10,7 @@ class ManufactureReportLayout extends Model
 
     protected $fillable = [
         'name',
+        'part',
         'type',
         'description',
         'created_by',

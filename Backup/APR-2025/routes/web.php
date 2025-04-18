@@ -48,7 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/websetting', [DepartmentController::class, 'websetting'])->name('websetting');
     Route::post('/websetting-update', [DepartmentController::class, 'updateWebSetting'])->name('websetting.update');
 
-
     Route::get('/datainsert', [TblStockController::class, 'datainsert'])->name('datainsert');
 
     // User Crud
@@ -279,6 +278,7 @@ Route::middleware('auth')->group(function () {
     Route::get('layouts-preview-{id}', [ManufactureReportLayoutController::class, 'show'])->name('layouts.show');
     Route::delete('layouts-{id}', [ManufactureReportLayoutController::class, 'destroy'])->name('layouts.destroy');
 
+    Route::post('get-report-layout', [ManufactureReportLayoutController::class, 'fetch'])->name('get.report.layout');
 
 });
 

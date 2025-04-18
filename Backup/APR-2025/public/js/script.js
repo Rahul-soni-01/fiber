@@ -468,6 +468,7 @@ $(document).ready(function () {
             }
         });
     });
+    
     $('#part, #type').change(function () {
         const part = $('#part').val();
         const type = $('#type').val();
@@ -477,17 +478,75 @@ $(document).ready(function () {
             const dataValue = $('#type').find('option:selected').data('value');
             // console.log("Raw value:", dataValue, typeof dataValue); // Always a string initially
             if (part == 0) {
-                window.location.href = '?type=' + encodeURIComponent(type);
+                // window.location.href = '?type=' + encodeURIComponent(type);
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                $.ajax({
+                    url: '/get-report-layout',
+                    type: 'post',
+                    data: { 
+                        part: part,
+                        type: type,
+                        _token: csrfToken, 
+                    },
+                    success: function (response) {
+                        if (response.status === 200 && response.layout.length > 0) {
+                            let html = '';
+                            response.layout.forEach(function(item) {
+                                // console.log(item);
+                                if (item.fields && Array.isArray(item.fields)) {
+                                    item.fields.forEach(function(field) {
+                                        console.log(field);
+                                        if(field.sub_category){
+                                            if(field.sub_category.sr_no == '1'){
+                                                html += `
+                                              <div class="row mb-1" id="row_${row}">
+                                                <!-- Sub Category -->
+                                                <div class="col-12 col-md-2">
+                                                    <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
+                                                    <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
+                                                    <input type="hidden" name="sr_no_or_not[]" value="1">
+                                                </div>
 
-               /* switch (dataValue) {
-                    case 15:
-                        $.each(allSubCategories, function (index, allSubCategory) {
-                            let dynamicContent;
-                            if (allSubCategory.sr_no == 0) {
-                                dynamicContent = ` <div class="row mt-1" id="row_${row}">
+                                                <!-- Serial No -->
+                                                <div class="col-12 col-md-3">
+                                                    <input type="text" name="srled[]" list="srled_${row}" class="form-control mb-1" placeholder="Select or enter a new SR No" required>
+                                                    <datalist id="srled_${row}">
+                                                        <option value=""></option>
+                                                    </datalist>
+                                                    <input type="hidden" name="used_qty[]" value="1">
+                                                </div>
+
+                                                <!-- WATT -->
+                                                <div class="col-12 col-md-2">
+                                                    <input type="text" id="wattled_${row}" name="wattled[]" class="form-control mb-1" placeholder="Enter WATT">
+                                                </div>
+
+                                                <!-- VOLT -->
+                                                <div class="col-12 col-md-2">
+                                                    <input type="text" id="voltled_${row}" name="voltled[]" class="form-control mb-1" placeholder="Enter VOLT">
+                                                </div>
+
+                                                <!-- AMP + Dead + Delete -->
+                                                <div class="col-12 col-md-3 d-flex align-items-center gap-2">
+                                                    <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">
+                                                    <input type="checkbox" name="dead[]" value="1" class="ms-2" onchange="syncHiddenInput(this, ${row})">
+                                                    <label class="ms-1">Dead</label>
+                                                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
+                                                    <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm ms-2" id="${row}"><i class="ri-delete-bin-fill"></i></button>
+                                                </div>
+                                            </div>
+                                            `;
+                                            }else if(field.sub_category.sr_no == '0'){
+                                                html += `
+                                                <div class="row mb-1" id="row_${row}">
+                                                 <div class="col-12 col-md-2">
+                                                    <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
+                                                    <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
+                                                    <input type="hidden" name="sr_no_or_not[]" value="0">
+                                                </div>
                                                     <input type="hidden" name="sr_no_or_not[]" value="0">
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                                                        <input type="text" list="srled_${row}" class="form-control" placeholder="Enter Quantity" required>
                                                         <datalist id="srled_${row}">
                                                             <option value=""></option>
                                                         </datalist>
@@ -495,7 +554,6 @@ $(document).ready(function () {
                                                         <input type="hidden" name="used_qty[]" class="form-control" placeholder="Enter Qty" value="1">
                                                     </div>
                                                     
-
                                                     <div class="col-12 col-md-2">                     
                                                         <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
                                                     </div>
@@ -506,321 +564,41 @@ $(document).ready(function () {
 
                                                         <input type="hidden" id="wattled_${row}" name="wattled[]" value="">
                                                     </div>
-                                                    <div class="col-12 col-md-2">
-                                                            <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
+                                                    <div class="col-12 col-md-3 d-flex justify-content-md-end gap-2 align-items-center">
+                                                    <input type="text" id="ampled_${row}" class="form-control d-none" placeholder="Enter AMP">
+                                                        <input type="checkbox" name="dead[]" value="1" class="ms-2" onchange="syncHiddenInput(this, ${row})">
 
-                                                        <lable class="m-2">Dead</lable>
+                                                        <lable class="ms-2">Dead</lable>
+                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm ms-2" id="${row}"><i class="ri-delete-bin-fill"></i></button>
                                                     </div>
-                                                    <div class="col-12 col-md-2 text-right">
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            } else {
-                                dynamicContent = `<div class="row" id="row_${row}">
-                                                    <input type="hidden" name="sr_no_or_not[]" value="1">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                                        <datalist id="srled_${row}">
-                                                            <option value=""></option>
-                                                        </datalist>
-                                                        <input type="hidden" name="used_qty[]" class="form-control" value="1">
-                                                    </div>
+                                                </div>
+                                                `;
+                                            }
+                                        }
+                                        else{
+                                            
+                                        }
+                                        row++;
+                                    });
+                                }
+                            });
+                            // if (subcategories && Array.isArray(subcategories)) {
+                            //     subcategories.forEach(sub_category => {
+                            //         $(`#subcategory_${row}`).append(`<option value="${sub_category.id}" data-unit="${sub_category.unit}" data-sr_no="${sub_category.sr_no}">${sub_category.category.category_name} - ${sub_category.sub_category_name}</option>`);
+                            //     });
+                            // }
+                          
+                            $('#TBody').html(html);
+                        }else {
+                            $('#TBody').html('<p class="text-danger">No layout found for this selection.</p>');
+                        }
+                    },
+                    error: function () {
+                        $('#TBody').html('<p class="text-danger">Failed to load layout.</p>');
+                    }
+                });
 
-                                                    <div class="col-12 col-md-2">
-
-                                                    <input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT">
-                                                    </div>
-
-                                                    <div class="col-12 col-md-2">
-                                                        <input type="text" id="voltled_${row}" name="voltled[]" class="form-control" placeholder="Enter VOLT">
-                                                    </div>
-                                                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-
-                                                    <div class="col-12 col-md-5 d-flex justify-content-between">                                                  
-                                                        <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">                                                    
-                                                        <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
-                                                        
-                                                        <lable class="m-2">Dead</lable>
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            }
-                            $('#TBody').append(`
-                                <div class="row mb-3 align-items-center" id="row_${row}">
-                                    <!-- Select Dropdown -->
-                                    <div class="col-12 col-md-2 d-flex">
-                                        <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub ml-2 form-control">
-                                        <option value="${allSubCategory.id}" selected>${allSubCategory.sub_category_name}</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <!-- Dynamic Content -->
-                                    <div class="col-12 col-md-10" id="col_${row}">
-                                   ${dynamicContent}
-                                    </div>
-                                </div>
-                              `);
-                            row++;
-                        });
-                        break;
-
-                    case 18:
-                        $.each(allSubCategories, function (index, allSubCategory) {
-                            let dynamicContent;
-                            if (allSubCategory.sr_no == 0) {
-                                dynamicContent = ` <div class="row mt-1" id="row_${row}">
-                                                    <input type="hidden" name="sr_no_or_not[]" value="0">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                                        <datalist id="srled_${row}">
-                                                            <option value=""></option>
-                                                        </datalist>
-                                                        <input type="hidden" name="srled[]" value="0">
-                                                        <input type="hidden" name="used_qty[]" class="form-control" placeholder="Enter Qty" value="1">
-                                                    </div>
-                                                    
-
-                                                    <div class="col-12 col-md-2">                     
-                                                        <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-                                                    </div>
-                                                    <div class="col-12 col-md-2">
-                                                        <input type="hidden" id="ampled_${row}" name="ampled[]" value="">
-
-                                                        <input type="hidden" id="voltled_${row}" name="voltled[]" value="">
-
-                                                        <input type="hidden" id="wattled_${row}" name="wattled[]" value="">
-                                                    </div>
-                                                    <div class="col-12 col-md-2">
-                                                            <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
-
-                                                        <lable class="m-2">Dead</lable>
-                                                    </div>
-                                                    <div class="col-12 col-md-2 text-right">
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            } else {
-                                dynamicContent = `<div class="row" id="row_${row}">
-                                                    <input type="hidden" name="sr_no_or_not[]" value="1">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                                        <datalist id="srled_${row}">
-                                                            <option value=""></option>
-                                                        </datalist>
-                                                        <input type="hidden" name="used_qty[]" class="form-control" value="1">
-                                                    </div>
-
-                                                    <div class="col-12 col-md-2">
-
-                                                    <input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT">
-                                                    </div>
-
-                                                    <div class="col-12 col-md-2">
-                                                        <input type="text" id="voltled_${row}" name="voltled[]" class="form-control" placeholder="Enter VOLT">
-                                                    </div>
-                                                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-
-                                                    <div class="col-12 col-md-5 d-flex justify-content-between">                                                  
-                                                        <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">                                                    
-                                                        <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
-                                                        
-                                                        <lable class="m-2">Dead</lable>
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            }
-                            $('#TBody').append(`
-                                <div class="row mb-3 align-items-center" id="row_${row}">
-                                    <!-- Select Dropdown -->
-                                    <div class="col-12 col-md-2 d-flex">
-                                        <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub ml-2 form-control">
-                                        <option value="${allSubCategory.id}" selected>${allSubCategory.sub_category_name}</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <!-- Dynamic Content -->
-                                    <div class="col-12 col-md-10" id="col_${row}">
-                                   ${dynamicContent}
-                                    </div>
-                                </div>
-                              `);
-                            row++;
-                        });
-                        break;
-
-                    case 21:
-                        $.each(allSubCategories, function (index, allSubCategory) {
-                            let dynamicContent;
-                            if (allSubCategory.sr_no == 0) {
-                                dynamicContent = ` <div class="row mt-1" id="row_${row}">
-                                                    <input type="hidden" name="sr_no_or_not[]" value="0">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                                        <datalist id="srled_${row}">
-                                                            <option value=""></option>
-                                                        </datalist>
-                                                        <input type="hidden" name="srled[]" value="0">
-                                                        <input type="hidden" name="used_qty[]" class="form-control" placeholder="Enter Qty" value="1">
-                                                    </div>
-                                                    
-
-                                                    <div class="col-12 col-md-2">                     
-                                                        <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-                                                    </div>
-                                                    <div class="col-12 col-md-2">
-                                                        <input type="hidden" id="ampled_${row}" name="ampled[]" value="">
-
-                                                        <input type="hidden" id="voltled_${row}" name="voltled[]" value="">
-
-                                                        <input type="hidden" id="wattled_${row}" name="wattled[]" value="">
-                                                    </div>
-                                                    <div class="col-12 col-md-2">
-                                                            <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
-
-                                                        <lable class="m-2">Dead</lable>
-                                                    </div>
-                                                    <div class="col-12 col-md-2 text-right">
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            } else {
-                                dynamicContent = `<div class="row" id="row_${row}">
-                                                    <input type="hidden" name="sr_no_or_not[]" value="1">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                                        <datalist id="srled_${row}">
-                                                            <option value=""></option>
-                                                        </datalist>
-                                                        <input type="hidden" name="used_qty[]" class="form-control" value="1">
-                                                    </div>
-
-                                                    <div class="col-12 col-md-2">
-
-                                                    <input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT">
-                                                    </div>
-
-                                                    <div class="col-12 col-md-2">
-                                                        <input type="text" id="voltled_${row}" name="voltled[]" class="form-control" placeholder="Enter VOLT">
-                                                    </div>
-                                                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-
-                                                    <div class="col-12 col-md-5 d-flex justify-content-between">                                                  
-                                                        <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">                                                    
-                                                        <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
-                                                        
-                                                        <lable class="m-2">Dead</lable>
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            }
-                            $('#TBody').append(`
-                                <div class="row mb-3 align-items-center" id="row_${row}">
-                                    <!-- Select Dropdown -->
-                                    <div class="col-12 col-md-2 d-flex">
-                                        <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub ml-2 form-control">
-                                        <option value="${allSubCategory.id}" selected>${allSubCategory.sub_category_name}</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <!-- Dynamic Content -->
-                                    <div class="col-12 col-md-10" id="col_${row}">
-                                   ${dynamicContent}
-                                    </div>
-                                </div>
-                              `);
-                            row++;
-                        });
-                        break;
-                    case 26:
-                        $.each(allSubCategories, function (index, allSubCategory) {
-                            let dynamicContent;
-                            if (allSubCategory.sr_no == 0) {
-                                dynamicContent = ` <div class="row mt-1" id="row_${row}">
-                                                    <input type="hidden" name="sr_no_or_not[]" value="0">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                                        <datalist id="srled_${row}">
-                                                            <option value=""></option>
-                                                        </datalist>
-                                                        <input type="hidden" name="srled[]" value="0">
-                                                        <input type="hidden" name="used_qty[]" class="form-control" placeholder="Enter Qty" value="1">
-                                                    </div>
-                                                    
-
-                                                    <div class="col-12 col-md-2">                     
-                                                        <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-                                                    </div>
-                                                    <div class="col-12 col-md-2">
-                                                        <input type="hidden" id="ampled_${row}" name="ampled[]" value="">
-
-                                                        <input type="hidden" id="voltled_${row}" name="voltled[]" value="">
-
-                                                        <input type="hidden" id="wattled_${row}" name="wattled[]" value="">
-                                                    </div>
-                                                    <div class="col-12 col-md-2">
-                                                            <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
-
-                                                        <lable class="m-2">Dead</lable>
-                                                    </div>
-                                                    <div class="col-12 col-md-2 text-right">
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            } else {
-                                dynamicContent = `<div class="row" id="row_${row}">
-                                                    <input type="hidden" name="sr_no_or_not[]" value="1">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
-                                                        <datalist id="srled_${row}">
-                                                            <option value=""></option>
-                                                        </datalist>
-                                                        <input type="hidden" name="used_qty[]" class="form-control" value="1">
-                                                    </div>
-
-                                                    <div class="col-12 col-md-2">
-
-                                                    <input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT">
-                                                    </div>
-
-                                                    <div class="col-12 col-md-2">
-                                                        <input type="text" id="voltled_${row}" name="voltled[]" class="form-control" placeholder="Enter VOLT">
-                                                    </div>
-                                                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-
-                                                    <div class="col-12 col-md-5 d-flex justify-content-between">                                                  
-                                                        <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">                                                    
-                                                        <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row})">
-                                                        
-                                                        <lable class="m-2">Dead</lable>
-                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row}">Delete</button>
-                                                    </div>
-                                                </div>`;
-                            }
-                            $('#TBody').append(`
-                                <div class="row mb-3 align-items-center" id="row_${row}">
-                                    <!-- Select Dropdown -->
-                                    <div class="col-12 col-md-2 d-flex">
-                                        <select required onchange="tbl_stock(${row});" id="subcategory_${row}" name="sub_category[]" class="tbl_sub ml-2 form-control">
-                                        <option value="${allSubCategory.id}" selected>${allSubCategory.sub_category_name}</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <!-- Dynamic Content -->
-                                    <div class="col-12 col-md-10" id="col_${row}">
-                                   ${dynamicContent}
-                                    </div>
-                                </div>
-                              `);
-                            row++;
-                        });
-                        break;
-
-                    default:
-                        // Handle other cases
-                        console.log("No specific handler for dataValue:", dataValue);
-                        // Your default logic here
-                }*/
-            }
+               }
         }
     });
 });

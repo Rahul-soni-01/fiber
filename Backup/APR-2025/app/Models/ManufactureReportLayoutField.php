@@ -20,4 +20,8 @@ class ManufactureReportLayoutField extends Model
     {
         return $this->belongsTo(ManufactureReportLayout::class, 'layout_id');
     }
+    public function subCategory()
+    {
+        return $this->belongsTo(tbl_sub_category::class, 'field_key', 'id');
+    }
 }

@@ -33,6 +33,18 @@
             </select>
         </div>
         <div class="mb-3">
+            <select id="part" name="part" class="form-control">
+                <option value="" disabled {{ old('part', $layout->part ?? null) === null ? 'selected' :
+                    '' }}>
+                    Select Part
+                </option>
+                <option value="0" {{ old('part', $layout->part ?? null) === 0 ? 'selected' : '' }}>New
+                </option>
+                <option value="1" {{ old('part', $layout->part ?? null) === 1 ? 'selected' : ''
+                    }}>Repairing</option>
+            </select>
+        </div>
+        <div class="mb-3">
             <label class="form-label">Description</label>
             <textarea name="description" class="form-control">{{ $layout->description }}</textarea>
         </div>

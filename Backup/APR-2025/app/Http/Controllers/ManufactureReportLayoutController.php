@@ -29,6 +29,7 @@ class ManufactureReportLayoutController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'part' => 'required|max:255',
             'type' => 'required|exists: tbl_types,id', // assuming you're validating against a 'types' table
             'fields' => 'required|array|min:1',
             'fields.*.field_key' => 'required|max:255',
@@ -48,6 +49,7 @@ class ManufactureReportLayoutController extends Controller
         $layout = ManufactureReportLayout::create([
             'name' => $request->name,
             'type' => $request->type,
+            'part' => $request->part,
             'description' => $request->description,
             'created_by' => auth()->check() ? auth()->user()->id : 4,
             'is_active' => $request->has('is_active'),
@@ -104,6 +106,7 @@ class ManufactureReportLayoutController extends Controller
         $layout->update([
             'name' => $request->name,
             'type' => $request->type,
+            'part' => $request->part,
             'description' => $request->description,
             'is_active' => $request->has('is_active'),
         ]);
@@ -124,5 +127,21 @@ class ManufactureReportLayoutController extends Controller
         $layout = ManufactureReportLayout::findOrFail($id);
         $layout->delete();
         return redirect()->route('layouts.index')->with('success', 'Layout deleted.');
+    }
+
+    public function fetch(Request $request){
+        $part = $request->part;
+        $type = $request->type;
+        $layout = ManufactureReportLayout::with(['fields' => function($query) {
+            $query->orderBy('sort_order');
+        }, 'fields.subCategory', 'fields.subCategory.category'])
+        ->where('type', $request->type)
+        ->where('part', $request->part)
+        ->where('is_active', true)
+        ->get();
+        if($layout){
+            return response()->json(['status' => 200, 'layout' => $layout ]);
+        }
+        return response()->json(['status' => 404, 'layout' => 'Not Found' ]);
     }
 }
