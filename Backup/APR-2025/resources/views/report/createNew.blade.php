@@ -29,7 +29,7 @@
             @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
             <div class="row mb-3">
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="part-label">
                     <h5>Part</h5>
                 </div>
                 <!-- Part Dropdown -->
@@ -40,33 +40,32 @@
                         <option value="1">Repairing</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="temp-label">
                     <h5>Temp no.</h5>
                 </div>
                 @endif
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'cavity')
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="worker_name-label">
                     <h5>EMPLOYEE NAME</h5>
                 </div>
                 <div class="col-12 col-md-3">
-                    <input type="text" id="wn" name="worker_name" class="form-control"
+                    <input type="text" id="employee_name" name="worker_name" class="form-control"
                         placeholder="Enter Worker Name">
                 </div>
                 @endif
             </div>
             @endif
-            @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' ||
-            auth()->user()->type === 'admin' || auth()->user()->type === 'user')
+            @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' || auth()->user()->type === 'admin' || auth()->user()->type === 'user')
             <div class="row mb-3">
                 @if(auth()->user()->type === 'godown' || auth()->user()->type === 'admin' ||
                 auth()->user()->type === 'user')
                 <!-- SR (FIBER) Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="sr_no_fiber-label">
                     <h5>SR (FIBER)</h5>
                 </div>
                 <!-- SR (FIBER) Input -->
                 <div class="col-12 col-md-3">
-                    <input type="text" id="srfiber" name="sr_no_fiber" class="form-control"
+                    <input type="text" id="sr_no_fiber" name="sr_no_fiber" class="form-control"
                         placeholder="Enter SR No Fiber">
                 </div>
                 @endif
@@ -77,13 +76,12 @@
                 @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
                 <!-- Temporary No Input -->
                 <div class="col-12 col-md-2">
-                    <input type="text" id="temp" name="temp" class="form-control"
-                        placeholder="Enter Temporary No">
+                    <input type="text" id="temp" name="temp" class="form-control" placeholder="Enter Temporary No">
                 </div>
                 @endif
                 @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user')
                 <!-- M.J Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="mj-label">
                     <h5>M.J</h5>
                 </div>
                 <!-- M.J Input -->
@@ -98,7 +96,7 @@
             <div class="row mb-3">
                 @if(auth()->user()->type == 'admin' || auth()->user()->type === 'godown')
                 <!-- Warranty Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="warranty-label">
                     <h5>Warranty</h5>
                 </div>
                 <!-- Warranty Dropdown -->
@@ -117,7 +115,7 @@
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'user' ||
                 auth()->user()->type === 'godown')
                 <!-- Type Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="type-label">
                     <h5>Type</h5>
                 </div>
                 <!-- Type Dropdown -->

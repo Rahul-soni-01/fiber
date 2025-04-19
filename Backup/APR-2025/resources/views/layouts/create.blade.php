@@ -67,9 +67,9 @@
                 @php
                 $defaultFields = [
                     ['field_key' => 'part', 'label' => 'Part'],
-                    ['field_key' => 'temp_no', 'label' => 'Temp no.'],
-                    ['field_key' => 'employee_name', 'label' => 'EMPLOYEE NAME'],
-                    ['field_key' => 'sr_fiber', 'label' => 'SR (FIBER)'],
+                    ['field_key' => 'temp', 'label' => 'Temp no.'],
+                    ['field_key' => 'worker_name', 'label' => 'EMPLOYEE NAME'],
+                    ['field_key' => 'sr_no_fiber', 'label' => 'SR (FIBER)'],
                     ['field_key' => 'mj', 'label' => 'M.J'],
                     ['field_key' => 'warranty', 'label' => 'Warranty'],
                     ['field_key' => 'type', 'label' => 'Type'],
@@ -94,16 +94,10 @@
                 @endif --}}
                 <tr>
                     <td>
-                        <input 
-                            type="text" 
-                            name="fields[{{ $index }}][field_key]" 
-                            class="form-control @if(isset($field['is_subcategory'])) readonly-field @endif"
-                            value="{{ $field['field_key'] }}"
-                            @if(isset($field['is_subcategory'])) readonly @endif>
+                        <input type="text" name="fields[{{ $index }}][field_key]" class="form-control @if(isset($field['is_subcategory'])) readonly-field @endif" value="{{ $field['field_key'] }}" @if(isset($field['is_subcategory'])) readonly @endif>
                             @if(isset($field['is_subcategory']))
                                 <input type="hidden" name="fields[{{ $index }}][is_subcategory]" value="{{ $field['id'] }}">
-                                <input type="hidden" name="fields[{{ $index }}][field_key]" class="form-control"
-                                    value="{{ $field['id'] }}" required>
+                                <input type="hidden" name="fields[{{ $index }}][field_key]" class="form-control"  value="{{ $field['id'] }}" required>
                             @endif
                     </td>
                     <td>

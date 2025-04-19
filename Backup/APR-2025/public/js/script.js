@@ -491,51 +491,61 @@ $(document).ready(function () {
                     success: function (response) {
                         if (response.status === 200 && response.layout.length > 0) {
                             let html = '';
+                            let without_subcategory = [];
+        
+                            // Default fields to check against
+                            const defaultFields = [
+                                {field_key: 'part', label: 'Part'},
+                                {field_key: 'temp', label: 'Temp no.'},
+                                {field_key: 'worker_name', label: 'EMPLOYEE NAME'},
+                                {field_key: 'sr_no_fiber', label: 'SR (FIBER)'},
+                                {field_key: 'mj', label: 'M.J'},
+                                {field_key: 'warranty', label: 'Warranty'},
+                                {field_key: 'type', label: 'Type'}
+                            ];
                             response.layout.forEach(function(item) {
                                 // console.log(item);
                                 if (item.fields && Array.isArray(item.fields)) {
                                     item.fields.forEach(function(field) {
-                                        console.log(field);
+                                        // console.log(field);
                                         if(field.sub_category){
                                             if(field.sub_category.sr_no == '1'){
                                                 html += `
-                                              <div class="row mb-1" id="row_${row}">
-                                                <!-- Sub Category -->
-                                                <div class="col-12 col-md-2">
-                                                    <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
-                                                    <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
-                                                    <input type="hidden" name="sr_no_or_not[]" value="1">
-                                                </div>
+                                                <div class="row mb-1" id="row_${row}">
+                                                    <div class="col-12 col-md-2">
+                                                        <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
+                                                        <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
+                                                        <input type="hidden" name="sr_no_or_not[]" value="1">
+                                                    </div>
 
-                                                <!-- Serial No -->
-                                                <div class="col-12 col-md-3">
-                                                    <input type="text" name="srled[]" list="srled_${row}" class="form-control mb-1" placeholder="Select or enter a new SR No" required>
-                                                    <datalist id="srled_${row}">
-                                                        <option value=""></option>
-                                                    </datalist>
-                                                    <input type="hidden" name="used_qty[]" value="1">
-                                                </div>
+                                                    <!-- Serial No -->
+                                                    <div class="col-12 col-md-3">
+                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control mb-1" placeholder="Select or enter a new SR No" required>
+                                                        <datalist id="srled_${row}">
+                                                            <option value=""></option>
+                                                        </datalist>
+                                                        <input type="hidden" name="used_qty[]" value="1">
+                                                    </div>
 
-                                                <!-- WATT -->
-                                                <div class="col-12 col-md-2">
-                                                    <input type="text" id="wattled_${row}" name="wattled[]" class="form-control mb-1" placeholder="Enter WATT">
-                                                </div>
+                                                    <!-- WATT -->
+                                                    <div class="col-12 col-md-2">
+                                                        <input type="text" id="wattled_${row}" name="wattled[]" class="form-control mb-1" placeholder="Enter WATT">
+                                                    </div>
 
-                                                <!-- VOLT -->
-                                                <div class="col-12 col-md-2">
-                                                    <input type="text" id="voltled_${row}" name="voltled[]" class="form-control mb-1" placeholder="Enter VOLT">
-                                                </div>
+                                                    <!-- VOLT -->
+                                                    <div class="col-12 col-md-2">
+                                                        <input type="text" id="voltled_${row}" name="voltled[]" class="form-control mb-1" placeholder="Enter VOLT">
+                                                    </div>
 
-                                                <!-- AMP + Dead + Delete -->
-                                                <div class="col-12 col-md-3 d-flex align-items-center gap-2">
-                                                    <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">
-                                                    <input type="checkbox" name="dead[]" value="1" class="ms-2" onchange="syncHiddenInput(this, ${row})">
-                                                    <label class="ms-1">Dead</label>
-                                                    <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
-                                                    <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm ms-2" id="${row}"><i class="ri-delete-bin-fill"></i></button>
-                                                </div>
-                                            </div>
-                                            `;
+                                                    <!-- AMP + Dead + Delete -->
+                                                    <div class="col-12 col-md-3 d-flex align-items-center gap-2">
+                                                        <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">
+                                                        <input type="checkbox" name="dead[]" value="1" class="ms-2" onchange="syncHiddenInput(this, ${row})">
+                                                        <label class="ms-1">Dead</label>
+                                                        <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
+                                                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm ms-2" id="${row}"><i class="ri-delete-bin-fill"></i></button>
+                                                    </div>
+                                                </div> `;
                                             }else if(field.sub_category.sr_no == '0'){
                                                 html += `
                                                 <div class="row mb-1" id="row_${row}">
@@ -576,7 +586,15 @@ $(document).ready(function () {
                                             }
                                         }
                                         else{
-                                            
+                                            defaultFields.forEach((defaultfield) => {
+                                                if(defaultfield.label == field.label){
+                                                    $htmlfind = $('#' + field.field_key.replace(/\s+/g, '-').toLowerCase() + '-label');
+                                                    if (field.visible == 0) {
+                                                        $htmlfind.css('visibility', 'hidden'); // Hides but keeps space
+                                                    } 
+                                                    console.log($htmlfind, defaultfield);
+                                                }   
+                                            });
                                         }
                                         row++;
                                     });
@@ -587,8 +605,8 @@ $(document).ready(function () {
                             //         $(`#subcategory_${row}`).append(`<option value="${sub_category.id}" data-unit="${sub_category.unit}" data-sr_no="${sub_category.sr_no}">${sub_category.category.category_name} - ${sub_category.sub_category_name}</option>`);
                             //     });
                             // }
-                          
                             $('#TBody').html(html);
+                            
                         }else {
                             $('#TBody').html('<p class="text-danger">No layout found for this selection.</p>');
                         }
