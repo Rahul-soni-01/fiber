@@ -34,12 +34,12 @@
         <div class="mb-3">
             <label for="name" class="form-label">Select Part</label>
 
-        <select id="part" name="part" required class="form-control">
-            <option value="" selected disabled>Select Part</option>
-            <option value="0">New</option>
-            <option value="1">Repairing</option>
-        </select>
-    </div>
+            <select id="part" name="part" required class="form-control">
+                <option value="" selected disabled>Select Part</option>
+                <option value="0">New</option>
+                <option value="1">Repairing</option>
+            </select>
+        </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Layout Description</label>
@@ -66,39 +66,42 @@
             <tbody id="field-body">
                 @php
                 $defaultFields = [
-                    ['field_key' => 'part', 'label' => 'Part'],
-                    ['field_key' => 'temp', 'label' => 'Temp no.'],
-                    ['field_key' => 'worker_name', 'label' => 'EMPLOYEE NAME'],
-                    ['field_key' => 'sr_no_fiber', 'label' => 'SR (FIBER)'],
-                    ['field_key' => 'mj', 'label' => 'M.J'],
-                    ['field_key' => 'warranty', 'label' => 'Warranty'],
-                    ['field_key' => 'type', 'label' => 'Type'],
+                ['field_key' => 'part', 'label' => 'Part'],
+                ['field_key' => 'temp', 'label' => 'Temp no.'],
+                ['field_key' => 'worker_name', 'label' => 'EMPLOYEE NAME'],
+                ['field_key' => 'sr_no_fiber', 'label' => 'SR (FIBER)'],
+                ['field_key' => 'mj', 'label' => 'M.J'],
+                ['field_key' => 'warranty', 'label' => 'Warranty'],
+                ['field_key' => 'type', 'label' => 'Type'],
                 ];
-                
+
                 $allFields = array_merge(
-                    $defaultFields,
-                    $sub_categories->map(function($item) {
-                        return [
-                            'is_subcategory' => true,
-                            'id' => $item['id'],
-                            'field_key' => $item['category']['category_name'].' '.$item['sub_category_name'],
-                            'label' => ucwords($item['category']['category_name']).'-'.ucwords($item['sub_category_name'])
-                        ];
-                    })->toArray()
+                $defaultFields,
+                $sub_categories->map(function($item) {
+                return [
+                'is_subcategory' => true,
+                'id' => $item['id'],
+                'field_key' => $item['category']['category_name'].' '.$item['sub_category_name'],
+                'label' => ucwords($item['category']['category_name']).'-'.ucwords($item['sub_category_name'])
+                ];
+                })->toArray()
                 );
                 @endphp
-            
+
                 @foreach ($allFields as $index => $field)
-                {{-- @if(isset($field['is_subcategory'])) 
+                {{-- @if(isset($field['is_subcategory']))
                 {{ dd($allFields,$field);}}
                 @endif --}}
                 <tr>
                     <td>
-                        <input type="text" name="fields[{{ $index }}][field_key]" class="form-control @if(isset($field['is_subcategory'])) readonly-field @endif" value="{{ $field['field_key'] }}" @if(isset($field['is_subcategory'])) readonly @endif>
-                            @if(isset($field['is_subcategory']))
-                                <input type="hidden" name="fields[{{ $index }}][is_subcategory]" value="{{ $field['id'] }}">
-                                <input type="hidden" name="fields[{{ $index }}][field_key]" class="form-control"  value="{{ $field['id'] }}" required>
-                            @endif
+                        <input type="text" name="fields[{{ $index }}][field_key]"
+                            class="form-control @if(isset($field['is_subcategory'])) readonly-field @endif"
+                            value="{{ $field['field_key'] }}" @if(isset($field['is_subcategory'])) readonly @endif>
+                        @if(isset($field['is_subcategory']))
+                        <input type="hidden" name="fields[{{ $index }}][is_subcategory]" value="{{ $field['id'] }}">
+                        <input type="hidden" name="fields[{{ $index }}][field_key]" class="form-control"
+                            value="{{ $field['id'] }}" required>
+                        @endif
                     </td>
                     <td>
                         <input type="text" name="fields[{{ $index }}][label]" class="form-control"
@@ -108,10 +111,12 @@
                         <input type="checkbox" name="fields[{{ $index }}][visible]" value="1" checked>
                     </td>
                     <td>
-                        <input type="number" name="fields[{{ $index }}][sort_order]" class="form-control" value="{{ $index + 1 }}">
+                        <input type="number" name="fields[{{ $index }}][sort_order]" class="form-control"
+                            value="{{ $index + 1 }}">
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-sm remove-row" @if(isset($field['is_subcategory'])) disabled @endif>X</button>
+                        <button type="button" class="btn btn-danger btn-sm remove-row"
+                            @if(!isset($field['is_subcategory'])) disabled @endif>X</button>
                     </td>
                 </tr>
                 @endforeach
@@ -214,29 +219,34 @@
             const label = row.querySelector('input[name*="[label]"]').value;
             const visible = row.querySelector('input[name*="[visible]"]').checked;
             const sortOrder = parseInt(row.querySelector('input[name*="[sort_order]"]').value) || 0;
+            const isSubcategory = row.querySelector('input[name*="[is_subcategory]"]')?.checked || false;
             
             allFields.push({
                 fieldKey,
                 label,
                 visible,
-                sortOrder
+                sortOrder,
+                isSubcategory
             });
         });
         
         // Sort fields by sort order
         allFields.sort((a, b) => a.sortOrder - b.sortOrder);
         
-        // Create container for the first row (special treatment for first 7 fields)
+        // Create containers for different field groups
         const firstRow = document.createElement('div');
         firstRow.className = 'row row-cols-3 g-3 mb-3';
         fieldsContainer.appendChild(firstRow);
         
-        // Create container for remaining rows (2 columns)
-        const remainingRows = document.createElement('div');
-        remainingRows.className = 'row g-3';
-        fieldsContainer.appendChild(remainingRows);
+        const secondRow = document.createElement('div');
+        secondRow.className = 'row row-cols-2 g-3 mb-3';
+        fieldsContainer.appendChild(secondRow);
         
-        // Process first 7 fields - show empty space if not visible
+        const remainingContainer = document.createElement('div');
+        remainingContainer.className = 'remaining-fields';
+        fieldsContainer.appendChild(remainingContainer);
+        
+        // Process first 7 fields
         allFields.slice(0, 7).forEach((field, index) => {
             const fieldCol = document.createElement('div');
             fieldCol.className = 'col';
@@ -249,7 +259,6 @@
                     </div>
                 `;
             } else {
-                // Create empty placeholder for invisible fields
                 fieldCol.innerHTML = `
                     <div class="border rounded p-2 h-100 bg-light">
                         <div class="text-muted small mb-1">(Hidden)</div>
@@ -258,26 +267,25 @@
                 `;
             }
             
-            // First 3 fields go in the 3-column row
             if (index < 3) {
                 firstRow.appendChild(fieldCol);
-            } 
-            // Next 4 fields (index 3-6) go in 2-column rows
-            else {
-                // Create new row if needed (every 2 columns)
-                if ((index - 3) % 2 === 0) {
-                    const newRow = document.createElement('div');
-                    newRow.className = 'row row-cols-2 g-3';
-                    remainingRows.appendChild(newRow);
-                }
-                const currentRow = remainingRows.lastElementChild;
-                currentRow.appendChild(fieldCol);
+            } else {
+                secondRow.appendChild(fieldCol);
             }
         });
         
         // Process remaining fields (index 7+)
+        let currentRow = null;
+        
         allFields.slice(7).forEach((field) => {
-            if (!field.visible) return; // Skip invisible fields beyond first 7
+            if (!field.visible) return;
+            
+            // Create new row for subcategories or if no current row exists
+            if (field.isSubcategory || !currentRow) {
+                currentRow = document.createElement('div');
+                currentRow.className = 'row row-cols-1 g-3 mb-3';
+                remainingContainer.appendChild(currentRow);
+            }
             
             const fieldCol = document.createElement('div');
             fieldCol.className = 'col';
@@ -288,13 +296,6 @@
                 </div>
             `;
             
-            // Add to remaining rows (2 columns)
-            if (remainingRows.lastElementChild.children.length >= 2) {
-                const newRow = document.createElement('div');
-                newRow.className = 'row row-cols-2 g-3';
-                remainingRows.appendChild(newRow);
-            }
-            const currentRow = remainingRows.lastElementChild;
             currentRow.appendChild(fieldCol);
         });
     });

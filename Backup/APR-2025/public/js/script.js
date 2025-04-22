@@ -511,16 +511,17 @@ $(document).ready(function () {
                                         if(field.sub_category){
                                             if(field.sub_category.sr_no == '1'){
                                                 html += `
-                                                <div class="row mb-1" id="row_${row}">
+                                                <div class="row align-items-center mb-1" id="row_${row}">
                                                     <div class="col-12 col-md-2">
                                                         <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
-                                                        <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
+                                                        <input type="hidden" id="subcategory_${field.sub_category.id}" name="sub_category[]" value="${field.sub_category.id}"> 
                                                         <input type="hidden" name="sr_no_or_not[]" value="1">
                                                     </div>
 
                                                     <!-- Serial No -->
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control mb-1" placeholder="Select or enter a new SR No" required>
+                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control mb-1" 
+                                                          onfocus="SerialFocus(this,${row})" placeholder="Select or enter a new SR No" required>
                                                         <datalist id="srled_${row}">
                                                             <option value=""></option>
                                                         </datalist>
@@ -538,7 +539,7 @@ $(document).ready(function () {
                                                     </div>
 
                                                     <!-- AMP + Dead + Delete -->
-                                                    <div class="col-12 col-md-3 d-flex align-items-center gap-2">
+                                                    <div class="col-12 col-md-3 d-flex gap-2">
                                                         <input type="text" id="ampled_${row}" name="ampled[]" class="form-control" placeholder="Enter AMP">
                                                         <input type="checkbox" name="dead[]" value="1" class="ms-2" onchange="syncHiddenInput(this, ${row})">
                                                         <label class="ms-1">Dead</label>
@@ -548,7 +549,7 @@ $(document).ready(function () {
                                                 </div> `;
                                             }else if(field.sub_category.sr_no == '0'){
                                                 html += `
-                                                <div class="row mb-1" id="row_${row}">
+                                                <div class="row align-items-center mb-1" id="row_${row}">
                                                  <div class="col-12 col-md-2">
                                                     <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
                                                     <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
@@ -574,7 +575,7 @@ $(document).ready(function () {
 
                                                         <input type="hidden" id="wattled_${row}" name="wattled[]" value="">
                                                     </div>
-                                                    <div class="col-12 col-md-3 d-flex justify-content-md-end gap-2 align-items-center">
+                                                    <div class="col-12 col-md-3 d-flex justify-content-md-end gap-2 ">
                                                     <input type="text" id="ampled_${row}" class="form-control d-none" placeholder="Enter AMP">
                                                         <input type="checkbox" name="dead[]" value="1" class="ms-2" onchange="syncHiddenInput(this, ${row})">
 
@@ -589,11 +590,15 @@ $(document).ready(function () {
                                             defaultFields.forEach((defaultfield) => {
                                                 if(defaultfield.label == field.label){
                                                     $htmlfind = $('#' + field.field_key.replace(/\s+/g, '-').toLowerCase() + '-label');
+                                                    $html = $('#' + field.field_key.replace(/\s+/g, '-').toLowerCase());
                                                     if (field.visible == 0) {
                                                         $htmlfind.css('visibility', 'hidden'); // Hides but keeps space
+                                                        $html.css('visibility', 'hidden'); // Hides but keeps space
                                                     } 
-                                                    console.log($htmlfind, defaultfield);
                                                 }   
+                                                else{
+                                                    // Random New Field.
+                                                }
                                             });
                                         }
                                         row++;
@@ -620,6 +625,20 @@ $(document).ready(function () {
         }
     });
 });
+
+function SerialFocus(inputElement, row) {
+    console.log("Input focused for row:", row);
+    const datalistId = `srled_${row}`;
+    const datalist = document.getElementById(datalistId);
+
+    // Just a sample; replace with actual dynamic logic
+    datalist.innerHTML = `
+        <option value="SR-001"></option>
+        <option value="SR-002"></option>
+        <option value="SR-003"></option>
+    `;
+}
+
 
 function GetInvoiceData(user, selectId) {
     const selectedId = document.getElementById(selectId).value;
@@ -1095,6 +1114,7 @@ function tbl_stock(row_id) {
     var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
 
     var subcategoryElement = document.getElementById(`subcategory_${row_id}`);
+    console.log(subcategoryElement,subcategory_id);
     var Tdhtml = document.getElementById(`col_${row_id}`);
     if (Tdhtml && Tdhtml.innerHTML.trim() !== '') {
         Tdhtml.innerHTML = '';

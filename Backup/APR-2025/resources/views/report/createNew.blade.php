@@ -49,7 +49,7 @@
                     <h5>EMPLOYEE NAME</h5>
                 </div>
                 <div class="col-12 col-md-3">
-                    <input type="text" id="employee_name" name="worker_name" class="form-control"
+                    <input type="text" id="worker_name" name="worker_name" class="form-control"
                         placeholder="Enter Worker Name">
                 </div>
                 @endif

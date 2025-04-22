@@ -778,7 +778,7 @@ $(document).ready(function () {
 
                                                     <div class="col-12 col-md-2">
 
-                                                    <input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT">
+                                                        <input type="text" id="wattled_${row}" name="wattled[]" class="form-control" placeholder="Enter WATT">
                                                     </div>
 
                                                     <div class="col-12 col-md-2">
