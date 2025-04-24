@@ -1380,12 +1380,7 @@ function tbl_stock(row_id) {
 
     }
 
-    if (!subcategory_id) {
-        console.error(`Element with ID subcategory_${row_id} not found!`);
-        return;
-    }
-
-    if (!row_id) {
+    if (!subcategory_id || !row_id) {
         console.error(`Element with ID subcategory_${row_id} not found!`);
         return;
     }
@@ -1432,6 +1427,57 @@ function tbl_stock(row_id) {
             }
         }
     });
+}
+function fetchStockData(subcategory_id, row_id) {
+    if (!subcategory_id || !row_id) {
+        console.error(`Invalid subcategory_id or row_id`);
+        return;
+    }
+
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    $.ajax({
+        type: "POST",
+        url: "/check_stock",
+        data: {
+            _token: csrfToken,
+            subcategory_id: subcategory_id,
+        },
+        success: function (response) {
+            updateSerialOptions(response.data, row_id);
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+        }
+    });
+}
+function updateSerialOptions(data, row_id) {
+    var srled = document.getElementById(`srled_${row_id}`);
+    if (!srled) {
+        console.error(`Element with ID 'srled_${row_id}' not found.`);
+        return;
+    }
+
+    var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
+    if (inputField) {
+        inputField.removeAttribute('value');
+    }
+
+    srled.innerHTML = '<option value="">Select</option>';
+
+    if (data.length === 0) {
+        let option = document.createElement("option");
+        option.value = "";
+        option.text = "No data available";
+        srled.appendChild(option);
+    } else {
+        data.forEach(item => {
+            let option = document.createElement("option");
+            option.value = item.serial_no;
+            option.text = item.serial_no;
+            srled.appendChild(option);
+        });
+    }
 }
 
 var count = 1;

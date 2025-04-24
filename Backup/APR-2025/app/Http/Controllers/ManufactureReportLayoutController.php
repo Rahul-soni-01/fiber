@@ -84,6 +84,7 @@ class ManufactureReportLayoutController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $layout = ManufactureReportLayout::findOrFail($id);
         $request->validate([
             'name' => 'required|string|max:255',
@@ -94,13 +95,10 @@ class ManufactureReportLayoutController extends Controller
             'fields.*.sort_order' => 'nullable|integer',
         ]);
         if ($request->has('is_active')) {
-            $exists = ManufactureReportLayout::where('type', $request->type)
-                        ->where('is_active', true)
-                        ->exists();
+            $exists = ManufactureReportLayout::where('type', $request->type)->where('is_active', true)->where('id', '!=', $id)->exists();
         
             if ($exists) {
-                return back()->withErrors(['is_active' => 'An active layout for the selected type already exists.'])
-                             ->withInput();
+                return back()->withErrors(['is_active' => 'An active layout for the selected type already exists.'])->withInput();
             }
         }
         $layout->update([
@@ -111,12 +109,39 @@ class ManufactureReportLayoutController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
+        /*foreach ($request->fields as $fieldId => $fieldData) {
+            if (is_numeric($fieldId)) {
+                // Update existing field
+                ManufactureReportLayoutField::where('id', $fieldId)->update([
+                    'label' => $fieldData['label'],
+                    'visible' => isset($fieldData['visible']),
+                    'sort_order' => $fieldData['sort_order'],
+                ]);
+            } else {
+                // Create new field (if $fieldId is not numeric, e.g., 'new_1')
+                ManufactureReportLayoutField::create([
+                    'layout_id' => $layout->id, // Link to the parent layout
+                    'field_key' => $fieldData['field_key'],
+                    'label' => $fieldData['label'],
+                    'visible' => isset($fieldData['visible']),
+                    'sort_order' => $fieldData['sort_order'],
+                ]);
+            }
+        }*/
         foreach ($request->fields as $fieldId => $fieldData) {
-            ManufactureReportLayoutField::where('id', $fieldId)->update([
-                'label' => $fieldData['label'],
-                'visible' => isset($fieldData['visible']),
-                'sort_order' => $fieldData['sort_order'],
-            ]);
+            ManufactureReportLayoutField::updateOrCreate(
+                [ 
+                    'field_key' => $fieldId,
+                    'layout_id' => $layout->id,   
+                ], // Check if field exists by Layout ID & subcategory id.
+                [
+                    'layout_id' => $layout->id,
+                    'field_key' => $fieldData['field_key'],
+                    'label' => $fieldData['label'],
+                    'visible' => isset($fieldData['visible']),
+                    'sort_order' => $fieldData['sort_order'],
+                ]
+            );
         }
 
         return redirect()->back()->with('success', 'Layout updated successfully.');

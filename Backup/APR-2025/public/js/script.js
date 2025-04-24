@@ -492,7 +492,8 @@ $(document).ready(function () {
                         if (response.status === 200 && response.layout.length > 0) {
                             let html = '';
                             let without_subcategory = [];
-        
+                            let serialRows = []; // To keep track of rows that need tbl_serial_no
+
                             // Default fields to check against
                             const defaultFields = [
                                 {field_key: 'part', label: 'Part'},
@@ -507,21 +508,19 @@ $(document).ready(function () {
                                 // console.log(item);
                                 if (item.fields && Array.isArray(item.fields)) {
                                     item.fields.forEach(function(field) {
-                                        // console.log(field);
                                         if(field.sub_category){
                                             if(field.sub_category.sr_no == '1'){
                                                 html += `
                                                 <div class="row align-items-center mb-1" id="row_${row}">
                                                     <div class="col-12 col-md-2">
                                                         <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
-                                                        <input type="hidden" id="subcategory_${field.sub_category.id}" name="sub_category[]" value="${field.sub_category.id}"> 
+                                                        <input type="hidden" id="subcategory_${row}" name="sub_category[]" value="${field.sub_category.id}"> 
                                                         <input type="hidden" name="sr_no_or_not[]" value="1">
                                                     </div>
 
                                                     <!-- Serial No -->
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control mb-1" 
-                                                          onfocus="SerialFocus(this,${row})" placeholder="Select or enter a new SR No" required>
+                                                        <input type="text" name="srled[]" list="srled_${row}" class="form-control mb-1" placeholder="Select or enter a new SR No" required>
                                                         <datalist id="srled_${row}">
                                                             <option value=""></option>
                                                         </datalist>
@@ -547,6 +546,7 @@ $(document).ready(function () {
                                                         <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm ms-2" id="${row}"><i class="ri-delete-bin-fill"></i></button>
                                                     </div>
                                                 </div> `;
+                                                serialRows.push(row); 
                                             }else if(field.sub_category.sr_no == '0'){
                                                 html += `
                                                 <div class="row align-items-center mb-1" id="row_${row}">
@@ -596,10 +596,8 @@ $(document).ready(function () {
                                                         $html.css('visibility', 'hidden'); // Hides but keeps space
                                                     } 
                                                 }   
-                                                else{
-                                                    // Random New Field.
-                                                }
                                             });
+                                            
                                         }
                                         row++;
                                     });
@@ -611,7 +609,10 @@ $(document).ready(function () {
                             //     });
                             // }
                             $('#TBody').html(html);
-                            
+                            serialRows.forEach(function(rowNum) {
+
+                                tbl_serial_no(rowNum);
+                            });
                         }else {
                             $('#TBody').html('<p class="text-danger">No layout found for this selection.</p>');
                         }
@@ -627,7 +628,7 @@ $(document).ready(function () {
 });
 
 function SerialFocus(inputElement, row) {
-    console.log("Input focused for row:", row);
+    // console.log("Input focused for row:", row);
     const datalistId = `srled_${row}`;
     const datalist = document.getElementById(datalistId);
 
@@ -639,6 +640,18 @@ function SerialFocus(inputElement, row) {
     `;
 }
 
+function tbl_serial_no(row){
+    const subcategoryInput = document.getElementById(`subcategory_${row}`);
+    
+    if (!subcategoryInput) {
+        console.error(`Subcategory input for row ${row} not found`);
+        return;
+    }
+    
+    const subcategoryId = subcategoryInput.value;
+    // console.log('Subcategory ID:', subcategoryId);
+    fetchStockData(subcategoryId, row);
+}
 
 function GetInvoiceData(user, selectId) {
     const selectedId = document.getElementById(selectId).value;
@@ -1114,7 +1127,7 @@ function tbl_stock(row_id) {
     var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
 
     var subcategoryElement = document.getElementById(`subcategory_${row_id}`);
-    console.log(subcategoryElement,subcategory_id);
+    // console.log(subcategoryElement,subcategory_id);
     var Tdhtml = document.getElementById(`col_${row_id}`);
     if (Tdhtml && Tdhtml.innerHTML.trim() !== '') {
         Tdhtml.innerHTML = '';
@@ -1156,7 +1169,7 @@ function tbl_stock(row_id) {
                 <lable class="m-2">Dead</lable>
             </div>
             <div class="col-12 col-md-2 text-right">
-                <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
+                <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm margin-btn" id="${row_id}"><i class="ri-delete-bin-fill"></i></button>
             </div>
         </div>`;
         }
@@ -1189,7 +1202,7 @@ function tbl_stock(row_id) {
                         <input type="checkbox" name="dead[]" value="1" class="m-2" onchange="syncHiddenInput(this, ${row_id})">
                         
                         <lable class="m-2">Dead</lable>
-                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger margin-btn" id="${row_id}">Delete</button>
+                        <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm margin-btn" id="${row_id}"><i class="ri-delete-bin-fill"></i></button>
                     </div>
                 </div>
             `;
@@ -1251,6 +1264,57 @@ function tbl_stock(row_id) {
     });
 }
 
+function fetchStockData(subcategory_id, row_id) {
+    if (!subcategory_id || !row_id) {
+        console.error(`Invalid subcategory_id or row_id`);
+        return;
+    }
+
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    $.ajax({
+        type: "POST",
+        url: "/check_stock",
+        data: {
+            _token: csrfToken,
+            subcategory_id: subcategory_id,
+        },
+        success: function (response) {
+            updateSerialOptions(response.data, row_id);
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+        }
+    });
+}
+function updateSerialOptions(data, row_id) {
+    var srled = document.getElementById(`srled_${row_id}`);
+    if (!srled) {
+        console.error(`Element with ID 'srled_${row_id}' not found.`);
+        return;
+    }
+
+    var inputField = document.querySelector(`input[list="srled_${row_id}"]`);
+    if (inputField) {
+        inputField.removeAttribute('value');
+    }
+
+    srled.innerHTML = '<option value="">Select</option>';
+
+    if (data.length === 0) {
+        let option = document.createElement("option");
+        option.value = "";
+        option.text = "No data available";
+        srled.appendChild(option);
+    } else {
+        data.forEach(item => {
+            let option = document.createElement("option");
+            option.value = item.serial_no;
+            option.text = item.serial_no;
+            srled.appendChild(option);
+        });
+    }
+}
 var count = 1;
 function BtnAdd(categories, subCategories) {
     if (window.location.pathname == '/sale-create' || window.location.pathname == '/sale-repair-create') {

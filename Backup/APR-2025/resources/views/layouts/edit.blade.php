@@ -68,18 +68,48 @@
                 </tr>
             </thead>
             <tbody id="field-body">
+                @php
+                $defaultFields = [
+                ['field_key' => 'part', 'label' => 'Part'],
+                ['field_key' => 'temp', 'label' => 'Temp no.'],
+                ['field_key' => 'worker_name', 'label' => 'EMPLOYEE NAME'],
+                ['field_key' => 'sr_no_fiber', 'label' => 'SR (FIBER)'],
+                ['field_key' => 'mj', 'label' => 'M.J'],
+                ['field_key' => 'warranty', 'label' => 'Warranty'],
+                ['field_key' => 'type', 'label' => 'Type'],
+                ];
+
+                $allFields = array_merge(
+                $defaultFields,
+                $sub_categories->map(function($item) {
+                return [
+                'is_subcategory' => true,
+                'id' => $item['id'],
+                'field_key' => $item['category']['category_name'].' '.$item['sub_category_name'],
+                'label' => ucwords($item['category']['category_name']).'-'.ucwords($item['sub_category_name'])
+                ];
+                })->toArray()
+                );
+                @endphp
+                {{-- {{ dd($allFields)}} --}}
                 @foreach ($layout->fields as $index => $field)
                 <tr>
                     <td>
                         @php $fieldKeyFound = false @endphp
                         @foreach ($sub_categories as $sub_category)
-                        @if($sub_category->id == $field->field_key)
-                        @php $fieldKeyFound = true @endphp
-                        <input type="hidden" name="fields[{{ $index }}][id]" value="{{ $field->id }}">
-                        <input type="text" name="fields[{{ $index }}][field_key]" class="form-control readonly-field"
-                            value="{{ $sub_category->sub_category_name }}" readonly>
-                        @break
-                        @endif
+                            @if($sub_category->id == $field->field_key)
+                                {{-- {{dd($field,$sub_category);}} --}}
+                                {{-- {{ dd($field);}} --}}
+                                @php $fieldKeyFound = true @endphp
+                                <input type="hidden" name="fields[{{ $index }}][id]" value="{{ $field->id }}">
+                                <input type="text" name="fields[{{ $index }}][field_key]" class="form-control readonly-field"
+                                    value="{{ $sub_category->sub_category_name }}" readonly>
+                                @break
+                            
+                            @else
+
+                            @endif
+                            
                         @endforeach
 
                         @if(!$fieldKeyFound)
@@ -87,15 +117,10 @@
                             value="{{ $field->field_key }}" required>
                         @endif
                     </td>
-                    <td><input type="text" name="fields[{{ $index }}][label]" class="form-control"
-                            value="{{ $field->label }}" required></td>
-                    <td class="text-center"><input type="checkbox" name="fields[{{ $index }}][visible]" value="1" {{
-                            $field->visible ? 'checked' : '' }}></td>
-                    <td><input type="number" name="fields[{{ $index }}][sort_order]" class="form-control"
-                            value="{{ $field->sort_order }}"></td>
-                    <td><button type="button" class="btn btn-danger btn-sm remove-row" @if(!isset($field['is_subcategory'])) disabled @endif>X</button></td>
-                    
-                </tr>
+                    <td><input type="text" name="fields[{{ $index }}][label]" class="form-control" value="{{ $field->label }}" required></td>
+                    <td class="text-center"><input type="checkbox" name="fields[{{ $index }}][visible]" value="1" {{ $field->visible ? 'checked' : '' }}></td>
+                    <td><input type="number" name="fields[{{ $index }}][sort_order]" class="form-control" value="{{ $field->sort_order }}"></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-row">{{ $index }}</button></td></tr>
                 @endforeach
             </tbody>
         </table>
@@ -109,7 +134,6 @@
                 <a href="{{ route('layouts.index') }}" class="btn btn-secondary">Back</a>
             </div>
     </form>
-
 
     <!-- Preview Modal -->
     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">

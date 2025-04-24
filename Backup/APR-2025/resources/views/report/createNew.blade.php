@@ -175,6 +175,7 @@
             </div>
             @endif
             <div id="TBody"></div>
+            <div id="Append_Extra_Line"></div>
             <div class="row mt-3">
                 <div class="col-12 col-md-2">
                     <strong>NOTE</strong>
