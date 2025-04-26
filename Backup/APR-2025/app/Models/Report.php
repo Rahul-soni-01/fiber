@@ -28,6 +28,7 @@ class Report extends Model
         'sale_status',
         'stock_status',
         'final_amount',
+        'extra_line',
     ];
 
     public function tbl_leds()

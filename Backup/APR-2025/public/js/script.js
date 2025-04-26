@@ -491,8 +491,9 @@ $(document).ready(function () {
                     success: function (response) {
                         if (response.status === 200 && response.layout.length > 0) {
                             let html = '';
-                            let without_subcategory = [];
+                            let ExtraLine = '';
                             let serialRows = []; // To keep track of rows that need tbl_serial_no
+                            let ExtraLineRows = []; // To keep track of rows that need Extra_LineRows
 
                             // Default fields to check against
                             const defaultFields = [
@@ -545,7 +546,7 @@ $(document).ready(function () {
                                                         <input type="hidden" name="dead[]" value="0" class="hidden-dead-${row}">
                                                         <button type="button" onclick="NewremoveRow(this)" class="btn btn-danger btn-sm ms-2" id="${row}"><i class="ri-delete-bin-fill"></i></button>
                                                     </div>
-                                                </div> `;
+                                                    </div> `;
                                                 serialRows.push(row); 
                                             }else if(field.sub_category.sr_no == '0'){
                                                 html += `
@@ -585,8 +586,26 @@ $(document).ready(function () {
                                                 </div>
                                                 `;
                                             }
+                                            // console.log(field.sub_category);
                                         }
                                         else{
+                                            const isDefault = defaultFields.some(df => df.label === field.label);
+                                            const isNumeric = !isNaN(field.label);
+                    
+                                            if (!isDefault && !isNumeric) {
+                                                ExtraLineRows.push(row);
+                                                ExtraLine +=  `
+                                                    <div class="row mt-3 align-items-center mb-1" id="row_${row}">
+                                                        <div class="col-12 col-md-2">
+                                                            <strong>${field.label}</strong>
+                                                        </div>
+                                                        <div class="col-12 col-md-10">
+                                                            <input type="hidden" name="field_key[]" value="${field.field_key}">
+                                                            <textarea id="note1" name="field_key_value[]" class="form-control" placeholder="Enter ${field.label}..."></textarea>
+                                                        </div>
+                                                    </div> `;
+                                            }
+
                                             defaultFields.forEach((defaultfield) => {
                                                 if(defaultfield.label == field.label){
                                                     $htmlfind = $('#' + field.field_key.replace(/\s+/g, '-').toLowerCase() + '-label');
@@ -595,9 +614,8 @@ $(document).ready(function () {
                                                         $htmlfind.css('visibility', 'hidden'); // Hides but keeps space
                                                         $html.css('visibility', 'hidden'); // Hides but keeps space
                                                     } 
-                                                }   
+                                                } 
                                             });
-                                            
                                         }
                                         row++;
                                     });
@@ -609,9 +627,13 @@ $(document).ready(function () {
                             //     });
                             // }
                             $('#TBody').html(html);
+                            $('#Append_Extra_Line').html(ExtraLine);
                             serialRows.forEach(function(rowNum) {
-
                                 tbl_serial_no(rowNum);
+                            });
+                            ExtraLineRows.forEach(function(Rows) {
+                                // ExtraLineAppend();
+                                console.log(Rows);
                             });
                         }else {
                             $('#TBody').html('<p class="text-danger">No layout found for this selection.</p>');
@@ -621,8 +643,7 @@ $(document).ready(function () {
                         $('#TBody').html('<p class="text-danger">Failed to load layout.</p>');
                     }
                 });
-
-               }
+            }
         }
     });
 });

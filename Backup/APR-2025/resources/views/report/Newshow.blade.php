@@ -123,6 +123,21 @@
                         </tbody>
                     </table>
                 </div>
+                @php
+                    $extraData = json_decode($report->extra_line, true);
+                @endphp
+                
+                @if(!empty($extraData))
+                    @foreach($extraData as $key => $value)
+                    <div class="row mt-4 ">
+                    <div class="col-md-3">  
+                        <strong>{{ $key }}</strong>
+                    </div>
+                    <div class="col-md-9">
+                        <span>{{ $value ?? 'N/A' }}</span>
+                    </div>
+                    @endforeach 
+                @endif
                 <div class="row mt-4 ">
                     <div class="col-md-3">
                         <strong>NOTE</strong>

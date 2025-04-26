@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class ManufactureReportLayoutController extends Controller
     {
         $types = Tbltype::all();
         $sub_categories = tbl_sub_category::with('category')->get();
-        return view('layouts.create',compact('sub_categories','types'));
+        return view('layouts.create', compact('sub_categories', 'types'));
     }
 
     public function store(Request $request)
@@ -38,12 +39,12 @@ class ManufactureReportLayoutController extends Controller
         ]);
         if ($request->has('is_active')) {
             $exists = ManufactureReportLayout::where('type', $request->type)
-                        ->where('is_active', true)
-                        ->exists();
-        
+                ->where('is_active', true)
+                ->exists();
+
             if ($exists) {
                 return back()->withErrors(['is_active' => 'An active layout for the selected type already exists.'])
-                             ->withInput();
+                    ->withInput();
             }
         }
         $layout = ManufactureReportLayout::create([
@@ -54,7 +55,7 @@ class ManufactureReportLayoutController extends Controller
             'created_by' => auth()->check() ? auth()->user()->id : 4,
             'is_active' => $request->has('is_active'),
         ]);
-    
+
         foreach ($request->fields as $index => $field) {
             ManufactureReportLayoutField::create([
                 'layout_id' => $layout->id,
@@ -74,7 +75,7 @@ class ManufactureReportLayoutController extends Controller
         $sub_categories = tbl_sub_category::with('category')->get();
         $layout = ManufactureReportLayout::with('fields')->findOrFail($id);
         // dd($layout, $sub_categories);
-        return view('layouts.edit', compact('layout','sub_categories','types'));
+        return view('layouts.edit', compact('layout', 'sub_categories', 'types'));
     }
     public function show($id)
     {
@@ -96,7 +97,7 @@ class ManufactureReportLayoutController extends Controller
         ]);
         if ($request->has('is_active')) {
             $exists = ManufactureReportLayout::where('type', $request->type)->where('is_active', true)->where('id', '!=', $id)->exists();
-        
+
             if ($exists) {
                 return back()->withErrors(['is_active' => 'An active layout for the selected type already exists.'])->withInput();
             }
@@ -129,19 +130,28 @@ class ManufactureReportLayoutController extends Controller
             }
         }*/
         foreach ($request->fields as $fieldId => $fieldData) {
-            ManufactureReportLayoutField::updateOrCreate(
-                [ 
-                    'field_key' => $fieldId,
-                    'layout_id' => $layout->id,   
-                ], // Check if field exists by Layout ID & subcategory id.
-                [
-                    'layout_id' => $layout->id,
-                    'field_key' => $fieldData['field_key'],
+            if (is_numeric($fieldId)) {
+                // Update existing field
+                ManufactureReportLayoutField::where('id', $fieldId)->update([
                     'label' => $fieldData['label'],
                     'visible' => isset($fieldData['visible']),
                     'sort_order' => $fieldData['sort_order'],
-                ]
-            );
+                ]);
+            } else {
+                ManufactureReportLayoutField::updateOrCreate(
+                    [
+                        'field_key' => $fieldId,
+                        'layout_id' => $layout->id,
+                    ], // Check if field exists by Layout ID & subcategory id.
+                    [
+                        'layout_id' => $layout->id,
+                        'field_key' => $fieldData['field_key'],
+                        'label' => $fieldData['label'],
+                        'visible' => isset($fieldData['visible']),
+                        'sort_order' => $fieldData['sort_order'],
+                    ]
+                );
+            }
         }
 
         return redirect()->back()->with('success', 'Layout updated successfully.');
@@ -154,19 +164,20 @@ class ManufactureReportLayoutController extends Controller
         return redirect()->route('layouts.index')->with('success', 'Layout deleted.');
     }
 
-    public function fetch(Request $request){
+    public function fetch(Request $request)
+    {
         $part = $request->part;
         $type = $request->type;
-        $layout = ManufactureReportLayout::with(['fields' => function($query) {
+        $layout = ManufactureReportLayout::with(['fields' => function ($query) {
             $query->orderBy('sort_order');
         }, 'fields.subCategory', 'fields.subCategory.category'])
-        ->where('type', $request->type)
-        ->where('part', $request->part)
-        ->where('is_active', true)
-        ->get();
-        if($layout){
-            return response()->json(['status' => 200, 'layout' => $layout ]);
+            ->where('type', $request->type)
+            ->where('part', $request->part)
+            ->where('is_active', true)
+            ->get();
+        if ($layout) {
+            return response()->json(['status' => 200, 'layout' => $layout]);
         }
-        return response()->json(['status' => 404, 'layout' => 'Not Found' ]);
+        return response()->json(['status' => 404, 'layout' => 'Not Found']);
     }
 }

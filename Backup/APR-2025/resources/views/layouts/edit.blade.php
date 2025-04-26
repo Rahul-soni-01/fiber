@@ -1,6 +1,6 @@
 @extends('demo')
 @section('content')
-<div class="container-fluid">
+<div class="container">
     <h2>Edit Layout: {{ $layout->name }}</h2>
     @if ($errors->any())
     <div style="color: red;">
@@ -97,19 +97,19 @@
                     <td>
                         @php $fieldKeyFound = false @endphp
                         @foreach ($sub_categories as $sub_category)
-                            @if($sub_category->id == $field->field_key)
-                                {{-- {{dd($field,$sub_category);}} --}}
-                                {{-- {{ dd($field);}} --}}
-                                @php $fieldKeyFound = true @endphp
-                                <input type="hidden" name="fields[{{ $index }}][id]" value="{{ $field->id }}">
-                                <input type="text" name="fields[{{ $index }}][field_key]" class="form-control readonly-field"
-                                    value="{{ $sub_category->sub_category_name }}" readonly>
-                                @break
-                            
-                            @else
+                        @if($sub_category->id == $field->field_key)
+                        {{-- {{dd($field,$sub_category);}} --}}
+                        {{-- {{ dd($field);}} --}}
+                        @php $fieldKeyFound = true @endphp
+                        <input type="hidden" name="fields[{{ $index }}][id]" value="{{ $field->id }}">
+                        <input type="text" name="fields[{{ $index }}][field_key]" class="form-control readonly-field"
+                            value="{{ $sub_category->sub_category_name }}" readonly>
+                        @break
 
-                            @endif
-                            
+                        @else
+
+                        @endif
+
                         @endforeach
 
                         @if(!$fieldKeyFound)
@@ -117,10 +117,14 @@
                             value="{{ $field->field_key }}" required>
                         @endif
                     </td>
-                    <td><input type="text" name="fields[{{ $index }}][label]" class="form-control" value="{{ $field->label }}" required></td>
-                    <td class="text-center"><input type="checkbox" name="fields[{{ $index }}][visible]" value="1" {{ $field->visible ? 'checked' : '' }}></td>
-                    <td><input type="number" name="fields[{{ $index }}][sort_order]" class="form-control" value="{{ $field->sort_order }}"></td>
-                    <td><button type="button" class="btn btn-danger btn-sm remove-row">{{ $index }}</button></td></tr>
+                    <td><input type="text" name="fields[{{ $index }}][label]" class="form-control"
+                            value="{{ $field->label }}" required></td>
+                    <td class="text-center"><input type="checkbox" name="fields[{{ $index }}][visible]" value="1" {{
+                            $field->visible ? 'checked' : '' }}></td>
+                    <td><input type="number" name="fields[{{ $index }}][sort_order]" class="form-control"
+                            value="{{ $field->sort_order }}"></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-row">{{ $index }}</button></td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
@@ -134,40 +138,41 @@
                 <a href="{{ route('layouts.index') }}" class="btn btn-secondary">Back</a>
             </div>
     </form>
+</div>
+</div>
 
-    <!-- Preview Modal -->
-    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content text-dark">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="previewModalLabel">Layout Preview</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content text-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Layout Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Layout Preview using row/col -->
+                <div class="container-fluid">
+                    <div class="row g-3" id="preview-fields-container"></div>
                 </div>
-                <div class="modal-body">
-                    <!-- Layout Preview using row/col -->
-                    <div class="container-fluid">
-                        <div class="row g-3" id="preview-fields-container"></div>
-                    </div>
 
-                    <!-- Layout Details -->
-                    <div class="mt-4 p-3 bg-light rounded">
-                        <h6>Layout Details:</h6>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p><strong>Name:</strong> <span id="preview-layout-name"></span></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p><strong>Description:</strong> <span id="preview-layout-desc"></span></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p><strong>Active:</strong> <span id="preview-layout-active"></span></p>
-                            </div>
+                <!-- Layout Details -->
+                <div class="mt-4 p-3 bg-light rounded">
+                    <h6>Layout Details:</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><strong>Name:</strong> <span id="preview-layout-name"></span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Description:</strong> <span id="preview-layout-desc"></span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Active:</strong> <span id="preview-layout-active"></span></p>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -178,13 +183,13 @@
     
      $('#add-field').click(function () {
          let newRow = `
-             <tr>
-                 <td><input type="text" name="fields[${fieldIndex}][field_key]" class="form-control" required></td>
-                 <td><input type="text" name="fields[${fieldIndex}][label]" class="form-control" required></td>
-                 <td class="text-center"><input type="checkbox" name="fields[${fieldIndex}][visible]" value="1" checked></td>
-                 <td><input type="number" name="fields[${fieldIndex}][sort_order]" class="form-control" value="${fieldIndex + 1}"></td>
-                 <td><button type="button" class="btn btn-danger btn-sm remove-row">X</button></td>
-             </tr>`;
+            <tr>
+                <td><input type="text" name="fields[${fieldIndex}][field_key]" class="form-control" required></td>
+                <td><input type="text" name="fields[${fieldIndex}][label]" class="form-control" required></td>
+                <td class="text-center"><input type="checkbox" name="fields[${fieldIndex}][visible]" value="1" checked></td>
+                <td><input type="number" name="fields[${fieldIndex}][sort_order]" class="form-control" value="${fieldIndex + 1}"></td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-row">X</button></td>
+            </tr>`;
          $('#field-body').append(newRow);
          fieldIndex++;
      });

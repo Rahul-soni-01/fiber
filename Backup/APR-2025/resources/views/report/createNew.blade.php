@@ -146,7 +146,7 @@
             @endif
             @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric' || auth()->user()->type
             === 'godown' )
-            <div class="row ">
+            <div class="row">
                 <!-- ITEM -->
                 <div class="col-12 col-md-3">
                     <h5>ITEM</h5>

@@ -45,6 +45,7 @@ return new class extends Migration
             $table->string('output_watt')->nullable();
             $table->string('nani_cavity')->nullable();
             $table->string('final_cavity')->nullable();
+            $table->json('extra_line')->nullable();  // Store combined JSON data
             $table->text('note1')->nullable();        //Any note for fiber
             $table->text('note2')->nullable();        //Any note for fiber
             $table->text('remark')->nullable();        //Any remark for fiber at reject time

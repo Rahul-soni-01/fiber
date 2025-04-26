@@ -26,6 +26,8 @@ use App\Models\ManufactureReportLayout;
 use App\Models\ManufactureReportLayoutField;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
+
 
 
 class ReportController extends Controller
@@ -559,7 +561,7 @@ class ReportController extends Controller
 
     public function stockReport(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $validator = Validator::make(
             $request->all(),
             [
@@ -612,6 +614,18 @@ class ReportController extends Controller
             $firstErrorMessage = $validator->errors()->first();
             return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
         }
+
+        if (
+            $request->has(['field_key', 'field_key_value']) &&
+            is_array($request->field_key) &&
+            is_array($request->field_key_value) &&
+            count($request->field_key) === count($request->field_key_value)) {
+            $combinedArray = array_combine($request->field_key, $request->field_key_value);
+        } else {
+            $combinedArray = []; // Fallback if conditions fail
+        }
+        
+        $jsonData = json_encode($combinedArray);
         $report = new Report();
         $report->part = $request->input('part');
         if (Auth()->user()->type === 'godown') {
@@ -628,6 +642,7 @@ class ReportController extends Controller
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
         $report->sale_status = 0;
+        $report->extra_line =$jsonData;
         if($request->input('part') == 1){
             $report->section = 2;
             $report->r_status = 1;
