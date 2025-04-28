@@ -56,4 +56,22 @@ class PermissionController extends Controller
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
+
+    // Report Section Update
+    public function update(Request $request){
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:tbl_reports,id',
+            'section' => 'required|integer|in:0,1,2,3,4', // Only allowed section values
+        ]);
+    
+        // Find the report or fail automatically
+        $report = Report::findOrFail($validated['id']);
+    
+        // Update the section
+        $report->section = $validated['section'];
+        $report->save();
+
+        return response()->json(['success' => true, 'message' => 'Section updated successfully.']);
+
+    }
 }

@@ -23,6 +23,7 @@
                             <th>ID</th>
                             <th>Part</th>
                             <th>W/N.W.</th>
+                            <th>Section</th>
                             <th>Date</th>
                             <th>Serial No.</th>
                             <th>Type</th>
@@ -46,6 +47,16 @@
                                         <span class="badge badge-secondary">Unknown</span>
                                     @endif
                                 </td>
+                                <td>
+                                    <select id="section" class="form-select section"  data-id="{{ $report->id }}">
+                                        <option value="0" {{ $report->section == 0 ? 'selected' : '' }}>Mainstore</option>
+                                        <option value="1" {{ $report->section == 1 ? 'selected' : '' }}>Manufacture</option>
+                                        <option value="2" {{ $report->section == 2 ? 'selected' : '' }}>Repair</option>
+                                        <option value="3" {{ $report->section == 3 ? 'selected' : '' }}>Baddesk</option>
+                                        <option value="4" {{ $report->section == 4 ? 'selected' : '' }}>Sell</option>
+                                    </select>
+                                </td>
+                                         
                                 <td>{{ $report->m_j ?? 'N/A' }}</td>
                                 <td>{{ $report->created_at->format('d-m-Y') ?? 'N/A' }}</td>
                                 <td>{{ $sr_no_fiber }}</td>

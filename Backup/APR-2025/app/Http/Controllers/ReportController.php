@@ -215,7 +215,8 @@ class ReportController extends Controller
                 }
                 return $item;
             };
-            
+            $Advancedviewresults = collect();
+
             // tbl_reports
             $reports = Report::where('sr_no_fiber', $sr_no)
                 ->select('*', 'sr_no_fiber as sr_no', 'created_at as date', DB::raw("'tbl_reports' as table_name"))

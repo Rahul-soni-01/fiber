@@ -123,7 +123,7 @@
                             $field->visible ? 'checked' : '' }}></td>
                     <td><input type="number" name="fields[{{ $index }}][sort_order]" class="form-control"
                             value="{{ $field->sort_order }}"></td>
-                    <td><button type="button" class="btn btn-danger btn-sm remove-row">{{ $index }}</button></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="ri-delete-bin-fill"></i></button></td>
                 </tr>
                 @endforeach
             </tbody>

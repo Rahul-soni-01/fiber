@@ -401,16 +401,17 @@ $(document).ready(function () {
 
         var content = $('#payment').html();
         var currentUrl = window.location.href;
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
         $.ajax({
             url: '/generate-pdf',
             type: 'POST',
             data: {
+                _token: csrfToken,
                 content: content,
                 currentUrl: currentUrl
             },
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
+           
             success: function (response) {
                 const link = document.createElement('a');
                 const url = window.URL.createObjectURL(response);
@@ -645,6 +646,57 @@ $(document).ready(function () {
                 });
             }
         }
+    });
+    $('.section').on('change', function(e) {
+        // e.preventDefault();
+
+        let selectedValue = $(this).val();                  // New section value
+        let selectedText = $(this).find('option:selected').text(); // New section text
+        let reportId = $(this).data('id');                   // Get report id
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Change section to: " + selectedText + "?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, update it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Ajax Call
+                $.ajax({
+                    url: '/update-section',
+                    method: 'POST',
+                    
+                    data: {
+                        _token: csrfToken,
+                        id: reportId,
+                        section: selectedValue,
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Updated!',
+                            response.message, // 👈 show the message from server response
+                            'success'
+                        );
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Something went wrong. Please try again.',
+                            'error'
+                        );
+                    }
+                });
+            } else {
+                // Reload page to undo change if canceled
+                location.reload();
+            }
+        });
     });
 });
 

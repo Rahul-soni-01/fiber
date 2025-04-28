@@ -222,6 +222,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('baddesk-create-{id}', [PermissionController::class, 'create'])->name('baddesk.create');
     Route::post('baddesk-store', [PermissionController::class, 'store'])->name('baddesk.store');
+    Route::post('update-section', [PermissionController::class, 'update'])->name('update.section');
     
     // Sale Crud
     Route::get('sale-return-show-{sale_id}', [SaleController::class, 'return_show'])->name('sale.return.show');
