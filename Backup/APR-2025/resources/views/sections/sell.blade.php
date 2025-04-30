@@ -24,7 +24,6 @@
                     <th>Part</th>
                     <th>W/N.W.</th>
                     <th>Section</th>
-
                     <th>Date</th>
                     <th>Serial No.</th>
                     <th>Type</th>
@@ -49,6 +48,8 @@
                         <span class="badge badge-secondary">Unknown</span>
                         @endif
                     </td>
+                    <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown')
+                        }}</td>
                     <td>
                         <select id="section" class="form-select section"  data-id="{{ $report->id }}">
                             <option value="0" {{ $report->section == 0 ? 'selected' : '' }}>Mainstore</option>
@@ -60,7 +61,7 @@
                     </td>
                     
                     {{-- {{ dd($report);}} --}}
-                    <td>{{ $report->f_status ?? 'N/A' }}</td>
+                    {{-- <td>{{ $report->f_status ?? 'N/A' }}</td> --}}
                     <td>{{ $report->created_at->format('d-m-Y') ?? 'N/A' }}</td>
                     <td>{{ $sr_no_fiber }}</td>
                     <td>{{ $report->tbl_type->name ?? ($report->type ?? 'N/A') }}</td>

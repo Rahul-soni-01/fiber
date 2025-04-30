@@ -679,7 +679,7 @@ $(document).ready(function () {
                     success: function(response) {
                         Swal.fire(
                             'Updated!',
-                            response.message, // 👈 show the message from server response
+                            response.message, 
                             'success'
                         );
                         location.reload();

@@ -38,7 +38,7 @@
                     <h5>Part</h5>
                 </div>
                 <div class="col-md-3">
-                    <select id="part" name="part" class="form-control" @if(in_array(auth()->user()->type,
+                    <select id="part1" name="part" class="form-control" @if(in_array(auth()->user()->type,
                         ['cavity'])) readonly @endif>
                         <option value="" disabled {{ old('part', $report->part ?? null) === null ? 'selected' :
                             '' }}>
@@ -124,7 +124,7 @@
                 </div>
                 <div class="col-md-3">
                     @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
-                    <select id="type" name="type" class="form-control" required @if(in_array(auth()->user()->type,
+                    <select id="type1" name="type" class="form-control" required @if(in_array(auth()->user()->type,
                         ['electric', 'cavity'])) readonly @endif>
                         <option value="" disabled selected>Select Type</option>
                         @foreach($types as $type)
