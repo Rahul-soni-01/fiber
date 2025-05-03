@@ -5,17 +5,11 @@
 <div class="main" id="main">
     @if ($errors->any())
     <div style="color: red;">
-
         <ul>
-
             @foreach ($errors->all() as $error)
-
             <li>{{ $error }}</li>
-
             @endforeach
-
         </ul>
-
     </div>
     @endif
     <p>New reports Fillter.</p>
@@ -67,36 +61,21 @@
 </div>
 <script>
     document.getElementById("toggleSwitch").addEventListener("change", function() {
-
-                const rows = document.querySelectorAll("table tbody tr");
-
-                if (this.checked) {
-
-                    rows.forEach(row => {
-
-                        if (row.classList.contains('new-part')) {
-
-                            row.style.display = "";
-
-                        } else {
-
-                            row.style.display = "none";
-
-                        }
-
-                    });
-
+        const rows = document.querySelectorAll("table tbody tr");
+        if (this.checked) {
+            rows.forEach(row => {
+                if (row.classList.contains('new-part')) {
+                    row.style.display = "";
                 } else {
-
-                    rows.forEach(row => {
-
-                        row.style.display = "";
-
-                    });
-
+                    row.style.display = "none";
                 }
-
             });
+        } else {
+            rows.forEach(row => {
+                row.style.display = "";
+            });
+        }
+    });
 
 </script>
 @endsection
