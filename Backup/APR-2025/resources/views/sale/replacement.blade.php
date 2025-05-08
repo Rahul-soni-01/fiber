@@ -12,7 +12,7 @@
     </ul>
 </div>
 @endif
-{{  dd($customers); }}
+{{-- {{  dd($customers); }} --}}
 <div class="mt-2" id="main">
     <form action="" method="get">
         <div class="container">
