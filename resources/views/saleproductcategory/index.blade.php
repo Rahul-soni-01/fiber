@@ -24,7 +24,7 @@
                 <td>{{ $category->id }}</td>
                 <td>{{ $category->name }}</td>
                 <td>{{ $category->is_type ? 'Active' : 'Inactive' }}</td>
-                what are you doing?
+                
                 <td>
                     <!-- Edit Link -->
                     <a href="{{ route('saleproductcategory.edit', ['id' => $category->id]) }}"
