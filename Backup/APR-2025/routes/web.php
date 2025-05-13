@@ -27,6 +27,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PdfGeneratorController;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ManufactureReportLayoutController;
+use App\Http\Controllers\OpeningBalanceController;
+
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
 
@@ -73,12 +75,21 @@ Route::middleware('auth')->group(function () {
     Route::put('/predefine-update', [TblAccCoaController::class, 'predefineUpdate'])->name('predefine.update');
 
     // acccoa Crud
+    Route::get('/balance', [TblAccCoaController::class, 'finalbalance'])->name('final.balance');
+
     Route::get('/acccoa', [TblAccCoaController::class, 'index'])->name('acccoa.index');
     Route::get('/acccoa-create', [TblAccCoaController::class, 'create'])->name('acccoa.create');
     Route::post('/acccoa-store', [TblAccCoaController::class, 'store'])->name('acccoa.store');
     Route::get('edit-acccoa-{acccoa_id}', [TblAccCoaController::class, 'edit'])->name(('acccoa.edit')); //View acccoa By id.
     Route::put('/acccoa/{id}', [TblAccCoaController::class, 'update'])->name('acccoa.update');
     Route::delete('/acccoa{acccoa_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
+
+    Route::get('/opening-balance', [OpeningBalanceController::class, 'index'])->name('openingbalance.index');
+    Route::get('/opening-balance-create', [OpeningBalanceController::class, 'create'])->name('openingbalance.create');
+    Route::post('/opening-balance-store', [OpeningBalanceController::class, 'store'])->name('openingbalance.store');
+    Route::get('/edit-opening-balance-{id}', [OpeningBalanceController::class, 'edit'])->name('openingbalance.edit'); // View opening balance by ID
+    Route::put('/opening-balance/{id}', [OpeningBalanceController::class, 'update'])->name('openingbalance.update');
+    Route::delete('/opening-balance/{id}', [OpeningBalanceController::class, 'destroy'])->name('openingbalance.destroy');
 
     //saleproductcategory crud
     Route::get('/saleproductcategory', [TblSaleProductCategoryController::class, 'index'])->name('saleproductcategory.index');

@@ -11,6 +11,7 @@ class Report extends Model
 
     protected $table = 'tbl_reports';
     protected $fillable = [
+        'indate',
         'worker_name',
         'sr_no_fiber',
         'm_j',
@@ -29,6 +30,7 @@ class Report extends Model
         'stock_status',
         'final_amount',
         'extra_line',
+        'outdate',
     ];
 
     public function tbl_leds()

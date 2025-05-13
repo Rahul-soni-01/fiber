@@ -286,6 +286,7 @@ class SaleController extends Controller
                     // Update sale_status to 1
                     $report->sale_status = 1;
                     $report->stock_status = 0;
+                    $report->outdate = $request->date;
                     $report->section = 4;
                     $report->save();
                     // dd($report,$request->cname[$i]);

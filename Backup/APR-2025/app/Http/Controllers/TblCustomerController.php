@@ -63,8 +63,7 @@ class TblCustomerController extends Controller
             3 => 40001,
         };
 
-        $maxHeadCode = TblAccCoa::where('HeadLevel', '=', 4)
-                ->max('HeadCode');
+        $maxHeadCode = TblAccCoa::where('HeadLevel', '=', 4)->max('HeadCode');
         if ($maxHeadCode) {
             $HeadCode = $maxHeadCode + 1;
         } else {

@@ -764,6 +764,12 @@
                                 <li class="nav-item nav-sub-item" id="add">
                                     <a href="{{ route('gst-pdf.index') }}" class="nav-link">GST PDF Invoice</a>
                                 </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('final.balance') }}" class="nav-link">Final balance</a>
+                                </li>
+                                 <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('openingbalance.index') }}" class="nav-link">Opening balance</a>
+                                </li>
                             </ul>
                         </div>
                     </li>

@@ -15,6 +15,64 @@ class TblAccCoaController extends Controller
         $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Account ?? [];
         return in_array($action, $permissions);
     }
+
+    public function finalbalance(Request $request)
+    {
+        // 1. Assets Calculation
+        $cashInHand = DB::table('tbl_payments')
+            ->where('payment_method', 'Cash')
+            ->sum('amount_paid')
+            - DB::table('tbl_expensive')
+            ->where('payment_type', 'Cash')
+            ->sum('amount');
+
+        $bankBalance = DB::table('tbl_payments')
+            ->where('payment_method', 'Bank')
+            ->sum('amount_paid')
+            - DB::table('tbl_expensive')
+            ->where('payment_type', 'Bank')
+            ->sum('amount');
+
+        $accountsReceivable = DB::table('tbl_sales')
+            ->sum('amount')
+            - DB::table('tbl_customer_payments')
+            ->whereNotNull('customer_id')
+            ->sum('amount_paid');
+ 
+        // 2. Liabilities Calculation
+        $accountsPayable = DB::table('tbl_purchases')
+            ->sum('inr_amount')
+            - DB::table('tbl_payments')
+            ->whereNotNull('supplier_id')
+            ->sum('amount_paid');
+
+        // 3. Profit & Loss Calculation
+        $totalSales = DB::table('tbl_sales')->sum('amount');
+        $totalPurchases = DB::table('tbl_purchases')->sum('inr_amount');
+        $totalExpenses = DB::table('tbl_expensive')->sum('amount');
+
+        $grossProfit = $totalSales - $totalPurchases;
+        $netProfit = $grossProfit - $totalExpenses;
+
+        return view('acccoa.finalbalance', [
+            // Assets
+            'cash_in_hand' => $cashInHand,
+            'bank_balance' => $bankBalance,
+            'accounts_receivable' => $accountsReceivable,
+
+            // Liabilities
+            'accounts_payable' => $accountsPayable,
+
+            // Equity
+            'net_profit' => $netProfit,
+
+            // Additional useful data
+            'total_sales' => $totalSales,
+            'total_purchases' => $totalPurchases,
+            'total_expenses' => $totalExpenses,
+            'report_date' => now()->format('d-M-Y')
+        ]);
+    }
     public function index()
     {
         $accounts = TblAccCoa::all();
@@ -28,7 +86,6 @@ class TblAccCoaController extends Controller
             return view('acccoa.create', compact('accounts'));
         }
         return redirect('/unauthorized');
-
     }
 
     public function store(Request $request)
@@ -94,7 +151,6 @@ class TblAccCoaController extends Controller
             return view('acccoa.predefine', compact('predefineaccount', 'accounts', 'predefineaccounts'));
         }
         return redirect('/unauthorized');
-
     }
 
     public function predefineUpdate(Request $request)
@@ -133,7 +189,6 @@ class TblAccCoaController extends Controller
         }
         $predefineaccount->save();
         return redirect()->route('predefine.index')->with('success', 'Updated successfully.');
-
     }
     public function edit($id, Request $request)
     {
@@ -143,7 +198,6 @@ class TblAccCoaController extends Controller
             return view('acccoa.edit', compact('acccoa', 'accounts'));
         }
         return redirect('/unauthorized');
-
     }
 
     public function update(Request $request, TblAccCoa $tblAccCoa, $id)
