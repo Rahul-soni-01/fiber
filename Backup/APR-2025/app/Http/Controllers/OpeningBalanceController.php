@@ -43,10 +43,10 @@ class OpeningBalanceController extends Controller
             'short_term_loans' => 'nullable|numeric',
             'long_term_loans' => 'nullable|numeric',
             'tax_payable' => 'nullable|numeric',
-            'share_capital' => 'nullable|numeric',
-            'retained_earnings' => 'nullable|numeric',
+            'owners_capital' => 'nullable|numeric',
+            'partners_capital' => 'nullable|numeric',
             'current_profit' => 'nullable|numeric',
-            'capital' => 'nullable|numeric',
+            // 'capital' => 'nullable|numeric',
         ]);
 
         OpeningBalance::create($validated);
@@ -57,9 +57,10 @@ class OpeningBalanceController extends Controller
     /**
      * Show the form for editing the specified opening balance.
      */
-    public function edit(OpeningBalance $openingBalance)
+    public function edit(OpeningBalance $openingBalance,$id)
     {
-        return view('opening_balances.edit', compact('openingBalance'));
+        $openingBalance = OpeningBalance::find($id);
+        return view('opening_balances.edit', compact('openingBalance','id'));
     }
 
     /**
@@ -83,10 +84,10 @@ class OpeningBalanceController extends Controller
             'short_term_loans' => 'nullable|numeric',
             'long_term_loans' => 'nullable|numeric',
             'tax_payable' => 'nullable|numeric',
-            'share_capital' => 'nullable|numeric',
-            'retained_earnings' => 'nullable|numeric',
+            'owners_capital' => 'nullable|numeric',
+            'partners_capital' => 'nullable|numeric',
             'current_profit' => 'nullable|numeric',
-            'capital' => 'nullable|numeric',
+            // 'capital' => 'nullable|numeric',
         ]);
 
         $openingBalance->update($validated);

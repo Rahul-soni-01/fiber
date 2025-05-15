@@ -27,10 +27,10 @@ class OpeningBalance extends Model
         'short_term_loans',
         'long_term_loans',
         'tax_payable',
-        'share_capital',
-        'retained_earnings',
+        'owners_capital',
+        'partners_capital',
         'current_profit',
-        'capital', // or use sub-categories like owners_capital, partners_capital, etc.
+        // 'capital', // or use sub-categories like owners_capital, partners_capital, etc.
     ];
 
     protected $casts = [
@@ -49,9 +49,9 @@ class OpeningBalance extends Model
         'short_term_loans' => 'decimal:2',
         'long_term_loans' => 'decimal:2',
         'tax_payable' => 'decimal:2',
-        'share_capital' => 'decimal:2',
-        'retained_earnings' => 'decimal:2',
+        'owners_capital' => 'decimal:2',
+        'partners_capital' => 'decimal:2',
         'current_profit' => 'decimal:2',
-        'capital' => 'decimal:2',
+        // 'capital' => 'decimal:2',
     ];
 }

@@ -33,15 +33,8 @@ class Report extends Model
         'outdate',
     ];
 
-    public function tbl_leds()
-    {
-        return $this->hasMany(TblLed::class, 'report_id', 'id');
-    }
+   
 
-    public function tbl_cards()
-    {
-        return $this->hasMany(TblCard::class, 'report_id', 'id');
-    }
     public function tbl_type() // Singular, since it's a belongsTo relationship
     {
         return $this->belongsTo(Tbltype::class, 'type', 'id');

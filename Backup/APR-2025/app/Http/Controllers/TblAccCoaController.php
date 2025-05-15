@@ -38,7 +38,7 @@ class TblAccCoaController extends Controller
             - DB::table('tbl_customer_payments')
             ->whereNotNull('customer_id')
             ->sum('amount_paid');
- 
+
         // 2. Liabilities Calculation
         $accountsPayable = DB::table('tbl_purchases')
             ->sum('inr_amount')
@@ -114,11 +114,13 @@ class TblAccCoaController extends Controller
             $maxHeadCode = TblAccCoa::where('HeadLevel', $data->HeadLevel + 1)
                 ->where('HeadCode', '>=', $thousand)
                 ->max('HeadCode');
+
             if ($maxHeadCode) {
                 $HeadCode = $maxHeadCode + 1;
             } else {
                 $HeadCode = $thousand; // Start with the base value
             }
+            // dd($HeadCode);
 
             $PHeadName = $data->HeadName;
             $PHeadCode = $data->HeadCode;
@@ -166,6 +168,7 @@ class TblAccCoaController extends Controller
             'serviceCode',
             'customerCode',
             'supplierCode',
+            'ExpenseCode',
             'costs_of_good_solds',
             'vat',
             'tax',
@@ -241,10 +244,21 @@ class TblAccCoaController extends Controller
         return redirect()->route('acccoa.index')->with('success', 'Updated successfully.');
     }
 
-    public function destroy(TblAccCoa $tblAccCoa)
+    public function destroy(TblAccCoa $tblAccCoa, $id)
     {
-        $tblAccCoa->delete();
-        return redirect()->route('acccoa.index')->with('success', 'Delete successfully.');
+        $acccoa = TblAccCoa::findOrFail($id);
+
+        if ($acccoa) {
+            // Check if this HeadCode is used as PHeadCode in other records
+            $hasChild = TblAccCoa::where('PHeadCode', $acccoa->HeadCode)->exists();
+            // dd($hasChild,$acccoa);
+            if ($hasChild) {
+                return redirect()->back()->with('error', 'Cannot delete this record. It is a Parent to other accounts.');
+            }
+
+            $acccoa->delete();
+            return redirect()->route('acccoa.index')->with('success', 'Deleted successfully.');
+        }
     }
 
     public function getMaxFieldNumber($field, $table, $where = null, $type = null, $field2 = null)

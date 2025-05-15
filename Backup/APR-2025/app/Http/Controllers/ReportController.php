@@ -40,7 +40,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')->get();
+            $reports = Report::with('tbl_type')->get();
             // dd($reports);
             if (auth()->user()->type === 'godown') {
                 // dd("de");
@@ -61,7 +61,7 @@ class ReportController extends Controller
             // dd($types,$reports);
             if (auth()->user()->type === 'godown') {
                 // dd("de");
-                $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')
+                $reports = Report::with('tbl_type')
                     ->where('sale_status', '0')
                     ->orWhere('part', 1)
                     ->get();
@@ -73,7 +73,7 @@ class ReportController extends Controller
     }
     public function ReportNew(Request $request)
     {
-        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        $reports = Report::with('tbl_type')
         // ->where('part', 0);
         ->where('sale_status', 0);
         // Apply filters conditionally
@@ -101,7 +101,7 @@ class ReportController extends Controller
                 ->get();
             // $categoryId = tbl_category::whereRaw('LOWER(category_name) = ?', ['card'])->value('id');
             // $cards = tbl_sub_category::where('cid', $categoryId)->get();
-            $types = Tbltype::orderBy('id', 'asc')->get();
+            // $types = Tbltype::orderBy('id', 'asc')->get();
             // $party_id = tbl_party::where('party_name', 'opening stock')->value('id');
             // $invoice = tbl_purchase::where('pid', $party_id)->first();
             // $invoice_no = $invoice->invoice_no;
@@ -128,14 +128,14 @@ class ReportController extends Controller
             // dd($hrs);
             $customers = TblCustomer::all();
             // return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('types', 'all_sub_categories', 'customers'));
+            return view("report.createNew", compact('all_sub_categories', 'customers'));
         }
         return redirect('/unauthorized');
     }
    
     public function show(Request $request, $id)
     {
-        $report = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')->find($id);
+        $report = Report::with('tbl_type')->find($id);
         $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')->where('report_id', $id)->get();
         // dd($reportitems);
         // return view('report.show', compact('report'));
@@ -143,7 +143,7 @@ class ReportController extends Controller
     }
     public function typeshow(Request $request, $id)
     {
-        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        $reports = Report::with('tbl_type')
             ->where('type', $id);
         // Apply filters conditionally
         if ($request->query('s_date') !== null && $request->query('e_date') !== null) {
@@ -169,7 +169,7 @@ class ReportController extends Controller
     {
         $type = $request->type;
         if ($request->url == 'sale-repair-create') {
-            $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
+            $reports = Report::with('tbl_type')
                 ->where('part', 1)
                 ->where('sale_status', 0)
                 ->where('stock_status', 1)
@@ -179,7 +179,7 @@ class ReportController extends Controller
                 ->get()
                 ->pluck('sr_no_fiber');
         } elseif ($request->url == 'sale-create') {
-            $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
+            $reports = Report::with('tbl_type')
                 ->where('part', 0)
                 ->where('sale_status', 0)
                 ->where('stock_status', 1)
@@ -293,7 +293,7 @@ class ReportController extends Controller
     }
     public function ready(Request $request)
     {
-        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        $reports = Report::with('tbl_type')
             // ->where('part', 0)
             ->where('sale_status', 0)
             // ->where('r_status', 0)
@@ -410,7 +410,7 @@ class ReportController extends Controller
 
     public function edit($id)
     {
-        $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category', 'tbl_type')->find($id);
+        $report = Report::with('tbl_type')->find($id);
         $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category', 'tbl_sub_category.category')->where('report_id', $id)->get();
         // dd($id);
         $invoice_no = SelectedInvoice::first()->invoice_no;
@@ -449,7 +449,7 @@ class ReportController extends Controller
     public function reject(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_leds', 'tbl_cards')->where('status', 2)->get();
+            $reports = Report::with('tbl_type')->where('status', 2)->get();
             return view("report.reject", compact('reports'));
         }
         return redirect('/unauthorized');

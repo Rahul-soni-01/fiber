@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TblExpense;
 use App\Models\TblBank;
+use App\Models\TblAccPredefineAccount;
+use App\Models\TblAccCoa;
 
 class TblExpenseController extends Controller
 {
@@ -16,8 +18,11 @@ class TblExpenseController extends Controller
 
     public function create()
     {
+        $predefineaccount = TblAccPredefineAccount::findOrFail(1);
+        $all_expensive_type = TblAccCoa::where('PHeadCode',$predefineaccount->ExpenseCode)->get();
         $banks = TblBank::all();
-        return view('expenses.create',compact('banks'));
+        // dd($all_expensive_type);
+        return view('expenses.create',compact('banks','all_expensive_type'));
     }
     public function store(Request $request)
     {
@@ -25,6 +30,7 @@ class TblExpenseController extends Controller
             'date' => 'required',
             'name' => 'nullable|string|max:255',
             'amount' => 'nullable|numeric',
+            'HeadCode' => 'nullable|numeric',
             'payment_type' => 'nullable|in:Cash,Bank',
             'bank_id' => 'nullable|integer',
             'transaction_type' => 'nullable|string|max:255',
@@ -32,7 +38,7 @@ class TblExpenseController extends Controller
             'notes' => 'nullable|string|max:255',
         ]);
         
-        $data = $request->only(['date','name', 'amount', 'payment_type', 'notes']); // Always include these fields
+        $data = $request->only(['date','name', 'amount', 'payment_type', 'HeadCode','notes']); // Always include these fields
         
         // Only add these fields if payment_type is 'Bank'
         if ($request->payment_type == 'Bank') {
@@ -43,8 +49,6 @@ class TblExpenseController extends Controller
         
         TblExpense::create($data);
         
-
-
         return redirect()->route('expenses.index')->with('success', 'Expense created successfully.');
     }
     public function show($id)
@@ -64,6 +68,7 @@ class TblExpenseController extends Controller
         $request->validate([
             'name' => 'nullable|string|max:255',
             'amount' => 'nullable|numeric',
+            'HeadCode' => 'nullable|numeric',
             'payment_type' => 'nullable|in:Cash,Bank',
             'bank_id' => 'nullable|integer',
             'transaction_type' => 'nullable|string|max:255',
@@ -73,7 +78,7 @@ class TblExpenseController extends Controller
         
         $expense = TblExpense::findOrFail($id);
         
-        $data = $request->only(['name', 'amount', 'payment_type', 'notes']); // Always include these fields
+        $data = $request->only(['name', 'amount', 'payment_type','HeadCode', 'notes']); // Always include these fields
         
         if ($request->payment_type == 'Bank') {
             $data['bank_id'] = $request->bank_id;

@@ -10,6 +10,7 @@ class TblBank extends Model
     use HasFactory;
     protected $table = 'tbl_bank';
     protected $fillable = [
+        'HeadCode',
         'bank_name',
         'branch',
         'account_type',

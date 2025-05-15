@@ -26,6 +26,7 @@ class TblAccPredefineAccount extends Model
         'serviceCode',
         'customerCode',
         'supplierCode',
+        'ExpenseCode',
         'costs_of_good_solds',
         'vat',
         'tax',

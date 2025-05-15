@@ -770,6 +770,12 @@
                                  <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('openingbalance.index') }}" class="nav-link">Opening balance</a>
                                 </li>
+                                  <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('acccoa.index') }}" id="show" class="nav-link">Chart of Account</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('predefine.index') }}" id="view" class="nav-link">Predefine of Accounts </a>
+                                </li>
                             </ul>
                         </div>
                     </li>

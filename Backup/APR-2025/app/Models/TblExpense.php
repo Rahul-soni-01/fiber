@@ -15,6 +15,7 @@ class TblExpense extends Model
         'date',
         'name',
         'amount',
+        'HeadCode',
         'payment_type',
         'transaction_type',
         'bank_id',

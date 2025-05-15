@@ -32,7 +32,18 @@
                 <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}"
                     placeholder="Enter expense name">
             </div>
-
+            <div class="col-md-4 mb-3">
+                <label for="HeadCode" class="form-label">Expense Type</label>
+                <select id="HeadCode" name="HeadCode" class="form-control select2"
+                    placeholder="Enter Expense Type">
+                    <option value="" disabled selected>Choose a Expense Type</option>
+                    @foreach($all_expensive_type as $account)
+                        <option value="{{ $account->HeadCode }}" >
+                            {{ $account->HeadCode }} - {{ $account->HeadName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
             <!-- Amount -->
             <div class="col-md-4 mb-3">
                 <label for="amount" class="form-label">Amount</label>
@@ -100,7 +111,7 @@
             </div>
             <!-- Bank ID -->
 
-            <div class="mb-3 col-md-6">
+            <div class="mb-3 col-12">
                 <label for="note">Note:</label>
                 <textarea id="notes" name="notes" class="form-control"></textarea>
             </div>
