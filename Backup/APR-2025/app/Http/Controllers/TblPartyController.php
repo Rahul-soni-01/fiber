@@ -144,6 +144,15 @@ class TblPartyController extends Controller
     
         $result = $party->save();
     
+        if ($party->HeadCode) {
+            $ledger = TblAccCoa::where('HeadCode', $party->HeadCode)->first();
+            // dd($ledger);
+            if ($ledger) {
+                $ledger->update([
+                    'HeadName' => $request->party_name,
+                ]);
+            }
+        }
         if ($result) {
             return redirect()->route('party.show')->with('success', 'Party updated successfully.');
         } else {

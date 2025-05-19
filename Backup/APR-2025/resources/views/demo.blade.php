@@ -634,6 +634,9 @@
                                 <li class="nav-item nav-sub-item" id="view">
                                     <a href="{{ route('layouts.index') }}" class="nav-link">Show Report Layout</a>
                                 </li>
+                                <li class="nav-item nav-sub-item" id="view">
+                                    <a href="{{ route('report-permission.index') }}" class="nav-link">Report Permission</a>
+                                </li>
                         </div>
                     </li>
                     <!-- Report -->
@@ -766,6 +769,9 @@
                                 </li>
                                 <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('final.balance') }}" class="nav-link">Final balance</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('financial-years.index') }}" class="nav-link">Financial Year</a>
                                 </li>
                                  <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('openingbalance.index') }}" class="nav-link">Opening balance</a>

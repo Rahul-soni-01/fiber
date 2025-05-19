@@ -28,6 +28,8 @@ use App\Http\Controllers\PdfGeneratorController;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ManufactureReportLayoutController;
 use App\Http\Controllers\OpeningBalanceController;
+use App\Http\Controllers\FinancialYearController;
+use App\Http\Controllers\ReportPermissionController;
 
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
@@ -69,6 +71,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage-permissions-store', [ManagePermissionController::class, 'store'])->name('manage.permissions.store');
     Route::get('/manage-permissions-departments-{id}', [ManagePermissionController::class, 'edit'])->name('managePermissions.departments');
     Route::post('/manage-permissions-update-{id}', [ManagePermissionController::class, 'update'])->name('manage-permissions.update');
+
+    Route::resource('financial-years', FinancialYearController::class);
+    Route::resource('report-permission', ReportPermissionController::class);
 
     // predefine edit
     Route::get('/predefine', [TblAccCoaController::class, 'predefine'])->name('predefine.index');

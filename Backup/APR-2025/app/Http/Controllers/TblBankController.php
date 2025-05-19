@@ -144,6 +144,7 @@ class TblBankController extends Controller
         $bank->update($request->all());
         if ($bank->HeadCode) {
                 $ledger = TblAccCoa::where('HeadCode', $bank->HeadCode)->first();
+                // dd($ledger);
                 if ($ledger) {
                     $ledger->update([
                         'HeadName' => $request->bank_name,

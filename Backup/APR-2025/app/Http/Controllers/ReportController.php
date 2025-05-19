@@ -101,7 +101,7 @@ class ReportController extends Controller
                 ->get();
             // $categoryId = tbl_category::whereRaw('LOWER(category_name) = ?', ['card'])->value('id');
             // $cards = tbl_sub_category::where('cid', $categoryId)->get();
-            // $types = Tbltype::orderBy('id', 'asc')->get();
+            $types = Tbltype::orderBy('id', 'asc')->get();
             // $party_id = tbl_party::where('party_name', 'opening stock')->value('id');
             // $invoice = tbl_purchase::where('pid', $party_id)->first();
             // $invoice_no = $invoice->invoice_no;
@@ -128,7 +128,7 @@ class ReportController extends Controller
             // dd($hrs);
             $customers = TblCustomer::all();
             // return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('all_sub_categories', 'customers'));
+            return view("report.createNew", compact('types','all_sub_categories', 'customers'));
         }
         return redirect('/unauthorized');
     }
