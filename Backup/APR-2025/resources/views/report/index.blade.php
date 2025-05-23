@@ -182,7 +182,7 @@
                     </td>
                     @endif
                     @if ($type === 'admin' )
-                    <td>{{ $report->sr_no_fiber }}</td>
+                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->tbl_type->name ?? 0 }}</td>
                     <td>{{ $report->worker_name }}</td>
                     <td>{{ $report->final_amount }}</td>

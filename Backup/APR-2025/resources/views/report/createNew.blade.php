@@ -7,7 +7,7 @@
     {{ session('error') }}
 </div>
 @endif
-<div class="container-fluid">  
+<div class="container-fluid">
     <form action="{{route('report.stockReport')}}" method="post" id="report-form">
         @csrf
         <div class="container-fluid">
@@ -26,7 +26,8 @@
                 </div>
                 @endif
             </div>
-            @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
+            @if( auth()->user()->type == 'admin')
+             @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
             <div class="row mb-3">
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')
                 <div class="col-12 col-md-2" id="part-label">
@@ -130,6 +131,94 @@
                 @endif
             </div>
             @endif
+            @else
+            <div class="row mb-3">
+                @foreach ($allowedFields as $field)
+                @switch($field)
+
+                @case('part')
+                <div class="col-12 col-md-2">
+                    <h5>Part</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <select id="part" name="part" class="form-control" required>
+                        <option value="" disabled selected>Select Part</option>
+                        <option value="0">New</option>
+                        <option value="1">Repairing</option>
+                    </select>
+                </div>
+                @break
+
+                @case('temp')
+                <div class="col-12 col-md-2">
+                    <h5>Temp no.</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="temp" class="form-control" placeholder="Enter Temporary No">
+                </div>
+                @break
+
+                @case('worker_name')
+                <div class="col-12 col-md-2">
+                    <h5>Employee Name</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="worker_name" class="form-control" placeholder="Enter Worker Name">
+                </div>
+                @break
+
+                @case('sr_no_fiber')
+                <div class="col-12 col-md-2">
+                    <h5>SR (Fiber)</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="sr_no_fiber" class="form-control" placeholder="Enter SR No Fiber">
+                </div>
+                @break
+
+                @case('mj')
+                <div class="col-12 col-md-2">
+                    <h5>M.J</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="m_j" class="form-control" placeholder="Enter M/J Value">
+                </div>
+                @break
+
+                @case('warranty')
+                <div class="col-12 col-md-2">
+                    <h5>Warranty</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <select name="warranty" class="form-control" required>
+                        <option value="" disabled selected>Select Warranty</option>
+                        <option value="0">No Warranty</option>
+                        <option value="1">Warranty</option>
+                    </select>
+                </div>
+                @break
+
+                @case('type')
+                <div class="col-12 col-md-2">
+                    <h5>Type</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <select id="type" name="type" class="form-control select2" data-type='@json($all_sub_categories)'
+                        required>
+                        <option value="" disabled selected>Select Type</option>
+                        @foreach($types as $type)
+                        <option value="{{ $type->id }}" data-value="{{ $type->name }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @break
+
+                @endswitch
+                @endforeach
+            </div>
+
+            @endif
+
             @if( auth()->user()->type !== 'godown')
             <div class="row mb-3">
                 <!-- Empty Columns -->
@@ -144,6 +233,7 @@
                 <div class="col-12 col-md-2"></div>
             </div>
             @endif
+            
             @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric' || auth()->user()->type
             === 'godown' )
             <div class="row">

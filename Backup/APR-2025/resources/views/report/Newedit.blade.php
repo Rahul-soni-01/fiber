@@ -161,13 +161,13 @@
                         <h5>SR</h5>
                     </div>
                     <div class="col-md-2">
-                        <h5>AMP.</h5>
+                        <h5>WATT</h5>
                     </div>
                     <div class="col-md-2">
-                        <h5>VOLT</h5>
+                        <h5>WALT</h5>
                     </div>
                     <div class="col-md-3">
-                        <h5>WATT</h5>
+                        <h5>AMP.</h5>
                     </div>
                     <div class="col-md-2">
                         <h5>Dead/Action</h5>
@@ -214,11 +214,11 @@
                         </div>
                         <div class="col-md-2">
                             @if($reportitem->sr_no != 0)
-                            <input type="text" id="ampled_1" name="ampled[]" class="form-control"
-                                value="{{ $reportitem->amp }}" placeholder="Enter AMP">
+                            <input type="text" id="ampled_1" name="wattled[]" class="form-control"
+                                value="{{ $reportitem->watt }}" placeholder="Enter Watt">
                             @else
-                            <input type="hidden" id="ampled_1" name="ampled[]" class="form-control"
-                                value="{{ $reportitem->amp }}" placeholder="Enter AMP">
+                            <input type="hidden" id="ampled_1" name="wattled[]" class="form-control"
+                                value="{{ $reportitem->watt }}" placeholder="Enter Watt">
                             @endif
                         </div>
                         <div class="col-md-2">
@@ -231,12 +231,13 @@
                             @endif
                         </div>
                         <div class="col-12 col-md-5 d-flex justify-content-between">
+                            
                             @if($reportitem->sr_no != 0)
-                            <input type="text" id="ampled_1" name="wattled[]" class="form-control"
-                                value="{{ $reportitem->watt }}" placeholder="Enter Watt">
+                            <input type="text" id="ampled_1" name="ampled[]" class="form-control"
+                                value="{{ $reportitem->amp }}" placeholder="Enter AMP">
                             @else
-                            <input type="hidden" id="ampled_1" name="wattled[]" class="form-control"
-                                value="{{ $reportitem->watt }}" placeholder="Enter Watt">
+                            <input type="hidden" id="ampled_1" name="ampled[]" class="form-control"
+                                value="{{ $reportitem->amp }}" placeholder="Enter AMP">
                             @endif
                             <input type="hidden" name="dead[]" value="0" class="hidden-dead-{{$index+1}}"
                                 @if($reportitem->dead_status == '1') disabled @endif>

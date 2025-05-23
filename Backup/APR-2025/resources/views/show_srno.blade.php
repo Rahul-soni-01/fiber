@@ -47,7 +47,12 @@
             <td>{{ $invoice_no }}</td>
             <td>{{ $item->category->category_name ?? 'N/A' }} - {{ $item->subCategory->sub_category_name ?? 'N/A' }}
             </td>
-            <td>{{ $item->subCategory->unit ?? 'N/A' }}</td>
+            <td> @if ($item->subCategory->unit == 'Pic') 
+                    Pcs
+                @else
+                    {{ $item->subCategory->unit }}
+                @endif
+            </td>
             <td>{{ $item->serial_no ?? 'N/A' }}</td>
             <td>{{ $item->qty ?? 'N/A' }}</td>
             <td>{{ $item->status == 0 ? 'No Use' : ($item->status == 1 ? 'Used' : 'Unknown') }}</td>

@@ -34,16 +34,14 @@
     === 'admin' || auth()->user()->type === 'user')
     <div class="row mt-4 ">
         <div class="col-md-3">
-            @if(auth()->user()->type === 'account' ||auth()->user()->type == 'admin' || auth()->user()->type
-            === 'user' )
+           
             <h5>SR(FIBER)</h5>
-            @endif
+           
         </div>
         <div class="col-md-2">
-            @if(auth()->user()->type === 'account' || auth()->user()->type == 'admin' ||
-            auth()->user()->type === 'user')
-            <span>{{ $report->sr_no_fiber }}</span>
-            @endif
+           
+            <span>{{ $report->sr_no_fiber ?? 'N/A'}}</span>
+           
         </div>
         <div class="col-md-2">
             @if(auth()->user()->type == 'admin' || auth()->user()->type === 'electric')

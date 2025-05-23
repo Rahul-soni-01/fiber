@@ -45,8 +45,8 @@ class ReportPermissionController extends Controller
     // Show single record
     public function show($id)
     {
-        $permission = ReportPermission::findOrFail($id);
-        return view('report_permission.show', compact('permission'));
+        $reportPermission = ReportPermission::findOrFail($id);
+        return view('report_permission.show', compact('reportPermission'));
     }
 
     // Show form to edit record

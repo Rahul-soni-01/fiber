@@ -8,8 +8,6 @@ use App\Models\tbl_purchase_item;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Report;
-use App\Models\TblLed;
-use App\Models\TblCard;
 use App\Models\TblStock;
 use Illuminate\Support\Facades\Validator;
 use App\Models\tbl_sub_category;
@@ -24,6 +22,8 @@ use App\Models\TblSaleReturn;
 use App\Models\Tbltype;
 use App\Models\ManufactureReportLayout;
 use App\Models\ManufactureReportLayoutField;
+use App\Models\ReportPermission;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
@@ -127,8 +127,21 @@ class ReportController extends Controller
             //     ->get();
             // dd($hrs);
             $customers = TblCustomer::all();
+            $userType = auth()->user()->type;
+
+            $permission = ReportPermission::where('user_type', $userType)->first();
+            $allFields = ['part', 'temp', 'worker_name', 'sr_no_fiber', 'mj', 'warranty', 'type'];
+            if($userType == 'admin'){
+                $allowedFields = $allFields;
+            }else{
+                $allowedFields = $permission ? $permission->field_name : [];
+                if(is_string($allowedFields)){
+                    $allowedFields = json_decode($allowedFields,true);
+                }
+            }
+
             // return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('types','all_sub_categories', 'customers'));
+            return view("report.createNew", compact('types','all_sub_categories', 'customers','allowedFields'));
         }
         return redirect('/unauthorized');
     }
