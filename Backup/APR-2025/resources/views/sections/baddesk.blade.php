@@ -29,8 +29,8 @@
                 <tr class="bg-dark text-white">
                     <th>ID</th>
                     <th>Part</th>
-                    <th>W/N.W.</th>
                     <th>Section</th>
+                    <th>W/N.W.</th>
 
                     <th>Date</th>
                     <th>Serial No.</th>
@@ -66,7 +66,7 @@
                         </select>
                     </td>
                     
-                    <td>{{ $report->m_j ?? 'N/A' }}</td>
+                    <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown') }}</td>
                     <td>{{ $report->created_at->format('d-m-Y') ?? 'N/A' }}</td>
                     <td>{{ $sr_no_fiber }}</td>
                     <td>{{ $report->tbl_type->name ?? ($report->type ?? 'N/A') }}</td>

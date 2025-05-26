@@ -155,7 +155,8 @@
                 </strong>
             </div>
             <div class="col-md-9">
-                <span>{{ ($report->indate ?? $report->created_at)->format('Y-m-d') }}</span>
+                <span>{{ \Carbon\Carbon::parse($report->indate ?? $report->created_at)->format('Y-m-d') }}</span>
+
                 <br>
                 <span>{{ $report->outdate }}</span>
             </div>

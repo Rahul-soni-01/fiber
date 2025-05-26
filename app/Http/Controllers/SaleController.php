@@ -527,7 +527,7 @@ class SaleController extends Controller
                     $report->save();
                 }
                 SaleItem::where('sid', $id)->delete();
-
+                
                 $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);
                 $sale->sale_id = $request->sale_id;
                 $sale->customer_id = $request->cid;

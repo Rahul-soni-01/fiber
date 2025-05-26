@@ -64,9 +64,25 @@ class PermissionController extends Controller
             'section' => 'required|integer|in:0,1,2,3,4', // Only allowed section values
         ]);
     
+        // dd($request->all());
         // Find the report or fail automatically
+
         $report = Report::findOrFail($validated['id']);
-    
+        if ($validated['section'] == 0) {
+            $report->part = 0;
+
+        } elseif ($validated['section'] == 1) {
+            $report->part = 0;
+
+        } elseif ($validated['section'] == 2) {
+            $report->part = 1;
+            
+        } elseif ($validated['section'] == 3) {
+            $report->part = 0;
+            
+        } elseif ($validated['section'] == 4) {
+            $report->part = 0;
+        }
         // Update the section
         $report->section = $validated['section'];
         $report->save();

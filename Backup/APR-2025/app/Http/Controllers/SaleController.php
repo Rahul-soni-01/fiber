@@ -519,7 +519,7 @@ class SaleController extends Controller
 
     public function update(Request $request, $id){
         if ($this->checkPermission($request, 'edit')) {
-          
+           
             $oldsaleItems = SaleItem::where('sid', $id)->get();
             try {
                 foreach ($oldsaleItems as $oldsaleItem) {
@@ -527,7 +527,11 @@ class SaleController extends Controller
                     $report->sale_status = 0;
                     $report->save();
                 }
-                SaleItem::where('sid', $id)->delete();
+                $delete = SaleItem::where('sid', $id)->delete();
+//  dd($request->all(),$delete);
+                if (!$delete) {
+                    throw new \Exception('Failed to delete sale item');
+                }
 
                 $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);
                 $sale->sale_id = $request->sale_id;
