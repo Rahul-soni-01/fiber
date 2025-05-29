@@ -2,7 +2,7 @@
 @section('title', 'Sale Return')
 
 @section('content')
-<h1>Sale Return</h1>
+<h1>Sale Return/Repair</h1>
         <div class="main" id="main">
             <a href="{{ route('sale.return') }}" class="btn btn-primary mt-2 mb-2">Add Sale Return</a>
             <table class="table text-white">

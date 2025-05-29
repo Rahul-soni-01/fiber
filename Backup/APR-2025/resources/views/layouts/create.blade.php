@@ -23,7 +23,7 @@
             <input type="text" name="name" class="form-control" placeholder="Enter layout name" required>
         </div>
         <div class="mb-3">
-            <label for="name" class="form-label">Layout Name</label>
+            <label for="name" class="form-label">Layout Type</label>
             <select id="type" name="type" required class="form-control">
                 <option value="" disabled selected>Select Type</option>
                 @foreach($types as $type)

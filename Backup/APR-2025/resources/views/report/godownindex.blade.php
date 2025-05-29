@@ -2,6 +2,7 @@
 @section('title', 'Show Report')
 @section('content')
 <h1>Show {{ auth()->user()->type }} Report</h1>
+<a href="{{ route('report.create')}}" class="btn btn-primary mb-3">Add Report</a>
 <div class="main" id="main">
     @if ($errors->any())
     <div style="color: red;">

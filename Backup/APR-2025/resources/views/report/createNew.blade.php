@@ -26,8 +26,9 @@
                 </div>
                 @endif
             </div>
+            {{-- if admin login then option for report layout append --}}
             @if( auth()->user()->type == 'admin')
-             @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
+            @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
             <div class="row mb-3">
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')
                 <div class="col-12 col-md-2" id="part-label">
@@ -56,7 +57,8 @@
                 @endif
             </div>
             @endif
-            @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' || auth()->user()->type === 'admin' || auth()->user()->type === 'user')
+            @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' || auth()->user()->type ===
+            'admin' || auth()->user()->type === 'user')
             <div class="row mb-3">
                 @if(auth()->user()->type === 'godown' || auth()->user()->type === 'admin' ||
                 auth()->user()->type === 'user')
@@ -121,7 +123,8 @@
                 </div>
                 <!-- Type Dropdown -->
                 <div class="col-12 col-md-3">
-                    <select id="type" name="type" data-type="{{ json_encode($all_sub_categories) }}" required class="form-control">
+                    <select id="type" name="type" data-type="{{ json_encode($all_sub_categories) }}" required
+                        class="form-control">
                         <option value="" disabled selected>Select Type</option>
                         @foreach($types as $type)
                         <option value="{{$type->id}}" data-value="{{$type->name}}">{{$type->name}}</option>
@@ -131,6 +134,7 @@
                 @endif
             </div>
             @endif
+            {{-- if admin not login then No for report layout append. --}}
             @else
             <div class="row mb-3">
                 @foreach ($allowedFields as $field)
@@ -199,18 +203,36 @@
                 @break
 
                 @case('type')
-                <div class="col-12 col-md-2">
-                    <h5>Type</h5>
+                @if( auth()->user()->type === 'godown')
                 </div>
-                <div class="col-12 col-md-3 mb-2">
-                    <select id="type" name="type" class="form-control select2" data-type='@json($all_sub_categories)'
-                        required>
-                        <option value="" disabled selected>Select Type</option>
-                        @foreach($types as $type)
-                        <option value="{{ $type->id }}" data-value="{{ $type->name }}">{{ $type->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <div class="row mb-3">
+
+                     <div class="col-12 col-md-2">
+                        <h5>Type</h5>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2">
+                        <select id="type" name="type" class="form-control" data-type='@json($all_sub_categories)'
+                            required>
+                            <option value="" disabled selected>Select Type</option>
+                            @foreach($types as $type)
+                            <option value="{{ $type->id }}" data-value="{{ $type->name }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                     <div class="col-12 col-md-3">
+                        <h5>Type</h5>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2">
+                        <select id="type" name="type" class="form-control select2" data-type='@json($all_sub_categories)'
+                            required>
+                            <option value="" disabled selected>Select Type</option>
+                            @foreach($types as $type)
+                            <option value="{{ $type->id }}" data-value="{{ $type->name }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
                 @break
 
                 @endswitch
@@ -233,9 +255,8 @@
                 <div class="col-12 col-md-2"></div>
             </div>
             @endif
-            
-            @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric' || auth()->user()->type
-            === 'godown' )
+
+            @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
             <div class="row">
                 <!-- ITEM -->
                 <div class="col-12 col-md-3">

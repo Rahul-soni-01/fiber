@@ -519,16 +519,15 @@ class SaleController extends Controller
 
     public function update(Request $request, $id){
         if ($this->checkPermission($request, 'edit')) {
-           
             $oldsaleItems = SaleItem::where('sid', $id)->get();
             try {
                 foreach ($oldsaleItems as $oldsaleItem) {
-                    $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('id', $oldsaleItem->report_id)->first();
+                    $report = Report::where('id', $oldsaleItem->report_id)->first();
                     $report->sale_status = 0;
                     $report->save();
                 }
                 $delete = SaleItem::where('sid', $id)->delete();
-//  dd($request->all(),$delete);
+                
                 if (!$delete) {
                     throw new \Exception('Failed to delete sale item');
                 }
@@ -589,6 +588,7 @@ class SaleController extends Controller
                 return redirect()->route('sale.index')->with('success', 'Sale created successfully.');
 
             }catch (\Exception $e) {
+                dd("catch");
                 // If an error occurs, restore the old report items
                 SaleItem::where('report_id', $id)->delete();
                 foreach ($oldsaleItems as $item) {

@@ -28,10 +28,11 @@ class ManufactureReportLayoutController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'name' => 'required|string|max:255',
             'part' => 'required|max:255',
-            'type' => 'required|exists: tbl_types,id', // assuming you're validating against a 'types' table
+            'type' => 'required|exists:tbl_types,id', // assuming you're validating against a 'types' table
             'fields' => 'required|array|min:1',
             'fields.*.field_key' => 'required|max:255',
             'fields.*.label' => 'required|string|max:255',

@@ -952,7 +952,7 @@ function getDataForReturn(event) {
                             html += '<div class="col">' + item.category.name + '</div>'; // category_name property
                             html += '<div class="col">' + item.sub_category.name + '</div>'; // sub_category_name property
                             html += '<div class="col">' + item.sr_no + '</div>'; // sub_category_name property
-                            html += '<div class="col">' + item.unit + '</div>'; // unit property
+                            html += '<div class="col">' + (item.unit === 'Pic' ? 'Pcs' : item.unit) + '</div>';
                             html += '<div class="col">' + item.qty + '</div>'; // qty property
                             html += '<div class="col">' + item.return + '</div>'; // return property
                             html += '<div class="col">' + (item.report_qty !== undefined ? item.report_qty : 0) + '</div>';
