@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 06, 2025 at 09:18 PM
+-- Generation Time: Jun 03, 2025 at 10:01 PM
 -- Server version: 10.6.21-MariaDB-cll-lve
--- PHP Version: 8.3.15
+-- PHP Version: 8.3.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,6 +44,29 @@ CREATE TABLE `cache_locks` (
   `owner` varchar(255) NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `companies`
+--
+
+CREATE TABLE `companies` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `tax_id` varchar(50) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `companies`
+--
+
+INSERT INTO `companies` (`id`, `name`, `tax_id`, `address`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Maktech', 'Maktech', 'Surat', 1, '2025-06-03 00:40:55', '2025-06-03 16:58:47');
 
 -- --------------------------------------------------------
 
@@ -233,6 +256,158 @@ INSERT INTO `manage_permission` (`id`, `uid`, `d_id`, `p_id`, `created_at`, `upd
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `manufacture_report_layouts`
+--
+
+CREATE TABLE `manufacture_report_layouts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `type` varchar(191) DEFAULT NULL,
+  `part` varchar(191) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `created_by` bigint(20) UNSIGNED NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `manufacture_report_layouts`
+--
+
+INSERT INTO `manufacture_report_layouts` (`id`, `name`, `type`, `part`, `description`, `created_by`, `is_active`, `created_at`, `updated_at`) VALUES
+(2, 'Report 30', '1', NULL, 'Report 30 Manufacturing Layout', 4, 0, '2025-04-14 10:15:34', '2025-04-16 23:52:35'),
+(3, 'Report 26', '4', '0', 'Description Report 26', 4, 1, '2025-04-15 07:26:03', '2025-04-17 00:09:36'),
+(4, 'Manufacturing Report 21', '3', '0', 'Report 21 Description', 4, 0, '2025-04-16 01:34:44', '2025-05-28 21:40:09'),
+(5, '28 May', '3', '0', 'New 21 layout', 4, 1, '2025-05-28 21:40:00', '2025-05-29 20:10:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `manufacture_report_layout_fields`
+--
+
+CREATE TABLE `manufacture_report_layout_fields` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `layout_id` bigint(20) UNSIGNED NOT NULL,
+  `field_key` varchar(191) NOT NULL,
+  `label` varchar(191) NOT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT 1,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `manufacture_report_layout_fields`
+--
+
+INSERT INTO `manufacture_report_layout_fields` (`id`, `layout_id`, `field_key`, `label`, `visible`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 1, 'part', 'Temp no.', 1, 2, '2025-04-12 06:54:40', '2025-05-29 19:59:42'),
+(2, 1, 'employee_name', 'EMPLOYEE NAME', 1, 3, '2025-04-12 06:54:40', '2025-05-29 19:59:42'),
+(3, 1, 'temp_no', 'SR (FIBER)', 1, 4, '2025-04-12 06:54:40', '2025-05-29 19:59:42'),
+(4, 1, 'sr_fiberd', 'M.J', 1, 5, '2025-04-12 06:54:40', '2025-05-29 19:59:42'),
+(5, 1, 'mj', 'Warranty', 1, 6, '2025-04-12 06:54:40', '2025-05-29 19:59:42'),
+(6, 1, 'warranty', 'Type', 1, 7, '2025-04-12 06:54:40', '2025-05-29 19:59:42'),
+(7, 1, 'type', 'LD-15', 1, 8, '2025-04-12 06:54:41', '2025-05-29 20:10:18'),
+(8, 1, 'demo_1', 'LD-30', 1, 9, '2025-04-12 06:54:41', '2025-05-29 20:10:18'),
+(9, 2, 'part', 'AOM-QSWITCH', 1, 11, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(10, 2, 'temp_no', 'Fiber-10/130 (S)', 1, 12, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(11, 2, 'employee_name', 'COMBINER-3*1 (10*130)', 1, 13, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(12, 2, 'sr_fiber', 'HR-HR', 1, 14, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(13, 2, 'mj', 'CARD-Power PCB', 1, 15, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(14, 2, 'warranty', 'CARD-Control Card', 1, 16, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(15, 2, 'type', 'COUPLAR-2*2', 1, 18, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(16, 2, 'LD 15', 'Fiber-30/250 (L)', 1, 19, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(17, 2, 'LD 30', 'CARD-Thermal Cabel', 1, 20, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(18, 2, 'LD 45', 'BODY-SMALL BODY', 1, 21, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(19, 2, 'AOM QSWITCH', 'ISOLATOR-30/250', 1, 23, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(20, 2, 'Fiber 10/130 (S)', 'COMBINER-3*1(30/250)', 1, 24, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(21, 2, 'COMBINER 3*1 (10*130)', 'RF-Rf Card', 1, 25, '2025-04-14 10:15:34', '2025-05-29 20:10:18'),
+(22, 2, 'HR HR', 'ISOLATOR-30/250', 1, 23, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(23, 2, 'CARD Power PCB', 'COMBINER-3*1(30/250)', 1, 24, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(24, 2, 'CARD Control card', 'RF-Rf Card', 1, 25, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(25, 2, 'ISOLATOR 20/130', 'Fiber-20/125 (M)', 1, 26, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(26, 2, 'COUPLAR 2*2', 'Glue-Index Glue', 1, 27, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(27, 2, 'Fiber 30/250 (L)', 'Glue-Cavity Glue', 1, 28, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(28, 2, 'CARD Thermal Cabel', 'Glue-Sealing Glue', 1, 29, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(29, 2, 'BODY SMALL BODY', 'Glue-Heat Sink Glue', 1, 30, '2025-04-14 10:15:34', '2025-04-17 00:09:37'),
+(30, 2, 'ISOLATOR 30/250', 'LD-30 (2)', 1, 26, '2025-04-14 10:15:35', '2025-05-29 19:59:42'),
+(31, 2, 'COMBINER 3*1(30/250)', 'COMBINER-3*1(30/250)', 1, 24, '2025-04-14 10:15:35', '2025-04-14 10:15:35'),
+(32, 2, 'RF rf card', 'RF-Rf Card', 1, 25, '2025-04-14 10:15:35', '2025-04-14 10:15:35'),
+(33, 2, 'Fiber 20/125 (M)', 'Fiber-20/125 (M)', 1, 26, '2025-04-14 10:15:35', '2025-04-14 10:15:35'),
+(34, 3, 'part', 'Part', 1, 1, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(35, 3, 'temp', 'Temp no.', 1, 2, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(36, 3, 'worker_name', 'EMPLOYEE NAME', 1, 3, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(37, 3, 'sr_no_fiber', 'SR (FIBER)', 0, 4, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(38, 3, 'mj', 'M.J', 1, 5, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(39, 3, 'warranty', 'Warranty', 1, 6, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(40, 3, 'type', 'Type', 1, 7, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(41, 3, '1', 'LD-15', 1, 8, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(42, 3, '2', 'LD-30', 1, 9, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(43, 3, '3', 'LD-45', 1, 10, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(44, 3, '15', 'AOM-QSWITCH', 1, 11, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(45, 3, '16', 'Fiber-10/130 (S)', 1, 12, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(46, 3, '18', 'COMBINER-3*1 (10*130)', 1, 13, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(47, 3, '19', 'HR-HR', 1, 14, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(48, 3, '20', 'CARD-Power PCB', 1, 15, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(49, 3, '21', 'CARD-Control Card', 1, 16, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(50, 3, '22', 'ISOLATOR-20/130', 1, 17, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(51, 3, '23', 'COUPLAR-2*2', 1, 18, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(52, 3, '26', 'Fiber-30/250 (L)', 1, 19, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(53, 3, '30', 'CARD-Thermal Cabel', 1, 20, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(54, 3, '31', 'BODY-SMALL BODY', 1, 21, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(55, 3, '32', 'BODY-BIG BODY', 1, 22, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(56, 3, '33', 'ISOLATOR-30/250', 1, 23, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(57, 3, '34', 'COMBINER-3*1(30/250)', 1, 24, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(58, 3, '35', 'RF-Rf Card', 1, 25, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(59, 3, '37', 'Fiber-20/125 (M)', 1, 26, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(60, 3, '38', 'Glue-Index Glue', 1, 27, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(61, 3, '39', 'Glue-Cavity Glue', 1, 28, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(62, 3, '40', 'Glue-Sealing Glue', 1, 29, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(63, 3, '41', 'Glue-Heat Sink Glue', 1, 30, '2025-04-15 07:26:03', '2025-04-15 07:26:03'),
+(64, 4, 'part', 'Part', 1, 1, '2025-04-16 01:34:44', '2025-04-25 00:55:38'),
+(65, 4, 'temp_no', 'Temp no.', 1, 2, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(66, 4, 'employee_name', 'EMPLOYEE NAME', 1, 3, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(67, 4, 'sr_fiber', 'SR (FIBER)', 1, 4, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(68, 4, 'mj', 'M.J', 1, 5, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(69, 4, 'warranty', 'Warranty', 1, 6, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(70, 4, 'type', 'Type', 1, 7, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(124, 5, '18', 'COMBINER-3*1 (10*130)', 1, 13, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(116, 5, 'sr_no_fiber', 'SR (FIBER)', 1, 4, '2025-05-28 21:40:00', '2025-05-29 20:10:18'),
+(75, 4, 'demo_1', 'Demo 1', 1, 31, '2025-04-16 01:34:44', '2025-04-25 00:55:38'),
+(76, 4, '32', 'BODY-BIG BODY', 1, 22, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(77, 4, '33', 'ISOLATOR-30/250', 1, 23, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(78, 4, '34', 'COMBINER-3*1(30/250)', 1, 24, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(79, 4, '35', 'RF-Rf Card', 1, 25, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(80, 4, '37', 'Fiber-20/125 (M)', 1, 26, '2025-04-16 01:34:44', '2025-04-16 01:34:44'),
+(113, 5, 'part', 'Part', 1, 1, '2025-05-28 21:40:00', '2025-05-29 20:10:18'),
+(114, 5, 'temp', 'Temp no.', 1, 2, '2025-05-28 21:40:00', '2025-05-29 20:10:18'),
+(115, 5, 'worker_name', 'EMPLOYEE NAME', 1, 3, '2025-05-28 21:40:00', '2025-05-29 20:10:18'),
+(135, 5, 'Demo 1', 'LD-30 (2)', 1, 26, '2025-05-29 20:10:18', '2025-05-29 20:10:18'),
+(129, 5, '26', 'Fiber-30/250 (L)', 1, 19, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(128, 5, '23', 'COUPLAR-2*2', 1, 18, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(127, 5, '21', 'CARD-Control Card', 1, 16, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(126, 5, '20', 'CARD-Power PCB', 1, 15, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(125, 5, '19', 'HR-HR', 1, 14, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(117, 5, 'mj', 'M.J', 1, 5, '2025-05-28 21:40:00', '2025-05-29 20:10:18'),
+(118, 5, 'warranty', 'Warranty', 1, 6, '2025-05-28 21:40:00', '2025-05-29 20:10:18'),
+(119, 5, 'type', 'Type', 1, 7, '2025-05-28 21:40:00', '2025-05-29 20:10:18'),
+(120, 5, '1', 'LD-15', 1, 8, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(121, 5, '2', 'LD-30', 1, 9, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(122, 5, '15', 'AOM-QSWITCH', 1, 11, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(123, 5, '16', 'Fiber-10/130 (S)', 1, 12, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(111, 4, 'demo_2', 'Demo 2', 1, 27, '2025-04-25 00:55:38', '2025-04-25 00:55:38'),
+(112, 4, 'demo_3', 'Demo 3', 1, 28, '2025-04-25 00:55:38', '2025-04-25 00:55:38'),
+(130, 5, '30', 'CARD-Thermal Cabel', 1, 20, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(131, 5, '31', 'BODY-SMALL BODY', 1, 21, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(132, 5, '33', 'ISOLATOR-30/250', 1, 23, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(133, 5, '34', 'COMBINER-3*1(30/250)', 1, 24, '2025-05-28 21:40:00', '2025-05-28 21:40:00'),
+(134, 5, '35', 'RF-Rf Card', 1, 25, '2025-05-28 21:40:00', '2025-05-28 21:40:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -343,13 +518,6 @@ CREATE TABLE `replacements` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `replacements`
---
-
-INSERT INTO `replacements` (`id`, `sale_id`, `old_item_id`, `new_item_id`, `date`, `old_sr_no`, `new_sr_no`, `note`, `created_at`, `updated_at`) VALUES
-(3, '2', '3', '6', '2025-04-02', 'M25150001', 'M25150002', 'MBA', '2025-04-02 22:02:20', '2025-04-02 22:02:20');
-
 -- --------------------------------------------------------
 
 --
@@ -369,29 +537,29 @@ CREATE TABLE `selected_invoices` (
 --
 
 INSERT INTO `selected_invoices` (`id`, `scid`, `invoice_no`, `created_at`, `updated_at`) VALUES
-(1, '1', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(2, '2', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(3, '3', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(4, '15', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(5, '16', '4', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(6, '18', '109', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(7, '19', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(8, '20', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(9, '21', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(10, '22', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(11, '23', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(12, '26', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(13, '30', '3', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(14, '31', '8', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(15, '32', '8', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(16, '33', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(17, '34', '109', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(18, '35', '2', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(19, '37', '4', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(20, '38', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(21, '39', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(22, '40', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03'),
-(23, '41', '1', '2025-04-04 22:54:03', '2025-04-04 22:54:03');
+(1, '1', '2', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(2, '2', '2', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(3, '3', '2', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(4, '15', '2', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(5, '16', '3', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(6, '18', '3', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(7, '19', '2', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(8, '20', '1', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(9, '21', '1', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(10, '22', '502', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(11, '23', '3', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(12, '26', '3', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(13, '30', '1', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(14, '31', '4', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(15, '32', '4', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(16, '33', '2', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(17, '34', '3', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(18, '35', '124', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(19, '37', '3', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(20, '38', '1', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(21, '39', '1', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(22, '40', '1', '2025-05-29 18:39:28', '2025-05-29 18:39:28'),
+(23, '41', '1', '2025-05-29 18:39:28', '2025-05-29 18:39:28');
 
 -- --------------------------------------------------------
 
@@ -447,7 +615,7 @@ INSERT INTO `tbl_acc_coa` (`id`, `HeadCode`, `HeadName`, `PHeadName`, `PHeadCode
 (15, '30007', 'Long-Term Debt', 'Long Term Liabilities', '20003', 3, '2024-12-16 02:15:15', '2024-12-16 02:15:15'),
 (16, '30008', 'Other Long-Term  Liabilities', 'Long Term Liabilities', '20003', 3, '2024-12-16 02:15:53', '2024-12-16 02:15:53'),
 (17, '30009', 'Accounts Payable', 'Current Liabilities', '20004', 3, '2024-12-16 02:16:12', '2024-12-16 02:16:12'),
-(18, '30010', 'Accrued Expenses', 'Current Liabilities', '20004', 3, '2024-12-16 02:16:25', '2024-12-16 02:16:25'),
+(18, '30022', 'Expenses', 'Current Liabilities', '20004', 3, '2024-12-16 02:16:25', '2025-05-14 22:06:26'),
 (19, '30011', 'Provisions', 'Current Liabilities', '20004', 3, '2024-12-16 02:18:47', '2024-12-16 02:18:47'),
 (20, '40002', 'Provision for State Income Tax', 'Provisions', '30011', 4, '2024-12-16 02:19:08', '2024-12-16 02:19:08'),
 (21, '40003', 'Depreciation of Goodwill', 'Depreciations', '30006', 4, '2024-12-16 02:19:34', '2024-12-16 02:19:34'),
@@ -463,19 +631,53 @@ INSERT INTO `tbl_acc_coa` (`id`, `HeadCode`, `HeadName`, `PHeadName`, `PHeadCode
 (31, '40009', 'Employee Receivable', 'Accounts Receivable', '30013', 4, '2024-12-16 02:26:26', '2024-12-16 02:26:26'),
 (32, '40010', 'Inventory account', 'Inventory', '30004', 4, '2024-12-16 02:26:55', '2024-12-16 02:26:55'),
 (33, '40011', 'Customer instants', 'Prepaid Expenses', '30003', 4, '2024-12-16 02:29:52', '2024-12-16 02:29:52'),
-(34, '30016', 'Cash at Bank', 'Current Asset', '20001', 3, '2024-12-16 05:53:34', '2024-12-16 05:53:34'),
-(35, '40012', 'Bank 1', 'Cash at Bank', '30016', 4, '2024-12-16 05:54:47', '2024-12-16 05:54:47'),
+(34, '30016', 'Bank', 'Current Asset', '20001', 3, '2024-12-16 05:53:34', '2025-05-14 23:53:35'),
+(35, '40012', 'Bank 1', 'Bank', '30016', 4, '2024-12-16 05:54:47', '2024-12-16 05:54:47'),
 (36, '30017', 'Purchase Account', 'Cost of Goods Sold', '20005', 3, '2024-12-16 06:31:44', '2024-12-16 06:31:44'),
 (37, '20006', 'Direct Income', 'Assets', '10001', 2, '2024-12-16 06:32:46', '2024-12-16 06:32:46'),
 (38, '20007', 'Indirect Income', 'Assets', '10001', 2, '2024-12-16 06:32:59', '2024-12-16 06:32:59'),
 (39, '30018', 'Sales Accounts', 'Direct Income', '20006', 3, '2024-12-16 06:33:13', '2024-12-16 06:33:13'),
 (40, '30019', 'Construction Income', 'Direct Income', '20006', 3, '2024-12-16 06:33:25', '2024-12-16 06:33:25'),
 (41, '30020', 'Reimbursement Income', 'Direct Income', '20006', 3, '2024-12-16 06:33:42', '2024-12-16 06:33:42'),
-(42, '30021', 'Tax', 'Current Liabilities', '20004', 3, '2024-12-16 06:38:12', '2024-12-16 06:38:12'),
-(43, '30022', 'Machinery', 'Fixed Assets', '20002', 3, '2024-12-17 05:46:56', '2024-12-17 05:46:56'),
-(44, '40013', 'Customer Taksh', 'Accounts Receivable', '30013', 4, '2024-12-25 01:20:53', '2024-12-25 01:20:53'),
+(51, '40016', 'Pretty Cash', 'Cash', '30002', 4, '2025-05-13 23:58:52', '2025-05-13 23:58:52'),
+(43, '30023', 'Machinery', 'Fixed Assets', '20002', 3, '2024-12-17 05:46:56', '2024-12-17 05:46:56'),
+(54, '40019', 'STICK WELL', 'Accounts Payable', '30009', 4, '2025-05-14 00:23:23', '2025-05-14 00:23:23'),
 (45, '40001', 'Cruz Becker', 'Sales Accounts', '30018', 4, '2024-12-25 06:15:42', '2024-12-25 06:15:42'),
-(49, '40014', 'Rahim Mathews', 'Accounts Receivable', '30013', 4, '2025-01-07 07:13:47', '2025-01-07 07:13:47');
+(50, '40015', 'Jignesh Ramoliya', 'Accounts Receivable', '30013', 4, '2025-04-09 01:16:51', '2025-04-09 01:16:51'),
+(52, '40017', 'STPL', 'Accounts Receivable', '30013', 4, '2025-05-14 00:03:23', '2025-05-14 00:03:23'),
+(55, '40020', 'Amit Shukla ji', 'Accounts Payable', '30009', 4, '2025-05-14 01:19:06', '2025-05-15 17:50:10'),
+(56, '40021', 'Office Expenses', 'Expenses', '30022', 4, '2025-05-14 22:07:34', '2025-05-14 22:07:34'),
+(57, '40022', 'Rent Expenses', 'Expenses', '30022', 4, '2025-05-14 22:59:31', '2025-05-14 22:59:31'),
+(59, '40024', 'YES BANK 12', 'Bank', '30016', 4, '2025-05-15 01:01:53', '2025-05-15 17:25:13'),
+(61, '40025', 'AMAR SHUKLA', 'Accounts Payable', '30009', 4, '2025-05-16 01:19:35', '2025-05-16 01:19:35'),
+(62, '40026', 'Bhawan Body', 'Accounts Payable', '30009', 4, '2025-05-16 01:22:28', '2025-05-16 01:22:28'),
+(63, '40027', 'OPTO TUNE', 'Accounts Payable', '30009', 4, '2025-05-16 01:23:06', '2025-05-16 01:23:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_acc_financial_years`
+--
+
+CREATE TABLE `tbl_acc_financial_years` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `is_active` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `tbl_acc_financial_years`
+--
+
+INSERT INTO `tbl_acc_financial_years` (`id`, `name`, `start_date`, `end_date`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, '2023-24', '2023-04-01', '2024-03-31', 0, '2025-05-16 00:29:00', '2025-05-16 00:37:35'),
+(2, '2024-25', '2024-04-01', '2025-03-31', 0, '2025-05-16 00:37:58', '2025-05-16 00:38:32'),
+(3, '2025-26', '2025-04-01', '2026-03-31', 1, '2025-05-16 00:38:21', '2025-05-16 00:38:32'),
+(4, '2026-27', '2025-04-01', '2026-03-31', 0, '2025-05-16 00:41:25', '2025-05-16 00:41:25');
 
 -- --------------------------------------------------------
 
@@ -494,6 +696,7 @@ CREATE TABLE `tbl_acc_predefine_account` (
   `serviceCode` int(11) DEFAULT NULL,
   `customerCode` int(11) DEFAULT NULL,
   `supplierCode` int(11) DEFAULT NULL,
+  `ExpenseCode` varchar(191) DEFAULT NULL,
   `costs_of_good_solds` int(11) DEFAULT NULL,
   `vat` int(11) DEFAULT NULL,
   `tax` int(11) DEFAULT NULL,
@@ -516,8 +719,8 @@ CREATE TABLE `tbl_acc_predefine_account` (
 -- Dumping data for table `tbl_acc_predefine_account`
 --
 
-INSERT INTO `tbl_acc_predefine_account` (`id`, `cashCode`, `bankCode`, `advance`, `fixedAsset`, `purchaseCode`, `salesCode`, `serviceCode`, `customerCode`, `supplierCode`, `costs_of_good_solds`, `vat`, `tax`, `inventoryCode`, `CPLCode`, `LPLCode`, `salary_code`, `emp_npf_contribution`, `empr_npf_contribution`, `emp_icf_contribution`, `empr_icf_contribution`, `prov_state_tax`, `state_tax`, `prov_npfcode`, `created_at`, `updated_at`) VALUES
-(1, 30002, 30016, 30014, 20002, 30017, 30018, 3010401, 30013, 30009, 30005, 30021, 30021, 1020401, 2010201, 2010202, 4020501, 4020502, 4020503, 4021201, 0, 5020101, 4021101, 5020102, NULL, '2024-12-17 05:26:12');
+INSERT INTO `tbl_acc_predefine_account` (`id`, `cashCode`, `bankCode`, `advance`, `fixedAsset`, `purchaseCode`, `salesCode`, `serviceCode`, `customerCode`, `supplierCode`, `ExpenseCode`, `costs_of_good_solds`, `vat`, `tax`, `inventoryCode`, `CPLCode`, `LPLCode`, `salary_code`, `emp_npf_contribution`, `empr_npf_contribution`, `emp_icf_contribution`, `empr_icf_contribution`, `prov_state_tax`, `state_tax`, `prov_npfcode`, `created_at`, `updated_at`) VALUES
+(1, 30002, 30016, 30014, 20002, 30017, 30018, 3010401, 30013, 30009, '30022', 30005, 30021, 30021, 1020401, 2010201, 2010202, 4020501, 4020502, 4020503, 4021201, 0, 5020101, 4021101, 5020102, NULL, '2025-05-15 00:59:53');
 
 -- --------------------------------------------------------
 
@@ -592,6 +795,7 @@ INSERT INTO `tbl_acc_vaucher` (`id`, `fyear`, `VNo`, `Vtype`, `referenceNo`, `VD
 
 CREATE TABLE `tbl_bank` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `HeadCode` varchar(255) NOT NULL,
   `bank_name` varchar(191) NOT NULL,
   `branch` varchar(191) DEFAULT NULL,
   `account_type` enum('HSS','CD','CC','OD') DEFAULT NULL,
@@ -607,50 +811,10 @@ CREATE TABLE `tbl_bank` (
 -- Dumping data for table `tbl_bank`
 --
 
-INSERT INTO `tbl_bank` (`id`, `bank_name`, `branch`, `account_type`, `account_number`, `ifsc_code`, `account_holder_name`, `opening_balance`, `created_at`, `updated_at`) VALUES
-(1, 'State Bank Of India', 'Katargam', 'CC', '4132464345', 'SBIN0016040', 'Shri DenisBhai Vora', '20000', '2024-12-18 01:54:15', '2024-12-18 01:54:15'),
-(2, 'Reserve Bank Of India', 'Katargam', 'CC', '4132412364345', 'RBIN0016040', 'Shri DenisBhai Vora RBI', '8000', '2024-12-18 07:10:29', '2024-12-18 07:10:29');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_cards`
---
-
-CREATE TABLE `tbl_cards` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `scid` varchar(255) DEFAULT NULL,
-  `report_id` varchar(255) DEFAULT NULL,
-  `sr_card` varchar(255) DEFAULT NULL,
-  `amp_card` varchar(255) DEFAULT NULL,
-  `volt_card` varchar(255) DEFAULT NULL,
-  `watt_card` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `tbl_cards`
---
-
-INSERT INTO `tbl_cards` (`id`, `scid`, `report_id`, `sr_card`, `amp_card`, `volt_card`, `watt_card`, `created_at`, `updated_at`) VALUES
-(1, '20', '23', '0', 'Dolorum veniam plac', 'Maxime suscipit vero', 'Veniam aute deserun', '2024-10-26 02:03:30', '2024-10-26 02:03:30'),
-(2, '20', '24', '0', 'amp 0', 'VOLT 0', 'WATT 0', '2024-10-26 04:39:35', '2024-10-26 04:39:35'),
-(3, '20', '25', '1', '1', '1', '1', '2024-11-16 01:07:11', '2024-11-16 01:07:11'),
-(4, '21', '26', '0', '1', '1', '1', '2024-11-17 23:51:12', '2024-11-17 23:51:12'),
-(5, '20', '28', '0', '1', '1', '1', '2024-11-23 00:22:55', '2024-11-23 00:22:55'),
-(6, '20', '28', '0', '1', '1', '1', '2024-11-23 00:22:55', '2024-11-23 00:22:55'),
-(7, '20', '31', '0', 'Laborum fuga Culpa', 'Aut sit esse volupt', 'Neque quas sit et et', '2024-11-23 02:07:13', '2024-11-23 02:07:13'),
-(8, '21', '32', '0', 'Aute obcaecati accus', 'Reprehenderit est u', 'Lorem molestiae mole', '2024-11-23 02:07:59', '2024-11-23 02:07:59'),
-(9, '20', '33', '0', 'Nostrud vel qui susc', 'Culpa mollit dolores', 'Dolore qui qui facer', '2024-11-23 02:15:44', '2024-11-23 02:15:44'),
-(15, '20', '34', '0', '11', '1', '1', '2024-11-25 06:24:49', '2024-11-25 06:24:49'),
-(16, '20', '34', '0', '11', '1', '1', '2024-11-25 06:24:49', '2024-11-25 06:24:49'),
-(17, '20', '34', '0', '11', '1', '1', '2024-11-25 06:24:49', '2024-11-25 06:24:49'),
-(18, '20', '34', '0', '11', '1', '1', '2024-11-25 06:24:49', '2024-11-25 06:24:49'),
-(19, '20', '35', '0', '0', '0', '0', '2024-11-28 03:56:58', '2024-11-28 03:56:58'),
-(20, '20', '35', '0', '0', '0', '0', '2024-11-28 03:56:58', '2024-11-28 03:56:58'),
-(21, '20', '36', '0', '0', '0', '0', '2024-11-28 04:13:04', '2024-11-28 04:13:04'),
-(22, '20', '36', '0', '0', '0', '0', '2024-11-28 04:13:04', '2024-11-28 04:13:04');
+INSERT INTO `tbl_bank` (`id`, `HeadCode`, `bank_name`, `branch`, `account_type`, `account_number`, `ifsc_code`, `account_holder_name`, `opening_balance`, `created_at`, `updated_at`) VALUES
+(1, '0', 'State Bank Of India', 'Katargam', 'CC', '4132464345', 'SBIN0016040', 'Shri DenisBhai Vora', '20000', '2024-12-18 01:54:15', '2024-12-18 01:54:15'),
+(2, '0', 'Reserve Bank Of India', 'Katargam', 'CC', '4132412364345', 'RBIN0016040', 'Shri DenisBhai Vora RBI', '8000', '2024-12-18 07:10:29', '2024-12-18 07:10:29'),
+(4, '40024', 'YES BANK 12', 'Nemo odit omnis fugi', 'OD', '864', 'Cum praesentium sit', 'Hiroko Gillespie', '78', '2025-05-15 01:03:43', '2025-05-15 17:23:22');
 
 -- --------------------------------------------------------
 
@@ -714,8 +878,8 @@ CREATE TABLE `tbl_customers` (
 --
 
 INSERT INTO `tbl_customers` (`id`, `customer_name`, `HeadCode`, `address`, `pincode`, `city`, `state`, `telephone_no`, `receiver_name`, `gst_no`, `ship_address`, `ship_pincode`, `ship_city`, `ship_state`, `created_at`, `updated_at`) VALUES
-(6, 'Jignesh Ramoliya', '0', 'SAHAJANAND TECHNOLOGIES PRIVATE LIMITED DTA, GROUND AND 1ST FLOOR PLOT NO 5526 ROAD NO 55, SACHIN GIDC', '394230', 'Surat', 'Gujarat', '11', 'Abigail Jordan', '36AAACH7409R1Z1', '162, parvati nagar -1,', '395004', 'Surat', 'Gujarat', '2025-01-02 11:27:47', '2025-03-07 17:49:54'),
-(9, 'Rahim Mathews', '40014', 'Doloremque provident', '395004', 'Surat', 'GJ', '245435456565', 'Alika Terry', '29GGGGG1314R9Z6', 'Laborum Fugiat vel', '400001', 'Mumbai', 'MH', '2025-01-07 07:13:47', '2025-01-07 07:13:47');
+(1, 'Jignesh Ramoliya', '40015', 'SAHAJANAND TECHNOLOGIES PRIVATE LIMITED DTA, GROUND AND 1ST FLOOR PLOT NO 5526 ROAD NO 55, SACHIN GIDC', '394230', 'Surat', 'Gujrat', '123', 'JR RCV', '36AAACH7409R1Z1', 'KATARGAM', '395004', 'SURAT', 'GUJRAT', '2025-04-09 01:16:51', '2025-04-09 01:16:51'),
+(2, 'STPL', '40017', 'STPL', '395002', 'Surat', 'Gujrat', '93434578798', 'STPL', '36AAACH7409R1Z1', 'Surat', '395002', 'Surat', 'Gujrat', '2025-05-14 00:03:23', '2025-05-14 00:03:23');
 
 -- --------------------------------------------------------
 
@@ -745,13 +909,6 @@ CREATE TABLE `tbl_customer_payments` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `tbl_customer_payments`
---
-
-INSERT INTO `tbl_customer_payments` (`id`, `customer_id`, `sell_id`, `amount_paid`, `remaining_amount`, `payment_date`, `payment_method`, `transaction_type`, `bank_id`, `bank_name`, `account_holder_name`, `branch_name`, `account_number`, `account_type`, `ifsc_code`, `cheque_no`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 6, '[\"101\"]', 8000.00, NULL, '2025-03-08', 'Cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '8k cash,2k reamaing', '2025-03-08 19:42:35', '2025-03-08 19:42:35');
-
 -- --------------------------------------------------------
 
 --
@@ -761,6 +918,7 @@ INSERT INTO `tbl_customer_payments` (`id`, `customer_id`, `sell_id`, `amount_pai
 CREATE TABLE `tbl_expensive` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `date` varchar(191) DEFAULT NULL,
+  `HeadCode` varchar(191) DEFAULT NULL,
   `name` varchar(191) DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
   `payment_type` enum('Cash','Bank') DEFAULT NULL,
@@ -772,44 +930,50 @@ CREATE TABLE `tbl_expensive` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `tbl_expensive`
+--
+
+INSERT INTO `tbl_expensive` (`id`, `date`, `HeadCode`, `name`, `amount`, `payment_type`, `transaction_type`, `bank_id`, `cheque_no`, `notes`, `created_at`, `updated_at`) VALUES
+(1, '2025-05-12', NULL, 'Chai', 50.00, 'Cash', NULL, NULL, NULL, NULL, '2025-05-12 19:39:48', '2025-05-12 19:39:48'),
+(2, '2025-05-15', '40022', 'Rent', 60000.00, 'Bank', 'UPI', '2', '7821674541585', 'Rent Office', '2025-05-15 18:44:27', '2025-05-15 18:44:27');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_leds`
+-- Table structure for table `tbl_opening_balances`
 --
 
-CREATE TABLE `tbl_leds` (
+CREATE TABLE `tbl_opening_balances` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `scid` varchar(255) NOT NULL,
-  `report_id` varchar(255) NOT NULL,
-  `sr_led` varchar(255) NOT NULL,
-  `amp_led` varchar(255) NOT NULL,
-  `volt_led` varchar(255) NOT NULL,
-  `watt_led` varchar(255) NOT NULL,
+  `balance_date` date NOT NULL,
+  `cash_on_hand` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `petty_cash` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `bank` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `investment_accounts` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `trade_receivables` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `loans_receivable` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `allowance_doubtful` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `raw_materials` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `work_in_progress` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `finished_goods` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `trade_payables` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `short_term_loans` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `long_term_loans` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `tax_payable` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `owners_capital` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `partners_capital` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `current_profit` decimal(15,2) NOT NULL DEFAULT 0.00,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbl_leds`
+-- Dumping data for table `tbl_opening_balances`
 --
 
-INSERT INTO `tbl_leds` (`id`, `scid`, `report_id`, `sr_led`, `amp_led`, `volt_led`, `watt_led`, `created_at`, `updated_at`) VALUES
-(1, '2', '23', 'Ut est rerum dolore', 'Dignissimos anim opt', 'Voluptates ut et adi', 'Quibusdam qui nulla', '2024-10-26 02:03:30', '2024-10-26 02:03:30'),
-(2, '1', '24', '100', '1', '1', 'watt 1', '2024-10-26 04:39:36', '2024-10-26 04:39:36'),
-(3, '1', '25', '93', '1', '11', '1', '2024-11-16 01:07:11', '2024-11-16 01:07:11'),
-(4, '2', '26', '74', '1', '1', '1', '2024-11-17 23:51:12', '2024-11-17 23:51:12'),
-(5, '1', '28', '45', '1', '1', '1', '2024-11-23 00:22:55', '2024-11-23 00:22:55'),
-(6, '1', '28', '80', '1', '1', '1', '2024-11-23 00:22:55', '2024-11-23 00:22:55'),
-(7, '2', '31', 'Reprehenderit exerc', 'Eiusmod libero omnis', 'Ipsa labore id amet', 'Non et dolorem in ex', '2024-11-23 02:07:13', '2024-11-23 02:07:13'),
-(8, '3', '32', 'Ut quam enim molesti', 'Accusamus consectetu', 'Expedita vitae asper', 'Autem modi corporis', '2024-11-23 02:07:59', '2024-11-23 02:07:59'),
-(9, '1', '33', 'Tempore nulla commo', 'Molestiae quam cupid', 'Doloremque qui ea ip', 'Ex hic dolores eum o', '2024-11-23 02:15:44', '2024-11-23 02:15:44'),
-(13, '1', '34', '1501', '1', '1', '1', '2024-11-25 06:24:49', '2024-11-25 06:24:49'),
-(14, '1', '34', '1505', '1', '1', '1', '2024-11-25 06:24:49', '2024-11-25 06:24:49'),
-(15, '1', '35', '15', '0', '0', '0', '2024-11-28 03:56:58', '2024-11-28 03:56:58'),
-(16, '1', '35', '27', '0', '0', '0', '2024-11-28 03:56:58', '2024-11-28 03:56:58'),
-(17, '1', '36', '67', '0', '0', '0', '2024-11-28 04:13:04', '2024-11-28 04:13:04'),
-(18, '2', '36', '74', '1', '0', '0', '2024-11-28 04:13:04', '2024-11-28 04:13:04');
+INSERT INTO `tbl_opening_balances` (`id`, `balance_date`, `cash_on_hand`, `petty_cash`, `bank`, `investment_accounts`, `trade_receivables`, `loans_receivable`, `allowance_doubtful`, `raw_materials`, `work_in_progress`, `finished_goods`, `trade_payables`, `short_term_loans`, `long_term_loans`, `tax_payable`, `owners_capital`, `partners_capital`, `current_profit`, `created_at`, `updated_at`) VALUES
+(1, '2025-04-01', 17.00, 67.00, 80.00, 97.00, 97.00, 10.00, 57.00, 3.00, 87.00, 74.00, 61.00, 24.00, 5.00, 95.00, 24.00, 34.00, 90.00, '2025-05-13 19:42:15', '2025-05-13 19:42:15');
 
 -- --------------------------------------------------------
 
@@ -820,6 +984,7 @@ INSERT INTO `tbl_leds` (`id`, `scid`, `report_id`, `sr_led`, `amp_led`, `volt_le
 CREATE TABLE `tbl_parties` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `party_name` varchar(255) NOT NULL,
+  `HeadCode` varchar(255) DEFAULT NULL,
   `address` varchar(255) NOT NULL,
   `telephone_no` varchar(255) NOT NULL,
   `sender_name` varchar(255) NOT NULL,
@@ -831,9 +996,14 @@ CREATE TABLE `tbl_parties` (
 -- Dumping data for table `tbl_parties`
 --
 
-INSERT INTO `tbl_parties` (`id`, `party_name`, `address`, `telephone_no`, `sender_name`, `created_at`, `updated_at`) VALUES
-(5, 'opening stock', '24165464', '45454545', 'dfsdfs', '2024-10-22 00:48:40', '2024-10-22 00:48:40'),
-(8, 'OPTO TUNE', 'CHINA', '987465467', 'DENIS', '2025-03-01 17:27:12', '2025-03-01 17:27:12');
+INSERT INTO `tbl_parties` (`id`, `party_name`, `HeadCode`, `address`, `telephone_no`, `sender_name`, `created_at`, `updated_at`) VALUES
+(5, 'opening stock', NULL, '24165464', '45454545', 'dfsdfs', '2024-10-22 00:48:40', '2024-10-22 00:48:40'),
+(8, 'OPTO TUNE', '40027', 'CHINA', '987465467', 'DENIS', '2025-03-01 17:27:12', '2025-03-01 17:27:12'),
+(10, 'AMAR SHUKLA', '40025', 'ABAD, GUJARAT', '1232131213', 'AMAR', '2025-04-07 17:48:44', '2025-04-07 17:48:44'),
+(11, 'Bhawan Body', '40026', 'ABAD, GUJARAT', '789415631', 'Bhawanbhai', '2025-04-07 17:49:41', '2025-04-07 17:49:41'),
+(12, 'Other', '40004 ', 'Other', '874932749', 'Not Available', '2025-04-07 20:29:01', '2025-04-07 20:29:01'),
+(14, 'STICK WELL', '40019', 'SURAT, GUJARAT', '1231231234', 'MEHUL BHAI', '2025-05-14 00:23:23', '2025-05-14 00:23:23'),
+(15, 'Amit Shukla ji', '40020', 'surat', '7987546138', 'Mehulbhai', '2025-05-14 01:19:06', '2025-05-15 17:50:10');
 
 -- --------------------------------------------------------
 
@@ -889,16 +1059,14 @@ CREATE TABLE `tbl_purchases` (
 --
 
 INSERT INTO `tbl_purchases` (`id`, `main_category`, `date`, `invoice_no`, `pid`, `amount`, `inr_rate`, `inr_amount`, `shipping_cost`, `round_amount`, `created_at`, `updated_at`) VALUES
-(1, NULL, '2025-03-05', '1', 8, 40000, 12.00, '480000.00', '0', '0', '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(2, 'Electronic', '2025-03-07', '2', 8, 2000, 12.00, '24000.00', '1000', '0', '2025-03-08 00:45:06', '2025-03-08 00:45:06'),
-(3, 'Optical', '2025-03-11', '4', 8, 24000, 12.00, '288000.00', '0', '0', '2025-03-11 18:43:28', '2025-03-11 18:43:28'),
-(4, 'Consumable', '2025-03-11', '5', 8, 900, 12.00, '10800.00', '200', '0', '2025-03-11 22:22:07', '2025-03-11 22:22:07'),
-(5, 'Consumable', '2025-03-11', '6', 8, 1300, 12.00, '15600.00', '200', '0', '2025-03-11 22:45:27', '2025-03-11 22:45:27'),
-(6, 'Electronic', '2025-03-17', '3', 8, 1800, 12.00, '21600.00', '0', '0', '2025-03-17 16:59:04', '2025-03-17 16:59:04'),
-(7, 'Electronic', '2025-03-17', '7', 8, 1000, 12.00, '12000.00', '0', '0', '2025-03-17 18:58:34', '2025-03-17 18:58:34'),
-(8, 'Mechanical', '2025-03-24', '8', 8, 18000, 12.00, '216000.00', '0', '0', '2025-03-24 17:23:20', '2025-03-24 17:23:20'),
-(9, 'Optical', '2025-03-25', '109', 8, 610000, 2.00, '1220000.00', '0', '0', '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(10, 'Optical', '2025-04-03', '11', 8, 200000, 80.00, '16000000.00', '0', '0', '2025-04-03 22:51:36', '2025-04-03 22:51:36');
+(1, 'Electronic', '2025-04-01', '1', 10, 280000, 1.00, '280000.00', '0', '0', '2025-04-07 17:53:59', '2025-04-07 17:53:59'),
+(2, 'Optical', '2025-04-01', '2', 8, 362000, 12.00, '4344000.00', '0', '0', '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(3, 'Optical', '2025-04-01', '3', 8, 20700, 12.00, '248400.00', '0', '0', '2025-04-07 20:02:16', '2025-04-07 20:02:16'),
+(4, 'Mechanical', '2025-04-01', '4', 11, 18000, 12.00, '216000.00', '0', '0', '2025-04-07 20:04:09', '2025-04-07 20:04:09'),
+(5, 'Electronic', '2025-04-08', '123', 10, 27000, 1.00, '27000.00', '0', '0', '2025-04-08 22:50:21', '2025-04-08 22:50:21'),
+(6, 'Electronic', '2025-05-01', '501', 10, 362000, 1.00, '362000.00', '0', '0', '2025-05-01 18:59:23', '2025-05-01 18:59:23'),
+(7, 'Electronic', '2025-05-21', '124', 10, 90000, 1.00, '90000.00', '0', '0', '2025-05-21 20:11:13', '2025-05-21 20:11:13'),
+(8, 'Optical', '2025-05-01', '502', 14, 180000, 12.00, '2160000.00', '0', '0', '2025-05-29 18:31:10', '2025-05-29 18:31:10');
 
 -- --------------------------------------------------------
 
@@ -925,55 +1093,34 @@ CREATE TABLE `tbl_purchase_items` (
 --
 
 INSERT INTO `tbl_purchase_items` (`id`, `invoice_no`, `cid`, `scid`, `qty`, `unit`, `price`, `tax`, `total`, `created_at`, `updated_at`) VALUES
-(1, '1', '1', '1', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(2, '1', '1', '2', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(3, '1', '1', '3', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(5, '1', '7', '20', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(6, '1', '7', '21', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(7, '1', '7', '30', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(8, '1', '8', '22', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(9, '1', '8', '33', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(10, '1', '9', '15', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(11, '1', '10', '16', 500, 'Mtr', 10.00, '0', 5000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(12, '1', '10', '26', 500, 'Mtr', 10.00, '0', 5000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(14, '1', '11', '34', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(15, '1', '12', '23', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(18, '1', '26', '31', 10, 'Pic', 150.00, '0', 1500.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(19, '1', '26', '32', 10, 'Pic', 150.00, '0', 1500.00, '2025-03-05 22:53:22', '2025-03-05 22:53:22'),
-(20, '2', '7', '20', 100, 'Pic', 10.00, '0', 1000.00, '2025-03-08 00:45:06', '2025-03-08 00:45:06'),
-(21, '2', '25', '35', 100, 'Pic', 10.00, '0', 1000.00, '2025-03-08 00:45:06', '2025-03-08 00:45:06'),
-(22, '4', '1', '1', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-11 18:43:28', '2025-03-11 18:43:28'),
-(23, '4', '6', '19', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-11 18:43:28', '2025-03-11 18:43:28'),
-(24, '4', '8', '22', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-11 18:43:28', '2025-03-11 18:43:28'),
-(25, '4', '10', '16', 1000, 'Mtr', 8.00, '0', 8000.00, '2025-03-11 18:43:28', '2025-03-11 18:43:28'),
-(26, '4', '10', '37', 1000, 'Mtr', 12.00, '0', 12000.00, '2025-03-11 18:43:28', '2025-03-11 18:43:28'),
-(27, '4', '9', '15', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-11 18:43:28', '2025-03-11 18:43:28'),
-(28, '5', '27', '38', 10, 'Pic', 25.00, '0', 250.00, '2025-03-11 22:22:07', '2025-03-11 22:22:07'),
-(29, '5', '27', '39', 10, 'Pic', 35.00, '0', 350.00, '2025-03-11 22:22:07', '2025-03-11 22:22:07'),
-(30, '5', '27', '40', 10, 'Pic', 30.00, '0', 300.00, '2025-03-11 22:22:07', '2025-03-11 22:22:07'),
-(31, '6', '27', '38', 10, 'Pic', 25.00, '0', 250.00, '2025-03-11 22:45:27', '2025-03-11 22:45:27'),
-(32, '6', '27', '39', 10, 'Pic', 35.00, '0', 350.00, '2025-03-11 22:45:27', '2025-03-11 22:45:27'),
-(33, '6', '27', '40', 10, 'Pic', 30.00, '0', 300.00, '2025-03-11 22:45:27', '2025-03-11 22:45:27'),
-(34, '6', '27', '41', 10, 'Pic', 40.00, '0', 400.00, '2025-03-11 22:45:27', '2025-03-11 22:45:27'),
-(35, '3', '7', '30', 25, 'Pic', 100.00, '0', 1000.00, '2025-03-17 16:59:04', '2025-03-17 16:59:04'),
-(36, '3', '25', '35', 10, 'Pic', 80.00, '0', 800.00, '2025-03-17 16:59:04', '2025-03-17 16:59:04'),
-(37, '7', '25', '35', 10, 'Pic', 100.00, '0', 1000.00, '2025-03-17 18:58:34', '2025-03-17 18:58:34'),
-(38, '8', '26', '32', 100, 'Pic', 100.00, '0', 10000.00, '2025-03-24 17:23:20', '2025-03-24 17:23:20'),
-(39, '8', '26', '31', 100, 'Pic', 80.00, '0', 8000.00, '2025-03-24 17:23:20', '2025-03-24 17:23:20'),
-(40, '109', '1', '1', 100, 'Pic', 400.00, '0', 40000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(41, '109', '1', '2', 100, 'Pic', 500.00, '0', 50000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(42, '109', '1', '3', 100, 'Pic', 600.00, '0', 60000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(43, '109', '8', '22', 100, 'Pic', 700.00, '0', 70000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(44, '109', '8', '33', 100, 'Pic', 800.00, '0', 80000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(45, '109', '6', '19', 100, 'Pic', 900.00, '0', 90000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(46, '109', '9', '15', 100, 'Pic', 1000.00, '0', 100000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(47, '109', '10', '16', 5000, 'Mtr', 5.00, '0', 25000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(48, '109', '10', '26', 3000, 'Mtr', 5.00, '0', 15000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(49, '109', '10', '37', 4000, 'Mtr', 5.00, '0', 20000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(50, '109', '11', '18', 100, 'Pic', 300.00, '0', 30000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(51, '109', '11', '34', 100, 'Pic', 200.00, '0', 20000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(52, '109', '12', '23', 100, 'Pic', 100.00, '0', 10000.00, '2025-03-25 20:13:13', '2025-03-25 20:13:13'),
-(53, '11', '1', '3', 200, 'Pic', 1000.00, '0', 200000.00, '2025-04-03 22:51:36', '2025-04-03 22:51:36');
+(1, '1', '7', '20', 100, 'Pic', 1100.00, '0', 110000.00, '2025-04-07 17:53:59', '2025-04-07 17:53:59'),
+(2, '1', '7', '21', 100, 'Pic', 900.00, '0', 90000.00, '2025-04-07 17:53:59', '2025-04-07 17:53:59'),
+(3, '1', '25', '35', 100, 'Pic', 800.00, '0', 80000.00, '2025-04-07 17:53:59', '2025-04-07 17:53:59'),
+(4, '2', '1', '1', 100, 'Pic', 250.00, '0', 25000.00, '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(5, '2', '1', '2', 100, 'Pic', 410.00, '0', 41000.00, '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(6, '2', '1', '3', 100, 'Pic', 540.00, '0', 54000.00, '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(7, '2', '11', '18', 200, 'Pic', 260.00, '0', 52000.00, '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(8, '2', '6', '19', 100, 'Pic', 500.00, '0', 50000.00, '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(9, '2', '8', '33', 100, 'Pic', 600.00, '0', 60000.00, '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(10, '2', '9', '15', 100, 'Pic', 800.00, '0', 80000.00, '2025-04-07 19:06:51', '2025-04-07 19:06:51'),
+(11, '3', '10', '16', 1000, 'Mtr', 5.00, '0', 5000.00, '2025-04-07 20:02:16', '2025-04-07 20:02:16'),
+(12, '3', '10', '26', 1000, 'Mtr', 7.00, '0', 7000.00, '2025-04-07 20:02:16', '2025-04-07 20:02:16'),
+(13, '3', '10', '37', 1000, 'Mtr', 6.00, '0', 6000.00, '2025-04-07 20:02:16', '2025-04-07 20:02:16'),
+(14, '3', '11', '18', 100, 'Pic', 8.00, '0', 800.00, '2025-04-07 20:02:16', '2025-04-07 20:02:16'),
+(15, '3', '11', '34', 100, 'Pic', 9.00, '0', 900.00, '2025-04-07 20:02:16', '2025-04-07 20:02:16'),
+(16, '3', '12', '23', 100, 'Pic', 10.00, '0', 1000.00, '2025-04-07 20:02:16', '2025-04-07 20:02:16'),
+(17, '4', '26', '31', 100, 'Pic', 80.00, '0', 8000.00, '2025-04-07 20:04:09', '2025-04-07 20:04:09'),
+(18, '4', '26', '32', 100, 'Pic', 100.00, '0', 10000.00, '2025-04-07 20:04:09', '2025-04-07 20:04:09'),
+(19, '1', '7', '30', 100, 'Pic', 1000.00, '0', 100000.00, '2025-04-08 19:04:00', '2025-04-08 19:04:00'),
+(20, '123', '7', '20', 10, 'Pic', 1100.00, '0', 11000.00, '2025-04-08 22:50:21', '2025-04-08 22:50:21'),
+(21, '123', '7', '21', 10, 'Pic', 900.00, '0', 9000.00, '2025-04-08 22:50:21', '2025-04-08 22:50:21'),
+(22, '123', '25', '35', 10, 'Pic', 700.00, '0', 7000.00, '2025-04-08 22:50:21', '2025-04-08 22:50:21'),
+(23, '501', '7', '20', 100, 'Pic', 1100.00, '0', 110000.00, '2025-05-01 18:59:23', '2025-05-01 18:59:23'),
+(24, '501', '7', '21', 100, 'Pic', 2500.00, '0', 250000.00, '2025-05-01 18:59:23', '2025-05-01 18:59:23'),
+(25, '501', '7', '30', 100, 'Pic', 20.00, '0', 2000.00, '2025-05-01 18:59:23', '2025-05-01 18:59:23'),
+(26, '124', '25', '35', 100, 'Pic', 900.00, '0', 90000.00, '2025-05-21 20:11:13', '2025-05-21 20:11:13'),
+(27, '502', '8', '22', 100, 'Pic', 800.00, '0', 80000.00, '2025-05-29 18:31:10', '2025-05-29 18:31:10'),
+(28, '502', '8', '33', 100, 'Pic', 1000.00, '0', 100000.00, '2025-05-29 18:31:10', '2025-05-29 18:31:10');
 
 -- --------------------------------------------------------
 
@@ -1019,6 +1166,7 @@ CREATE TABLE `tbl_reports` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `part` int(11) DEFAULT NULL,
   `f_status` int(11) DEFAULT NULL,
+  `indate` date DEFAULT NULL,
   `worker_name` varchar(255) DEFAULT NULL,
   `sr_no_fiber` varchar(255) DEFAULT NULL,
   `m_j` varchar(255) DEFAULT NULL,
@@ -1032,7 +1180,9 @@ CREATE TABLE `tbl_reports` (
   `r_status` int(11) DEFAULT NULL,
   `party_name` int(11) DEFAULT NULL,
   `final_amount` int(11) DEFAULT NULL,
+  `extra_line` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`extra_line`)),
   `stock_status` varchar(191) DEFAULT '0',
+  `outdate` date DEFAULT NULL,
   `sale_status` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1042,15 +1192,41 @@ CREATE TABLE `tbl_reports` (
 -- Dumping data for table `tbl_reports`
 --
 
-INSERT INTO `tbl_reports` (`id`, `part`, `f_status`, `worker_name`, `sr_no_fiber`, `m_j`, `type`, `note1`, `note2`, `section`, `remark`, `status`, `temp`, `r_status`, `party_name`, `final_amount`, `stock_status`, `sale_status`, `created_at`, `updated_at`) VALUES
-(1, 0, 1, 'DENIS', 'M25150001', 'MJ', '1', 'ELE DONE', 'User DONE', '3', NULL, 1, '0', 1, NULL, 4640, '1', '1', '2025-04-01 18:41:44', '2025-04-04 00:14:32'),
-(2, 0, 1, 'Parth', 'M25210001', 'P', '3', NULL, NULL, '4', NULL, 1, NULL, 0, NULL, 1500, '0', '1', '2025-04-01 22:21:56', '2025-04-02 23:57:58'),
-(4, 1, 1, 'DENIS 3', 'M25150001', 'MJ', '1', NULL, NULL, '3', NULL, 1, NULL, 1, NULL, 300, '1', '0', '2025-04-02 01:00:57', '2025-04-04 00:14:32'),
-(6, 0, 1, 'DENIS 2', 'M25150002', NULL, '1', NULL, NULL, '4', NULL, 1, NULL, 0, NULL, 5044, '1', '1', '2025-04-02 19:31:49', '2025-04-02 22:02:20'),
-(7, 1, 0, 'D 1', 'M22150001', 'MJ', '1', 'Repair Third Party', NULL, '4', NULL, 1, NULL, 1, NULL, 248, '0', '1', '2025-04-04 18:22:02', '2025-04-04 19:09:34'),
-(10, 0, 1, 'D 2', 'M25180001', 'MJ', '2', 'Diovde 18', NULL, '0', NULL, 1, NULL, 0, NULL, 2300, '1', '0', '2025-04-04 22:22:36', '2025-04-06 00:17:24'),
-(11, 0, 1, NULL, NULL, NULL, NULL, 'M25260001', 'M25260001', '1', NULL, NULL, NULL, 0, NULL, 562, '0', '0', '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(12, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, 0, NULL, 250, '0', '0', '2025-04-05 17:53:10', '2025-04-05 17:53:10');
+INSERT INTO `tbl_reports` (`id`, `part`, `f_status`, `indate`, `worker_name`, `sr_no_fiber`, `m_j`, `type`, `note1`, `note2`, `section`, `remark`, `status`, `temp`, `r_status`, `party_name`, `final_amount`, `extra_line`, `stock_status`, `outdate`, `sale_status`, `created_at`, `updated_at`) VALUES
+(1, 0, 1, NULL, 'DENIS 2', NULL, 'MJ', '1', NULL, NULL, '1', NULL, NULL, NULL, 0, NULL, 790, NULL, '0', NULL, '0', '2025-04-08 01:21:02', '2025-04-08 01:21:02'),
+(3, 0, 1, NULL, 'D-1, D-2', 'M25150002', 'MJ', '1', 'S KVT OUT 1.38W\r\nQ SW OUT 750W\r\n2*2 OUT 1.38W\r\n3*1 OUT 403W\r\nS 3*1 540W\r\n2*2 B (240WATT)(0.09 WALT)', NULL, '0', NULL, 1, '0', 1, NULL, 44019, NULL, '1', NULL, '1', '2025-04-08 19:39:14', '2025-05-12 19:30:57'),
+(4, 0, 1, NULL, NULL, NULL, NULL, NULL, '130', NULL, '1', NULL, NULL, '130', 0, NULL, 4425, NULL, '0', NULL, '0', '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(5, 1, 1, NULL, 'DENIS 2', 'M25150001', 'MJ', '1', 'M25150001 M25150001', 'M25150001 M25150001', '2', NULL, NULL, 'M25150001', 1, NULL, 540, NULL, '0', NULL, '0', '2025-04-09 00:50:39', '2025-04-09 00:50:39'),
+(6, 1, 0, NULL, 'visu,mira,rashmi', 'C24210162', 'MJ', '3', 'Final o/p :-20w, 20amp', '45-45 change, 30-30 Replace', '2', NULL, NULL, NULL, 1, NULL, 1335, NULL, '0', NULL, '0', '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(7, 1, 1, NULL, 'KOMAL,VISU ELE', 'C12308095', NULL, NULL, '30 WATT LD:-19.33WATT\r\n45 LD:-28.12 WATT & 8.76WALT', NULL, '2', NULL, NULL, NULL, 1, NULL, 908, NULL, '0', NULL, '0', '2025-04-09 17:47:41', '2025-04-09 17:47:42'),
+(8, 0, 1, '2025-03-25', 'MIRA', 'C25250003', 'NA', '4', 'FINAL O/P:- 23.3W / 9 AMP', 'LOSS 0.25 & 1.03', '4', NULL, 1, '0', 0, NULL, 12720, NULL, '0', '2025-05-26', '1', '2025-04-09 17:59:33', '2025-05-27 22:55:33'),
+(9, 0, 1, NULL, 'D 2', '123', 'MJ', '1', NULL, NULL, '1', NULL, NULL, NULL, 0, NULL, 3475, NULL, '0', NULL, '0', '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(10, 1, 1, NULL, 'Olympia Hudson', 'M24150004', 'Est autem ullam sun', '1', 'Rerum dolor veniam', 'Et tenetur officia o', '4', NULL, NULL, 'Quis maiores ut enim', 1, NULL, 1666, '{\"demo_2\":\"Fugiat ullamco dolo\",\"demo_3\":null,\"demo_1\":\"Aut qui nisi est in\"}', '0', '2025-05-26', '1', '2025-04-25 21:40:13', '2025-05-27 22:55:33'),
+(11, 0, 1, '2025-05-10', 'DENIS 2', 'M24150004', 'asda', '3', 'SACSA57D1', '1AS7D17 S6AD71', '0', NULL, 1, NULL, 0, NULL, 1415, '{\"demo_2\":\"ASDSA\",\"demo_3\":\"ASDASD\",\"demo_1\":\"CXZCZXCAS\"}', '1', NULL, '1', '2025-04-25 21:40:21', '2025-05-10 19:11:19'),
+(12, 0, 1, '2025-03-30', 'Mira, Rashmi', 'C25250002', NULL, '4', '23W / 9A', NULL, '4', NULL, 1, '0', 1, NULL, 21024, '[]', '0', '2025-05-26', '1', '2025-04-28 19:58:17', '2025-05-27 23:56:16'),
+(13, 1, 0, '2025-04-30', 'DENIZA', 'C25210256', 'MJ', '3', 'A+1 Fiber', '23.2 w/ 9 amp', '0', 'Verify By Acc.', 1, NULL, 0, NULL, 30, '[]', '1', NULL, '0', '2025-05-10 19:01:55', '2025-05-10 19:03:43'),
+(14, 1, 0, NULL, 'Dharm', 'M24210121', 'mj', '3', '19.9 W/ 10.50 amp', NULL, '2', NULL, NULL, NULL, 1, NULL, 500, '[]', '0', NULL, '0', '2025-05-10 19:29:20', '2025-05-10 19:29:20'),
+(15, 1, 0, NULL, 'Dhruvi', 'M25210239', 'mj', '3', 'big cavity punchers, Hr burn', NULL, '2', NULL, NULL, NULL, 1, NULL, 500, '[]', '0', NULL, '0', '2025-05-10 19:34:11', '2025-05-10 19:34:11'),
+(16, 1, 0, NULL, 'Dharm', 'C24210150', 'MJ', '3', 'Final O-p- 24w, 10.50 amp.', 'Coupler Re-Joint', '2', NULL, NULL, NULL, 1, NULL, NULL, '[]', '0', NULL, '0', '2025-05-10 19:38:37', '2025-05-10 19:38:37'),
+(17, 1, 1, '2025-03-30', 'Visu, Dhruvi', 'K25210290', NULL, '3', '20W / 11.5A', NULL, '2', NULL, 1, 'K25210290', 0, NULL, 34908, '[]', '1', NULL, '0', '2025-05-21 00:16:38', '2025-05-25 00:36:36'),
+(18, 0, 1, '2025-05-23', 'Anjali, Sweta', 'K25210289', NULL, '3', 'New Q-switch', NULL, '0', NULL, 1, 'K25210289', 1, NULL, 16739, '[]', '1', '2025-05-26', '1', '2025-05-21 00:34:28', '2025-05-28 00:03:09'),
+(19, 0, 1, NULL, NULL, NULL, NULL, NULL, '20W / 11.50 A', NULL, '1', NULL, 0, 'K25210288', 1, NULL, 17180, '[]', '0', NULL, '0', '2025-05-21 00:43:44', '2025-05-24 21:36:09'),
+(20, 0, 1, '2025-03-29', 'Anjali, Sweta', 'K25210287', 'mj', '3', '20W/ 11 A', NULL, '0', NULL, 1, '0', 0, NULL, 10360, '[]', '1', NULL, '0', '2025-05-21 00:59:49', '2025-05-23 21:55:46'),
+(21, 0, 1, '2025-04-03', 'Priya, Sweta', 'C25250004', NULL, '4', '22.8W/11.2A', NULL, '0', NULL, 1, '0', 0, NULL, 12340, '[]', '1', '2025-05-25', '0', '2025-05-21 19:08:52', '2025-05-27 22:14:35'),
+(23, 0, 1, '2025-03-29', 'Visu, Mira, Rashmi', 'K25210286', NULL, '3', '20W/11.3 A', NULL, '0', NULL, 1, '0', 0, NULL, 10640, '[]', '1', NULL, '0', '2025-05-21 21:56:27', '2025-05-23 23:35:27'),
+(24, 0, 1, NULL, 'Visu, Komal', 'K25210285', NULL, '3', '20W/11.5A', NULL, '1', NULL, 0, '0', 0, NULL, 9181, '[]', '0', NULL, '0', '2025-05-21 22:04:30', '2025-05-23 00:20:47'),
+(25, 0, 1, NULL, 'Visu. Komal', 'K25210284', NULL, '3', '20W. 11.5 A', NULL, '1', NULL, 0, '0', 0, NULL, 8833, '[]', '0', NULL, '0', '2025-05-21 22:35:33', '2025-05-23 00:51:06'),
+(26, 1, 1, '2025-05-26', 'Visu | Denis', 'C25210291', NULL, '4', 'error', 'DONE SMALL CAVITY', '2', '20 w. temp 45c', 1, '0', 1, NULL, 25103, '[]', '1', '2025-05-26', '1', '2025-05-26 18:53:16', '2025-05-27 20:13:32'),
+(27, 1, 0, '2025-04-18', 'Visu Dhruvi', 'M25180029', NULL, '2', 'Cavity Punchers, M25210238 (21 W) convert to M25180029 (18 W).', '17 w final Op,11 Amp', '0', NULL, 1, '0', 0, 2, 3354, '[]', '1', NULL, '0', '2025-05-28 01:11:17', '2025-05-28 01:19:47'),
+(28, 1, 1, NULL, NULL, 'M-24', NULL, '4', 'Marking 24', NULL, '1', NULL, 0, NULL, 0, NULL, NULL, '[]', '0', NULL, '0', '2025-05-28 23:41:08', '2025-05-28 23:41:08'),
+(29, 1, 1, NULL, NULL, 'K25210261', NULL, '3', 'Fiber Issue During Testing', NULL, '1', NULL, 0, NULL, 0, NULL, NULL, '[]', '0', NULL, '0', '2025-05-28 23:55:03', '2025-05-28 23:55:03'),
+(30, 1, 0, NULL, NULL, 'M2403210037', NULL, '3', 'Off Beam', NULL, '1', NULL, 0, NULL, 0, 1, NULL, '[]', '0', NULL, '0', '2025-05-28 23:56:23', '2025-05-28 23:56:23'),
+(31, 1, 0, NULL, NULL, 'K24210186', NULL, '3', 'Beam Off', NULL, '1', NULL, 0, NULL, 0, 1, NULL, '[]', '0', NULL, '0', '2025-05-28 23:57:05', '2025-05-28 23:57:05'),
+(32, 1, 0, NULL, NULL, 'C24210216', NULL, '4', 'Beam Mode Off', NULL, '1', NULL, 0, NULL, 0, 2, NULL, '[]', '0', NULL, '0', '2025-05-29 00:00:36', '2025-05-29 00:00:36'),
+(33, 1, 0, NULL, NULL, '14CC02070', NULL, '3', '20w || 10.50Amp', NULL, '1', NULL, 0, NULL, 0, NULL, NULL, '[]', '0', NULL, '0', '2025-05-29 00:02:08', '2025-05-29 00:02:08'),
+(34, 1, 0, NULL, NULL, 'C24210156', NULL, '3', 'Loss:- 0.05 Beam Mode Off', NULL, '1', NULL, 0, NULL, 0, 2, NULL, '[]', '0', NULL, '0', '2025-05-29 00:04:15', '2025-05-29 00:04:15'),
+(35, 1, 1, NULL, NULL, 'C22302027', NULL, '3', 'Beam Mode Off', NULL, '1', NULL, 0, NULL, 0, 1, NULL, '[]', '0', NULL, '0', '2025-05-29 00:13:50', '2025-05-29 00:13:50'),
+(36, 1, 0, NULL, NULL, 'C02201067', NULL, '1', 'Power Off', NULL, '1', NULL, 0, NULL, 0, NULL, NULL, '[]', '0', NULL, '0', '2025-05-29 00:21:33', '2025-05-29 00:21:33');
 
 -- --------------------------------------------------------
 
@@ -1079,67 +1255,247 @@ CREATE TABLE `tbl_reports_items` (
 --
 
 INSERT INTO `tbl_reports_items` (`id`, `scid`, `unit`, `report_id`, `dead_status`, `tblstock_id`, `sr_no`, `used_qty`, `amp`, `volt`, `watt`, `created_at`, `updated_at`) VALUES
-(59, '21', 'Pic', '1', '0', '100', '0', '1', NULL, NULL, NULL, '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(58, '35', 'Pic', '1', '0', '131', '0', '1', NULL, NULL, NULL, '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(57, '2', 'Pic', '1', '0', '1', 'ZXHZBB2330', '1', '1.2', '2.1', '6', '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(56, '16', 'Mtr', '1', '0', '127', '0', '5', NULL, NULL, NULL, '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(53, '19', 'Pic', '1', '0', '89', 'HRAAAB3001', '1', '1.0', '3.1', '15', '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(54, '31', 'Pic', '1', '0', '233', '0', '1', NULL, NULL, NULL, '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(55, '15', 'Pic', '1', '1', '114', 'AOMQSW5001', '1', '10', '4.1', '10', '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(52, '1', 'Pic', '1', '0', '11', 'ZXHZBA9278', '1', '1.2', '2.2', '2.3', '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(51, '23', 'Pic', '1', '0', '125', '0', '1', NULL, NULL, NULL, '2025-04-01 18:56:51', '2025-04-01 18:56:51'),
-(133, '1', 'Pic', '2', '0', '12', 'ZXHZBB5555', '1', '14', '44', '4', '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(132, '31', 'Pic', '2', '0', '233', '0', '1', NULL, NULL, NULL, '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(131, '21', 'Pic', '2', '0', '100', '0', '1', NULL, NULL, NULL, '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(130, '30', 'Pic', '2', '0', '129', '0', '1', NULL, NULL, NULL, '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(129, '20', 'Pic', '2', '0', '99', '0', '1', NULL, NULL, NULL, '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(128, '35', 'Pic', '2', '0', '131', '0', '1', NULL, NULL, NULL, '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(73, '19', 'Pic', '5', '0', '90', 'HRAAAB3002', '1', '10', '4.1', '1.5', '2025-04-02 19:24:12', '2025-04-02 19:24:12'),
-(74, '2', 'Pic', '5', '0', '4', 'ZXHZBB2571', '1', '5.1', '16', '2.4', '2025-04-02 19:24:12', '2025-04-02 19:24:12'),
-(71, '2', 'Pic', '4', '0', '3', 'ZXHZBB2307', '1', '10', '4.1', '1.5', '2025-04-02 01:00:57', '2025-04-02 01:00:57'),
-(72, '1', 'Pic', '4', '0', '15', 'ZXHZBA9063', '1', '4.2', '10', '1.5', '2025-04-02 01:00:57', '2025-04-02 01:00:57'),
-(75, '22', 'Pic', '5', '0', '79', 'ISAAAB2008', '1', '7.45', '4.5', '1.6', '2025-04-02 19:24:12', '2025-04-02 19:24:12'),
-(76, '31', 'Pic', '5', '0', '233', '0', '1', NULL, NULL, NULL, '2025-04-02 19:24:12', '2025-04-02 19:24:12'),
-(77, '30', 'Pic', '5', '0', '129', '0', '1', NULL, NULL, NULL, '2025-04-02 19:24:12', '2025-04-02 19:24:12'),
-(78, '16', 'Mtr', '5', '0', '127', '0', '7', NULL, NULL, NULL, '2025-04-02 19:24:12', '2025-04-02 19:24:12'),
-(126, '35', 'Pic', '6', '0', '131', '0', '1', NULL, NULL, NULL, '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(125, '23', 'Pic', '6', '0', '125', '0', '3', NULL, NULL, NULL, '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(124, '2', 'Pic', '6', '0', '6', 'ZXHZBB2456', '1', '4.2', '4.2', '42', '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(123, '1', 'Pic', '6', '0', '13', 'ZXHZBB5550', '1', '4.2', '4.1', '1.5', '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(122, '34', 'Pic', '6', '0', '62', '0', '1', NULL, NULL, NULL, '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(121, '22', 'Pic', '6', '0', '87', 'ISAAAB2010', '1', '10', '4.1', '10', '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(120, '31', 'Pic', '6', '0', '233', '0', '1', NULL, NULL, NULL, '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(119, '21', 'Pic', '6', '0', '100', '0', '1', NULL, NULL, NULL, '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(118, '15', 'Pic', '6', '0', '115', 'AOMQSW5002', '1', '7.2', '6.4', '5.7', '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(117, '16', 'Mtr', '6', '0', '127', '0', '7', NULL, NULL, NULL, '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(127, '19', 'Pic', '6', '0', '91', 'HRAAAB3003', '1', '8.4', '7.5', '6.4', '2025-04-02 19:47:10', '2025-04-02 19:47:10'),
-(134, '2', 'Pic', '2', '0', '2', 'ZXHZBB2663', '1', '14', '44', '4', '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(135, '19', 'Pic', '2', '0', '92', 'HRAAAB3004', '1', '14', '44', '4', '2025-04-02 23:53:24', '2025-04-02 23:53:24'),
-(136, '1', 'Pic', '7', '0', '11', 'ZXHZBA9278', '1', '10', '10', '42', '2025-04-04 18:22:02', '2025-04-04 18:22:02'),
-(137, '16', 'Mtr', '7', '0', '127', '0', '10', NULL, NULL, NULL, '2025-04-04 18:22:02', '2025-04-04 18:22:02'),
-(138, '30', 'Pic', '7', '0', '129', '0', '1', NULL, NULL, NULL, '2025-04-04 18:22:02', '2025-04-04 18:22:02'),
-(139, '1', 'Pic', '8', '0', '14', 'ZXHZBB5560', '1', '4.2', '10', '1.5', '2025-04-04 22:06:38', '2025-04-04 22:06:38'),
-(188, '23', 'Pic', '10', '0', '125', '0', '1', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(187, '15', 'Pic', '10', '0', '122', 'AOMQSW5009', '1', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(186, '35', 'Pic', '10', '0', '435', '0', '1', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(185, '35', 'Pic', '10', '1', '435', '0', '1', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(184, '32', 'Pic', '10', '0', '132', '0', '1', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(183, '30', 'Pic', '10', '0', '129', '0', '1', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(181, '22', 'Pic', '10', '0', '78', 'ISAAAB2007', '1', '8.1', '64', '51', '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(182, '1', 'Pic', '10', '0', '15', 'ZXHZBA9063', '1', '4.2', '4.1', '1.5', '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(180, '32', 'Pic', '10', '0', '132', '0', '1', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(189, '18', 'Pic', '10', '0', '436', '0', '0', NULL, NULL, NULL, '2025-04-04 22:54:09', '2025-04-04 22:54:09'),
-(190, '1', 'Pic', '11', '0', '16', 'ZXHZBA9277', '1', '1.0', '2.2', '2.3', '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(191, '19', 'Pic', '11', '1', '89', 'HRAAAB3001', '1', '4', '2.2', '6', '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(192, '37', 'Mtr', '11', '1', '234', '0', '7.5', NULL, NULL, NULL, '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(193, '26', 'Mtr', '11', '0', '124', '0', '7.5', NULL, NULL, NULL, '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(194, '32', 'Pic', '11', '0', '132', '0', '1', NULL, NULL, NULL, '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(195, '30', 'Pic', '11', '0', '129', '0', '1', NULL, NULL, NULL, '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(196, '20', 'Pic', '11', '0', '99', '0', '1', NULL, NULL, NULL, '2025-04-05 17:45:26', '2025-04-05 17:45:26'),
-(197, '20', 'Pic', '12', '0', '99', '0', '1', NULL, NULL, NULL, '2025-04-05 17:53:10', '2025-04-05 17:53:10'),
-(198, '1', 'Pic', '12', '0', '102', 'ZXHZBA9011', '1', '1', '2.2', '2.3', '2025-04-05 17:53:10', '2025-04-05 17:53:10'),
-(199, '35', 'Pic', '12', '0', '435', '0', '1', NULL, NULL, NULL, '2025-04-05 17:53:10', '2025-04-05 17:53:10'),
-(200, '30', 'Pic', '12', '0', '129', '0', '1', NULL, NULL, NULL, '2025-04-05 17:53:10', '2025-04-05 17:53:10');
+(1, '1', 'Pic', '1', '0', '103', 'ZXCBLD1600', '1', '4.2', '4.2', '1.5', '2025-04-08 01:21:02', '2025-04-08 01:21:02'),
+(2, '3', 'Pic', '1', '0', '303', 'ZXCBLD4600', '1', '10', '4.1', '5.7', '2025-04-08 01:21:02', '2025-04-08 01:21:02'),
+(3, '32', 'Pic', '2', '0', '513', '0', '1', NULL, NULL, NULL, '2025-04-08 19:31:15', '2025-04-08 19:31:15'),
+(4, '35', 'Pic', '2', '0', '3', '0', '1', NULL, NULL, NULL, '2025-04-08 19:31:15', '2025-04-08 19:31:15'),
+(124, '2', 'Pic', '6', '0', '526', 'ZXHZBB7711', '1', '7.9', '7.54', '14.30', '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(123, '16', 'Mtr', '3', '0', '506', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(122, '3', 'Pic', '3', '0', '521', 'ZXHZAY1458', '1', NULL, NULL, '22.40', '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(121, '15', 'Pic', '3', '0', '517', 'GA241129FQ278381', '1', NULL, NULL, '750', '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(13, '32', 'Pic', '4', '0', '513', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(14, '35', 'Pic', '4', '0', '3', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(15, '20', 'Pic', '4', '0', '1', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(16, '21', 'Pic', '4', '0', '2', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(17, '30', 'Pic', '4', '0', '514', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(18, '18', 'Pic', '4', '0', '509', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(19, '23', 'Pic', '4', '0', '511', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(20, '19', 'Pic', '4', '0', '305', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(21, '26', 'Mtr', '4', '0', '507', '0', '1', NULL, NULL, NULL, '2025-04-08 19:44:12', '2025-04-08 19:44:12'),
+(120, '3', 'Pic', '3', '0', '522', 'ZXHZBB1186', '1', '7.83', '11.53', '21.25', '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(119, '1', 'Pic', '3', '1', '515', 'ZHHZAY8592', '1', '2.76', '2.83', '2.30', '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(117, '35', 'Pic', '3', '0', '525', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(118, '32', 'Pic', '3', '0', '513', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(115, '30', 'Pic', '3', '0', '514', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(116, '21', 'Pic', '3', '0', '2', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(113, '18', 'Pic', '3', '0', '509', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(114, '23', 'Pic', '3', '0', '511', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(112, '20', 'Pic', '3', '0', '1', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(111, '19', 'Pic', '3', '0', '305', '0', '1', NULL, NULL, NULL, '2025-04-09 01:03:32', '2025-04-09 01:03:32'),
+(110, '3', 'Pic', '5', '0', '524', 'ZXHZBB1188', '1', '4.2', '4.1', '1.5', '2025-04-09 00:50:39', '2025-04-09 00:50:39'),
+(125, '2', 'Pic', '6', '0', '527', 'ZXHZBB8134', '1', '14.28', NULL, NULL, '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(126, '18', 'Pic', '6', '0', '509', '0', '1', NULL, NULL, NULL, '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(127, '19', 'Pic', '6', '0', '305', '0', '1', NULL, NULL, NULL, '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(128, '26', 'Mtr', '6', '0', '507', '0', '1', NULL, NULL, NULL, '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(129, '21', 'Pic', '7', '0', '2', '0', '1', NULL, NULL, NULL, '2025-04-09 17:47:42', '2025-04-09 17:47:42'),
+(130, '18', 'Pic', '7', '0', '509', '0', '1', NULL, NULL, NULL, '2025-04-09 17:47:42', '2025-04-09 17:47:42'),
+(464, '18', 'Pic', '8', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(463, '26', 'Mtr', '8', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(462, '16', 'Mtr', '8', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(461, '33', 'Pic', '8', '0', '531', 'EBBC16796', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(460, '3', 'Pic', '8', '0', '530', 'ZXHZAY5473', '1', NULL, NULL, '24.30', '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(459, '1', 'Pic', '8', '0', '529', 'ZXHZBA4694', '1', '2.66', '2.47', '2.24', '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(458, '3', 'Pic', '8', '0', '528', 'ZXHZAY5453', '1', '8.23', '11.58', '24.17', '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(457, '20', 'Pic', '8', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(456, '21', 'Pic', '8', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(455, '30', 'Pic', '8', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(454, '35', 'Pic', '8', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(453, '32', 'Pic', '8', '0', '513', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(145, '1', 'Pic', '9', '0', '546', 'ZXHZBB2456', '1', '1.', '10', '10', '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(146, '16', 'Mtr', '9', '0', '506', '0', '1', NULL, NULL, NULL, '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(147, '31', 'Pic', '9', '0', '512', '0', '1', NULL, NULL, NULL, '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(148, '35', 'Pic', '9', '0', '525', '0', '1', NULL, NULL, NULL, '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(149, '30', 'Pic', '9', '0', '514', '0', '1', NULL, NULL, NULL, '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(150, '21', 'Pic', '9', '0', '2', '0', '1', NULL, NULL, NULL, '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(151, '3', 'Pic', '9', '0', '547', 'ZXHZBB2457', '1', '4.2', '1.1', '12', '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(152, '32', 'Pic', '10', '0', '513', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:13', '2025-04-25 21:40:13'),
+(153, '33', 'Pic', '10', '1', '548', 'Perferendis nostrud', '1', 'Aliquid sunt amet q', 'Id omnis autem qui q', 'A aut asperiores dig', '2025-04-25 21:40:13', '2025-04-25 21:40:13'),
+(154, '34', 'Pic', '10', '0', '1', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:13', '2025-04-25 21:40:13'),
+(155, '35', 'Pic', '10', '0', '525', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:13', '2025-04-25 21:40:13'),
+(156, '37', 'Mtr', '10', '0', '508', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:13', '2025-04-25 21:40:13'),
+(157, '32', 'Pic', '11', '0', '513', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:21', '2025-04-25 21:40:21'),
+(158, '33', 'Pic', '11', '0', '549', NULL, '1', '1', '1', '1', '2025-04-25 21:40:21', '2025-04-25 21:40:21'),
+(159, '34', 'Pic', '11', '0', '1', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:21', '2025-04-25 21:40:21'),
+(160, '35', 'Pic', '11', '0', '525', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:21', '2025-04-25 21:40:21'),
+(161, '37', 'Mtr', '11', '0', '508', '0', '1', NULL, NULL, NULL, '2025-04-25 21:40:21', '2025-04-25 21:40:21'),
+(564, '15', 'Pic', '12', '0', '588', 'GA241129FQ278400', '1', NULL, NULL, '830', '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(565, '16', 'Mtr', '12', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(563, '33', 'Pic', '12', '0', '587', 'EBBD16095', '1', NULL, NULL, '23', '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(562, '3', 'Pic', '12', '0', '586', 'ZXHZBB1210', '1', '8.2', '11.57', '24.04', '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(174, '18', 'Pic', '13', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-10 19:02:41', '2025-05-10 19:02:41'),
+(173, '26', 'Mtr', '13', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-10 19:02:41', '2025-05-10 19:02:41'),
+(175, '19', 'Pic', '14', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-10 19:29:20', '2025-05-10 19:29:20'),
+(176, '19', 'Pic', '15', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-10 19:34:11', '2025-05-10 19:34:11'),
+(551, '15', 'Pic', '18', '0', '580', 'GA241129FQ278333', '1', NULL, NULL, '620', '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(537, '23', 'Pic', '17', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:09', '2025-05-23 18:57:09'),
+(536, '26', 'Mtr', '17', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:09', '2025-05-23 18:57:09'),
+(535, '15', 'Pic', '17', '0', '578', 'GA24112FQ278393', '1', NULL, NULL, NULL, '2025-05-23 18:57:09', '2025-05-23 18:57:09'),
+(534, '19', 'Pic', '17', '0', '305', '0', '2', NULL, NULL, NULL, '2025-05-23 18:57:09', '2025-05-23 18:57:09'),
+(533, '1', 'Pic', '17', '0', '551', 'ZXHZAZ5323', '1', '2.72', '2.48', '20', '2025-05-23 18:57:09', '2025-05-23 18:57:09'),
+(532, '20', 'Pic', '17', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(550, '16', 'Mtr', '18', '0', '506', '0', '4.5', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(549, '19', 'Pic', '18', '0', '305', '0', '6', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(548, '31', 'Pic', '18', '0', '512', '0', '1', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(546, '23', 'Pic', '18', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(547, '18', 'Pic', '18', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(545, '30', 'Pic', '18', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(544, '1', 'Pic', '18', '0', '554', 'ZXHZAW3736', '1', '2.66', '2.8', '2.2', '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(581, '33', 'Pic', '19', '0', '581', 'EBBD16130', '1', NULL, NULL, '20', '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(580, '18', 'Pic', '19', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(578, '26', 'Mtr', '19', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(579, '19', 'Pic', '19', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(577, '16', 'Mtr', '19', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(575, '35', 'Pic', '19', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(576, '23', 'Pic', '19', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(427, '20', 'Pic', '20', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(426, '35', 'Pic', '20', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(425, '2', 'Pic', '20', '0', '562', 'ZXHZBB9026', '1', '10.80', '7.66', '21.5', '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(424, '2', 'Pic', '20', '0', '561', 'ZXHZBD3433', '1', '10.80', '7.66', '21.5', '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(423, '1', 'Pic', '20', '0', '560', 'ZXHZAZ4614', '1', '2.9', '2.49', '2.13', '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(444, '30', 'Pic', '21', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(443, '20', 'Pic', '21', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(442, '32', 'Pic', '21', '0', '513', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(441, '35', 'Pic', '21', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(440, '3', 'Pic', '21', '0', '565', 'ZXHZAY5482', '1', '9.23', '8.75', '18.00', '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(439, '2', 'Pic', '21', '0', '564', 'ZXHZBA9071', '1', '3.09', '4.74', '18.23', '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(438, '1', 'Pic', '21', '0', '563', 'ZXHZBA3431', '1', '3.09', '4.74', '2.1', '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(566, '26', 'Mtr', '12', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(561, '32', 'Pic', '12', '0', '513', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(560, '1', 'Pic', '12', '0', '545', 'ZXHZBA9053', '1', '1.2', '2.2', '2.3', '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(488, '30', 'Pic', '23', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(487, '21', 'Pic', '23', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(486, '20', 'Pic', '23', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(485, '2', 'Pic', '23', '0', '570', 'ZXHZAB7707', '1', '10.44', '7.56', '21.11', '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(484, '2', 'Pic', '23', '0', '569', 'ZXHZBB7737', '1', '10.44', '7.56', '19.55', '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(483, '1', 'Pic', '23', '0', '568', 'ZXHZAV5093', '1', '2.75', '2.45', '2.19', '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(502, '21', 'Pic', '24', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(501, '20', 'Pic', '24', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(500, '3', 'Pic', '24', '0', '573', 'ZXHZBC5280', '1', '8.2', '7.59', '18.02', '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(499, '2', 'Pic', '24', '0', '572', 'ZXHZBC5315', '1', '8.2', '7.59', '17.56', '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(498, '1', 'Pic', '24', '0', '571', 'ZXHZAV7780', '1', '2.7', '3.01', '2.32', '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(517, '20', 'Pic', '25', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(516, '31', 'Pic', '25', '0', '512', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(515, '2', 'Pic', '25', '0', '576', 'ZXHZBD3897', '1', '10.5', '7.5', '20.00', '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(514, '2', 'Pic', '25', '0', '575', 'ZXHZBB9040', '1', '10.55', '7.59', '20.25', '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(513, '1', 'Pic', '25', '0', '574', 'ZXHZAZ4565', '1', '2.6', '2.48', '2.05', '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(531, '30', 'Pic', '17', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(530, '35', 'Pic', '17', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(529, '2', 'Pic', '17', '0', '552', 'ZXHZBB9136', '1', '10.80', '7.43', '20', '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(528, '16', 'Mtr', '17', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(527, '2', 'Pic', '17', '0', '553', 'ZXHZBD4794', '1', NULL, NULL, '20.44', '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(526, '21', 'Pic', '17', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(525, '31', 'Pic', '17', '0', '512', '0', '1', NULL, NULL, NULL, '2025-05-23 18:57:08', '2025-05-23 18:57:08'),
+(543, '2', 'Pic', '18', '0', '555', 'ZXHZBD3383', '1', '8.64', '7.58', '16.30', '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(542, '2', 'Pic', '18', '0', '556', 'ZXHZBB9139', '1', '8.92', '8.42', '17.06', '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(541, '20', 'Pic', '18', '0', '1', '0', '2', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(540, '21', 'Pic', '18', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(539, '35', 'Pic', '18', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(574, '30', 'Pic', '19', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(573, '1', 'Pic', '19', '0', '557', 'ZXHZAV9887', '1', '2.9', '2.5', '2', '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(572, '2', 'Pic', '19', '0', '558', 'ZXHZBB9156', '1', '11.13', '7.57', '20', '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(571, '2', 'Pic', '19', '0', '559', 'ZXHZBC5484', '1', '11.13', '7.57', '21.7', '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(570, '20', 'Pic', '19', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(569, '21', 'Pic', '19', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(428, '21', 'Pic', '20', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(429, '30', 'Pic', '20', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(430, '23', 'Pic', '20', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(431, '31', 'Pic', '20', '0', '512', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(432, '33', 'Pic', '20', '0', '583', 'EBBD16133', '1', NULL, NULL, '20', '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(433, '15', 'Pic', '20', '0', '584', 'GA241129FQ278428', '1', NULL, NULL, '640', '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(434, '16', 'Mtr', '20', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(435, '26', 'Mtr', '20', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(436, '18', 'Pic', '20', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(437, '19', 'Pic', '20', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(445, '21', 'Pic', '21', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(446, '15', 'Pic', '21', '0', '566', 'GA241129FQ278376', '1', NULL, NULL, '800', '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(447, '23', 'Pic', '21', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(448, '33', 'Pic', '21', '0', '585', 'EBBD166134', '1', NULL, NULL, '23', '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(449, '16', 'Mtr', '21', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(450, '26', 'Mtr', '21', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(451, '18', 'Pic', '21', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(452, '19', 'Pic', '21', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(465, '23', 'Pic', '8', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(466, '19', 'Pic', '8', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-22 23:12:00', '2025-05-22 23:12:00'),
+(559, '16', 'Mtr', '12', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(558, '21', 'Pic', '12', '1', '2', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(557, '2', 'Pic', '12', '0', '550', 'ZXHZBA9011', '1', '8.5', '11.5', '24.81', '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(556, '30', 'Pic', '12', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(555, '16', 'Mtr', '12', '1', '506', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(554, '30', 'Pic', '12', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(553, '35', 'Pic', '12', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(489, '31', 'Pic', '23', '0', '512', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(490, '35', 'Pic', '23', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(491, '23', 'Pic', '23', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(492, '33', 'Pic', '23', '0', '589', 'EBBD16132', '1', NULL, NULL, '20', '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(493, '16', 'Mtr', '23', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(494, '26', 'Mtr', '23', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(495, '15', 'Pic', '23', '0', '590', 'GA241129FQ278337', '1', NULL, NULL, '700', '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(496, '18', 'Pic', '23', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(497, '19', 'Pic', '23', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(503, '30', 'Pic', '24', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(504, '31', 'Pic', '24', '0', '512', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(505, '23', 'Pic', '24', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(506, '31', 'Pic', '24', '0', '512', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(507, '33', 'Pic', '24', '0', '591', 'EBBD16063', '1', NULL, NULL, '1.33', '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(508, '15', 'Pic', '24', '0', '592', 'GA241129FQ278350', '1', NULL, NULL, '670', '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(509, '16', 'Mtr', '24', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(510, '26', 'Mtr', '24', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(511, '34', 'Pic', '24', '0', '510', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(512, '19', 'Pic', '24', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(518, '21', 'Pic', '25', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(519, '30', 'Pic', '25', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(520, '23', 'Pic', '25', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(521, '15', 'Pic', '25', '0', '593', 'GA241129FQ278372', '1', NULL, NULL, '680', '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(522, '16', 'Mtr', '25', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(523, '18', 'Pic', '25', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(524, '19', 'Pic', '25', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(538, '33', 'Pic', '17', '0', '579', 'EBBD16135', '1', NULL, NULL, NULL, '2025-05-23 18:57:09', '2025-05-23 18:57:09'),
+(552, '26', 'Mtr', '18', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-23 19:03:12', '2025-05-23 19:03:12'),
+(567, '19', 'Pic', '12', '0', '305', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(568, '23', 'Pic', '12', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-23 22:05:58', '2025-05-23 22:05:58'),
+(582, '15', 'Pic', '19', '0', '582', 'GA241129FQ278338', '1', NULL, NULL, '730', '2025-05-24 21:36:09', '2025-05-24 21:36:09'),
+(633, '26', 'Mtr', '26', '0', '507', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(632, '33', 'Pic', '26', '0', '598', 'EBBD16064', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(629, '35', 'Pic', '26', '0', '567', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(630, '23', 'Pic', '26', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(631, '15', 'Pic', '26', '0', '597', 'GA241129FQ278380', '1', NULL, NULL, '700', '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(628, '32', 'Pic', '26', '0', '513', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(627, '3', 'Pic', '26', '0', '596', 'ZXHZAY5460', '1', '7.75', '11.73', '22', '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(626, '3', 'Pic', '26', '0', '595', 'ZXHZAY1409', '1', '7.75', '11.73', '21.0', '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(625, '1', 'Pic', '26', '0', '594', 'ZXHZAV7901', '1', '2.60', '2.49', '2.22', '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(624, '30', 'Pic', '26', '0', '514', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(623, '21', 'Pic', '26', '0', '2', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(622, '20', 'Pic', '26', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(621, '16', 'Mtr', '26', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(620, '19', 'Pic', '26', '0', '305', '0', '2', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(619, '18', 'Pic', '26', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-26 19:03:59', '2025-05-26 19:03:59'),
+(643, '16', 'Mtr', '27', '0', '506', '0', '1', NULL, NULL, NULL, '2025-05-28 01:19:01', '2025-05-28 01:19:01'),
+(642, '23', 'Pic', '27', '0', '511', '0', '1', NULL, NULL, NULL, '2025-05-28 01:19:01', '2025-05-28 01:19:01'),
+(641, '20', 'Pic', '27', '0', '1', '0', '1', NULL, NULL, NULL, '2025-05-28 01:19:01', '2025-05-28 01:19:01'),
+(640, '18', 'Pic', '27', '0', '509', '0', '1', NULL, NULL, NULL, '2025-05-28 01:19:01', '2025-05-28 01:19:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_report_permission`
+--
+
+CREATE TABLE `tbl_report_permission` (
+  `id` int(11) NOT NULL,
+  `user_type` varchar(100) NOT NULL,
+  `field_name` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`field_name`)),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `tbl_report_permission`
+--
+
+INSERT INTO `tbl_report_permission` (`id`, `user_type`, `field_name`, `created_at`, `updated_at`) VALUES
+(1, 'electric', '[\"part\",\"temp\"]', '2025-05-18 00:44:46', '2025-05-19 18:53:45'),
+(2, 'godown', '[\"sr_no_fiber\",\"warranty\",\"type\"]', '2025-05-19 18:55:55', '2025-05-19 18:55:55'),
+(3, 'user', '[\"part\",\"temp\",\"worker_name\",\"sr_no_fiber\",\"mj\",\"warranty\",\"type\"]', '2025-05-28 21:41:20', '2025-05-28 21:41:20');
 
 -- --------------------------------------------------------
 
@@ -1168,10 +1524,11 @@ CREATE TABLE `tbl_sales` (
 --
 
 INSERT INTO `tbl_sales` (`id`, `sale_id`, `sale_date`, `customer_id`, `status`, `repair_status`, `amount_r`, `shipping_cost`, `round_total`, `amount`, `notes`, `created_at`, `updated_at`) VALUES
-(1, '1', '2025-04-01', 6, '0', '0', 105000.00, 0.00, 0.00, 105000.00, NULL, '2025-04-01 21:36:48', '2025-04-01 21:37:33'),
-(2, '2', '2025-04-02', 6, '0', '1', 0.00, 0.00, 0.00, 0.00, NULL, '2025-04-02 18:32:50', '2025-04-02 18:32:50'),
-(3, '3', '2025-04-02', 6, '1', '0', 105000.00, 0.00, 0.00, 105000.00, NULL, '2025-04-02 23:55:51', '2025-04-02 23:57:58'),
-(4, '4', '2025-04-04', 9, '0', '1', 4100.00, 0.00, 0.00, 4100.00, NULL, '2025-04-04 19:09:34', '2025-04-04 19:09:34');
+(1, '1', '2025-04-08', 1, '1', '0', 105000.00, 0.00, 0.00, 105000.00, NULL, '2025-04-09 01:17:21', '2025-04-09 01:17:21'),
+(2, '2', '2025-05-26', 1, '0', '0', 95000.00, 0.00, 0.00, 95000.00, NULL, '2025-05-25 01:18:58', '2025-05-26 18:42:04'),
+(3, '107', '2025-05-26', 1, '0', '0', 95000.00, 0.00, 0.00, 95000.00, NULL, '2025-05-26 19:05:49', '2025-05-26 19:07:41'),
+(5, '3', '2025-05-26', 2, '1', '0', 2000.00, 0.00, 0.00, 2000.00, NULL, '2025-05-27 22:55:33', '2025-05-27 22:55:33'),
+(6, '4', '2025-05-26', 2, '0', '0', 220000.00, 0.00, 0.00, 220000.00, NULL, '2025-05-27 23:56:16', '2025-05-27 23:56:16');
 
 -- --------------------------------------------------------
 
@@ -1202,11 +1559,12 @@ CREATE TABLE `tbl_sales_items` (
 --
 
 INSERT INTO `tbl_sales_items` (`id`, `sid`, `sale_id`, `report_id`, `cname`, `scname`, `unit`, `sr_no`, `qty`, `rate`, `p_tax`, `total`, `status`, `created_at`, `updated_at`) VALUES
-(2, '1', '1', '1', '1', '4', 'Pic', 'M25150001', '1', '105000', '0', 105000.00, '0', '2025-04-01 21:37:33', '2025-04-01 21:37:33'),
-(3, '2', '2', '1', '1', '4', 'Pic', 'M25150001', '1', '0', '0', 0.00, '1', '2025-04-02 18:32:50', '2025-04-02 22:02:20'),
-(8, '3', '3', '2', '1', '4', 'Pic', 'M25210001', '1', '105000', '0', 105000.00, '0', '2025-04-02 23:57:58', '2025-04-02 23:57:58'),
-(6, '2', '2', '6', '1', '4', 'Pic', 'M25150002', '1', '0', '0', 0.00, '0', '2025-04-02 22:02:20', '2025-04-02 22:02:20'),
-(9, '4', '4', '7', '1', '4', 'Pic', 'M22150001', '1', '4100', '0', 4100.00, '0', '2025-04-04 19:09:34', '2025-04-04 19:09:34');
+(1, '1', '1', '3', '1', '4', 'Pic', 'M25150002', '1', '105000', '0', 105000.00, '0', '2025-04-09 01:17:21', '2025-04-09 01:17:21'),
+(16, '2', '2', '8', '1', '4', 'Pic', 'C25250003', '1', '95000', '0', 95000.00, '0', '2025-05-26 18:42:04', '2025-05-26 18:42:04'),
+(19, '3', '107', '26', '1', '6', 'Pic', 'C25210291', '1', '95000', '0', 95000.00, '0', '2025-05-26 19:07:42', '2025-05-26 19:07:42'),
+(24, '5', '3', '8', '1', '7', 'Pic', 'C25250003', '1', '2000', '0', 2000.00, '0', '2025-05-27 22:55:33', '2025-05-27 22:55:33'),
+(25, '6', '4', '18', '1', '6', 'Pic', 'K25210289', '1', '110000', '0', 110000.00, '0', '2025-05-27 23:56:16', '2025-05-27 23:56:16'),
+(26, '6', '4', '12', '1', '7', 'Pic', 'C25250002', '1', '110000', '0', 110000.00, '0', '2025-05-27 23:56:16', '2025-05-27 23:56:16');
 
 -- --------------------------------------------------------
 
@@ -1227,7 +1585,8 @@ CREATE TABLE `tbl_sale_product_category` (
 --
 
 INSERT INTO `tbl_sale_product_category` (`id`, `name`, `is_type`, `created_at`, `updated_at`) VALUES
-(1, 'Fiber', '1', '2024-12-20 01:23:37', '2024-12-20 01:28:19');
+(1, 'Fiber', '1', '2024-12-20 01:23:37', '2024-12-20 01:28:19'),
+(5, 'Key Chain', NULL, '2025-05-15 00:00:24', '2025-05-15 00:00:24');
 
 -- --------------------------------------------------------
 
@@ -1253,7 +1612,7 @@ INSERT INTO `tbl_sale_product_subcategory` (`id`, `spcid`, `name`, `unit`, `sr_n
 (4, 1, '15', 'Pic', 1, '2024-12-20 06:37:00', '2024-12-20 06:39:58'),
 (5, 1, '18', 'Pic', 1, '2024-12-20 06:37:08', '2024-12-20 06:39:52'),
 (6, 1, '21', 'Pic', 1, '2024-12-20 06:37:24', '2024-12-20 06:39:46'),
-(7, 1, '26', 'Pic', 1, '2024-12-20 06:39:27', '2024-12-20 06:39:27');
+(7, 1, '25', 'Pic', 1, '2024-12-20 06:39:27', '2025-05-25 01:18:23');
 
 -- --------------------------------------------------------
 
@@ -1282,8 +1641,9 @@ CREATE TABLE `tbl_sale_returns` (
 --
 
 INSERT INTO `tbl_sale_returns` (`id`, `date`, `customer_id`, `sale_id`, `sr_no`, `cid`, `scid`, `qty`, `unit`, `price`, `reason`, `created_at`, `updated_at`) VALUES
-(2, '2025-04-01', '6', '1', 'M25150001', '1', '4', 1, 'Pic', 105000.00, 'LD', '2025-04-02 00:10:59', '2025-04-02 00:10:59'),
-(3, '2025-04-02', '6', '2', 'M25150001', '1', '4', 1, 'Pic', 0.00, '14 Gaya.', '2025-04-02 18:45:59', '2025-04-02 18:45:59');
+(1, '2025-05-12', '1', '1', 'M25150002', '1', '4', 1, 'Pic', 105000.00, 'Not Working Properly', '2025-05-12 19:30:57', '2025-05-12 19:30:57'),
+(2, '2025-05-27', '1', '107', 'C25210291', '1', '6', 1, 'Pic', 95000.00, 'Watt Down', '2025-05-27 20:12:56', '2025-05-27 20:12:56'),
+(3, '2025-05-27', '2', '4', 'K25210289', '1', '6', 1, 'Pic', 110000.00, 'Watt Down', '2025-05-28 00:03:09', '2025-05-28 00:03:09');
 
 -- --------------------------------------------------------
 
@@ -1312,393 +1672,100 @@ CREATE TABLE `tbl_stock` (
 --
 
 INSERT INTO `tbl_stock` (`id`, `date`, `invoice_no`, `cid`, `scid`, `serial_no`, `qty`, `price`, `priceofUnit`, `status`, `dead_status`, `created_at`, `updated_at`) VALUES
-(1, '2025-03-05', '1', 1, 2, 'ZXHZBB2330', 1, 1000.00, 100.00, '0', '0', '2025-03-06 00:07:27', '2025-04-04 01:07:08'),
-(2, '2025-03-05', '1', 1, 2, 'ZXHZBB2663', 1, 1000.00, 100.00, '1', '0', '2025-03-06 00:07:27', '2025-04-03 22:23:36'),
-(3, '2025-03-05', '1', 1, 2, 'ZXHZBB2307', 1, 1000.00, 100.00, '0', '0', '2025-03-06 00:07:27', '2025-04-04 00:14:32'),
-(4, '2025-03-05', '1', 1, 2, 'ZXHZBB2571', 1, 1000.00, 100.00, '1', '0', '2025-03-06 00:07:27', '2025-04-02 19:24:12'),
-(5, '2025-03-05', '1', 1, 2, 'ZXHZBA9053', 1, 1000.00, 100.00, '0', '0', '2025-03-06 00:07:27', '2025-03-29 01:25:33'),
-(6, '2025-03-05', '1', 1, 2, 'ZXHZBB2456', 1, 1000.00, 100.00, '1', '0', '2025-03-06 00:07:27', '2025-04-02 19:47:10'),
-(104, '2025-03-05', '1', 8, 33, 'ISOTRA3001', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-11 01:00:09'),
-(9, '2025-03-05', '1', 1, 2, 'ZXHZAZ2222', 1, 1000.00, 100.00, '0', '0', '2025-03-06 00:07:27', '2025-03-06 00:07:27'),
-(10, '2025-03-05', '1', 1, 2, 'ZXHZBA9394', 1, 1000.00, 100.00, '0', '0', '2025-03-06 00:07:27', '2025-03-06 00:07:27'),
-(11, '2025-03-05', '1', 1, 1, 'ZXHZBA9278', 1, 1000.00, 200.00, '1', '0', '2025-03-06 00:13:30', '2025-04-04 18:22:02'),
-(12, '2025-03-05', '1', 1, 1, 'ZXHZBB5555', 1, 1000.00, 200.00, '1', '0', '2025-03-06 00:13:30', '2025-04-02 23:53:24'),
-(13, '2025-03-05', '1', 1, 1, 'ZXHZBB5550', 1, 1000.00, 200.00, '1', '0', '2025-03-06 00:13:30', '2025-04-02 19:47:10'),
-(14, '2025-03-05', '1', 1, 1, 'ZXHZBB5560', 1, 1000.00, 200.00, '1', '0', '2025-03-06 00:13:30', '2025-04-04 22:06:38'),
-(15, '2025-03-05', '1', 1, 1, 'ZXHZBA9063', 1, 1000.00, 200.00, '1', '0', '2025-03-06 00:13:30', '2025-04-04 22:54:09'),
-(16, '2025-03-05', '1', 1, 1, 'ZXHZBA9277', 1, 1000.00, 200.00, '1', '0', '2025-03-06 00:30:04', '2025-04-05 17:45:26'),
-(102, '2025-03-05', '1', 1, 1, 'ZXHZBA9011', 1, 1000.00, 100.00, '1', '0', '2025-03-06 23:14:52', '2025-04-05 17:53:10'),
-(103, '2025-03-05', '1', 1, 1, 'ZXHZAZ0750', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:14:52', '2025-03-29 23:48:25'),
-(19, '2025-03-05', '1', 1, 1, 'ZXHZBA9351', 1, 1000.00, 200.00, '0', '0', '2025-03-06 00:30:04', '2025-03-30 00:49:11'),
-(20, '2025-03-05', '1', 1, 1, 'ZXHZBB5557', 1, 1000.00, 200.00, '0', '0', '2025-03-06 00:30:04', '2025-03-06 00:30:04'),
-(22, '2025-03-05', '1', 10, 16, '0', 500, 5000.00, 10.00, '0', '0', '2025-03-06 00:34:42', '2025-04-03 22:17:56'),
-(52, '2025-03-05', '1', 1, 3, 'ZXHZBC0389', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:09', '2025-03-17 18:56:18'),
-(53, '2025-03-05', '1', 1, 3, 'ZXHZBC0241', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:09', '2025-03-17 19:01:15'),
-(54, '2025-03-05', '1', 1, 3, 'ZXHZBA9408', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:09', '2025-03-24 19:15:58'),
-(55, '2025-03-05', '1', 1, 3, 'ZXHZAY7615', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:09', '2025-03-06 18:07:09'),
-(56, '2025-03-05', '1', 1, 3, 'ZXHZBD3709', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:09', '2025-03-06 18:07:09'),
-(57, '2025-03-05', '1', 1, 3, 'ZXHZBB5580', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:09', '2025-03-06 18:07:09'),
-(58, '2025-03-05', '1', 1, 3, 'ZXHZBB2375', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:09', '2025-03-29 23:48:25'),
-(59, '2025-03-05', '1', 1, 3, 'ZXHZBB8072', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:51', '2025-03-06 18:07:51'),
-(60, '2025-03-05', '1', 1, 3, 'ZXHZBC0807', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:51', '2025-03-06 18:07:51'),
-(61, '2025-03-05', '1', 1, 3, 'ZXHZBC0380', 1, 1000.00, 100.00, '0', '0', '2025-03-06 18:07:51', '2025-03-24 19:34:44'),
-(62, '2025-03-05', '1', 11, 34, '0', 10, 1000.00, 100.00, '1', '0', '2025-03-06 18:09:33', '2025-04-02 19:31:49'),
-(87, '2025-03-05', '1', 8, 22, 'ISAAAB2010', 1, 1000.00, 100.00, '1', '0', '2025-03-06 19:53:01', '2025-04-02 19:47:10'),
-(79, '2025-03-05', '1', 8, 22, 'ISAAAB2008', 1, 1000.00, 100.00, '1', '0', '2025-03-06 19:31:57', '2025-04-02 19:24:12'),
-(78, '2025-03-05', '1', 8, 22, 'ISAAAB2007', 1, 1000.00, 100.00, '1', '0', '2025-03-06 19:31:57', '2025-04-04 22:54:09'),
-(77, '2025-03-05', '1', 8, 22, 'ISAAAB2006', 1, 1000.00, 100.00, '0', '0', '2025-03-06 19:30:53', '2025-03-06 19:30:53'),
-(76, '2025-03-05', '1', 8, 22, 'ISAAAB2005', 1, 1000.00, 100.00, '0', '0', '2025-03-06 19:30:53', '2025-03-06 19:30:53'),
-(75, '2025-03-05', '1', 8, 22, 'ISAAAB2004', 1, 1000.00, 100.00, '0', '0', '2025-03-06 19:30:53', '2025-03-06 19:30:53'),
-(74, '2025-03-05', '1', 8, 22, 'ISAAAB2003', 1, 1000.00, 100.00, '0', '0', '2025-03-06 19:30:53', '2025-03-06 19:30:53'),
-(73, '2025-03-05', '1', 8, 22, 'ISAAAB2002', 1, 1000.00, 100.00, '0', '0', '2025-03-06 19:30:53', '2025-03-06 19:30:53'),
-(72, '2025-03-05', '1', 8, 22, 'ISAAAB2001', 1, 1000.00, 100.00, '0', '0', '2025-03-06 19:30:53', '2025-03-19 19:00:54'),
-(86, '2025-03-05', '1', 8, 22, 'ISAAAB2009', 1, 1000.00, 100.00, '0', '0', '2025-03-06 19:53:01', '2025-03-06 19:53:01'),
-(88, '2025-03-05', '1', 7, 30, '0', 10, 1000.00, 100.00, '0', '0', '2025-03-06 20:20:20', '2025-03-11 01:00:09'),
-(89, '2025-03-05', '1', 6, 19, 'HRAAAB3001', 1, 1000.00, 100.00, '1', '1', '2025-03-06 20:20:40', '2025-04-05 17:45:26'),
-(90, '2025-03-05', '1', 6, 19, 'HRAAAB3002', 1, 1000.00, 100.00, '1', '0', '2025-03-06 20:20:40', '2025-04-02 19:24:12'),
-(91, '2025-03-05', '1', 6, 19, 'HRAAAB3003', 1, 1000.00, 100.00, '1', '0', '2025-03-06 20:20:40', '2025-04-02 19:47:10'),
-(92, '2025-03-05', '1', 6, 19, 'HRAAAB3004', 1, 1000.00, 100.00, '1', '0', '2025-03-06 20:20:40', '2025-04-02 23:53:24'),
-(93, '2025-03-05', '1', 6, 19, 'HRAAAB3005', 1, 1000.00, 100.00, '0', '0', '2025-03-06 20:21:48', '2025-03-24 17:24:04'),
-(94, '2025-03-05', '1', 6, 19, 'HRAAAB3006', 1, 1000.00, 100.00, '0', '0', '2025-03-06 20:21:48', '2025-03-06 20:21:48'),
-(95, '2025-03-05', '1', 6, 19, 'HRAAAB3007', 1, 1000.00, 100.00, '0', '0', '2025-03-06 20:21:48', '2025-03-06 20:21:48'),
-(96, '2025-03-05', '1', 6, 19, 'HRAAAB3008', 1, 1000.00, 100.00, '0', '0', '2025-03-06 20:21:48', '2025-03-06 20:21:48'),
-(97, '2025-03-05', '1', 6, 19, 'HRAAAB3009', 1, 1000.00, 100.00, '0', '0', '2025-03-06 20:21:48', '2025-03-06 20:21:48'),
-(98, '2025-03-05', '1', 6, 19, 'HRAAAB3010', 1, 1000.00, 100.00, '0', '0', '2025-03-06 20:21:48', '2025-03-06 20:21:48'),
-(99, '2025-03-05', '1', 7, 20, '0', 10, 1000.00, 100.00, '1', '0', '2025-03-06 20:22:44', '2025-04-01 22:21:56'),
-(100, '2025-03-05', '1', 7, 21, '0', 10, 1000.00, 100.00, '0', '0', '2025-03-06 20:24:25', '2025-04-04 00:14:32'),
-(101, '2025-03-05', '1', 26, 32, '0', 10, 1500.00, 150.00, '0', '0', '2025-03-06 22:15:25', '2025-03-07 00:38:05'),
-(105, '2025-03-05', '1', 8, 33, 'ISOTRA3002', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-22 19:24:43'),
-(106, '2025-03-05', '1', 8, 33, 'ISOTRA3003', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(107, '2025-03-05', '1', 8, 33, 'ISOTRA3004', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(108, '2025-03-05', '1', 8, 33, 'ISOTRA3005', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(109, '2025-03-05', '1', 8, 33, 'ISOTRA3006', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(110, '2025-03-05', '1', 8, 33, 'ISOTRA3007', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(111, '2025-03-05', '1', 8, 33, 'ISOTRA3008', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(112, '2025-03-05', '1', 8, 33, 'ISOTRA3009', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(113, '2025-03-05', '1', 8, 33, 'ISOTRA3010', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:46:41', '2025-03-06 23:46:41'),
-(114, '2025-03-05', '1', 9, 15, 'AOMQSW5001', 1, 1000.00, 100.00, '0', '1', '2025-03-06 23:47:00', '2025-04-04 00:14:32'),
-(115, '2025-03-05', '1', 9, 15, 'AOMQSW5002', 1, 1000.00, 100.00, '1', '0', '2025-03-06 23:47:00', '2025-04-02 19:47:10'),
-(116, '2025-03-05', '1', 9, 15, 'AOMQSW5003', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:47:00', '2025-03-24 17:24:04'),
-(117, '2025-03-05', '1', 9, 15, 'AOMQSW5004', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:47:00', '2025-03-06 23:47:00'),
-(118, '2025-03-05', '1', 9, 15, 'AOMQSW5005', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:47:00', '2025-03-29 01:25:34'),
-(119, '2025-03-05', '1', 9, 15, 'AOMQSW5006', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:47:00', '2025-03-07 17:10:24'),
-(120, '2025-03-05', '1', 9, 15, 'AOMQSW5007', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:47:00', '2025-04-03 22:19:24'),
-(121, '2025-03-05', '1', 9, 15, 'AOMQSW5008', 1, 1000.00, 100.00, '0', '0', '2025-03-06 23:47:00', '2025-03-06 23:47:00'),
-(122, '2025-03-05', '1', 9, 15, 'AOMQSW5009', 1, 1000.00, 100.00, '1', '0', '2025-03-06 23:47:00', '2025-04-04 22:54:09'),
-(123, '2025-03-05', '1', 9, 15, 'AOMQSW5010', 1, 1000.00, 100.00, '1', '0', '2025-03-06 23:47:00', '2025-04-04 22:24:15'),
-(124, '2025-03-05', '1', 10, 26, '0', 500, 5000.00, 10.00, '1', '0', '2025-03-06 23:47:14', '2025-04-05 17:45:26'),
-(125, '2025-03-05', '1', 12, 23, '0', 10, 1000.00, 100.00, '0', '0', '2025-03-06 23:47:32', '2025-03-07 00:38:05'),
-(126, '2025-03-05', '1', 26, 31, '0', 10, 1500.00, 150.00, '0', '0', '2025-03-06 23:47:36', '2025-03-06 23:47:36'),
-(127, '2025-03-11', '4', 10, 16, '0', 1000, 8000.00, 8.00, '1', '0', '2025-03-13 18:09:19', '2025-04-04 18:22:02'),
-(129, '2025-03-17', '3', 7, 30, '0', 25, 2500.00, 40.00, '1', '0', '2025-03-17 17:42:36', '2025-04-01 22:21:56'),
-(130, '2025-03-17', '7', 25, 35, '0', 10, 1000.00, 100.00, '0', '0', '2025-03-17 19:01:15', '2025-03-17 19:01:15'),
-(131, '2025-03-17', '3', 25, 35, '0', 10, 800.00, 80.00, '0', '0', '2025-03-18 01:13:54', '2025-04-04 00:14:32'),
-(132, '2025-03-24', '8', 26, 32, '0', 100, 10000.00, 100.00, '1', '0', '2025-03-24 17:24:04', '2025-04-04 22:22:36'),
-(133, '2025-03-25', '109', 1, 1, 'LDZHCB1501', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(134, '2025-03-25', '109', 1, 1, 'LDXJVR1502', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(135, '2025-03-25', '109', 1, 1, 'LDQWYT1503', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(136, '2025-03-25', '109', 1, 1, 'LDPZBC1504', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(137, '2025-03-25', '109', 1, 1, 'LDMKLQ1505', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(138, '2025-03-25', '109', 1, 1, 'LDRTYU1506', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(139, '2025-03-25', '109', 1, 1, 'LDASDF1507', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(140, '2025-03-25', '109', 1, 1, 'LDZXCV1508', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(141, '2025-03-25', '109', 1, 1, 'LDPOIU1509', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(142, '2025-03-25', '109', 1, 1, 'LDLKJH1510', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(143, '2025-03-25', '109', 1, 1, 'LDMNBV1511', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(144, '2025-03-25', '109', 1, 1, 'LDQAZX1512', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(145, '2025-03-25', '109', 1, 1, 'LDWSXE1513', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(146, '2025-03-25', '109', 1, 1, 'LDEDCR1514', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(147, '2025-03-25', '109', 1, 1, 'LDRFVT1515', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(148, '2025-03-25', '109', 1, 1, 'LDTGBY1516', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(149, '2025-03-25', '109', 1, 1, 'LDYHNU1517', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(150, '2025-03-25', '109', 1, 1, 'LDUJMI1518', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(151, '2025-03-25', '109', 1, 1, 'LDIKOL1519', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(152, '2025-03-25', '109', 1, 1, 'LDOLPW1520', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(153, '2025-03-25', '109', 1, 1, 'LDPLMN1521', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(154, '2025-03-25', '109', 1, 1, 'LDZXSD1522', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(155, '2025-03-25', '109', 1, 1, 'LDQWER1523', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(156, '2025-03-25', '109', 1, 1, 'LDASDE1524', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(157, '2025-03-25', '109', 1, 1, 'LDFGHY1525', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(158, '2025-03-25', '109', 1, 1, 'LDBVCM1526', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(159, '2025-03-25', '109', 1, 1, 'LDNMBT1527', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(160, '2025-03-25', '109', 1, 1, 'LDLKOP1528', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(161, '2025-03-25', '109', 1, 1, 'LDPLKI1529', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(162, '2025-03-25', '109', 1, 1, 'LDZXCV1530', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(163, '2025-03-25', '109', 1, 1, 'LDQWER1531', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(164, '2025-03-25', '109', 1, 1, 'LDASDF1532', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(165, '2025-03-25', '109', 1, 1, 'LDZXCQ1533', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(166, '2025-03-25', '109', 1, 1, 'LDWSXE1534', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(167, '2025-03-25', '109', 1, 1, 'LDRFVT1535', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(168, '2025-03-25', '109', 1, 1, 'LDTGBY1536', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(169, '2025-03-25', '109', 1, 1, 'LDYHNU1537', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(170, '2025-03-25', '109', 1, 1, 'LDUJMI1538', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(171, '2025-03-25', '109', 1, 1, 'LDIKOL1539', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(172, '2025-03-25', '109', 1, 1, 'LDOLPL1540', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(173, '2025-03-25', '109', 1, 1, 'LDPLMN1541', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(174, '2025-03-25', '109', 1, 1, 'LDZXSD1542', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(175, '2025-03-25', '109', 1, 1, 'LDQWER1543', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(176, '2025-03-25', '109', 1, 1, 'LDASDE1544', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(177, '2025-03-25', '109', 1, 1, 'LDFGHU1545', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(178, '2025-03-25', '109', 1, 1, 'LDBVCN1546', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(179, '2025-03-25', '109', 1, 1, 'LDNMBU1547', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(180, '2025-03-25', '109', 1, 1, 'LDLKIO1548', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(181, '2025-03-25', '109', 1, 1, 'LDPLKY1549', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(182, '2025-03-25', '109', 1, 1, 'LDZXCV1550', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(183, '2025-03-25', '109', 1, 1, 'LDQWER1551', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(184, '2025-03-25', '109', 1, 1, 'LDASDF1552', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(185, '2025-03-25', '109', 1, 1, 'LDZXCQ1553', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(186, '2025-03-25', '109', 1, 1, 'LDWSXE1554', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(187, '2025-03-25', '109', 1, 1, 'LDRFVT1555', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(188, '2025-03-25', '109', 1, 1, 'LDTGBY1556', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(189, '2025-03-25', '109', 1, 1, 'LDYHNU1557', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(190, '2025-03-25', '109', 1, 1, 'LDUJMI1558', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(191, '2025-03-25', '109', 1, 1, 'LDIKOL1559', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(192, '2025-03-25', '109', 1, 1, 'LDOLPQ1560', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(193, '2025-03-25', '109', 1, 1, 'LDPLMN1561', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(194, '2025-03-25', '109', 1, 1, 'LDZXSD1562', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(195, '2025-03-25', '109', 1, 1, 'LDQWER1563', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(196, '2025-03-25', '109', 1, 1, 'LDASDE1564', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(197, '2025-03-25', '109', 1, 1, 'LDFGHU1565', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(198, '2025-03-25', '109', 1, 1, 'LDBVNC1566', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(199, '2025-03-25', '109', 1, 1, 'LDNMBS1567', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(200, '2025-03-25', '109', 1, 1, 'LDLKIT1568', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(201, '2025-03-25', '109', 1, 1, 'LDPLKI1569', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(202, '2025-03-25', '109', 1, 1, 'LDZXCV1570', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(203, '2025-03-25', '109', 1, 1, 'LDQWER1571', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(204, '2025-03-25', '109', 1, 1, 'LDASDF1572', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(205, '2025-03-25', '109', 1, 1, 'LDZXCQ1573', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(206, '2025-03-25', '109', 1, 1, 'LDWSXE1574', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(207, '2025-03-25', '109', 1, 1, 'LDRFVT1575', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(208, '2025-03-25', '109', 1, 1, 'LDTGBY1576', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(209, '2025-03-25', '109', 1, 1, 'LDYHNU1577', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(210, '2025-03-25', '109', 1, 1, 'LDUJMI1578', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(211, '2025-03-25', '109', 1, 1, 'LDIKOL1579', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(212, '2025-03-25', '109', 1, 1, 'LDOLPQ1580', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(213, '2025-03-25', '109', 1, 1, 'LDPLMN1581', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(214, '2025-03-25', '109', 1, 1, 'LDZXSD1582', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(215, '2025-03-25', '109', 1, 1, 'LDQWER1583', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(216, '2025-03-25', '109', 1, 1, 'LDASDE1584', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(217, '2025-03-25', '109', 1, 1, 'LDFGHU1585', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(218, '2025-03-25', '109', 1, 1, 'LDBVNM1586', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(219, '2025-03-25', '109', 1, 1, 'LDNMBS1587', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(220, '2025-03-25', '109', 1, 1, 'LDLKIT1588', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(221, '2025-03-25', '109', 1, 1, 'LDPLKI1589', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(222, '2025-03-25', '109', 1, 1, 'LDZXCV1590', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(223, '2025-03-25', '109', 1, 1, 'LDQWER1591', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(224, '2025-03-25', '109', 1, 1, 'LDASDF1592', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(225, '2025-03-25', '109', 1, 1, 'LDZXCQ1593', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(226, '2025-03-25', '109', 1, 1, 'LDWSXE1594', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(227, '2025-03-25', '109', 1, 1, 'LDRFVT1595', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(228, '2025-03-25', '109', 1, 1, 'LDTGBY1596', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(229, '2025-03-25', '109', 1, 1, 'LDYHNU1597', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(230, '2025-03-25', '109', 1, 1, 'LDUJMI1598', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(231, '2025-03-25', '109', 1, 1, 'LDIKOL1599', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(232, '2025-03-25', '109', 1, 1, 'LDOLPQ1600', 1, 40000.00, 400.00, '0', '0', '2025-03-25 20:18:06', '2025-03-25 20:18:06'),
-(233, '2025-03-24', '8', 26, 31, '0', 100, 8000.00, 80.00, '0', '0', '2025-03-29 01:25:34', '2025-04-04 00:14:32'),
-(234, '2025-03-11', '4', 10, 37, '0', 1000, 12000.00, 12.00, '1', '0', '2025-03-29 01:25:34', '2025-04-05 17:45:26'),
-(235, '2025-04-03', '11', 1, 3, 'AXHZAE7859', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(236, '2025-04-03', '11', 1, 3, 'AXHZAE7763', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(237, '2025-04-03', '11', 1, 3, 'AXHZAE7773', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(238, '2025-04-03', '11', 1, 3, 'AXHZAE7949', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(239, '2025-04-03', '11', 1, 3, 'AXHZAF0639', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(240, '2025-04-03', '11', 1, 3, 'AXHZAE8059', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(241, '2025-04-03', '11', 1, 3, 'AXHZAF0751', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(242, '2025-04-03', '11', 1, 3, 'AXHZAF0060', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(243, '2025-04-03', '11', 1, 3, 'AXHZAE7931', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(244, '2025-04-03', '11', 1, 3, 'AXHZAH6169', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(245, '2025-04-03', '11', 1, 3, 'AXHZAE7820', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(246, '2025-04-03', '11', 1, 3, 'AXHZAF3390', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(247, '2025-04-03', '11', 1, 3, 'AXHZAE8082', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(248, '2025-04-03', '11', 1, 3, 'AXHZAE5991', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(249, '2025-04-03', '11', 1, 3, 'AXHZAE7775', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(250, '2025-04-03', '11', 1, 3, 'AXHZAE8390', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(251, '2025-04-03', '11', 1, 3, 'AXHZAF1305', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(252, '2025-04-03', '11', 1, 3, 'AXHZAF0026', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(253, '2025-04-03', '11', 1, 3, 'AXHZAE7872', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(254, '2025-04-03', '11', 1, 3, 'AXHZAF1303', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(255, '2025-04-03', '11', 1, 3, 'AXHZAE8797', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(256, '2025-04-03', '11', 1, 3, 'AXHZAF1368', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(257, '2025-04-03', '11', 1, 3, 'AXHZAE8520', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(258, '2025-04-03', '11', 1, 3, 'AXHZAE7779', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(259, '2025-04-03', '11', 1, 3, 'AXHZAF0127', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(260, '2025-04-03', '11', 1, 3, 'AXHZAF0146', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(261, '2025-04-03', '11', 1, 3, 'AXHZAE6059', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(262, '2025-04-03', '11', 1, 3, 'AXHZAE6055', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(263, '2025-04-03', '11', 1, 3, 'AXHZAF0147', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(264, '2025-04-03', '11', 1, 3, 'AXHZAF0091', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(265, '2025-04-03', '11', 1, 3, 'AXHZAA4582', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(266, '2025-04-03', '11', 1, 3, 'AXHZAE6720', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(267, '2025-04-03', '11', 1, 3, 'AXHZAE7860', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(268, '2025-04-03', '11', 1, 3, 'AXHZAE7873', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(269, '2025-04-03', '11', 1, 3, 'AXHZAE7925', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(270, '2025-04-03', '11', 1, 3, 'AXHZAE7870', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(271, '2025-04-03', '11', 1, 3, 'AXHZAE7760', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(272, '2025-04-03', '11', 1, 3, 'AXHZAE7768', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(273, '2025-04-03', '11', 1, 3, 'AXHZAE7865', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(274, '2025-04-03', '11', 1, 3, 'AXHZAE7787', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(275, '2025-04-03', '11', 1, 3, 'AXHZAE8062', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(276, '2025-04-03', '11', 1, 3, 'AXHZAE7951', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(277, '2025-04-03', '11', 1, 3, 'AXHZAE7937', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(278, '2025-04-03', '11', 1, 3, 'AXHZAE7086', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(279, '2025-04-03', '11', 1, 3, 'AXHZAE8074', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(280, '2025-04-03', '11', 1, 3, 'AXHZAF0173', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(281, '2025-04-03', '11', 1, 3, 'AXHZAE7940', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(282, '2025-04-03', '11', 1, 3, 'AXHZAE7938', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(283, '2025-04-03', '11', 1, 3, 'AXHZAA5933', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(284, '2025-04-03', '11', 1, 3, 'AXHZAA4547', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(285, '2025-04-03', '11', 1, 3, 'AXHZAA5942', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(286, '2025-04-03', '11', 1, 3, 'AXHZAA6226', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(287, '2025-04-03', '11', 1, 3, 'AXHZAA4671', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(288, '2025-04-03', '11', 1, 3, 'AXHZAE6570', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(289, '2025-04-03', '11', 1, 3, 'AXHZAA4568', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(290, '2025-04-03', '11', 1, 3, 'AXHZAE7094', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(291, '2025-04-03', '11', 1, 3, 'AXHZAF3511', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(292, '2025-04-03', '11', 1, 3, 'AXHZAF3483', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(293, '2025-04-03', '11', 1, 3, 'AXHZAA9364', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(294, '2025-04-03', '11', 1, 3, 'AXHZAF0964', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(295, '2025-04-03', '11', 1, 3, 'AXHZAA9025', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(296, '2025-04-03', '11', 1, 3, 'AXHZAF3438', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(297, '2025-04-03', '11', 1, 3, 'AXHZAF0567', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(298, '2025-04-03', '11', 1, 3, 'AXHZAF1605', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(299, '2025-04-03', '11', 1, 3, 'AXHZAC2183', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(300, '2025-04-03', '11', 1, 3, 'AXHZAA8386', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:49', '2025-04-03 22:51:49'),
-(301, '2025-04-03', '11', 1, 3, 'AXHZAA6317', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(302, '2025-04-03', '11', 1, 3, 'AXHZAA4760', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(303, '2025-04-03', '11', 1, 3, 'AXHZAC1942', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(304, '2025-04-03', '11', 1, 3, 'AXHZAE6620', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(305, '2025-04-03', '11', 1, 3, 'AXHZAA4581', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(306, '2025-04-03', '11', 1, 3, 'AXHZAC2713', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(307, '2025-04-03', '11', 1, 3, 'AXHZAE6573', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(308, '2025-04-03', '11', 1, 3, 'AXHZAA4775', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(309, '2025-04-03', '11', 1, 3, 'AXHZAC1947', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(310, '2025-04-03', '11', 1, 3, 'AXHZAA4765', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(311, '2025-04-03', '11', 1, 3, 'AXHZAA6063', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(312, '2025-04-03', '11', 1, 3, 'AXHZAA4585', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(313, '2025-04-03', '11', 1, 3, 'AXHZAA4475', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(314, '2025-04-03', '11', 1, 3, 'AXHZAA5931', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(315, '2025-04-03', '11', 1, 3, 'AXHZAA4392', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(316, '2025-04-03', '11', 1, 3, 'AXHZAA4759', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(317, '2025-04-03', '11', 1, 3, 'AXHZAA4772', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(318, '2025-04-03', '11', 1, 3, 'AXHZAC2714', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(319, '2025-04-03', '11', 1, 3, 'AXHZAA4432', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(320, '2025-04-03', '11', 1, 3, 'AXHZAA4580', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(321, '2025-04-03', '11', 1, 3, 'AXHZAF3399', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(322, '2025-04-03', '11', 1, 3, 'AXHZAA4761', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(323, '2025-04-03', '11', 1, 3, 'AXHZAA3987', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(324, '2025-04-03', '11', 1, 3, 'AXHZAA9028', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(325, '2025-04-03', '11', 1, 3, 'AXHZAA8403', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(326, '2025-04-03', '11', 1, 3, 'AXHZAA8338', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(327, '2025-04-03', '11', 1, 3, 'AXHZAB0942', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(328, '2025-04-03', '11', 1, 3, 'AXHZAB0969', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(329, '2025-04-03', '11', 1, 3, 'AXHZAA8352', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(330, '2025-04-03', '11', 1, 3, 'AXHZAA8317', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(331, '2025-04-03', '11', 1, 3, 'AXHZAE8708', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(332, '2025-04-03', '11', 1, 3, 'AXHZAE8730', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(333, '2025-04-03', '11', 1, 3, 'AXHZAE7784', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(334, '2025-04-03', '11', 1, 3, 'AXHZAF0629', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(335, '2025-04-03', '11', 1, 3, 'AXHZAG6736', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(336, '2025-04-03', '11', 1, 3, 'AXHZAG6737', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(337, '2025-04-03', '11', 1, 3, 'AXHZAG6740', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(338, '2025-04-03', '11', 1, 3, 'AXHZAG6758', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(339, '2025-04-03', '11', 1, 3, 'AXHZAG6756', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(340, '2025-04-03', '11', 1, 3, 'AXHZAG6749', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(341, '2025-04-03', '11', 1, 3, 'AXHZAG6763', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(342, '2025-04-03', '11', 1, 3, 'AXHZAG6757', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(343, '2025-04-03', '11', 1, 3, 'AXHZAG6755', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(344, '2025-04-03', '11', 1, 3, 'AXHZAG6754', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(345, '2025-04-03', '11', 1, 3, 'AXHZAG6735', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(346, '2025-04-03', '11', 1, 3, 'AXHZAG6759', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(347, '2025-04-03', '11', 1, 3, 'AXHZAG6744', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(348, '2025-04-03', '11', 1, 3, 'AXHZAA5906', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(349, '2025-04-03', '11', 1, 3, 'AXHZAB9961', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(350, '2025-04-03', '11', 1, 3, 'AXHZAA4589', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(351, '2025-04-03', '11', 1, 3, 'AXHZAC2711', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(352, '2025-04-03', '11', 1, 3, 'AXHZAE7117', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(353, '2025-04-03', '11', 1, 3, 'AXHZAC2028', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(354, '2025-04-03', '11', 1, 3, 'AXHZAE6576', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(355, '2025-04-03', '11', 1, 3, 'ZXHZBD4918', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(356, '2025-04-03', '11', 1, 3, 'AXHZAA9299', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(357, '2025-04-03', '11', 1, 3, 'AXHZAA8404', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(358, '2025-04-03', '11', 1, 3, 'AXHZAA4438', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(359, '2025-04-03', '11', 1, 3, 'AXHZAA9258', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(360, '2025-04-03', '11', 1, 3, 'AXHZAF1286', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(361, '2025-04-03', '11', 1, 3, 'AXHZAF3436', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(362, '2025-04-03', '11', 1, 3, 'AXHZAC2723', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(363, '2025-04-03', '11', 1, 3, 'AXHZAC2725', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(364, '2025-04-03', '11', 1, 3, 'AXHZAC2708', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(365, '2025-04-03', '11', 1, 3, 'AXHZAC2036', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(366, '2025-04-03', '11', 1, 3, 'AXHZAA4757', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(367, '2025-04-03', '11', 1, 3, 'AXHZAA4774', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(368, '2025-04-03', '11', 1, 3, 'AXHZAA4442', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(369, '2025-04-03', '11', 1, 3, 'AXHZAF3512', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(370, '2025-04-03', '11', 1, 3, 'AXHZAA4459', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(371, '2025-04-03', '11', 1, 3, 'AXHZAA4513', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(372, '2025-04-03', '11', 1, 3, 'ZXHZBD3673', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(373, '2025-04-03', '11', 1, 3, 'AXHZAE6595', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(374, '2025-04-03', '11', 1, 3, 'AXHZAC2017', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(375, '2025-04-03', '11', 1, 3, 'AXHZAA4377', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(376, '2025-04-03', '11', 1, 3, 'AXHZAA4190', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(377, '2025-04-03', '11', 1, 3, 'AXHZAA9254', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(378, '2025-04-03', '11', 1, 3, 'AXHZAA9432', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(379, '2025-04-03', '11', 1, 3, 'AXHZAA9487', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(380, '2025-04-03', '11', 1, 3, 'AXHZAA9472', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(381, '2025-04-03', '11', 1, 3, 'AXHZAA9386', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(382, '2025-04-03', '11', 1, 3, 'AXHZAA9408', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(383, '2025-04-03', '11', 1, 3, 'AXHZAA9436', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(384, '2025-04-03', '11', 1, 3, 'AXHZAA6312', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(385, '2025-04-03', '11', 1, 3, 'AXHZAA8306', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(386, '2025-04-03', '11', 1, 3, 'AXHZAA8433', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(387, '2025-04-03', '11', 1, 3, 'AXHZAA8322', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(388, '2025-04-03', '11', 1, 3, 'AXHZAA9421', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(389, '2025-04-03', '11', 1, 3, 'AXHZAA8319', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(390, '2025-04-03', '11', 1, 3, 'AXHZAA8299', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(391, '2025-04-03', '11', 1, 3, 'AXHZAA8277', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(392, '2025-04-03', '11', 1, 3, 'AXHZAA4355', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(393, '2025-04-03', '11', 1, 3, 'AXHZAA9301', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(394, '2025-04-03', '11', 1, 3, 'AXHZAA8295', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(395, '2025-04-03', '11', 1, 3, 'AXHZAA9294', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(396, '2025-04-03', '11', 1, 3, 'AXHZAA8400', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(397, '2025-04-03', '11', 1, 3, 'AXHZAA4403', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(398, '2025-04-03', '11', 1, 3, 'AXHZAA4571', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(399, '2025-04-03', '11', 1, 3, 'AXHZAA9327', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(400, '2025-04-03', '11', 1, 3, 'AXHZAA4103', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(401, '2025-04-03', '11', 1, 3, 'AXHZAA9381', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(402, '2025-04-03', '11', 1, 3, 'AXHZAA8323', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(403, '2025-04-03', '11', 1, 3, 'AXHZAA8270', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(404, '2025-04-03', '11', 1, 3, 'AXHZAA8375', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(405, '2025-04-03', '11', 1, 3, 'AXHZAA9293', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(406, '2025-04-03', '11', 1, 3, 'AXHZAA9292', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(407, '2025-04-03', '11', 1, 3, 'AXHZAA8262', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(408, '2025-04-03', '11', 1, 3, 'AXHZAG6748', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(409, '2025-04-03', '11', 1, 3, 'AXHZAG6738', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(410, '2025-04-03', '11', 1, 3, 'AXHZAG6745', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(411, '2025-04-03', '11', 1, 3, 'AXHZAG6761', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(412, '2025-04-03', '11', 1, 3, 'AXHZAG6751', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(413, '2025-04-03', '11', 1, 3, 'AXHZAG6750', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(414, '2025-04-03', '11', 1, 3, 'AXHZAG6742', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(415, '2025-04-03', '11', 1, 3, 'AXHZAG6743', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(416, '2025-04-03', '11', 1, 3, 'AXHZAG6746', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(417, '2025-04-03', '11', 1, 3, 'AXHZAA4541', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(418, '2025-04-03', '11', 1, 3, 'AXHZAC1953', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(419, '2025-04-03', '11', 1, 3, 'AXHZAE6723', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(420, '2025-04-03', '11', 1, 3, 'AXHZAG6752', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(421, '2025-04-03', '11', 1, 3, 'AXHZAG6760', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(422, '2025-04-03', '11', 1, 3, 'AXHZAA4773', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(423, '2025-04-03', '11', 1, 3, 'AXHZAE6629', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(424, '2025-04-03', '11', 1, 3, 'AXHZAF3400', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(425, '2025-04-03', '11', 1, 3, 'AXHZAA4425', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(426, '2025-04-03', '11', 1, 3, 'AXHZAF3408', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(427, '2025-04-03', '11', 1, 3, 'AXHZAF3922', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(428, '2025-04-03', '11', 1, 3, 'AXHZAE6726', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(429, '2025-04-03', '11', 1, 3, 'AXHZAA4348', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(430, '2025-04-03', '11', 1, 3, 'AXHZAA4539', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(431, '2025-04-03', '11', 1, 3, 'AXHZAE6602', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(432, '2025-04-03', '11', 1, 3, 'AXHZAG6734', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(433, '2025-04-03', '11', 1, 3, 'AXHZAG6762', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(434, '2025-04-03', '11', 1, 3, 'AXHZAG6741', 1, 200000.00, 1000.00, '0', NULL, '2025-04-03 22:51:50', '2025-04-03 22:51:50'),
-(435, '2025-03-07', '2', 25, 35, '0', 100, 1000.00, 10.00, '1', NULL, '2025-04-04 22:47:48', '2025-04-05 17:53:10'),
-(436, '2025-03-25', '109', 11, 18, '0', 100, 30000.00, 300.00, '0', NULL, '2025-04-04 22:53:28', '2025-04-04 22:53:28'),
-(437, '2025-03-25', '109', 11, 34, '0', 100, 20000.00, 200.00, '0', NULL, '2025-04-04 22:53:40', '2025-04-04 22:53:40');
+(1, '2025-04-01', '1', 7, 20, '0', 100, 110000.00, 1100.00, '1', NULL, '2025-04-08 01:01:17', '2025-04-08 19:39:14'),
+(2, '2025-04-01', '1', 7, 21, '0', 100, 90000.00, 900.00, '1', NULL, '2025-04-08 01:01:34', '2025-04-08 19:39:14'),
+(3, '2025-04-01', '1', 25, 35, '0', 100, 80000.00, 800.00, '1', NULL, '2025-04-08 01:01:52', '2025-04-08 19:31:15'),
+(304, '2025-04-01', '2', 11, 18, '0', 200, 52000.00, 260.00, '1', NULL, '2025-04-08 01:06:23', '2025-04-25 21:40:13'),
+(305, '2025-04-01', '2', 6, 19, '0', 100, 50000.00, 500.00, '1', NULL, '2025-04-08 01:06:29', '2025-04-08 19:39:14'),
+(598, '2025-04-01', '2', 8, 33, 'EBBD16064', 1, 60000.00, 600.00, '1', '0', '2025-05-26 19:02:08', '2025-05-26 19:03:59'),
+(597, '2025-04-01', '2', 9, 15, 'GA241129FQ278380', 1, 80000.00, 800.00, '1', '0', '2025-05-26 18:57:49', '2025-05-26 19:03:59'),
+(596, '2025-04-01', '2', 1, 3, 'ZXHZAY5460', 1, 54000.00, 540.00, '1', '0', '2025-05-26 18:53:16', '2025-05-26 19:03:59'),
+(595, '2025-04-01', '2', 1, 3, 'ZXHZAY1409', 1, 54000.00, 540.00, '1', '0', '2025-05-26 18:53:16', '2025-05-26 19:03:59'),
+(594, '2025-04-01', '2', 1, 1, 'ZXHZAV7901', 1, 25000.00, 250.00, '1', '0', '2025-05-26 18:53:16', '2025-05-26 19:03:59'),
+(593, '2025-04-01', '2', 9, 15, 'GA241129FQ278372', 1, 80000.00, 800.00, '1', '0', '2025-05-23 00:51:06', '2025-05-23 00:51:06'),
+(592, '2025-04-01', '2', 9, 15, 'GA241129FQ278350', 1, 80000.00, 800.00, '1', '0', '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(591, '2025-04-01', '2', 8, 33, 'EBBD16063', 1, 60000.00, 600.00, '1', '0', '2025-05-23 00:20:47', '2025-05-23 00:20:47'),
+(590, '2025-04-01', '2', 9, 15, 'GA241129FQ278337', 1, 80000.00, 800.00, '1', '0', '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(589, '2025-04-01', '2', 8, 33, 'EBBD16132', 1, 60000.00, 600.00, '1', '0', '2025-05-23 00:10:44', '2025-05-23 00:10:44'),
+(588, '2025-04-01', '2', 9, 15, 'GA241129FQ278400', 1, 80000.00, 800.00, '1', '0', '2025-05-22 23:21:03', '2025-05-23 22:05:58'),
+(587, '2025-04-01', '2', 8, 33, 'EBBD16095', 1, 60000.00, 600.00, '1', '0', '2025-05-22 23:21:03', '2025-05-23 22:05:58'),
+(586, '2025-04-01', '2', 1, 3, 'ZXHZBB1210', 1, 54000.00, 540.00, '1', '0', '2025-05-22 23:21:03', '2025-05-23 22:05:58'),
+(585, '2025-04-01', '2', 8, 33, 'EBBD166134', 1, 60000.00, 600.00, '1', '0', '2025-05-22 22:42:24', '2025-05-22 22:42:24'),
+(584, '2025-04-01', '2', 9, 15, 'GA241129FQ278428', 1, 80000.00, 800.00, '1', '0', '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(583, '2025-04-01', '2', 8, 33, 'EBBD16133', 1, 60000.00, 600.00, '1', '0', '2025-05-22 22:26:47', '2025-05-22 22:26:47'),
+(582, '2025-04-01', '2', 9, 15, 'GA241129FQ278338', 1, 80000.00, 800.00, '1', '0', '2025-05-22 22:12:08', '2025-05-24 21:36:09'),
+(581, '2025-04-01', '2', 8, 33, 'EBBD16130', 1, 60000.00, 600.00, '1', '0', '2025-05-22 22:12:08', '2025-05-24 21:36:09'),
+(580, '2025-04-01', '2', 9, 15, 'GA241129FQ278333', 1, 80000.00, 800.00, '1', '0', '2025-05-22 22:07:32', '2025-05-23 19:03:12'),
+(579, '2025-04-01', '2', 8, 33, 'EBBD16135', 1, 60000.00, 600.00, '1', '0', '2025-05-21 23:37:30', '2025-05-23 18:57:09'),
+(578, '2025-04-01', '2', 9, 15, 'GA24112FQ278393', 1, 80000.00, 800.00, '1', '0', '2025-05-21 23:36:30', '2025-05-23 18:57:09'),
+(577, '2025-04-01', '2', 9, 15, 'GA241129FQ278373', 1, 80000.00, 800.00, '1', '0', '2025-05-21 23:34:21', '2025-05-21 23:34:21'),
+(576, '2025-04-01', '2', 1, 2, 'ZXHZBD3897', 1, 41000.00, 410.00, '1', '0', '2025-05-21 22:35:33', '2025-05-23 00:51:06'),
+(575, '2025-04-01', '2', 1, 2, 'ZXHZBB9040', 1, 41000.00, 410.00, '1', '0', '2025-05-21 22:35:33', '2025-05-23 00:51:06'),
+(574, '2025-04-01', '2', 1, 1, 'ZXHZAZ4565', 1, 25000.00, 250.00, '1', '0', '2025-05-21 22:35:33', '2025-05-23 00:51:06'),
+(573, '2025-04-01', '2', 1, 3, 'ZXHZBC5280', 1, 54000.00, 540.00, '1', '0', '2025-05-21 22:04:30', '2025-05-23 00:20:47'),
+(572, '2025-04-01', '2', 1, 2, 'ZXHZBC5315', 1, 41000.00, 410.00, '1', '0', '2025-05-21 22:04:30', '2025-05-23 00:20:47'),
+(571, '2025-04-01', '2', 1, 1, 'ZXHZAV7780', 1, 25000.00, 250.00, '1', '0', '2025-05-21 22:04:30', '2025-05-23 00:20:47'),
+(570, '2025-04-01', '2', 1, 2, 'ZXHZAB7707', 1, 41000.00, 410.00, '1', '0', '2025-05-21 21:56:27', '2025-05-23 00:10:44'),
+(569, '2025-04-01', '2', 1, 2, 'ZXHZBB7737', 1, 41000.00, 410.00, '1', '0', '2025-05-21 21:56:27', '2025-05-23 00:10:44'),
+(568, '2025-04-01', '2', 1, 1, 'ZXHZAV5093', 1, 25000.00, 250.00, '1', '0', '2025-05-21 21:56:27', '2025-05-23 00:10:44'),
+(567, '2025-05-21', '124', 25, 35, '0', 100, 90000.00, 900.00, '1', NULL, '2025-05-21 20:27:07', '2025-05-21 21:56:27'),
+(566, '2025-04-01', '2', 9, 15, 'GA241129FQ278376', 1, 80000.00, 800.00, '1', '0', '2025-05-21 19:08:52', '2025-05-22 22:42:24'),
+(565, '2025-04-01', '2', 1, 3, 'ZXHZAY5482', 1, 54000.00, 540.00, '1', '0', '2025-05-21 19:08:52', '2025-05-22 22:42:24'),
+(564, '2025-04-01', '2', 1, 2, 'ZXHZBA9071', 1, 41000.00, 410.00, '1', '0', '2025-05-21 19:08:52', '2025-05-22 22:42:24'),
+(563, '2025-04-01', '2', 1, 1, 'ZXHZBA3431', 1, 25000.00, 250.00, '1', '0', '2025-05-21 19:08:52', '2025-05-22 22:42:24'),
+(562, '2025-04-01', '2', 1, 2, 'ZXHZBB9026', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:59:49', '2025-05-22 22:26:47'),
+(561, '2025-04-01', '2', 1, 2, 'ZXHZBD3433', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:59:49', '2025-05-22 22:26:47'),
+(560, '2025-04-01', '2', 1, 1, 'ZXHZAZ4614', 1, 25000.00, 250.00, '1', '0', '2025-05-21 00:59:49', '2025-05-22 22:26:47'),
+(559, '2025-04-01', '2', 1, 2, 'ZXHZBC5484', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:43:44', '2025-05-24 21:36:09'),
+(558, '2025-04-01', '2', 1, 2, 'ZXHZBB9156', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:43:44', '2025-05-24 21:36:09'),
+(557, '2025-04-01', '2', 1, 1, 'ZXHZAV9887', 1, 25000.00, 250.00, '1', '0', '2025-05-21 00:43:44', '2025-05-24 21:36:09'),
+(556, '2025-04-01', '2', 1, 2, 'ZXHZBB9139', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:34:28', '2025-05-23 19:03:12'),
+(555, '2025-04-01', '2', 1, 2, 'ZXHZBD3383', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:34:28', '2025-05-23 19:03:12'),
+(554, '2025-04-01', '2', 1, 1, 'ZXHZAW3736', 1, 25000.00, 250.00, '1', '0', '2025-05-21 00:34:28', '2025-05-23 19:03:12'),
+(553, '2025-04-01', '2', 1, 2, 'ZXHZBD4794', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:16:38', '2025-05-23 18:57:08'),
+(552, '2025-04-01', '2', 1, 2, 'ZXHZBB9136', 1, 41000.00, 410.00, '1', '0', '2025-05-21 00:16:38', '2025-05-23 18:57:08'),
+(551, '2025-04-01', '2', 1, 1, 'ZXHZAZ5323', 1, 25000.00, 250.00, '1', '0', '2025-05-21 00:16:38', '2025-05-23 18:57:09'),
+(550, '2025-04-01', '2', 1, 2, 'ZXHZBA9011', 1, 41000.00, 410.00, '1', '0', '2025-04-28 19:58:17', '2025-05-23 22:05:58'),
+(549, '2025-04-01', '2', 8, 33, NULL, 100, 60000.00, 600.00, '1', NULL, '2025-04-25 21:40:21', '2025-04-25 21:40:21'),
+(548, '2025-04-01', '2', 8, 33, 'Perferendis nostrud', 100, 60000.00, 600.00, '1', NULL, '2025-04-25 21:40:13', '2025-04-25 21:40:13'),
+(547, '2025-04-01', '2', 1, 3, 'ZXHZBB2457', 1, 54000.00, 540.00, '1', NULL, '2025-04-09 22:43:26', '2025-04-09 22:43:26'),
+(546, '2025-04-01', '2', 1, 1, 'ZXHZBB2456', 1, 25000.00, 250.00, '1', NULL, '2025-04-09 22:36:58', '2025-04-09 22:43:26'),
+(545, '2025-04-01', '2', 1, 1, 'ZXHZBA9053', 1, 25000.00, 250.00, '1', '0', '2025-04-09 22:36:58', '2025-05-23 22:05:58'),
+(544, '2025-04-01', '2', 1, 1, 'ZXHZBB2571', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(543, '2025-04-01', '2', 1, 1, 'ZXHZBB2307', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(542, '2025-04-01', '2', 1, 1, 'ZXHZBB2663', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(541, '2025-04-01', '2', 1, 1, 'ZXHZBB2330', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(540, '2025-04-01', '2', 1, 1, 'ZXHZBB2522', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(539, '2025-04-01', '2', 1, 1, 'ZXHZBB2598', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(538, '2025-04-01', '2', 1, 1, 'ZXHZBA9059', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(537, '2025-04-01', '2', 1, 1, 'ZXHZBB5551', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(536, '2025-04-01', '2', 1, 1, 'ZXHZBA9056', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(535, '2025-04-01', '2', 1, 1, 'ZXHZBB2672', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(534, '2025-04-01', '2', 1, 1, 'ZXHZBB2610', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(533, '2025-04-01', '2', 1, 1, 'ZXHZBB2382', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(532, '2025-04-01', '2', 1, 1, 'ZXHZBA9007', 1, 25000.00, 250.00, '0', NULL, '2025-04-09 22:36:58', '2025-04-09 22:36:58'),
+(531, '2025-04-01', '2', 8, 33, 'EBBC16796', 1, 60000.00, 600.00, '1', '0', '2025-04-09 17:59:33', '2025-05-22 23:12:00'),
+(530, '2025-04-01', '2', 1, 3, 'ZXHZAY5473', 1, 54000.00, 540.00, '1', '0', '2025-04-09 17:59:33', '2025-05-22 23:12:00'),
+(529, '2025-04-01', '2', 1, 1, 'ZXHZBA4694', 1, 25000.00, 250.00, '1', '0', '2025-04-09 17:59:33', '2025-05-22 23:12:00'),
+(528, '2025-04-01', '2', 1, 3, 'ZXHZAY5453', 1, 54000.00, 540.00, '1', '0', '2025-04-09 17:59:33', '2025-05-22 23:12:00'),
+(527, '2025-04-01', '2', 1, 2, 'ZXHZBB8134', 1, 41000.00, 410.00, '1', NULL, '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(526, '2025-04-01', '2', 1, 2, 'ZXHZBB7711', 1, 41000.00, 410.00, '1', NULL, '2025-04-09 17:44:21', '2025-04-09 17:44:21'),
+(525, '2025-04-08', '123', 25, 35, '0', 10, 7000.00, 700.00, '1', NULL, '2025-04-09 01:03:32', '2025-04-09 17:59:33'),
+(524, '2025-04-01', '2', 1, 3, 'ZXHZBB1188', 1, 54000.00, 540.00, '1', NULL, '2025-04-09 00:50:39', '2025-04-09 00:50:39'),
+(522, '2025-04-01', '2', 1, 3, 'ZXHZBB1186', 1, 54000.00, 540.00, '1', '0', '2025-04-08 22:05:05', '2025-04-09 01:03:32'),
+(521, '2025-04-01', '2', 1, 3, 'ZXHZAY1458', 1, 54000.00, 540.00, '1', '0', '2025-04-08 22:05:05', '2025-04-09 01:03:32'),
+(517, '2025-04-01', '2', 9, 15, 'GA241129FQ278381', 100, 80000.00, 800.00, '1', '0', '2025-04-08 19:50:41', '2025-04-09 01:03:32'),
+(523, '2025-04-01', '2', 1, 3, 'ZXHZBB1187', 1, 54000.00, 540.00, '1', NULL, '2025-04-09 00:15:28', '2025-04-09 00:15:28'),
+(515, '2025-04-01', '2', 1, 1, 'ZHHZAY8592', 100, 25000.00, 250.00, '1', '1', '2025-04-08 19:48:08', '2025-04-09 01:03:32'),
+(514, '2025-04-01', '1', 7, 30, '0', 100, 100000.00, 1000.00, '1', NULL, '2025-04-08 19:39:14', '2025-04-08 19:39:14'),
+(506, '2025-04-01', '3', 10, 16, '0', 1000, 5000.00, 5.00, '1', NULL, '2025-04-08 01:18:37', '2025-04-09 17:59:33'),
+(507, '2025-04-01', '3', 10, 26, '0', 1000, 7000.00, 7.00, '1', NULL, '2025-04-08 01:18:46', '2025-04-08 19:44:12'),
+(508, '2025-04-01', '3', 10, 37, '0', 1000, 6000.00, 6.00, '1', NULL, '2025-04-08 01:18:52', '2025-04-25 21:40:13'),
+(509, '2025-04-01', '3', 11, 18, '0', 100, 800.00, 8.00, '1', NULL, '2025-04-08 01:18:59', '2025-04-08 19:39:14'),
+(510, '2025-04-01', '3', 11, 34, '0', 100, 900.00, 9.00, '1', NULL, '2025-04-08 01:19:07', '2025-04-25 21:40:21'),
+(511, '2025-04-01', '3', 12, 23, '0', 100, 1000.00, 10.00, '1', NULL, '2025-04-08 01:19:16', '2025-04-08 19:39:14'),
+(512, '2025-04-01', '4', 26, 31, '0', 100, 8000.00, 80.00, '1', NULL, '2025-04-08 01:19:29', '2025-04-09 22:43:26'),
+(513, '2025-04-01', '4', 26, 32, '0', 100, 10000.00, 100.00, '1', NULL, '2025-04-08 01:19:35', '2025-04-08 19:31:15');
 
 -- --------------------------------------------------------
 
@@ -1727,8 +1794,8 @@ INSERT INTO `tbl_sub_categories` (`id`, `cid`, `sub_category_name`, `unit`, `sr_
 (3, 1, '45', 'Pic', 1, 0, '2024-10-02 18:58:22', '2024-10-02 18:58:22'),
 (15, 9, 'QSWITCH', 'Pic', 1, 0, '2024-10-22 00:40:33', '2024-10-22 00:40:33'),
 (16, 10, '10/130 (S)', 'Mtr', 0, 0, '2024-10-22 00:41:18', '2025-03-06 22:34:24'),
-(18, 11, '3*1 (20*130)', 'Pic', 0, 0, '2024-10-22 00:43:20', '2025-03-06 22:55:02'),
-(19, 6, 'HR', 'Pic', 1, 0, '2024-10-22 00:52:07', '2024-10-22 00:52:07'),
+(18, 11, '3*1 (10*130)', 'Pic', 0, 0, '2024-10-22 00:43:20', '2025-04-08 19:30:44'),
+(19, 6, 'HR', 'Pic', 0, 0, '2024-10-22 00:52:07', '2025-04-07 19:10:36'),
 (20, 7, 'Power PCB', 'Pic', 0, 0, '2024-10-22 00:53:17', '2024-10-22 00:53:17'),
 (21, 7, 'Control card', 'Pic', 0, 0, '2024-10-22 00:53:34', '2024-10-22 00:53:34'),
 (22, 8, '20/130', 'Pic', 1, 0, '2024-10-22 00:54:16', '2025-03-05 22:24:15'),
@@ -1739,7 +1806,7 @@ INSERT INTO `tbl_sub_categories` (`id`, `cid`, `sub_category_name`, `unit`, `sr_
 (32, 26, 'BIG BODY', 'Pic', 0, 0, '2025-03-05 22:25:47', '2025-03-05 22:25:47'),
 (33, 8, '30/250', 'Pic', 1, 0, '2025-03-05 22:26:47', '2025-03-06 23:39:39'),
 (34, 11, '3*1(30/250)', 'Pic', 0, 0, '2025-03-05 22:30:28', '2025-03-05 22:30:28'),
-(35, 25, 'Card', 'Pic', 0, 0, '2025-03-05 22:41:52', '2025-03-15 18:01:19'),
+(35, 25, 'rf card', 'Pic', 0, 0, '2025-03-05 22:41:52', '2025-04-08 01:00:53'),
 (37, 10, '20/125 (M)', 'Mtr', 0, 0, '2025-03-06 22:34:02', '2025-03-06 22:34:02'),
 (38, 27, 'Index Glue', 'Pic', 0, 0, '2025-03-08 00:36:43', '2025-03-08 00:36:43'),
 (39, 27, 'Cavity Glue', 'Pic', 0, 0, '2025-03-08 00:37:02', '2025-03-08 00:37:02'),
@@ -1767,7 +1834,7 @@ INSERT INTO `tbl_types` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (1, '15', '2025-03-15 17:35:39', '2025-03-15 17:35:39'),
 (2, '18', '2025-03-15 17:35:44', '2025-03-15 17:35:44'),
 (3, '21', '2025-03-15 17:35:49', '2025-03-15 17:35:49'),
-(4, '26', '2025-03-15 17:35:55', '2025-03-15 17:35:55');
+(4, '25', '2025-03-15 17:35:55', '2025-05-22 22:42:41');
 
 -- --------------------------------------------------------
 
@@ -1869,6 +1936,12 @@ ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
 
 --
+-- Indexes for table `companies`
+--
+ALTER TABLE `companies`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `departments`
 --
 ALTER TABLE `departments`
@@ -1908,6 +1981,19 @@ ALTER TABLE `job_batches`
 ALTER TABLE `manage_permission`
   ADD PRIMARY KEY (`id`),
   ADD KEY `manage_permission_uid_foreign` (`uid`);
+
+--
+-- Indexes for table `manufacture_report_layouts`
+--
+ALTER TABLE `manufacture_report_layouts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `manufacture_report_layout_fields`
+--
+ALTER TABLE `manufacture_report_layout_fields`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `manufacture_report_layout_fields_layout_id_foreign` (`layout_id`);
 
 --
 -- Indexes for table `migrations`
@@ -1955,6 +2041,12 @@ ALTER TABLE `tbl_acc_coa`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_acc_financial_years`
+--
+ALTER TABLE `tbl_acc_financial_years`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_acc_predefine_account`
 --
 ALTER TABLE `tbl_acc_predefine_account`
@@ -1978,12 +2070,6 @@ ALTER TABLE `tbl_acc_vaucher`
 ALTER TABLE `tbl_bank`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `tbl_bank_account_number_unique` (`account_number`);
-
---
--- Indexes for table `tbl_cards`
---
-ALTER TABLE `tbl_cards`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_categories`
@@ -2011,10 +2097,11 @@ ALTER TABLE `tbl_expensive`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_leds`
+-- Indexes for table `tbl_opening_balances`
 --
-ALTER TABLE `tbl_leds`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `tbl_opening_balances`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `tbl_opening_balances_balance_date_unique` (`balance_date`);
 
 --
 -- Indexes for table `tbl_parties`
@@ -2063,6 +2150,12 @@ ALTER TABLE `tbl_reports`
 -- Indexes for table `tbl_reports_items`
 --
 ALTER TABLE `tbl_reports_items`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_report_permission`
+--
+ALTER TABLE `tbl_report_permission`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -2141,6 +2234,12 @@ ALTER TABLE `web_settings`
 --
 
 --
+-- AUTO_INCREMENT for table `companies`
+--
+ALTER TABLE `companies`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
@@ -2171,6 +2270,18 @@ ALTER TABLE `manage_permission`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
+-- AUTO_INCREMENT for table `manufacture_report_layouts`
+--
+ALTER TABLE `manufacture_report_layouts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `manufacture_report_layout_fields`
+--
+ALTER TABLE `manufacture_report_layout_fields`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -2186,7 +2297,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `replacements`
 --
 ALTER TABLE `replacements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `selected_invoices`
@@ -2198,7 +2309,13 @@ ALTER TABLE `selected_invoices`
 -- AUTO_INCREMENT for table `tbl_acc_coa`
 --
 ALTER TABLE `tbl_acc_coa`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+
+--
+-- AUTO_INCREMENT for table `tbl_acc_financial_years`
+--
+ALTER TABLE `tbl_acc_financial_years`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_acc_predefine_account`
@@ -2222,13 +2339,7 @@ ALTER TABLE `tbl_acc_vaucher`
 -- AUTO_INCREMENT for table `tbl_bank`
 --
 ALTER TABLE `tbl_bank`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `tbl_cards`
---
-ALTER TABLE `tbl_cards`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_categories`
@@ -2240,31 +2351,31 @@ ALTER TABLE `tbl_categories`
 -- AUTO_INCREMENT for table `tbl_customers`
 --
 ALTER TABLE `tbl_customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_customer_payments`
 --
 ALTER TABLE `tbl_customer_payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_expensive`
 --
 ALTER TABLE `tbl_expensive`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `tbl_leds`
+-- AUTO_INCREMENT for table `tbl_opening_balances`
 --
-ALTER TABLE `tbl_leds`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+ALTER TABLE `tbl_opening_balances`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_parties`
 --
 ALTER TABLE `tbl_parties`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tbl_payments`
@@ -2276,13 +2387,13 @@ ALTER TABLE `tbl_payments`
 -- AUTO_INCREMENT for table `tbl_purchases`
 --
 ALTER TABLE `tbl_purchases`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbl_purchase_items`
 --
 ALTER TABLE `tbl_purchase_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `tbl_purchase_returns`
@@ -2300,31 +2411,37 @@ ALTER TABLE `tbl_purchase_return_items`
 -- AUTO_INCREMENT for table `tbl_reports`
 --
 ALTER TABLE `tbl_reports`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `tbl_reports_items`
 --
 ALTER TABLE `tbl_reports_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=644;
+
+--
+-- AUTO_INCREMENT for table `tbl_report_permission`
+--
+ALTER TABLE `tbl_report_permission`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_sales`
 --
 ALTER TABLE `tbl_sales`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tbl_sales_items`
 --
 ALTER TABLE `tbl_sales_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `tbl_sale_product_category`
 --
 ALTER TABLE `tbl_sale_product_category`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_sale_product_subcategory`
@@ -2342,7 +2459,7 @@ ALTER TABLE `tbl_sale_returns`
 -- AUTO_INCREMENT for table `tbl_stock`
 --
 ALTER TABLE `tbl_stock`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=438;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=599;
 
 --
 -- AUTO_INCREMENT for table `tbl_sub_categories`
@@ -2354,7 +2471,7 @@ ALTER TABLE `tbl_sub_categories`
 -- AUTO_INCREMENT for table `tbl_types`
 --
 ALTER TABLE `tbl_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_users`
