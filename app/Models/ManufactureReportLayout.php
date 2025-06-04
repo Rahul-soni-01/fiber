@@ -10,6 +10,8 @@ class ManufactureReportLayout extends Model
 
     protected $fillable = [
         'name',
+        'part',
+        'type',
         'description',
         'created_by',
         'is_active',
@@ -24,5 +26,9 @@ class ManufactureReportLayout extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+    public function tbl_type()
+    {
+        return $this->belongsTo(Tbltype::class, 'type', 'id');
     }
 }

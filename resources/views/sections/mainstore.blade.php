@@ -23,6 +23,7 @@
                     <th>ID</th>
                     {{-- <th>Part</th> --}}
                     <th>W/N.W.</th>
+                    <th>Section</th>
                     <th>Date</th>
                     <th>Serial No.</th>
                     <th>Type</th>
@@ -35,8 +36,7 @@
             <tbody>
                 @foreach ($reports as $sr_no_fiber => $reportGroup)
                 @foreach ($reportGroup as $report)
-                <tr
-                    class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
+                <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
                     <td>{{ $report->id }}</td>
                     {{-- <td>
                         @if($report->part == 0)
@@ -47,7 +47,15 @@
                             <span class="badge badge-secondary">Unknown</span>
                         @endif
                     </td> --}}
+
                     <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown') }}</td>
+                    <td><select id="section" class="form-select section"  data-id="{{ $report->id }}">
+                        <option value="0" {{ $report->section == 0 ? 'selected' : '' }}>Mainstore</option>
+                        <option value="1" {{ $report->section == 1 ? 'selected' : '' }}>Manufacture</option>
+                        <option value="2" {{ $report->section == 2 ? 'selected' : '' }}>Repair</option>
+                        <option value="3" {{ $report->section == 3 ? 'selected' : '' }}>Baddesk</option>
+                        <option value="4" {{ $report->section == 4 ? 'selected' : '' }}>Sell</option>
+                    </select></td>
                     <td>{{ $report->created_at->format('d-m-Y') ?? 'N/A' }}</td>
                     <td>{{ $sr_no_fiber }}</td>
                     <td>{{ $report->tbl_type->name ?? ($report->type ?? 'N/A') }}</td>
@@ -55,16 +63,16 @@
                     <td>{{ $report->final_amount ? '₹'.number_format($report->final_amount, 2) : 'N/A' }}</td>
                     <td>
                         @if($report->sale_status)
-                        <span class="badge badge-success">Sold</span>
+                        <span class="badge bg-success">Sold & Repairing</span>
                         @else
-                        <span class="badge badge-secondary">Unsold</span>
+                        <span class="badge bg-secondary">Unsold</span>
                         @endif
                     </td>
                     <td>
                         @if($report->stock_status)
-                        <span class="badge badge-info">In Stock</span>
+                        <span class="badge bg-primary">In Stock</span>
                         @else
-                        <span class="badge badge-light">Out of Stock</span>
+                        <span class="badge bg-danger">Out of Stock</span>
                         @endif
                     </td>
                     <td>
@@ -72,7 +80,7 @@
                             <a href="{{ route('report.search', ['sr_no' => $sr_no_fiber]) }}"
                                 class="btn btn-sm btn-info me-1"><i class="ri-eye-fill"></i></a>
                             <a href="{{ route('baddesk.create', ['id' => $sr_no_fiber]) }}"
-                                class="btn btn-sm btn-primary "><i class="fa-solid fa-trash"></i></a>
+                                class="btn btn-sm btn-danger "><i class="fa-solid fa-trash"></i></a>
                             {{-- Route::get('/report-search', [ReportController::class,
                             'search'])->name('report.search'); --}}
                             {{-- <a href="{{ route('reports.edit', $report->id) }}"

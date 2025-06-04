@@ -8,6 +8,8 @@ use App\Models\tbl_sub_category;
 use App\Models\tbl_purchase;
 use App\Models\TblPurchaseReturn;
 use App\Models\TblPayment;
+use App\Models\TblAccCoa;
+use App\Models\TblAccPredefineAccount;
 use Illuminate\Http\Request;
 
 class TblPartyController extends Controller
@@ -61,9 +63,37 @@ class TblPartyController extends Controller
             'contact_person_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
         ]);
     
+         $predefineaccount = TblAccPredefineAccount::findOrFail(1);
+        // dd($predefineaccount);
+        $HeadLevel = 3;
+
+        $thousand = match ($HeadLevel) {
+            1 => 20001,
+            2 => 30001,
+            3 => 40001,
+        };
+
+        $maxHeadCode = TblAccCoa::where('HeadLevel', '=', 4)->max('HeadCode');
+        if ($maxHeadCode) {
+            $HeadCode = $maxHeadCode + 1;
+        } else {
+            $HeadCode = $thousand; // Start with the base value
+        }
+        // dd($HeadCode);
+        $PHeadName = TblAccCoa::where('HeadCode',$predefineaccount->supplierCode)->first()->HeadName;
+        
+        $newledger = new TblAccCoa();
+        $newledger->HeadCode = $HeadCode;
+        $newledger->HeadName = $request->party_name;
+        $newledger->PHeadName = $PHeadName;
+        $newledger->PHeadCode = $predefineaccount->supplierCode;
+        $newledger->HeadLevel = 4;
+        $newledger =  $newledger->save();
+
         // Create new tbl_party instance
         $party = new tbl_party();
         $party->party_name = $request->party_name;
+        $party->HeadCode = $HeadCode;
         $party->address = $request->address;
         $party->telephone_no = $request->tele_no;
         $party->sender_name = $request->contact_person_name;
@@ -114,6 +144,15 @@ class TblPartyController extends Controller
     
         $result = $party->save();
     
+        if ($party->HeadCode) {
+            $ledger = TblAccCoa::where('HeadCode', $party->HeadCode)->first();
+            // dd($ledger);
+            if ($ledger) {
+                $ledger->update([
+                    'HeadName' => $request->party_name,
+                ]);
+            }
+        }
         if ($result) {
             return redirect()->route('party.show')->with('success', 'Party updated successfully.');
         } else {

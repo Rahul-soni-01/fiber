@@ -280,12 +280,13 @@ class SaleController extends Controller
             $count = count($request->sr_no);
             for ($i = 0; $i < $count; $i++) {
                 $report_id = $request->sr_no[$i];
-                $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('sr_no_fiber', $report_id)->first();
+                $report = Report::with('reportItems')->where('sr_no_fiber', $report_id)->first();
                 // dd($report);
                 if ($report) {
                     // Update sale_status to 1
                     $report->sale_status = 1;
                     $report->stock_status = 0;
+                    $report->outdate = $request->date;
                     $report->section = 4;
                     $report->save();
                     // dd($report,$request->cname[$i]);
@@ -518,16 +519,19 @@ class SaleController extends Controller
 
     public function update(Request $request, $id){
         if ($this->checkPermission($request, 'edit')) {
-          
             $oldsaleItems = SaleItem::where('sid', $id)->get();
             try {
                 foreach ($oldsaleItems as $oldsaleItem) {
-                    $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('id', $oldsaleItem->report_id)->first();
+                    $report = Report::where('id', $oldsaleItem->report_id)->first();
                     $report->sale_status = 0;
                     $report->save();
                 }
-                SaleItem::where('sid', $id)->delete();
+                $delete = SaleItem::where('sid', $id)->delete();
                 
+                if (!$delete) {
+                    throw new \Exception('Failed to delete sale item');
+                }
+
                 $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);
                 $sale->sale_id = $request->sale_id;
                 $sale->customer_id = $request->cid;
@@ -584,6 +588,7 @@ class SaleController extends Controller
                 return redirect()->route('sale.index')->with('success', 'Sale created successfully.');
 
             }catch (\Exception $e) {
+                dd("catch");
                 // If an error occurs, restore the old report items
                 SaleItem::where('report_id', $id)->delete();
                 foreach ($oldsaleItems as $item) {

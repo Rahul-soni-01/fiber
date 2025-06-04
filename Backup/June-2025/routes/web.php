@@ -30,6 +30,7 @@ use App\Http\Controllers\ManufactureReportLayoutController;
 use App\Http\Controllers\OpeningBalanceController;
 use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\ReportPermissionController;
+use App\Http\Controllers\CompanyController;
 
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
@@ -41,7 +42,8 @@ Route::get('/', function () {
 Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
 
 Route::get('/welcome', function () {
-    return view('demo');
+    // return view('demo');
+    return view('busy.index');
 });
 
 Route::middleware('auth')->group(function () {
@@ -53,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/websetting-update', [DepartmentController::class, 'updateWebSetting'])->name('websetting.update');
 
     Route::get('/datainsert', [TblStockController::class, 'datainsert'])->name('datainsert');
+
+    Route::resource('companies', CompanyController::class);
 
     // User Crud
     Route::get('/user', [TblUserController::class, 'index'])->name('user.index');

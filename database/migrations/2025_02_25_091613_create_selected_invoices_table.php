@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('selected_invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('scid');
             $table->string('invoice_no');
             $table->timestamps();
         });

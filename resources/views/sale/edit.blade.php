@@ -64,12 +64,13 @@
                 </div>
             
                 @foreach($sale->items as $key => $item)
-                    <div class="row g-2 align-items-center product-row">
+                {{-- {{ dd($item);}} --}}
+                    <div class="row g-2 align-items-center product-row p-1">
                         <div class="col-md-3 col-lg-2">
                             <label class="d-md-none fw-bold">Category</label>
                             <select name="cname[]" class="form-control">
                                 @foreach($sale_product_categories as $category)
-                                    <option value="{{ $category->id }}" {{ $item->category_id == $category->id ? 'selected' : '' }}>
+                                    <option value="{{ $category->id }}" {{ $item->cname == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
                                     </option>
                                 @endforeach
@@ -80,7 +81,7 @@
                             <label class="d-md-none fw-bold">Sub Category</label>
                             <select name="scname[]" class="form-control">
                                 @foreach($sale_product_subcategories as $subcategory)
-                                    <option value="{{ $subcategory->id }}" {{ $item->subcategory_id == $subcategory->id ? 'selected' : '' }}>
+                                    <option value="{{ $subcategory->id }}" {{ $item->scname == $subcategory->id ? 'selected' : '' }}>
                                         {{ $subcategory->name }}
                                     </option>
                                 @endforeach
@@ -90,7 +91,7 @@
                         <div class="col-md-2 col-lg-1">
                             <label class="d-md-none fw-bold">Unit</label>
                             <select name="unit[]" class="form-control">
-                                <option value="Pic" {{ $item->unit == 'Pic' ? 'selected' : '' }}>Pic</option>
+                                <option value="Pic" {{ $item->unit == 'Pic' ? 'selected' : '' }}>Pcs</option>
                                 <option value="Mtr" {{ $item->unit == 'Mtr' ? 'selected' : '' }}>Mtr</option>
                             </select>
                         </div>

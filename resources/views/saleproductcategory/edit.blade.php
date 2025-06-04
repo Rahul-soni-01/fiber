@@ -1,5 +1,6 @@
 @extends('demo')
 @section('title', 'Sale Product Category')
+
 @section('content')
 <h1>Sale Product Category</h1>
 <div class="main" id="main">
@@ -21,12 +22,14 @@
             <div class="row justify-content-center">
                 <!-- Centering the form on larger screens -->
                 <div class="col-12 col-lg-6">
+
                     <!-- Category Name -->
                     <div class="mb-3">
                         <label for="name">Category Name</label>
                         <input type="text" name="name" id="name" class="form-control" placeholder="Enter Category Name"
                             value="{{ $category->name }}" required>
                     </div>
+
                     <!-- Category Type -->
                     {{-- <div class="mb-3">
                         <label for="is_type">Category Type</label>
@@ -36,6 +39,7 @@
                             <label class="form-check-label" for="is_type">Is Active</label>
                         </div>
                     </div> --}}
+
                     <!-- Submit Button -->
                     <button type="submit" class="btn btn-success">Update</button>
                 </div>

@@ -34,19 +34,16 @@
             </td>
         </tr>
         @if(auth()->user()->type === 'account' || auth()->user()->type === 'electric' || auth()->user()->type ===
-        'admin' || auth()->user()->type === 'user')
+        'admin' || auth()->user()->type === 'user' || auth()->user()->type === 'cavity')
         <tr>
             <td>
-                @if(auth()->user()->type === 'account' ||auth()->user()->type == 'admin' || auth()->user()->type ===
-                'user' )
+               
                 <h5>SR(FIBER)</h5>
-                @endif
+               
             </td>
             <td>
-                @if(auth()->user()->type === 'account' || auth()->user()->type == 'admin' || auth()->user()->type ===
-                'user' )
-                <span>{{ $report->sr_no_fiber }}</span>
-                @endif
+                <span>{{ $report->sr_no_fiber ?? "N/A" }}</span>
+               
             </td>
             <td>
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')

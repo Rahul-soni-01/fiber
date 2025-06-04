@@ -41,7 +41,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <input type="number" id="invoice_no" name="invoice_no" class="form-control"
-                    placeholder="Enter Invoice No." required>
+                    placeholder="Enter Invoice No.">
             </div>
             <div class="col-md-6 col-lg-3">
                 <input type="date" id="date" name="date" class="form-control"

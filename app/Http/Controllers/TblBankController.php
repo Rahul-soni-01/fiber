@@ -7,6 +7,8 @@ use App\Models\TblBank;
 use App\Models\CustomerPayment;
 use App\Models\TblPayment;
 use App\Models\TblExpense;
+use App\Models\TblAccPredefineAccount;
+use App\Models\TblAccCoa;
 
 
 class TblBankController extends Controller
@@ -32,6 +34,35 @@ class TblBankController extends Controller
             'account_holder_name' => 'required|string',
             'opening_balance' => 'required|string',
         ]);
+            
+        // dd($predefineaccount);
+        $HeadLevel = 3;
+
+        $thousand = match ($HeadLevel) {
+            1 => 20001,
+            2 => 30001,
+            3 => 40001,
+        };
+  
+        $predefineaccount = TblAccPredefineAccount::findOrFail(1);
+        $maxHeadCode = TblAccCoa::where('HeadLevel', '=', 4)->max('HeadCode');
+        if ($maxHeadCode) {
+            $HeadCode = $maxHeadCode + 1;
+        } else {
+            $HeadCode = $thousand; // Start with the base value
+        }
+        $PHeadName = TblAccCoa::where('HeadCode',$predefineaccount->bankCode)->first()->HeadName;
+        // dd($HeadCode,$PHeadName);
+        
+        $newledger = new TblAccCoa();
+        $newledger->HeadCode = $HeadCode;
+        $newledger->HeadName = $request->bank_name;
+        $newledger->PHeadName = $PHeadName;
+        $newledger->PHeadCode = $predefineaccount->bankCode;
+        $newledger->HeadLevel = 4;
+        $newledger =  $newledger->save();
+
+        $request->merge(['HeadCode' => $HeadCode]);
 
         TblBank::create($request->all());
 
@@ -111,7 +142,15 @@ class TblBankController extends Controller
 
         $bank = TblBank::findOrFail($id);
         $bank->update($request->all());
-
+        if ($bank->HeadCode) {
+                $ledger = TblAccCoa::where('HeadCode', $bank->HeadCode)->first();
+                // dd($ledger);
+                if ($ledger) {
+                    $ledger->update([
+                        'HeadName' => $request->bank_name,
+                    ]);
+                }
+            }
         return redirect()->route('banks.index')->with('success', 'Bank updated successfully!');
     }
 

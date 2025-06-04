@@ -147,10 +147,10 @@
             <button class="navbar-toggler d-block" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
                 <i class="fa-solid fa-angles-right"></i>
             </button>
-            <!-- Main Menu -->
-            {{-- <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- Main Menu -->
             <div class="collapse navbar-collapse bg-dark" id="mainNavbar">
                 <ul class="navbar-nav me-auto">
                     <!-- Company -->
@@ -194,11 +194,36 @@
                                     </li>
                                 </ul>
                             </li>
+                            {{-- Product Section --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#">
+                                    </i>Product Section
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('mainstore.section') }}" class="dropdown-item">Main Store</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('Manufactur.section') }}"
+                                            class="dropdown-item">Manufacturer</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('Repair.section') }}" class="dropdown-item">Repair</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('baddesk.section') }}" class="dropdown-item">Bad Desk</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('sell.section') }}" class="dropdown-item">Sell</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {{-- Roles --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle" href="#">Roles</a>
                                 <ul class="dropdown-menu">
 
-                                    <!-- Permission Submenu with collapse toggle -->
+                                    <!-- Roles Submenu with collapse toggle -->
                                     <li>
 
                                         <ul class="list-unstyled">
@@ -214,10 +239,11 @@
                                     </li>
                                 </ul>
                             </li>
+                            {{-- Permissions --}}
                             <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#">ermissions</a>
+                                <a class="dropdown-item dropdown-toggle" href="#">Permissions</a>
                                 <ul class="dropdown-menu">
-                                    <!-- Permission Submenu with collapse toggle -->
+                                    <!--PPermission -->
                                     <li>
                                         <ul class="list-unstyled">
                                             <li>
@@ -244,6 +270,7 @@
                             <i class="fa-solid fa-exchange-alt"></i> Transaction
                         </a>
                         <ul class="dropdown-menu">
+                            {{-- Supplier --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle" href="#">Supplier</a>
                                 <ul class="dropdown-menu">
@@ -257,11 +284,12 @@
                                         <a href="{{ route('payment.create') }}" class="dropdown-item">Add Payment</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('payment.index') }}" class="dropdown-item">Supplier Payment</a>
+                                        <a href="{{ route('payment.index') }}" class="dropdown-item">Supplier
+                                            Payment</a>
                                     </li>
                                 </ul>
                             </li>
-                            
+                            {{-- Category --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle" href="#">Category</a>
                                 <ul class="dropdown-menu">
@@ -272,11 +300,94 @@
                                         <a href="{{ route('category.index') }}" class="dropdown-item">Show Category</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('subcategory.index') }}" class="dropdown-item">Show Sub Category</a>
+                                        <a href="{{ route('subcategory.index') }}" class="dropdown-item">Show Sub
+                                            Category</a>
                                     </li>
                                 </ul>
                             </li>
-                            
+                            {{-- Purchase --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#"> Purchase
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('inward.good.view') }}" class="dropdown-item">Add Purchase</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('inward.index') }}" class="dropdown-item">Show Purchase</a>
+                                    </li>
+                                    <li>
+
+                                    </li>
+                                </ul>
+                            </li>
+                            {{-- Sale --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#">Sale/Product Out-In</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('sale.create') }}" class="dropdown-item">Add Sale/Product
+                                            Out</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('sale.repair.create') }}" class="dropdown-item">Add
+                                            Repair/Product Out</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('replacement.create') }}"
+                                            class="dropdown-item">Replacement</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('sale.index') }}" class="dropdown-item">Show Product Out</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('sale.return.index') }}" class="dropdown-item">Sale Return</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {{-- Purchase Return --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#"> Purchase Return
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('inward.index') }}" class="dropdown-item">Show Return
+                                            Purchase</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('purchase.return.create') }}" class="dropdown-item">Add Return
+                                            Purchase</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {{-- Sale Return --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#"> Sale Return
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('sale.return.index') }}" class="dropdown-item">Show Return
+                                            Sale</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('sale.return') }}" class="dropdown-item">Add Return Sale</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {{-- GST PDF --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#">
+                                    <i class="ri-user-star-line me-1"></i> GST PDF
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('gst-pdf.index') }}" class="dropdown-item">GST PDF Invoice</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('gst-pdf.create') }}" class="dropdown-item">GST PDF Create</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
 
@@ -352,7 +463,7 @@
                         </ul>
                     </li>
                 </ul>
-            </div> --}}
+            </div>
 
             <!-- ADMIN & LogOut Button -->
             <div class="ms-auto d-flex align-items-center justify-content-center">
@@ -431,6 +542,27 @@
                                 </li>
                                 <li class="nav-item nav-sub-item">
                                     <a href="{{ route('departments.create') }}" class="nav-link">Add Departments</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Companies -->
+                    <li class="nav-item" id="Company">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#company">
+                            <i class="ri-community-line"></i> Companies <i class="ri-arrow-down-s-line float-end"></i>
+                        </a>
+                        <div class="collapse" id="company">
+                            <ul class="nav flex-column ms-3">
+                                <li class="nav-item nav-sub-item">
+                                    <a href="{{ route('companies.index') }}" class="nav-link">
+                                        <i class="ri-list-check"></i> All Companies
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-sub-item">
+                                    <a href="{{ route('companies.create') }}" class="nav-link">
+                                        <i class="ri-add-circle-line"></i> Add New Company
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -518,10 +650,9 @@
                             </ul>
                         </div>
                     </li>
-                     <!-- Report Layout-->
-                    <li class="nav-item" id="Inward">
+                    <li class="nav-item" id="Layout">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#ReportLayout">
-                            <i class="ri-download-line"></i> Report Layout <i class="ri-arrow-down-s-line float-end"></i>
+                            <i class="ri-layout-line"></i> Report Layout <i class="ri-arrow-down-s-line float-end"></i>
                         </a>
                         <div class="collapse" id="ReportLayout">
                             <ul class="nav flex-column ms-3">
@@ -530,6 +661,10 @@
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
                                     <a href="{{ route('layouts.index') }}" class="nav-link">Show Report Layout</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="view">
+                                    <a href="{{ route('report-permission.index') }}" class="nav-link">Report
+                                        Permission</a>
                                 </li>
                         </div>
                     </li>
@@ -660,6 +795,23 @@
                             <ul class="nav flex-column ms-3">
                                 <li class="nav-item nav-sub-item" id="add">
                                     <a href="{{ route('gst-pdf.index') }}" class="nav-link">GST PDF Invoice</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('final.balance') }}" class="nav-link">Final balance</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('financial-years.index') }}" class="nav-link">Financial Year</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('openingbalance.index') }}" class="nav-link">Opening balance</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('acccoa.index') }}" id="show" class="nav-link">Chart of
+                                        Account</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('predefine.index') }}" id="view" class="nav-link">Predefine of
+                                        Accounts </a>
                                 </li>
                             </ul>
                         </div>

@@ -2,6 +2,15 @@
 @section('title', 'Edit Department')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <h3>Edit Department</h3>
     <a href="{{ route('departments.index') }}" class="btn btn-primary">Back to Departments</a>
     <form action="{{ route('departments.update', $department->id) }}" method="POST">

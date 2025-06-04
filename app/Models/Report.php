@@ -11,6 +11,7 @@ class Report extends Model
 
     protected $table = 'tbl_reports';
     protected $fillable = [
+        'indate',
         'worker_name',
         'sr_no_fiber',
         'm_j',
@@ -28,17 +29,12 @@ class Report extends Model
         'sale_status',
         'stock_status',
         'final_amount',
+        'extra_line',
+        'outdate',
     ];
 
-    public function tbl_leds()
-    {
-        return $this->hasMany(TblLed::class, 'report_id', 'id');
-    }
+   
 
-    public function tbl_cards()
-    {
-        return $this->hasMany(TblCard::class, 'report_id', 'id');
-    }
     public function tbl_type() // Singular, since it's a belongsTo relationship
     {
         return $this->belongsTo(Tbltype::class, 'type', 'id');

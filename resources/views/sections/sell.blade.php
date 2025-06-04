@@ -23,11 +23,12 @@
                     <th>ID</th>
                     <th>Part</th>
                     <th>W/N.W.</th>
+                    <th>Section</th>
                     <th>Date</th>
                     <th>Serial No.</th>
                     <th>Type</th>
-                    <th>Worker Name</th>
-                    <th>Final Amount</th>
+                    {{-- <th>Worker Name</th> --}}
+                    {{-- <th>Final Amount</th> --}}
                     <th>Sale</th>
                     <th>Stock</th>
                     <th>Action</th>
@@ -47,12 +48,33 @@
                         <span class="badge badge-secondary">Unknown</span>
                         @endif
                     </td>
-                    <td>{{ $report->f_status ?? 'N/A' }}</td>
+                    <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown')
+                        }}</td>
+                    <td>
+                        @if($report->section == 0)
+                        <span class="badge badge-primary">Mainstore</span>
+                        @elseif($report->section == 1)
+                        <span class="badge badge-success">Manufacture</span>
+                        @elseif($report->section == 2)
+                        <span class="badge badge-warning">Repair</span>
+                        @elseif($report->section == 3)
+                        <span class="badge badge-danger">Baddesk</span>
+                        @elseif($report->section == 4)
+                        <span class="badge badge-info">Sell</span>
+                        @else
+                        <span class="badge badge-secondary">Unknown</span>
+                        @endif
+
+
+                    </td>
+
+                    {{-- {{ dd($report);}} --}}
+                    {{-- <td>{{ $report->f_status ?? 'N/A' }}</td> --}}
                     <td>{{ $report->created_at->format('d-m-Y') ?? 'N/A' }}</td>
                     <td>{{ $sr_no_fiber }}</td>
                     <td>{{ $report->tbl_type->name ?? ($report->type ?? 'N/A') }}</td>
-                    <td>{{ $report->worker_name ?? 'N/A' }}</td>
-                    <td>{{ $report->final_amount ? '₹'.number_format($report->final_amount, 2) : 'N/A' }}</td>
+                    {{-- <td>{{ $report->worker_name ?? 'N/A' }}</td>
+                    <td>{{ $report->final_amount ? '₹'.number_format($report->final_amount, 2) : 'N/A' }}</td> --}}
                     <td>
                         @if($report->sale_status)
                         <span class="badge badge-success">Sold</span>

@@ -1,5 +1,6 @@
 @extends('demo')
 @section('title', 'Sale Product Category')
+
 @section('content')
 <h1>Sale Product Category</h1>
 <div class="main" id="main">
@@ -19,12 +20,14 @@
             <div class="row justify-content-center">
                 <!-- Centering the form on larger screens -->
                 <div class="col-12 col-lg-6">
+
                     <!-- Sale Product Category Name Input -->
                     <div class="mb-3">
                         <label for="name">Sale Product Category Name</label>
                         <input type="text" name="name" id="name" class="form-control"
                             placeholder="Enter Sale Product Category Name" required>
                     </div>
+
                     <!-- Sale Product Category Type Input (Optional) -->
                     {{-- <div class="mb-3">
                         <label for="is_type" class="form-label">Category Type</label>
@@ -34,11 +37,13 @@
                         </div>
                     </div>
                     --}}
+
                     <!-- Submit Button -->
                     <button type="submit" class="btn btn-success">Submit</button>
                 </div>
             </div>
         </div>
     </form>
+
 </div>
 @endsection

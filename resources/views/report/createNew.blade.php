@@ -7,7 +7,7 @@
     {{ session('error') }}
 </div>
 @endif
-<div class="container-fluid">  
+<div class="container-fluid">
     <form action="{{route('report.stockReport')}}" method="post" id="report-form">
         @csrf
         <div class="container-fluid">
@@ -26,10 +26,12 @@
                 </div>
                 @endif
             </div>
+            {{-- if admin login then option for report layout append --}}
+            @if( auth()->user()->type == 'admin')
             @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
             <div class="row mb-3">
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'electric')
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="part-label">
                     <h5>Part</h5>
                 </div>
                 <!-- Part Dropdown -->
@@ -40,33 +42,33 @@
                         <option value="1">Repairing</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="temp-label">
                     <h5>Temp no.</h5>
                 </div>
                 @endif
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'cavity')
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="worker_name-label">
                     <h5>EMPLOYEE NAME</h5>
                 </div>
                 <div class="col-12 col-md-3">
-                    <input type="text" id="wn" name="worker_name" class="form-control"
+                    <input type="text" id="worker_name" name="worker_name" class="form-control"
                         placeholder="Enter Worker Name">
                 </div>
                 @endif
             </div>
             @endif
-            @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' ||
-            auth()->user()->type === 'admin' || auth()->user()->type === 'user')
+            @if(auth()->user()->type === 'godown' || auth()->user()->type === 'electric' || auth()->user()->type ===
+            'admin' || auth()->user()->type === 'user')
             <div class="row mb-3">
                 @if(auth()->user()->type === 'godown' || auth()->user()->type === 'admin' ||
                 auth()->user()->type === 'user')
                 <!-- SR (FIBER) Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="sr_no_fiber-label">
                     <h5>SR (FIBER)</h5>
                 </div>
                 <!-- SR (FIBER) Input -->
                 <div class="col-12 col-md-3">
-                    <input type="text" id="srfiber" name="sr_no_fiber" class="form-control"
+                    <input type="text" id="sr_no_fiber" name="sr_no_fiber" class="form-control"
                         placeholder="Enter SR No Fiber">
                 </div>
                 @endif
@@ -77,13 +79,12 @@
                 @if(auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
                 <!-- Temporary No Input -->
                 <div class="col-12 col-md-2">
-                    <input type="text" id="temp" name="temp" class="form-control"
-                        placeholder="Enter Temporary No">
+                    <input type="text" id="temp" name="temp" class="form-control" placeholder="Enter Temporary No">
                 </div>
                 @endif
                 @if(auth()->user()->type === 'admin' || auth()->user()->type === 'user')
                 <!-- M.J Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="mj-label">
                     <h5>M.J</h5>
                 </div>
                 <!-- M.J Input -->
@@ -98,7 +99,7 @@
             <div class="row mb-3">
                 @if(auth()->user()->type == 'admin' || auth()->user()->type === 'godown')
                 <!-- Warranty Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="warranty-label">
                     <h5>Warranty</h5>
                 </div>
                 <!-- Warranty Dropdown -->
@@ -117,12 +118,13 @@
                 @if(auth()->user()->type == 'admin' || auth()->user()->type == 'user' ||
                 auth()->user()->type === 'godown')
                 <!-- Type Label -->
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2" id="type-label">
                     <h5>Type</h5>
                 </div>
                 <!-- Type Dropdown -->
                 <div class="col-12 col-md-3">
-                    <select id="type" name="type" data-type="{{ json_encode($all_sub_categories) }}" required class="form-control">
+                    <select id="type" name="type" data-type="{{ json_encode($all_sub_categories) }}" required
+                        class="form-control">
                         <option value="" disabled selected>Select Type</option>
                         @foreach($types as $type)
                         <option value="{{$type->id}}" data-value="{{$type->name}}">{{$type->name}}</option>
@@ -132,6 +134,113 @@
                 @endif
             </div>
             @endif
+            {{-- if admin not login then No for report layout append. --}}
+            @else
+            <div class="row mb-3">
+                @foreach ($allowedFields as $field)
+                @switch($field)
+
+                @case('part')
+                <div class="col-12 col-md-2">
+                    <h5>Part</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <select id="part" name="part" class="form-control" required>
+                        <option value="" disabled selected>Select Part</option>
+                        <option value="0">New</option>
+                        <option value="1">Repairing</option>
+                    </select>
+                </div>
+                @break
+
+                @case('temp')
+                <div class="col-12 col-md-2">
+                    <h5>Temp no.</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="temp" class="form-control" placeholder="Enter Temporary No">
+                </div>
+                @break
+
+                @case('worker_name')
+                <div class="col-12 col-md-2">
+                    <h5>Employee Name</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="worker_name" class="form-control" placeholder="Enter Worker Name">
+                </div>
+                @break
+
+                @case('sr_no_fiber')
+                <div class="col-12 col-md-2">
+                    <h5>SR (Fiber)</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="sr_no_fiber" class="form-control" placeholder="Enter SR No Fiber">
+                </div>
+                @break
+
+                @case('mj')
+                <div class="col-12 col-md-2">
+                    <h5>M.J</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <input type="text" name="m_j" class="form-control" placeholder="Enter M/J Value">
+                </div>
+                @break
+
+                @case('warranty')
+                <div class="col-12 col-md-2">
+                    <h5>Warranty</h5>
+                </div>
+                <div class="col-12 col-md-3 mb-2">
+                    <select name="warranty" class="form-control" required>
+                        <option value="" disabled selected>Select Warranty</option>
+                        <option value="0">No Warranty</option>
+                        <option value="1">Warranty</option>
+                    </select>
+                </div>
+                @break
+
+                @case('type')
+                @if( auth()->user()->type === 'godown')
+                </div>
+                <div class="row mb-3">
+
+                     <div class="col-12 col-md-2">
+                        <h5>Type</h5>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2">
+                        <select id="type" name="type" class="form-control" data-type='@json($all_sub_categories)'
+                            required>
+                            <option value="" disabled selected>Select Type</option>
+                            @foreach($types as $type)
+                            <option value="{{ $type->id }}" data-value="{{ $type->name }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                     <div class="col-12 col-md-3">
+                        <h5>Type</h5>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2">
+                        <select id="type" name="type" class="form-control select2" data-type='@json($all_sub_categories)'
+                            required>
+                            <option value="" disabled selected>Select Type</option>
+                            @foreach($types as $type)
+                            <option value="{{ $type->id }}" data-value="{{ $type->name }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+                @break
+
+                @endswitch
+                @endforeach
+            </div>
+
+            @endif
+
             @if( auth()->user()->type !== 'godown')
             <div class="row mb-3">
                 <!-- Empty Columns -->
@@ -146,9 +255,9 @@
                 <div class="col-12 col-md-2"></div>
             </div>
             @endif
-            @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric' || auth()->user()->type
-            === 'godown' )
-            <div class="row ">
+
+            @if( auth()->user()->type === 'admin' || auth()->user()->type === 'electric')
+            <div class="row">
                 <!-- ITEM -->
                 <div class="col-12 col-md-3">
                     <h5>ITEM</h5>
@@ -177,6 +286,7 @@
             </div>
             @endif
             <div id="TBody"></div>
+            <div id="Append_Extra_Line"></div>
             <div class="row mt-3">
                 <div class="col-12 col-md-2">
                     <strong>NOTE</strong>

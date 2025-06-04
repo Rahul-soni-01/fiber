@@ -67,7 +67,7 @@ class TblPurchaseItemController extends Controller
         // dd($request->all());
         // For Product
         $validator = Validator::make($request->all(), [
-            'invoice_no' => 'required|unique:tbl_purchases,invoice_no',
+            // 'invoice_no' => 'required|unique:tbl_purchases,invoice_no',
             'cname' => 'required|array',
             'scname' => 'required|array',
             'unit' => 'required|array',
@@ -85,11 +85,18 @@ class TblPurchaseItemController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+         $inward = new tbl_purchase();
         // For Invoice 
-        $inward = new tbl_purchase();
+        if(empty($request->invoice_no) || tbl_purchase::where('invoice_no', $request->invoice_no)->exists()) {
+            // Get the maximum existing invoice_no and increment it
+            $maxId = tbl_purchase::max('invoice_no');
+            $inward->invoice_no = $maxId ? $maxId + 1 : 1; // Start with 1 if no purchase exist
+        } else {
+            $inward->invoice_no = $request->invoice_no;
+        }
+       
         $inward->main_category = $request->main_category;
         $inward->date = $request->date;
-        $inward->invoice_no = $request->invoice_no;
         $inward->pid = $request->party_name;
         $inward->amount = $request->amount_d;
         $inward->inr_rate = $request->rate_r;
@@ -117,7 +124,7 @@ class TblPurchaseItemController extends Controller
 
             for ($i = 0; $i < $count; $i++) {
                 $itemResult = tbl_purchase_item::create([
-                    'invoice_no' => $request->invoice_no,
+                    'invoice_no' =>  $maxId ? $maxId + 1 : 1,
                     'cid' => $request->cname[$i],
                     'scid' => $request->scname[$i],
                     'qty' => $request->qty[$i],

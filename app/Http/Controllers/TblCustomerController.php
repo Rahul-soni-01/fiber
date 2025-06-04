@@ -164,7 +164,16 @@ class TblCustomerController extends Controller
         $customer->ship_state = $request->ship_state;
     
         $result = $customer->save();
-    
+        if ($customer->HeadCode) {
+            $ledger = TblAccCoa::where('HeadCode', $customer->HeadCode)->first();
+            // dd($ledger);
+            if ($ledger) {
+                $ledger->update([
+                    'HeadName' => $request->customer_name,
+                ]);
+            }
+        }
+
         if ($result) {
             return redirect()->route('customer.index')->with('success', 'Customer updated successfully.');
         } else {

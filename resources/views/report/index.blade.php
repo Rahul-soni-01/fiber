@@ -2,6 +2,7 @@
 @section('title', 'All Report')
 @section('content')
 <h1>All Report</h1>
+<a href="{{ route('report.create')}}" class="btn btn-primary mb-3">Add Report</a>
 <div class="text-white">
     @if ($errors->any())
     <div style="color: red;">
@@ -181,7 +182,7 @@
                     </td>
                     @endif
                     @if ($type === 'admin' )
-                    <td>{{ $report->sr_no_fiber }}</td>
+                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->tbl_type->name ?? 0 }}</td>
                     <td>{{ $report->worker_name }}</td>
                     <td>{{ $report->final_amount }}</td>

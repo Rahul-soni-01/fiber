@@ -27,6 +27,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PdfGeneratorController;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ManufactureReportLayoutController;
+use App\Http\Controllers\OpeningBalanceController;
+use App\Http\Controllers\FinancialYearController;
+use App\Http\Controllers\ReportPermissionController;
+use App\Http\Controllers\CompanyController;
 
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
@@ -38,7 +42,8 @@ Route::get('/', function () {
 Route::get('logout', [TblUserController::class, 'logout'])->name('logout');
 
 Route::get('/welcome', function () {
-    return view('demo');
+    // return view('demo');
+    return view('busy.index');
 });
 
 Route::middleware('auth')->group(function () {
@@ -49,8 +54,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/websetting', [DepartmentController::class, 'websetting'])->name('websetting');
     Route::post('/websetting-update', [DepartmentController::class, 'updateWebSetting'])->name('websetting.update');
 
-
     Route::get('/datainsert', [TblStockController::class, 'datainsert'])->name('datainsert');
+
+    Route::resource('companies', CompanyController::class);
 
     // User Crud
     Route::get('/user', [TblUserController::class, 'index'])->name('user.index');
@@ -70,17 +76,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage-permissions-departments-{id}', [ManagePermissionController::class, 'edit'])->name('managePermissions.departments');
     Route::post('/manage-permissions-update-{id}', [ManagePermissionController::class, 'update'])->name('manage-permissions.update');
 
+    Route::resource('financial-years', FinancialYearController::class);
+    Route::resource('report-permission', ReportPermissionController::class);
+
     // predefine edit
     Route::get('/predefine', [TblAccCoaController::class, 'predefine'])->name('predefine.index');
     Route::put('/predefine-update', [TblAccCoaController::class, 'predefineUpdate'])->name('predefine.update');
 
     // acccoa Crud
+    Route::get('/balance', [TblAccCoaController::class, 'finalbalance'])->name('final.balance');
+
     Route::get('/acccoa', [TblAccCoaController::class, 'index'])->name('acccoa.index');
     Route::get('/acccoa-create', [TblAccCoaController::class, 'create'])->name('acccoa.create');
     Route::post('/acccoa-store', [TblAccCoaController::class, 'store'])->name('acccoa.store');
     Route::get('edit-acccoa-{acccoa_id}', [TblAccCoaController::class, 'edit'])->name(('acccoa.edit')); //View acccoa By id.
     Route::put('/acccoa/{id}', [TblAccCoaController::class, 'update'])->name('acccoa.update');
     Route::delete('/acccoa{acccoa_id}', [TblAccCoaController::class, 'destroy'])->name('acccoa.destroy');
+
+    Route::get('/opening-balance', [OpeningBalanceController::class, 'index'])->name('openingbalance.index');
+    Route::get('/opening-balance-create', [OpeningBalanceController::class, 'create'])->name('openingbalance.create');
+    Route::post('/opening-balance-store', [OpeningBalanceController::class, 'store'])->name('openingbalance.store');
+    Route::get('/edit-opening-balance-{id}', [OpeningBalanceController::class, 'edit'])->name('openingbalance.edit'); // View opening balance by ID
+    Route::put('/opening-balance/{id}', [OpeningBalanceController::class, 'update'])->name('openingbalance.update');
+    Route::delete('/opening-balance/{id}', [OpeningBalanceController::class, 'destroy'])->name('openingbalance.destroy');
 
     //saleproductcategory crud
     Route::get('/saleproductcategory', [TblSaleProductCategoryController::class, 'index'])->name('saleproductcategory.index');
@@ -224,6 +242,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('baddesk-create-{id}', [PermissionController::class, 'create'])->name('baddesk.create');
     Route::post('baddesk-store', [PermissionController::class, 'store'])->name('baddesk.store');
+    Route::post('update-section', [PermissionController::class, 'update'])->name('update.section');
     
     // Sale Crud
     Route::get('sale-return-show-{sale_id}', [SaleController::class, 'return_show'])->name('sale.return.show');
@@ -272,15 +291,16 @@ Route::middleware('auth')->group(function () {
     Route::put('gst-pdf/{id}', [GstPdfTableController::class, 'update'])->name('gst-pdf.update');
     Route::get('gst-pdf-show-{id}', [GstPdfTableController::class, 'show'])->name(('gst-pdf.show'));
 
-    // Route::prefix('layouts')->name('layouts.')->group(function () {
-        Route::get('layouts', [ManufactureReportLayoutController::class, 'index'])->name('layouts.index');
-        Route::get('layouts-create', [ManufactureReportLayoutController::class, 'create'])->name('layouts.create');
-        Route::post('/layouts', [ManufactureReportLayoutController::class, 'store'])->name('layouts.store');
-        Route::get('layouts-{id}-edit', [ManufactureReportLayoutController::class, 'edit'])->name('layouts.edit');
-        Route::put('layouts-{id}', [ManufactureReportLayoutController::class, 'update'])->name('layouts.update');
-        Route::get('layouts-preview-{id}', [ManufactureReportLayoutController::class, 'show'])->name('layouts.show');
-        Route::delete('layouts-{id}', [ManufactureReportLayoutController::class, 'destroy'])->name('layouts.destroy');
-    // });
+    Route::get('layouts', [ManufactureReportLayoutController::class, 'index'])->name('layouts.index');
+    Route::get('layouts-create', [ManufactureReportLayoutController::class, 'create'])->name('layouts.create');
+    Route::post('/layouts', [ManufactureReportLayoutController::class, 'store'])->name('layouts.store');
+    Route::get('layouts-{id}-edit', [ManufactureReportLayoutController::class, 'edit'])->name('layouts.edit');
+    Route::put('layouts-{id}', [ManufactureReportLayoutController::class, 'update'])->name('layouts.update');
+    Route::get('layouts-preview-{id}', [ManufactureReportLayoutController::class, 'show'])->name('layouts.show');
+    Route::delete('layouts-{id}', [ManufactureReportLayoutController::class, 'destroy'])->name('layouts.destroy');
+
+    Route::post('get-report-layout', [ManufactureReportLayoutController::class, 'fetch'])->name('get.report.layout');
+
 });
 
 Route::get('/unauthorized', function () {

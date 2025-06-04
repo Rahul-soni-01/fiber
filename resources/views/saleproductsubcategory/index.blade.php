@@ -1,5 +1,6 @@
 @extends('demo')
 @section('title', 'Sale Product SubCategory')
+
 @section('content')
 <h1>Sale Product SubCategory</h1>
 <div class="main" id="main">
@@ -8,6 +9,7 @@
         {{ session('success') }}
     </div>
     @endif
+
     <a href="{{ route('saleproductsubcategory.create') }}" class="btn btn-primary mb-2">Add Sale Product Sub
         Category</a>
     <table class="table text-white">
@@ -34,6 +36,7 @@
                     <a href="{{ route('saleproductsubcategory.edit', ['id' => $subcategory->id]) }}" class="btn btn-sm btn-warning">
                         <i class="ri-edit-2-fill"></i>
                     </a>
+
                     <!-- Delete Form -->
                     <form action="{{ route('saleproductsubcategory.destroy', $subcategory->id) }}" method="POST"
                         style="display:inline;">
@@ -49,5 +52,7 @@
             @endforeach
         </tbody>
     </table>
+
+
 </div>
 @endsection

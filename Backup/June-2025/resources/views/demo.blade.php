@@ -10,7 +10,7 @@
     <script src="/public/js/jquery-3.7.1.min.js"></script>
     <script src="/public/js/script.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!--<link rel="stylesheet" href="css/style.css">-->
     <!--<script src="js/jquery-3.7.1.min.js"></script>-->
     <!--<script src="{{ asset('js/script.js') }}"></script>-->
@@ -200,14 +200,15 @@
                             {{-- Product Section --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle" href="#">
-                                   </i>Product Section
+                                    </i>Product Section
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="{{ route('mainstore.section') }}" class="dropdown-item">Main Store</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('Manufactur.section') }}" class="dropdown-item">Manufacturer</a>
+                                        <a href="{{ route('Manufactur.section') }}"
+                                            class="dropdown-item">Manufacturer</a>
                                     </li>
                                     <li>
                                         <a href="{{ route('Repair.section') }}" class="dropdown-item">Repair</a>
@@ -286,7 +287,8 @@
                                         <a href="{{ route('payment.create') }}" class="dropdown-item">Add Payment</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('payment.index') }}" class="dropdown-item">Supplier Payment</a>
+                                        <a href="{{ route('payment.index') }}" class="dropdown-item">Supplier
+                                            Payment</a>
                                     </li>
                                 </ul>
                             </li>
@@ -301,7 +303,8 @@
                                         <a href="{{ route('category.index') }}" class="dropdown-item">Show Category</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('subcategory.index') }}" class="dropdown-item">Show Sub Category</a>
+                                        <a href="{{ route('subcategory.index') }}" class="dropdown-item">Show Sub
+                                            Category</a>
                                     </li>
                                 </ul>
                             </li>
@@ -317,7 +320,7 @@
                                         <a href="{{ route('inward.index') }}" class="dropdown-item">Show Purchase</a>
                                     </li>
                                     <li>
-                                     
+
                                     </li>
                                 </ul>
                             </li>
@@ -326,13 +329,16 @@
                                 <a class="dropdown-item dropdown-toggle" href="#">Sale/Product Out-In</a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('sale.create') }}" class="dropdown-item">Add Sale/Product Out</a>
+                                        <a href="{{ route('sale.create') }}" class="dropdown-item">Add Sale/Product
+                                            Out</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('sale.repair.create') }}" class="dropdown-item">Add Repair/Product Out</a>
+                                        <a href="{{ route('sale.repair.create') }}" class="dropdown-item">Add
+                                            Repair/Product Out</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('replacement.create') }}" class="dropdown-item">Replacement</a>
+                                        <a href="{{ route('replacement.create') }}"
+                                            class="dropdown-item">Replacement</a>
                                     </li>
                                     <li>
                                         <a href="{{ route('sale.index') }}" class="dropdown-item">Show Product Out</a>
@@ -348,27 +354,30 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('inward.index') }}" class="dropdown-item">Show Return Purchase</a>
+                                        <a href="{{ route('inward.index') }}" class="dropdown-item">Show Return
+                                            Purchase</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('purchase.return.create') }}" class="dropdown-item">Add Return Purchase</a>
+                                        <a href="{{ route('purchase.return.create') }}" class="dropdown-item">Add Return
+                                            Purchase</a>
                                     </li>
                                 </ul>
                             </li>
-                            {{--  Sale Return --}}
+                            {{-- Sale Return --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle" href="#"> Sale Return
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('sale.return.index') }}" class="dropdown-item">Show Return Sale</a>
+                                        <a href="{{ route('sale.return.index') }}" class="dropdown-item">Show Return
+                                            Sale</a>
                                     </li>
                                     <li>
                                         <a href="{{ route('sale.return') }}" class="dropdown-item">Add Return Sale</a>
                                     </li>
                                 </ul>
                             </li>
-                            {{--  GST PDF --}}
+                            {{-- GST PDF --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle" href="#">
                                     <i class="ri-user-star-line me-1"></i> GST PDF
@@ -540,6 +549,27 @@
                             </ul>
                         </div>
                     </li>
+
+                    <!-- Companies -->
+                    <li class="nav-item" id="Company">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#company">
+                            <i class="ri-community-line"></i> Companies <i class="ri-arrow-down-s-line float-end"></i>
+                        </a>
+                        <div class="collapse" id="company">
+                            <ul class="nav flex-column ms-3">
+                                <li class="nav-item nav-sub-item">
+                                    <a href="{{ route('companies.index') }}" class="nav-link">
+                                        <i class="ri-list-check"></i> All Companies
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-sub-item">
+                                    <a href="{{ route('companies.create') }}" class="nav-link">
+                                        <i class="ri-add-circle-line"></i> Add New Company
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                     <!-- Types -->
                     <li class="nav-item" id="Type">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#typeMenu">
@@ -636,7 +666,8 @@
                                     <a href="{{ route('layouts.index') }}" class="nav-link">Show Report Layout</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
-                                    <a href="{{ route('report-permission.index') }}" class="nav-link">Report Permission</a>
+                                    <a href="{{ route('report-permission.index') }}" class="nav-link">Report
+                                        Permission</a>
                                 </li>
                         </div>
                     </li>
@@ -774,14 +805,16 @@
                                 <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('financial-years.index') }}" class="nav-link">Financial Year</a>
                                 </li>
-                                 <li class="nav-item nav-sub-item" id="show">
+                                <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('openingbalance.index') }}" class="nav-link">Opening balance</a>
                                 </li>
-                                  <li class="nav-item nav-sub-item" id="show">
-                                    <a href="{{ route('acccoa.index') }}" id="show" class="nav-link">Chart of Account</a>
+                                <li class="nav-item nav-sub-item" id="show">
+                                    <a href="{{ route('acccoa.index') }}" id="show" class="nav-link">Chart of
+                                        Account</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="show">
-                                    <a href="{{ route('predefine.index') }}" id="view" class="nav-link">Predefine of Accounts </a>
+                                    <a href="{{ route('predefine.index') }}" id="view" class="nav-link">Predefine of
+                                        Accounts </a>
                                 </li>
                             </ul>
                         </div>

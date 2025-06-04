@@ -8,8 +8,6 @@ use App\Models\tbl_purchase_item;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Report;
-use App\Models\TblLed;
-use App\Models\TblCard;
 use App\Models\TblStock;
 use Illuminate\Support\Facades\Validator;
 use App\Models\tbl_sub_category;
@@ -22,8 +20,15 @@ use App\Models\SelectedInvoice;
 use App\Models\TblReportItem;
 use App\Models\TblSaleReturn;
 use App\Models\Tbltype;
+use App\Models\ManufactureReportLayout;
+use App\Models\ManufactureReportLayoutField;
+use App\Models\ReportPermission;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
+
+
 
 class ReportController extends Controller
 {
@@ -35,7 +40,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')->get();
+            $reports = Report::with('tbl_type')->get();
             // dd($reports);
             if (auth()->user()->type === 'godown') {
                 // dd("de");
@@ -56,7 +61,7 @@ class ReportController extends Controller
             // dd($types,$reports);
             if (auth()->user()->type === 'godown') {
                 // dd("de");
-                $reports = Report::with('tbl_leds', 'tbl_cards', 'tbl_type')
+                $reports = Report::with('tbl_type')
                     ->where('sale_status', '0')
                     ->orWhere('part', 1)
                     ->get();
@@ -68,7 +73,7 @@ class ReportController extends Controller
     }
     public function ReportNew(Request $request)
     {
-        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        $reports = Report::with('tbl_type')
         // ->where('part', 0);
         ->where('sale_status', 0);
         // Apply filters conditionally
@@ -122,15 +127,28 @@ class ReportController extends Controller
             //     ->get();
             // dd($hrs);
             $customers = TblCustomer::all();
+            $userType = auth()->user()->type;
+
+            $permission = ReportPermission::where('user_type', $userType)->first();
+            $allFields = ['part', 'temp', 'worker_name', 'sr_no_fiber', 'mj', 'warranty', 'type'];
+            if($userType == 'admin'){
+                $allowedFields = $allFields;
+            }else{
+                $allowedFields = $permission ? $permission->field_name : [];
+                if(is_string($allowedFields)){
+                    $allowedFields = json_decode($allowedFields,true);
+                }
+            }
+
             // return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('types', 'all_sub_categories', 'customers'));
+            return view("report.createNew", compact('types','all_sub_categories', 'customers','allowedFields'));
         }
         return redirect('/unauthorized');
     }
    
     public function show(Request $request, $id)
     {
-        $report = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')->find($id);
+        $report = Report::with('tbl_type')->find($id);
         $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')->where('report_id', $id)->get();
         // dd($reportitems);
         // return view('report.show', compact('report'));
@@ -138,7 +156,7 @@ class ReportController extends Controller
     }
     public function typeshow(Request $request, $id)
     {
-        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        $reports = Report::with('tbl_type')
             ->where('type', $id);
         // Apply filters conditionally
         if ($request->query('s_date') !== null && $request->query('e_date') !== null) {
@@ -164,7 +182,7 @@ class ReportController extends Controller
     {
         $type = $request->type;
         if ($request->url == 'sale-repair-create') {
-            $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
+            $reports = Report::with('tbl_type')
                 ->where('part', 1)
                 ->where('sale_status', 0)
                 ->where('stock_status', 1)
@@ -174,7 +192,7 @@ class ReportController extends Controller
                 ->get()
                 ->pluck('sr_no_fiber');
         } elseif ($request->url == 'sale-create') {
-            $reports = Report::with('tbl_leds.tbl_sub_category', 'tbl_type')
+            $reports = Report::with('tbl_type')
                 ->where('part', 0)
                 ->where('sale_status', 0)
                 ->where('stock_status', 1)
@@ -210,7 +228,8 @@ class ReportController extends Controller
                 }
                 return $item;
             };
-            
+            $Advancedviewresults = collect();
+
             // tbl_reports
             $reports = Report::where('sr_no_fiber', $sr_no)
                 ->select('*', 'sr_no_fiber as sr_no', 'created_at as date', DB::raw("'tbl_reports' as table_name"))
@@ -287,7 +306,7 @@ class ReportController extends Controller
     }
     public function ready(Request $request)
     {
-        $reports = Report::with('tbl_leds', 'tbl_leds.tbl_sub_category', 'tbl_type')
+        $reports = Report::with('tbl_type')
             // ->where('part', 0)
             ->where('sale_status', 0)
             // ->where('r_status', 0)
@@ -404,7 +423,7 @@ class ReportController extends Controller
 
     public function edit($id)
     {
-        $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category', 'tbl_type')->find($id);
+        $report = Report::with('tbl_type')->find($id);
         $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category', 'tbl_sub_category.category')->where('report_id', $id)->get();
         // dd($id);
         $invoice_no = SelectedInvoice::first()->invoice_no;
@@ -443,7 +462,7 @@ class ReportController extends Controller
     public function reject(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_leds', 'tbl_cards')->where('status', 2)->get();
+            $reports = Report::with('tbl_type')->where('status', 2)->get();
             return view("report.reject", compact('reports'));
         }
         return redirect('/unauthorized');
@@ -556,7 +575,7 @@ class ReportController extends Controller
 
     public function stockReport(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $validator = Validator::make(
             $request->all(),
             [
@@ -609,6 +628,18 @@ class ReportController extends Controller
             $firstErrorMessage = $validator->errors()->first();
             return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
         }
+
+        if (
+            $request->has(['field_key', 'field_key_value']) &&
+            is_array($request->field_key) &&
+            is_array($request->field_key_value) &&
+            count($request->field_key) === count($request->field_key_value)) {
+            $combinedArray = array_combine($request->field_key, $request->field_key_value);
+        } else {
+            $combinedArray = []; // Fallback if conditions fail
+        }
+        
+        $jsonData = json_encode($combinedArray);
         $report = new Report();
         $report->part = $request->input('part');
         if (Auth()->user()->type === 'godown') {
@@ -625,6 +656,7 @@ class ReportController extends Controller
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
         $report->sale_status = 0;
+        $report->extra_line =$jsonData;
         if($request->input('part') == 1){
             $report->section = 2;
             $report->r_status = 1;
@@ -1132,7 +1164,9 @@ class ReportController extends Controller
                 if ($request->status == 1) {
                     $report->sale_status = 0;
                     $report->stock_status = 1;
+                    // $report->section = $request->section;
                     $report->section = 0;
+                    $report->indate = $request->indate ?? null;
                 }
                 $report->remark = $request->remark;
                 $report->save();

@@ -1,7 +1,7 @@
 @extends('demo')
-@section('title', 'Main Store')
+@section('title', 'Bad Debt')
 @section('content')
-<h1>Main Store</h1>
+<h1>Bad Debt</h1>
 <div class="text-white">
     @if ($errors->any())
     <div style="color: red;">
@@ -29,7 +29,9 @@
                 <tr class="bg-dark text-white">
                     <th>ID</th>
                     <th>Part</th>
+                    <th>Section</th>
                     <th>W/N.W.</th>
+
                     <th>Date</th>
                     <th>Serial No.</th>
                     <th>Type</th>
@@ -54,7 +56,17 @@
                         <span class="badge badge-secondary">Unknown</span>
                         @endif
                     </td>
-                    <td>{{ $report->m_j ?? 'N/A' }}</td>
+                    <td>
+                        <select id="section" class="form-select section"  data-id="{{ $report->id }}">
+                            <option value="0" {{ $report->section == 0 ? 'selected' : '' }}>Mainstore</option>
+                            <option value="1" {{ $report->section == 1 ? 'selected' : '' }}>Manufacture</option>
+                            <option value="2" {{ $report->section == 2 ? 'selected' : '' }}>Repair</option>
+                            <option value="3" {{ $report->section == 3 ? 'selected' : '' }}>Baddesk</option>
+                            <option value="4" {{ $report->section == 4 ? 'selected' : '' }}>Sell</option>
+                        </select>
+                    </td>
+                    
+                    <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown') }}</td>
                     <td>{{ $report->created_at->format('d-m-Y') ?? 'N/A' }}</td>
                     <td>{{ $sr_no_fiber }}</td>
                     <td>{{ $report->tbl_type->name ?? ($report->type ?? 'N/A') }}</td>

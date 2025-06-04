@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ReportPermission;
 use Illuminate\Http\Request;
+use App\Models\tbl_user;
+
 
 class ReportPermissionController extends Controller
 {
@@ -17,7 +19,10 @@ class ReportPermissionController extends Controller
     // Show form to create new
     public function create()
     {
-        return view('report_permission.create');
+
+        $user_types = tbl_user::where('type', '!=', 'admin')->select('type')->distinct()->pluck('type');
+
+        return view('report_permission.create', compact('user_types'));
     }
 
     // Store new record
@@ -40,16 +45,23 @@ class ReportPermissionController extends Controller
     // Show single record
     public function show($id)
     {
-        $permission = ReportPermission::findOrFail($id);
-        return view('report_permission.show', compact('permission'));
+        $reportPermission = ReportPermission::findOrFail($id);
+        return view('report_permission.show', compact('reportPermission'));
     }
 
     // Show form to edit record
     public function edit($id)
     {
-        $permission = ReportPermission::findOrFail($id);
-        return view('report_permission.edit', compact('permission'));
+        $reportPermission = ReportPermission::findOrFail($id);
+
+        $user_types = tbl_user::where('type', '!=', 'admin')
+            ->select('type')
+            ->distinct()
+            ->pluck('type');
+
+        return view('report_permission.edit', compact('reportPermission', 'user_types'));
     }
+
 
     // Update record
     public function update(Request $request, $id)
