@@ -89,7 +89,7 @@ class TblPurchaseItemController extends Controller
         // For Invoice 
         if(empty($request->invoice_no) || tbl_purchase::where('invoice_no', $request->invoice_no)->exists()) {
             // Get the maximum existing invoice_no and increment it
-            $maxId = tbl_purchase::max('invoice_no');
+            $maxId = tbl_purchase::max('invoice_no') ?? 0;
             $inward->invoice_no = $maxId ? $maxId + 1 : 1; // Start with 1 if no purchase exist
         } else {
             $inward->invoice_no = $request->invoice_no;
@@ -97,6 +97,7 @@ class TblPurchaseItemController extends Controller
        
         $inward->main_category = $request->main_category;
         $inward->date = $request->date;
+        $inward->currency = $request->currency;
         $inward->pid = $request->party_name;
         $inward->amount = $request->amount_d;
         $inward->inr_rate = $request->rate_r;

@@ -56,7 +56,7 @@ class ReportController extends Controller
             $types = Tbltype::with(['reports' => function ($query) {
                 $query->where('sale_status', 0);
             }])->get();
-             // Use 'tbl_type' (singular) as defined in the model
+            // Use 'tbl_type' (singular) as defined in the model
             // $reports = Report::with('tbl_type')->get()->groupBy('type');
             // dd($types,$reports);
             if (auth()->user()->type === 'godown') {
@@ -74,8 +74,8 @@ class ReportController extends Controller
     public function ReportNew(Request $request)
     {
         $reports = Report::with('tbl_type')
-        // ->where('part', 0);
-        ->where('sale_status', 0);
+            // ->where('part', 0);
+            ->where('sale_status', 0);
         // Apply filters conditionally
         if ($request->query('s_date') !== null && $request->query('e_date') !== null) {
             $startDate = Carbon::parse($request->query('s_date'))->startOfDay();
@@ -131,21 +131,21 @@ class ReportController extends Controller
 
             $permission = ReportPermission::where('user_type', $userType)->first();
             $allFields = ['part', 'temp', 'worker_name', 'sr_no_fiber', 'mj', 'warranty', 'type'];
-            if($userType == 'admin'){
+            if ($userType == 'admin') {
                 $allowedFields = $allFields;
-            }else{
+            } else {
                 $allowedFields = $permission ? $permission->field_name : [];
-                if(is_string($allowedFields)){
-                    $allowedFields = json_decode($allowedFields,true);
+                if (is_string($allowedFields)) {
+                    $allowedFields = json_decode($allowedFields, true);
                 }
             }
 
             // return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs'));
-            return view("report.createNew", compact('types','all_sub_categories', 'customers','allowedFields'));
+            return view("report.createNew", compact('types', 'all_sub_categories', 'customers', 'allowedFields'));
         }
         return redirect('/unauthorized');
     }
-   
+
     public function show(Request $request, $id)
     {
         $report = Report::with('tbl_type')->find($id);
@@ -218,7 +218,7 @@ class ReportController extends Controller
             $sr_no = $request->input('sr_no');
 
             $results = collect();
-            
+
             // Helper function to format dates consistently
             $formatDate = function ($item) {
                 if (isset($item->date) && $item->date instanceof \DateTime) {
@@ -236,7 +236,7 @@ class ReportController extends Controller
                 ->get()
                 ->map($formatDate);
             $results = $results->merge($reports);
-            
+
             // tbl_stock
             $stock = TblStock::where('serial_no', $sr_no)
                 ->with('category', 'subCategory')
@@ -248,7 +248,7 @@ class ReportController extends Controller
                     return $formatDate($item);
                 });
             $results = $results->merge($stock);
-            
+
             // tbl_report_items
             $report_items = TblReportItem::where('sr_no', $sr_no)
                 ->with('report')
@@ -256,7 +256,7 @@ class ReportController extends Controller
                 ->get()
                 ->map($formatDate);
             $results = $results->merge($report_items);
-            
+
             // tbl_sales_items
             $salesItems = SaleItem::where('sr_no', $sr_no)
                 ->with('sale', 'sale.customer')
@@ -270,7 +270,7 @@ class ReportController extends Controller
                     return $formatDate($item);
                 });
             $results = $results->merge($salesItems);
-            
+
             // tbl_sale_returns
             $saleReturns = TblSaleReturn::where('sr_no', $sr_no)
                 ->with('customer')
@@ -280,25 +280,25 @@ class ReportController extends Controller
             $results = $results->merge($saleReturns);
 
             $replacements = Replacement::where('old_sr_no', $sr_no)
-                    ->orWhere('new_sr_no', $sr_no)
-                    ->get()
-                    ->map(function ($item) use ($formatDate) {
-                        $item->table_name = 'replacements';
-                        $item->action = $item->old_sr_no == $item->sr_no ? 'Replaced' : 'Replacement Received';
-                        return $formatDate($item);
-                    });
+                ->orWhere('new_sr_no', $sr_no)
+                ->get()
+                ->map(function ($item) use ($formatDate) {
+                    $item->table_name = 'replacements';
+                    $item->action = $item->old_sr_no == $item->sr_no ? 'Replaced' : 'Replacement Received';
+                    return $formatDate($item);
+                });
             $results = $results->merge($replacements);
-            
+
             // Sort results by date (ascending order)
             $sortedResults = $results->sortBy(function ($item) {
                 return $item->date ?? now(); // Use current time if date is null
             })->values();
-            
+
             // If you need descending order (newest first), use sortByDesc instead:
             // $sortedResults = $results->sortByDesc(function ($item) {
             //     return $item->date ?? now();
             // })->values();
-            
+
             // return view('report.search', compact('reports', 'reportitems'));
             return view('report.search', compact('sortedResults'));
         }
@@ -310,12 +310,12 @@ class ReportController extends Controller
             // ->where('part', 0)
             ->where('sale_status', 0)
             // ->where('r_status', 0)
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('part', 0)
-                      ->orWhere(function($q) {
-                          $q->where('part', 1)
+                    ->orWhere(function ($q) {
+                        $q->where('part', 1)
                             ->where('f_status', 0);
-                      });
+                    });
             })
             ->where('status', 1);
         if ($request->id) {
@@ -354,42 +354,42 @@ class ReportController extends Controller
     public function mainstore(Request $request)
     {
         $reports = Report::with('tbl_type')
-                ->where('section', 0)
-                ->where(function($query) {
-                    $query->where('part', 0)
-                          ->orWhere(function($q) {
-                              $q->where('part', 1)
-                                ->where('f_status', 0);
-                          });
-                })
-                ->get()
-                ->groupBy('sr_no_fiber');
+            ->where('section', 0)
+            ->where(function ($query) {
+                $query->where('part', 0)
+                    ->orWhere(function ($q) {
+                        $q->where('part', 1)
+                            ->where('f_status', 0);
+                    });
+            })
+            ->get()
+            ->groupBy('sr_no_fiber');
         return view('sections.mainstore', compact('reports'));
     }
 
     public function manufactur(Request $request)
     {
         $reports = Report::with('tbl_type')
-                ->where('section', 1)
-                ->where('part', 0)
-                ->get()
-                ->groupBy('sr_no_fiber');
+            ->where('section', 1)
+            ->where('part', 0)
+            ->get()
+            ->groupBy('sr_no_fiber');
         return view('sections.manufactur', compact('reports'));
     }
 
     public function repair(Request $request)
     {
         $reports = Report::with('tbl_type')
-        ->where('section', 2)
-        ->where(function($query) {
-            $query->where('part', 0)
-                  ->orWhere(function($q) {
-                      $q->where('part', 1);
+            ->where('section', 2)
+            ->where(function ($query) {
+                $query->where('part', 0)
+                    ->orWhere(function ($q) {
+                        $q->where('part', 1);
                         // ->where('f_status', 0);
-                  });
-        })
-        ->get()
-        ->groupBy('sr_no_fiber'); // Ensures unique sr_no_fiber values
+                    });
+            })
+            ->get()
+            ->groupBy('sr_no_fiber'); // Ensures unique sr_no_fiber values
 
         // dd($reports);
         return view('sections.repair', compact('reports'));
@@ -398,27 +398,27 @@ class ReportController extends Controller
     public function baddesk(Request $request)
     {
         $reports = Report::with('tbl_type')
-                ->where('section', 3)
-                ->where('part', 0)
-                ->get()
-                ->groupBy('sr_no_fiber');
-        return view('sections.baddesk',compact('reports'));
+            ->where('section', 3)
+            ->where('part', 0)
+            ->get()
+            ->groupBy('sr_no_fiber');
+        return view('sections.baddesk', compact('reports'));
     }
 
     public function sell(Request $request)
     {
         $reports = Report::with('tbl_type')
-        ->where('section', 4)
-        ->where(function($query) {
-            $query->where('part', 0)
-                  ->orWhere(function($q) {
-                      $q->where('part', 1)
-                        ->where('f_status', 0);
-                  });
-        })
-        ->get()
-        ->groupBy('sr_no_fiber');
-        return view('sections.sell',compact('reports'));
+            ->where('section', 4)
+            ->where(function ($query) {
+                $query->where('part', 0)
+                    ->orWhere(function ($q) {
+                        $q->where('part', 1)
+                            ->where('f_status', 0);
+                    });
+            })
+            ->get()
+            ->groupBy('sr_no_fiber');
+        return view('sections.sell', compact('reports'));
     }
 
     public function edit($id)
@@ -458,7 +458,7 @@ class ReportController extends Controller
         // return view('report.edit', compact('sub_categories', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs', 'report'));
         return view('report.Newedit', compact('report', 'reportitems', 'all_sub_categories', 'types'));
     }
-    
+
     public function reject(Request $request)
     {
         if ($this->checkPermission($request, 'view')) {
@@ -633,20 +633,17 @@ class ReportController extends Controller
             $request->has(['field_key', 'field_key_value']) &&
             is_array($request->field_key) &&
             is_array($request->field_key_value) &&
-            count($request->field_key) === count($request->field_key_value)) {
+            count($request->field_key) === count($request->field_key_value)
+        ) {
             $combinedArray = array_combine($request->field_key, $request->field_key_value);
         } else {
             $combinedArray = []; // Fallback if conditions fail
         }
-        
+
         $jsonData = json_encode($combinedArray);
         $report = new Report();
         $report->part = $request->input('part');
-        if (Auth()->user()->type === 'godown') {
-            $report->r_status = 0;
-            $report->part = 1;
-            $report->status = 0;
-        }
+
         $report->f_status = $request->input('warranty') !== null ? $request->input('warranty') : 1;
         $report->worker_name = $request->input('worker_name');
         $report->sr_no_fiber = $request->input('sr_no_fiber');
@@ -656,17 +653,17 @@ class ReportController extends Controller
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
         $report->sale_status = 0;
-        $report->extra_line =$jsonData;
-        if($request->input('part') == 1){
+        $report->extra_line = $jsonData;
+        if ($request->input('part') == 1) {
             $report->section = 2;
             $report->r_status = 1;
 
             $mainreport = Report::where('sr_no_fiber', $request->input('sr_no_fiber'))->where('part', 0)->first();
-            if($mainreport){
+            if ($mainreport) {
                 $mainreport->section = 2;
                 $mainreport->save();
             }
-        }elseif($request->input('part') == 0){
+        } elseif ($request->input('part') == 0) {
             $report->section = 1;
             $report->r_status = 0;
         }
@@ -675,6 +672,12 @@ class ReportController extends Controller
             // $report->f_status = 0;
         } elseif (Auth()->user()->type === 'admin') {
             // $report->r_status = 1;
+        }
+        if (Auth()->user()->type === 'godown') {
+            $report->r_status = 0;
+            $report->part = 1;
+            $report->status = 0;
+            $report->section = 2;
         }
         try {
             $report->save();
@@ -689,6 +692,7 @@ class ReportController extends Controller
         $TblStockupdateIds = [];
         $TblReportiteminsertedIds = [];
         if ($sub_category) {
+            // dd($sub_category);
             foreach ($request->srled as $index => $serial_no) {
                 $sr_no_or_not = $request->sr_no_or_not[$index];
                 $dead = $request->dead[$index];
@@ -784,7 +788,7 @@ class ReportController extends Controller
                         $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
                         $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
                         $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
-                        return redirect()->back()->with('error',"Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
+                        return redirect()->back()->with('error', "Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                         // return redirect()->back()->with('error', '!! No purchase Found in Stock, Please Select Valid Invoice No for Stock !!.');
                     }
                     $cid = $invoice_data->cid;
@@ -838,7 +842,7 @@ class ReportController extends Controller
                             // return redirect()->back()->with('error', 'Failed to store the report. You Not have a enough quantity in Stock, Please Check Your Stock Report.');
                             $invoiceNo = $invoice_no ? $invoice_no->invoice_no : 'N/A';
                             $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
-                            return redirect()->back()->with('error',"Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
+                            return redirect()->back()->with('error', "Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                         } elseif ($report_used_qty = $existingRecord->qty) {
                             $existingRecord->status = 1;
                         }
@@ -907,7 +911,7 @@ class ReportController extends Controller
         }
         return redirect()->route('report.index')->with('success', 'Report added successfully.');
     }
-   
+
     public function Latestupdate(Request $request, $id)
     {
         // dd($request->all());
@@ -919,20 +923,22 @@ class ReportController extends Controller
             // Check user type
             if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
 
-                // Step 2: Back in stock old sr_no items
-                foreach ($oldReportItems as $oldReportItem) {
-                    if ($oldReportItem->sr_no != 0) {
-                        $existingRecord = TblStock::where('serial_no', $oldReportItem->sr_no)
-                            ->first();
-                        if ($existingRecord) {
-                            $existingRecord->status = 0;
-                            $existingRecord->save();
+                if ($oldReportItems->isNotEmpty()) {
+                    // Step 2: Back in stock old sr_no items
+                    foreach ($oldReportItems as $oldReportItem) {
+                        if ($oldReportItem->sr_no != 0) {
+                            $existingRecord = TblStock::where('serial_no', $oldReportItem->sr_no)
+                                ->first();
+                            if ($existingRecord) {
+                                $existingRecord->status = 0;
+                                $existingRecord->save();
+                            }
                         }
                     }
+                    // Step 3: Delete old report items
+                    TblReportItem::where('report_id', $id)->delete();
                 }
 
-                // Step 3: Delete old report items
-                TblReportItem::where('report_id', $id)->delete();
 
                 // Validation for 'user' type
                 if (Auth()->user()->type === 'user') {
@@ -966,9 +972,9 @@ class ReportController extends Controller
                 if ($request->filled('type')) $report->type = $request->type;
                 if ($request->filled('remark')) $report->remark = $request->remark;
                 if ($request->filled('warranty')) $report->f_status  = $request->input('warranty') !== null ? $request->input('warranty') : 1;
-                if($request->input('part') == 1){
+                if ($request->input('part') == 1) {
                     $report->section = 2;
-                }elseif($request->input('part') == 0){
+                } elseif ($request->input('part') == 0) {
                     $report->section = 1;
                 }
                 // Additional logic for 'user' type
@@ -1066,7 +1072,7 @@ class ReportController extends Controller
                                 $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
                                 $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
                                 $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
-                               throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
+                                throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                             }
 
                             $cid = $invoice_data->cid;
@@ -1155,8 +1161,8 @@ class ReportController extends Controller
                     $Record_update_final_amount->final_amount = $amount;
                     $Record_update_final_amount->save();
 
-                    return redirect()->route('report.index')->with('success', 'Report added successfully.');
                 }
+                 return redirect()->route('report.index')->with('success', 'Report added successfully.');
             } elseif (Auth()->user()->type === 'account') {
                 // Handle account user logic
                 $report = Report::find($id);
@@ -1175,9 +1181,11 @@ class ReportController extends Controller
             }
         } catch (\Exception $e) {
             // If an error occurs, restore the old report items
-            TblReportItem::where('report_id', $id)->delete();
-            foreach ($oldReportItems as $item) {
-                TblReportItem::create($item->toArray());
+            if ($oldReportItems->isNotEmpty()) {
+                TblReportItem::where('report_id', $id)->delete();
+                foreach ($oldReportItems as $item) {
+                    TblReportItem::create($item->toArray());
+                }
             }
             return redirect()->back()->with('error', 'Failed to update the report: ' . $e->getMessage());
         }

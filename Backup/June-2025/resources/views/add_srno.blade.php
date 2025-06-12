@@ -170,7 +170,7 @@ isset($getsr_nos[0]) && $getsr_nos[0]->qty < $totalQty) || $getsr_nos->isEmpty()
         </table>
     </div>
     @else
-    <p class="text-muted">No serial numbers found.</p>
+    <p class="text-white">No serial numbers found.</p>
     @endif
 
     @endsection

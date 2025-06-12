@@ -84,6 +84,12 @@
     </div>
     <div class="container">
         <div class="row mt-3">
+            <div class="col-sm-2 offset-sm-8">Currency</div>
+            <div class="col-sm-2">
+                <label class="form-control">{{$item['currency']}}</label>
+            </div>
+        </div>
+        <div class="row mt-3">
             <div class="col-sm-2 offset-sm-8">Amount ($/¥)</div>
             <div class="col-sm-2">
                 <label class="form-control">{{$item['amount']}}</label>

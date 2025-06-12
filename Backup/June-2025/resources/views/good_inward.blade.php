@@ -55,6 +55,8 @@
                     @endforeach
                 </select>
             </div>
+            
+
         </div>
         <!-- Product Details Section -->
         <div class="cus-container mt-2">
@@ -97,11 +99,15 @@
                         onchange="total()">
                 </div>
                 <!-- Rate -->
+               
                 <div class="col custom-col">
-                    <label for="data[0][rate]" class="form-label">Rate</label>
+                    <label for="data[0][rate]" class="form-label">
+                        Rate (<span id="currencySymbol">$</span>)
+                    </label>
                     <input type="number" id="data[0][rate]" name="rate[]" class="form-control" placeholder="Rate"
                         onchange="total()">
                 </div>
+
                 <!-- Tax Percentage -->
                 <div class="col custom-col">
                     <label for="data[0][p_tax]" class="form-label">Tax(%)</label>
@@ -130,9 +136,19 @@
         <!-- Summary Section -->
         <div class="container">
             <div class="row mt-3">
+                 <div class="col-sm-2 offset-sm-8"><label for="currency" class="form-label">Currency</label></div>
+                <div class="col-sm-2">
+                    <select id="currency" name="currency" class="form-select" >
+                        <option value="₹" selected>₹ - INR</option>
+                        <option value="¥" >¥ - JPY</option>
+                        <option value="$">$ - USD</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
                 <div class="col-sm-2 offset-sm-8">Amount ($/¥)</div>
                 <div class="col-sm-2">
-                    <input type="number" id="amount_d" name="amount_d" placeholder="How much USD" step="0.01" required
+                    <input type="number" id="amount_d" name="amount_d" placeholder="How much ($/¥/₹)" step="0.01" required
                         class="form-control" onchange="rate()">
                 </div>
             </div>
@@ -140,7 +156,7 @@
                 <div class="col-sm-2 offset-sm-8">Rate (₹)</div>
                 <div class="col-sm-2">
                     <input type="number" id="rate_r" name="rate_r" class="form-control" step="0.01"
-                        placeholder="Rate of USD" required onchange="rate()">
+                        placeholder="Rate of ($/¥/₹)" required onchange="rate()">
                 </div>
             </div>
             <div class="row mt-3">
