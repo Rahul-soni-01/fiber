@@ -3,8 +3,8 @@
 
 @section('content')
 <a href="{{ route('type.create') }}" class="btn btn-primary mb-3">Add Type</a>
-<table class="table text-white">
-    <thead class="table-dark">
+<table class="table text-dark">
+    <thead class="bg-dark text-white">
         <tr>
             <th>#</th>
             <th>Name</th>
@@ -16,8 +16,7 @@
         <tr>
             <td>{{$loop->iteration}}</td>
             <td>{{$type->name}}</td>
-
-            <td><a href="{{ route('type.edit', ['type_id' => $type->id]) }}"  class="btn btn-sm btn-info"><i class="ri-eye-fill"></i></a>
+            <td><a href="{{ route('type.edit', ['type_id' => $type->id]) }}"  class="btn btn-sm btn-info"> <i class="fas fa-edit"></i></a>
                 <form action="{{ route('type.destroy', $type->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')

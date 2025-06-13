@@ -35,7 +35,7 @@ body {
     height: 100px;
     width: 200px;
 }
-.sidebar .nav-link, a {
+.sidebar .nav-link, a,label {
     color: white !important;
 }
 .sidebar .nav-link:hover {
@@ -46,8 +46,7 @@ body {
     padding-bottom: 10px; 
 }
 #content {
-    /* background: linear-gradient(45deg, #09203F, #537895); */
-    background: #F5F7FB !important;
+    background: linear-gradient(45deg, #09203F, #537895);
     min-height: max-content;
     height: 100%;
     overflow-y: auto;  
@@ -315,24 +314,6 @@ input[type=number] {
 .link:hover .websetting {
     display: inline; /* Show the span when hovering over the link */
 }
-/* Fix DataTable control text color */
-.dataTables_wrapper label,
-.dataTables_wrapper .dataTables_info,
-.dataTables_wrapper .dataTables_length select,
-.dataTables_wrapper .dataTables_filter input {
-    color: #000 !important; /* or any light color like #F5F7FB */
-    background-color: transparent !important;
-}
-
-/* Optional: Input field background for better visibility */
-.dataTables_wrapper .dataTables_filter input,
-.dataTables_wrapper .dataTables_length select {
-    background-color: #F5F7FB !important; /* dark background */
-    border: 1px solid #ccc !important;
-    border-radius: 4px v;
-    padding: 4px 6px !important;
-}
-
 @media (min-width: 1024px) {
     .custom-col {
         flex: 0 0 11%;

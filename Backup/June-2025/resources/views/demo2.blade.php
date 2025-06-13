@@ -480,7 +480,7 @@
 
             </div>
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 col-sm-12" id="maincontent">
+            <div class="col-lg-10 col-md-9 col-sm-12 text-white" id="maincontent">
                 <nav class="navbar navbar-expand-lg">
                     <div class="container-fluid">
                         <!-- Sidebar Toggle Button -->
