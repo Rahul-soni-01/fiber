@@ -1403,7 +1403,14 @@ function updateSerialOptions(data, row_id) {
         });
     }
 }
-var count = 1;
+const currentURL = window.location.href;
+const pattern = /^https:\/\/erp\.maktechlaser\.com\/inward\/edit\/\d+$/;
+
+if (pattern.test(currentURL)) {
+    
+}else{
+    var count = 1;
+}
 function BtnAdd(categories, subCategories) {
     if (window.location.pathname == '/sale-create' || window.location.pathname == '/sale-repair-create') {
         $('#TBody').append(`        
@@ -1477,17 +1484,17 @@ function BtnAdd(categories, subCategories) {
     else {
         $('#TBody').append(`
             <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
-                <div class="col custom-col">
+                <div class="col">
                     <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
                         <option value="" disabled selected class="0" >Choose a Category</option>
                     </select>
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
                         <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
                     </select>
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <select id="data[${count}][unit]" name="unit[]"
                         class="form-control">
                         <option value="">Select</option>
@@ -1495,26 +1502,26 @@ function BtnAdd(categories, subCategories) {
                         <option value="Mtr">Mtr</option>
                     </select>
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
                         class="form-control" onchange="total()">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][rate]" name="rate[]" placeholder="Rate"
                         class="form-control" onchange="total()">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][p_tax]" value="0" name="p_tax[]" step="0.01" placeholder="Tax"class="form-control" onchange="total()">
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][tax]" step="0.01" name="tax[]"
                         class="form-control" disabled>
                 </div>
-                <div class="col custom-col">
+                <div class="col">
                     <input type="number" id="data[${count}][total]" name="total[]" placeholder="Total"
                     step="0.01" class="form-control">
                 </div>
-                <div class="col custom-col">
+                <div class="col-auto">
                     <button type="button" class="btn btn-sm btn-danger" onclick="BtnDel(this)"><i class="ri-delete-bin-fill"></i></button>
                 </div>
             </div>
@@ -1545,7 +1552,9 @@ function BtnDel(button) {
     total();
 }
 function total() {
-    for (var i = 0; i < count; i++) {
+    
+    for (let i = 0; i < count; i++) {
+          
         var qtyElement = document.getElementById(`data[${i}][qty]`);
         if (qtyElement) {
             var qty = parseFloat(qtyElement.value) || 0;
@@ -1569,9 +1578,10 @@ function sub_total() {
     var subtotal = 0;
     for (var i = 0; i < count; i++) {
         var totalElement = document.getElementById(`data[${i}][total]`);
+     
         if (totalElement) {
             var total = parseFloat(document.getElementById(`data[${i}][total]`).value) || 0;
-            subtotal += total;
+            subtotal += total;   
         }
     }
     document.getElementById("amount_d").value = subtotal.toFixed(2);

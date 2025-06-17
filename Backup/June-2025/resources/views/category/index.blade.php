@@ -27,8 +27,8 @@
 
 
 <a href="{{ route('category.create') }}" class="btn btn-primary">Add Category</a>
-<table class="table text-white">
-    <thead class="table-dark">
+<table class="table text-dark">
+    <thead class="table-dark text-white">
         <tr>
             <th>#</th>
             <th>Category Name</th>

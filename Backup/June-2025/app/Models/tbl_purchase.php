@@ -14,5 +14,9 @@ class tbl_purchase extends Model
     {
         return $this->belongsTo(tbl_party::class, 'pid', 'id');
     }
+      public function Items()
+    {
+        return $this->hasMany(tbl_purchase_item::class, 'invoice_no', 'id');
+    }
 }
 

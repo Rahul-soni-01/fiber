@@ -57,8 +57,10 @@
     </div>
 </form>
 <div class="table-responsive">
-<table class="table text-white" id="inwardTable">
-    <thead class="table-dark">
+{{-- <table class="table text-white" id="inwardTable">
+    <thead class="table-dark"> --}}
+<table class="table text-dark">
+    <thead class="bg-dark text-white">
         <tr>
             <th>#</th>
             <th>Date</th>
@@ -85,7 +87,11 @@
             <td>{{$inward['inr_amount']}}</td>
             <td>{{$inward['shipping_cost']}}</td>
             <td><a href="{{ route('show_item.details', ['invoice_no' => $inward['invoice_no']]) }}" class="btn btn-sm btn-info"><i
-                        class="ri-eye-fill"></i></a> </td>
+                        class="ri-eye-fill"></i></a> 
+                <a href="{{ route('inward.edit', ['invoice_no' => $inward['invoice_no']]) }}" class="btn btn-sm btn-warning" title="Edit">
+                    <i class="ri-edit-line"></i>
+                </a>
+            </td>
         </tr>
         @endforeach
     </tbody>

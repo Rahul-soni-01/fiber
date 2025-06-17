@@ -1,7 +1,5 @@
 @extends('demo')
-
 @section('title', 'Financial Years')
-
 @section('content')
 
 <h1>Financial Years</h1>
@@ -15,8 +13,8 @@
 <a href="{{ route('financial-years.create') }}" class="btn btn-primary mb-3">Add Financial Year</a>
 
 <div class="table-responsive">
-    <table class="table text-white">
-        <thead class="table-dark">
+    <table class="table text-dark">
+        <thead class="table-dark text-white">
             <tr>
                 <th>#</th>
                 <th>Name</th>
@@ -26,7 +24,6 @@
                 <th>Action</th>
             </tr>
         </thead>
-
         <tbody>
             @forelse ($financialYears as $fy)
                 <tr>
@@ -64,7 +61,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td  class="text-center">No financial years found.</td>
+                    <td class="text-center">No financial years found.</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -72,5 +69,4 @@
         </tbody>
     </table>
 </div>
-
 @endsection

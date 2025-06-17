@@ -73,7 +73,7 @@
                     </select>
                 </div>
                 <!-- Sub Category Name -->
-                <div class="col custom-col">
+                <div class="col">
                     <label for="data[0][scname]" class="form-label" style="white-space:nowrap;">Sub Category </label>
                     <select id="data[0][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
                         <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
@@ -84,7 +84,7 @@
                     </select>
                 </div>
                 <!-- Unit -->
-                <div class="col custom-col">
+                <div class="col">
                     <label for="data[0][unit]" class="form-label">Unit</label>
                     <select id="data[0][unit]" name="unit[]" class="form-control">
                         <option value="">Select</option>
@@ -93,14 +93,14 @@
                     </select>
                 </div>
                 <!-- Quantity -->
-                <div class="col custom-col">
+                <div class="col">
                     <label for="data[0][qty]" class="form-label">Qty</label>
                     <input type="number" id="data[0][qty]" name="qty[]" class="form-control" placeholder="Quantity"
                         onchange="total()">
                 </div>
                 <!-- Rate -->
                
-                <div class="col custom-col">
+                <div class="col">
                     <label for="data[0][rate]" class="form-label">
                         Rate (<span id="currencySymbol">$</span>)
                     </label>
@@ -109,26 +109,26 @@
                 </div>
 
                 <!-- Tax Percentage -->
-                <div class="col custom-col">
+                <div class="col">
                     <label for="data[0][p_tax]" class="form-label">Tax(%)</label>
                     <input type="number" id="data[0][p_tax]" name="p_tax[]" step="0.01" placeholder="Tax"
                         class="form-control" onchange="total()" value="0">
                 </div>
                 <!-- Tax Amount -->
-                <div class="col custom-col">
+                <div class="col">
                     <label for="data[0][tax]" class="form-label">Tax</label>
                     <input type="number" id="data[0][tax]" name="tax[]" step="0.01" class="form-control" disabled>
                 </div>
                 <!-- Total Amount -->
-                <div class="col custom-col">
+                <div class="col">
                     <label for="data[0][total]" class="form-label">Total</label>
                     <input type="number" id="data[0][total]" name="total[]" step="0.01" placeholder="Total"
                         class="form-control">
                 </div>
-                <div class="col custom-col">
+                <div class="col-auto">
                     <label for="" class="form-label"></label>
                     <button type="button" class="btn btn-primary"
-                        onclick="BtnAdd({{ json_encode($inwards)}},{{ json_encode($items)}})">Add</button>
+                        onclick="BtnAdd({{ json_encode($inwards)}},{{ json_encode($items)}})">+</button>
                 </div>
             </div>
             <div class="" id="TBody"></div>

@@ -30,4 +30,8 @@ class tbl_purchase_item extends Model
     {
         return $this->belongsTo(tbl_sub_category::class, 'scid', 'id');
     }
+     public function inward()
+    {
+        return $this->belongsTo(Report::class, 'invoice_no', 'id');
+    }
 }

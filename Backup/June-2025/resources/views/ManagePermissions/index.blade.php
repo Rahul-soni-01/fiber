@@ -28,9 +28,9 @@
 
 
 <div class="table-responsive">
-<table class="table text-white">
+<table class="table text-dark">
 
-    <thead class="bg-dark">
+    <thead class="bg-dark text-white">
 
         <tr>
 

@@ -21,8 +21,8 @@
     <p>No reports found.</p>
     @else
     <div id="div1">
-        <table class="table text-white">
-            <thead class="bg-dark">
+        <table class="table text-dark">
+            <thead class="bg-dark text-white">
                 <tr>
                     <th>ID</th>
                     <th>Type</th>

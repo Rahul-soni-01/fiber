@@ -4,8 +4,8 @@
 @section('content')
 <h1>Purchase Return</h1>
 <a href="{{ route('purchase.return.create') }}" class="btn btn-primary mb-3">Add Purchase Return</a>
-<table class="table text-white">
-    <thead class="table-dark">
+<table class="table text-dark">
+    <thead class="table-dark text-white">
         <tr>
             <th>#</th>
             <th>Date</th>
