@@ -122,7 +122,11 @@
                     </select>
                </div>
                <div class="col">
-                    <input type="text" name="unit[]" class="form-control" value="{{ $item->unit }}">
+                    {{-- <input type="text" name="unit[]" class="form-control" value="{{ $item->unit }}"> --}}
+                     <select name="unit[]" class="form-control">
+                                <option value="Pic" {{ $item->unit == 'Pic' ? 'selected' : '' }}>Pcs</option>
+                                <option value="Mtr" {{ $item->unit == 'Mtr' ? 'selected' : '' }}>Mtr</option>
+                            </select>
                </div>
                <div class="col">
                     <input type="number" name="qty[]" id="data[{{$index}}][qty]" class="form-control"

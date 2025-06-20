@@ -3,10 +3,10 @@
 
 @section('content')
 <h1>Sale Return/Repair</h1>
-        <div class="main" id="main">
-            <a href="{{ route('sale.return') }}" class="btn btn-primary mt-2 mb-2">Add Sale Return</a>
-            <table class="table text-white">
-                <thead class="table-dark">
+<a href="{{ route('sale.return') }}" class="btn btn-primary mt-2 mb-2">Add Sale Return</a>
+    <div class="table-responsive">
+            <table class="table text-dark">
+                <thead class="table-dark text-white">
                     <tr>
                         <th>#</th>
                         <th>Date</th>
