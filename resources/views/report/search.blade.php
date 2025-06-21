@@ -179,21 +179,18 @@
 @endif
 --}}
 @if(!empty($sortedResults) && $sortedResults->isNotEmpty())
-<table class="table table-bordered text-white">
-    <thead class="bg-dark">
+<table class="table text-dark">
+    <thead class="table-dark text-white">
         <tr>
             <th>#</th>
             <th>SR No</th>
-            <th>Part</th> <!-- Show Part column only if 'tbl_reports' exists -->
+            <th>Part</th>
             <th>Date</th>
             <th>Action</th>
-            {{-- <th>Table Name</th> --}}
         </tr>
     </thead>
     <tbody>
-        {{-- {{dd($sortedResults);}} --}}
         @foreach($sortedResults as $key => $result)
-        {{-- {{dd($sortedResults);}} --}}
         <tr>
             <td>{{ $key + 1 }}</td>
             <td>{{ $result->sr_no }}</td>

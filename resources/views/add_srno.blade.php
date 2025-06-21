@@ -136,8 +136,8 @@ isset($getsr_nos[0]) && $getsr_nos[0]->qty < $totalQty) || $getsr_nos->isEmpty()
     @endif
     @if($getsr_nos->count())
     <div class="table-responsive mt-3">
-        <table class="table text-white table-sm">
-            <thead class="table-dark">
+        <table class="table text-dark">
+            <thead class="bg-dark text-white">
                 <tr>
                     <th>#</th>
                     <th>Serial No</th>
@@ -170,7 +170,7 @@ isset($getsr_nos[0]) && $getsr_nos[0]->qty < $totalQty) || $getsr_nos->isEmpty()
         </table>
     </div>
     @else
-    <p class="text-muted">No serial numbers found.</p>
+    <p class="text-white">No serial numbers found.</p>
     @endif
 
     @endsection

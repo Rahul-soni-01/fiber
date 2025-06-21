@@ -10,6 +10,8 @@ use App\Models\tbl_sub_category;
 use App\Models\SelectedInvoice;
 use App\Models\TblReportItem;
 use App\Models\TblStock;
+use App\Models\tbl_category;
+use App\Models\tbl_party;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -85,18 +87,19 @@ class TblPurchaseItemController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-         $inward = new tbl_purchase();
+        $inward = new tbl_purchase();
         // For Invoice 
-        if(empty($request->invoice_no) || tbl_purchase::where('invoice_no', $request->invoice_no)->exists()) {
+        if (empty($request->invoice_no) || tbl_purchase::where('invoice_no', $request->invoice_no)->exists()) {
             // Get the maximum existing invoice_no and increment it
-            $maxId = tbl_purchase::max('invoice_no');
+            $maxId = tbl_purchase::max('invoice_no') ?? 0;
             $inward->invoice_no = $maxId ? $maxId + 1 : 1; // Start with 1 if no purchase exist
         } else {
             $inward->invoice_no = $request->invoice_no;
         }
-       
+
         $inward->main_category = $request->main_category;
         $inward->date = $request->date;
+        $inward->currency = $request->currency;
         $inward->pid = $request->party_name;
         $inward->amount = $request->amount_d;
         $inward->inr_rate = $request->rate_r;
@@ -173,7 +176,7 @@ class TblPurchaseItemController extends Controller
                     }
 
                     $inwardsItem['return'] = $returnqty;
-                    
+
                     $TblStockdata = TblStock::where('scid', $scid)->where('invoice_no', $invoice_no)->get();
 
                     [$report_qty, $dead_report_qty] = $TblStockdata->flatMap(function ($TblStock) {
@@ -190,11 +193,11 @@ class TblPurchaseItemController extends Controller
                     $inwardsItem['report_qty'] = $report_qty;
                 }
 
-                    $response = [
-                        'status' => 'success',
-                        'data' => $data,
-                        'inwardsItems' => $inwardsItems,
-                    ];
+                $response = [
+                    'status' => 'success',
+                    'data' => $data,
+                    'inwardsItems' => $inwardsItems,
+                ];
             } else {
                 $response = [
                     'status' => 'error',
@@ -256,17 +259,75 @@ class TblPurchaseItemController extends Controller
     }
 
 
-    public function edit(tbl_purchase_item $tbl_purchase_item)
+    public function edit($id, Request $request)
     {
-        //
+        $inward = tbl_purchase::with('Items')->findOrFail($id); 
+        // $inward = tbl_purchase_item::where('invoice_no',$id)->get();
+        // dd($inward);
+        $inwards = tbl_category::all();
+        $items = tbl_sub_category::all();
+        $partyname = tbl_party::all();
+        $main_category = $request->query('main_category');
+
+        if($main_category){
+            $inwards = tbl_category::where('main_category', $main_category)->get();
+        }
+        return view('inward.edit', compact('inward', 'inwards', 'items', 'partyname'));
     }
 
 
-    public function update(Request $request, tbl_purchase_item $tbl_purchase_item)
-    {
-        //
-    }
 
+
+    public function update(Request $request, $invoice_no)
+    {
+        $validator = Validator::make($request->all(), [
+            'cname' => 'required|array',
+            'scname' => 'required|array',
+            'unit' => 'required|array',
+            'qty' => 'required|array',
+            'rate' => 'required|array',
+            'total' => 'required|array',
+            'amount_d' => 'required',
+            'rate_r' => 'required',
+            'amount_r' => 'required',
+            'shipping_cost' => 'required',
+            'round_total' => 'required',
+            // 'main_category' => 'required',   
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $inward = tbl_purchase::where('invoice_no', $invoice_no)->firstOrFail();
+        // $inward->main_category = $request->main_category;
+        $inward->date = $request->date;
+        $inward->amount = $request->amount_d;
+        $inward->inr_rate = $request->rate_r;
+        $inward->inr_amount = $request->amount_r;
+        $inward->shipping_cost = $request->shipping_cost;
+        $inward->round_amount = $request->round_total;
+        $inward->save();
+
+        // Delete old items and re-insert
+        tbl_purchase_item::where('invoice_no', $invoice_no)->delete();
+
+        $count = count($request->cname);
+        for ($i = 0; $i < $count; $i++) {
+            tbl_purchase_item::create([
+                'invoice_no' => $invoice_no,
+                'cid' => $request->cname[$i],
+                'scid' => $request->scname[$i],
+                'qty' => $request->qty[$i],
+                'unit' => $request->unit[$i],
+                'tax' => $request->p_tax[$i] ?? 0,
+                'price' => $request->rate[$i] ?? 0,
+                'total' => $request->total[$i],
+            ]);
+        }
+
+        return redirect()->route('inward.index')->with('success', 'Purchase updated successfully.');
+    }
 
     public function destroy(tbl_purchase_item $tbl_purchase_item)
     {

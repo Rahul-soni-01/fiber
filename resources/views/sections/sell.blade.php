@@ -17,9 +17,8 @@
     <p>No reports found.</p>
     @else
     <div id="div1" class="table-responsive mt-4">
-        <table class="table text-white">
-            <thead>
-                <tr class="bg-dark text-white">
+         <table class="table text-dark">
+                <thead class="table-dark text-white">
                     <th>ID</th>
                     <th>Part</th>
                     <th>W/N.W.</th>
@@ -41,28 +40,28 @@
                     <td>{{ $report->id }}</td>
                     <td>
                         @if($report->part == 0)
-                        <span class="badge badge-primary">New</span>
+                        <span class="badge bg-primary">New</span>
                         @elseif($report->part == 1)
-                        <span class="badge badge-warning">Repair</span>
+                        <span class="badge bg-warning">Repair</span>
                         @else
-                        <span class="badge badge-secondary">Unknown</span>
+                        <span class="badge bg-secondary">Unknown</span>
                         @endif
                     </td>
                     <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown')
                         }}</td>
                     <td>
                         @if($report->section == 0)
-                        <span class="badge badge-primary">Mainstore</span>
+                        <span class="badge bg-primary">Mainstore</span>
                         @elseif($report->section == 1)
-                        <span class="badge badge-success">Manufacture</span>
+                        <span class="badge bg-success">Manufacture</span>
                         @elseif($report->section == 2)
-                        <span class="badge badge-warning">Repair</span>
+                        <span class="badge bg-warning">Repair</span>
                         @elseif($report->section == 3)
-                        <span class="badge badge-danger">Baddesk</span>
+                        <span class="badge bg-danger">Baddesk</span>
                         @elseif($report->section == 4)
-                        <span class="badge badge-info">Sell</span>
+                        <span class="badge bg-info">Sell</span>
                         @else
-                        <span class="badge badge-secondary">Unknown</span>
+                        <span class="badge bg-secondary">Unknown</span>
                         @endif
 
 
@@ -77,16 +76,16 @@
                     <td>{{ $report->final_amount ? '₹'.number_format($report->final_amount, 2) : 'N/A' }}</td> --}}
                     <td>
                         @if($report->sale_status)
-                        <span class="badge badge-success">Sold</span>
+                        <span class="badge bg-success">Sold</span>
                         @else
-                        <span class="badge badge-secondary">Unsold</span>
+                        <span class="badge bg-secondary">Unsold</span>
                         @endif
                     </td>
                     <td>
                         @if($report->stock_status)
-                        <span class="badge badge-info">In Stock</span>
+                        <span class="badge bg-info">In Stock</span>
                         @else
-                        <span class="badge badge-light">Out of Stock</span>
+                        <span class="badge bg-warning">Out of Stock</span>
                         @endif
                     </td>
                     <td>

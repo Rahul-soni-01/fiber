@@ -16,8 +16,8 @@
 @endif
 <a href="{{ route('customer.create') }}" class="btn btn-primary mb-3">Add customer</a>
 <div class="table-responsive">
-<table class="table text-white">
-    <thead class="table-dark">
+<table class="table text-dark">
+    <thead class="table-dark text-white">
         <tr>
             <th>#</th>
             <th>Customer Name</th>
@@ -38,10 +38,7 @@
             <td>{{ $customer->telephone_no }}</td>
             <td>{{ $customer->receiver_name }}</td>
             <td class="d-flex">
-                {{-- <button class=""> --}}
-                    <a href="{{ route('customer.edit', ['customer_id' => $customer->id]) }}" class="btn btn-sm btn-primary"><i
-                        class="ri-eye-fill"></i></a>
-                {{-- </button> --}}
+                <a href="{{ route('customer.edit', ['customer_id' => $customer->id]) }}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>
              
                 <form action="{{ route('customer.destroy', $customer->id) }}" method="POST" style="display:inline;" class="text-white">
                     @csrf
@@ -51,8 +48,7 @@
                         <i class="ri-delete-bin-fill"></i>
                     </button>
                 </form>
-                <button class="btn"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $customer->id ]) }}">
-                        <i class="ri-history-fill"></i> </a></button>
+                <button class="btn btn-sm btn-primary"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $customer->id ]) }}"><i class="ri-history-fill"></i> </a></button>
             </td>
         </tr>
         @endforeach

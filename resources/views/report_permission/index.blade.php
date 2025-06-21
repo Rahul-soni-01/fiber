@@ -15,8 +15,8 @@
 <a href="{{ route('report-permission.create') }}" class="btn btn-primary mb-3">Add Report Permission</a>
 
 <div class="table-responsive">
-    <table class="table text-white">
-        <thead class="table-dark">
+    <table class="table text-dark">
+        <thead class="table-dark text-white">
             <tr>
                 <th>#</th>
                 <th>User Type</th>

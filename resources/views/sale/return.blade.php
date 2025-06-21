@@ -20,137 +20,27 @@
 </div>
 @endif
 <div class="main" id="main">
-    {{--
-    <form action="search" method="get">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-sm-6 col-md-4 mb-3">
-                    <input type="text" id="invoice_no" name="invoice_no" class="form-control" placeholder="Invoice No"
-                        value="{{ request('invoice_no') }}">
-                </div>
-                <div class="col-12 col-sm-6 col-md-4 mb-3">
-                    <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
-                        value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
-                </div>
-                <div class="col-12 col-sm-6 col-md-4 mb-3">
-                    <select id="party_name" name="cid" class="form-control" placeholder="Enter Party Name" required>
-                        <option value="" disabled selected>Choose a Customer</option>
-                        @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <div class="row justify-content-center" style="margin-top:2%">
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-dark" id="search" name="search">Search</button>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <form action="{{route('sale.return.store')}}" method="post">
-        @csrf
-
-        @if ($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-        <div class="container">
-            <div class="row">
-                <div class="col">Date</div>
-                <div class="col">Customer Name</div>
-            </div>
-            <div class="row">
-
-                <div class="col-md-6">
-                    <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
-                        value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
-                </div>
-                <div class="col-md-6">
-                    <select id="party_name" name="cid" class="form-control" placeholder="Enter Party Name" required>
-                        <option value="" disabled selected>Choose a Customer</option>
-                        @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="cus-container mt-2">
-                <h1>Serial Details</h1>
-                <div class="row">
-                    <div class="col">Serial No.</div>
-                    <div class="col"></div>
-                    <div class="col"><button class="btn btn-info" type="button" onclick="SaleRowadd({{$serial_nos}})">
-                            Add</button></div>
-                </div>
-                <div id="row-container">
-                    <div class="row custom-row mt-2 g-2 align-items-center">
-                        <div class="col">
-                            <select required id="serial_no" class="form-control select2" name="serial_no[]"
-                                onchange="serial_no_append(0,event)">
-                                <option value="" disabled selected>Select</option>
-                                @foreach($serial_nos as $serial_no)
-                                <option value="{{ $serial_no->sr_no_fiber }}">{{ $serial_no->sr_no_fiber }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col">
-                            @foreach($serial_nos as $serial_no)
-                            <span id="{{ $serial_no->sr_no_fiber }}" class="final_amount cstmspan_0"
-                                style="display: none">{{
-                                $serial_no->final_amount}}</span>
-                            @endforeach
-                        </div>
-                        <div class="col">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-5 g-2 align-items-center">
-                    <div class="col">
-                        <h5> Final Price</h5>
-                    </div>
-                    <div class="col">
-                        <input type="text" id="final_price" name="total_amount" class="form-control" readonly>
-                    </div>
-                    <div class="col">
-
-                    </div>
-
-                </div> --}}
-                {{-- <div class="row mt-5 g-2 align-items-center">
-                    <div class="col">
-                        <h5> Note</h5>
-                    </div>
-                    <div class="col">
-                        <textarea id="note" name="note" class="form-control"></textarea>
-                    </div>
-                    <div class="col">
-                    </div>
-                </div>
-                <div class="d-flex m-5 justify-content-center">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-            </div>
-
-        </div>
-    </form>--}}
-
     <div class="container">
-        <div class="row">
+        <!-- Return Type Selection -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="return_type">Return Type</label>
+                <select id="return_type" class="form-control">
+                    <option value="normal" selected>Search by Sale Invoice</option>
+                    <option value="old">Old Sale (Manual Entry)</option>
+                </select>
+            </div>
+        </div>
+
+
+        <!-- Normal Return Section -->
+
+        <div class="row" id="normal-section">
             <div class="col">Sale Invoice No.</div>
             <div class="col">Customer Name</div>
             <div class="col">Action</div>
-
         </div>
-        <div class="row">
+        <div class="row" id="normal-section-fields">
             <div class="col-md-4">
                 <input type="number" id="invoice_no" name="invoice_no" class="form-control"
                     placeholder="Enter Invoice no." required>
@@ -166,22 +56,26 @@
                 </select>
             </div>
             <div class="col-md-4">
-                {{-- <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date" required>
-                --}}
-                {{-- <input type="date" id="date" name="date" class="form-control" placeholder="Enter Date"
-                    value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required> --}}
                 <button class="btn btn-info" onclick="getDataForReturn(event)">Search</button>
             </div>
         </div>
+        <!-- Old Sale Manual Entry Section -->
 
-        <!-- Product Details Section -->
-        <div class="cus-container mt-2">
-            <h1>Product Return Details</h1>
-            <div id="InvoiceData">
-
+        <div class="row" id="old-sale-section" style="display: none;">
+            <div class="col-md-4">
+                <input type="text" name="manual_invoice_no" class="form-control" placeholder="Manual Invoice No.">
             </div>
+            <div class="col-md-4">
+                <input type="text" name="manual_customer_name" class="form-control" placeholder="Manual Customer Name">
+            </div>
+        </div>
+        <div class="cus-container mt-4">
+            <h1>Product Return Details</h1>
+            <div id="InvoiceData"></div>
+
             <form id="PurchaseReturnForm" action="{{ route('sale.return.store')}}" method="post">
                 @csrf
+
                 <div id="ReturnItems">
                     <h5 class="mt-3">Items to Return</h5>
                     <!-- Dynamic rows for return items will be appended here -->
@@ -197,7 +91,7 @@
                 </div>
             </form>
 
-            <div class="" id="TBody"></div>
+            <div id="TBody"></div>
         </div>
 
         <!-- Summary Section -->
@@ -255,4 +149,51 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('return_type').addEventListener('change', function () {
+        const returnTypeSelect = document.getElementById('return_type');
+        const normalSection = document.getElementById('normal-section');
+        const normalSectionFields = document.getElementById('normal-section-fields');
+        const oldSaleSection = document.getElementById('old-sale-section');
+
+        returnTypeSelect.addEventListener('change', function () {
+            const type = this.value;
+            if (type === 'old') {
+                normalSection.style.display = 'none';
+                normalSectionFields.style.display = 'none';
+                oldSaleSection.style.display = 'flex';
+                document.getElementById('InvoiceData').innerHTML = '';
+                document.getElementById('ReturnItems').innerHTML = '';
+            } else {
+                normalSection.style.display = 'flex';
+                normalSectionFields.style.display = 'flex';
+                oldSaleSection.style.display = 'none';
+            }
+        });
+
+    });
+    document.getElementById('AddReturnRow').addEventListener('click', function () {
+        const rowHtml = `
+            <div class="row mt-2 return-row">
+                <div class="col-md-4">
+                    <select name="items[][product_id]" class="form-control" required>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="items[][quantity]" class="form-control" placeholder="Qty" min="1" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="items[][reason]" class="form-control" placeholder="Reason for return" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-row">Remove</button>
+                </div>
+            </div>
+            `;
+            document.getElementById('ReturnItems').insertAdjacentHTML('beforeend', rowHtml);
+        });
+});
+
+</script>
 @endsection

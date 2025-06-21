@@ -5,18 +5,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">
+    <!--<link rel="shortcut icon" href="{{asset('storage/favicon.ico') }}">-->
     <title>@yield('title', 'Admin Dashboard')</title>
-    <link rel="stylesheet" href="{{asset('css/style.css') }}">
-    <script src={{ asset("js/jquery-3.7.1.min.js")}}></script>
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="/public/js/jquery-3.7.1.min.js"></script>
+    <script src="/public/js/script.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!--<link rel="stylesheet" href="css/style.css">-->
     <!--<script src="js/jquery-3.7.1.min.js"></script>-->
     <!--<script src="{{ asset('js/script.js') }}"></script>-->
-    {{-- <link rel="shortcut icon" href="/public/storage/favicon.ico"> --}}
-    
+    <link rel="shortcut icon" href="/public/storage/favicon.ico">
+    <link rel="stylesheet" href="/public/css/style.css">
     <!--<link rel="stylesheet" href="public/css/bootstrap.min.css"> -->
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
@@ -481,7 +480,7 @@
 
             </div>
             <!-- Main Content -->
-            <div class="col-lg-10 col-md-9 col-sm-12" id="maincontent">
+            <div class="col-lg-10 col-md-9 col-sm-12 text-white" id="maincontent">
                 <nav class="navbar navbar-expand-lg">
                     <div class="container-fluid">
                         <!-- Sidebar Toggle Button -->

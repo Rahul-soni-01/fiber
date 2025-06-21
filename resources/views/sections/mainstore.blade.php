@@ -17,9 +17,8 @@
     <p>No reports found.</p>
     @else
     <div id="div1" class="table-responsive mt-4">
-        <table class="table text-white">
-            <thead>
-                <tr class="bg-dark text-white">
+         <table class="table text-dark">
+                <thead class="table-dark text-white">
                     <th>ID</th>
                     {{-- <th>Part</th> --}}
                     <th>W/N.W.</th>

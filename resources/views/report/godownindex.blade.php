@@ -22,9 +22,9 @@
     <p>No reports found.</p>
     @else
     <div id="div1">
-        <table class="table text-white">
+        <table class="table text-dark">
             <thead>
-                <tr class="bg-dark">
+                <tr class="bg-dark text-white">
                     <th>ID</th>
                     <th>Part</th>
                     <th>Date</th>

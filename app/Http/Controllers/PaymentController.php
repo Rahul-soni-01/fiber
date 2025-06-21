@@ -33,9 +33,10 @@ class PaymentController extends Controller
             $banks = TblBank::all();
             $tbl_purchases = tbl_purchase::all();
 
-            return view('payment.create', compact('banks', 'customers', 'suppliers', 'selles', 'tbl_purchases'));
+            return view('payment.create', compact('banks','customers', 'suppliers', 'selles', 'tbl_purchases'));
         }
         return redirect('/unauthorized');
+
     }
     public function customercreate(Request $request)
     {
@@ -46,9 +47,10 @@ class PaymentController extends Controller
             $banks = TblBank::all();
             $tbl_purchases = tbl_purchase::all();
 
-            return view('payment.customercreate', compact('banks', 'customers', 'suppliers', 'selles', 'tbl_purchases'));
+            return view('payment.customercreate', compact('banks','customers', 'suppliers', 'selles', 'tbl_purchases'));
         }
         return redirect('/unauthorized');
+
     }
     public function store(Request $request)
     {
@@ -124,7 +126,7 @@ class PaymentController extends Controller
                 'cheque_no' => 'nullable|string|max:255',
             ]);
             $Customerinfo = TblCustomer::findOrFail($request->cid);
-
+            
             $CustomerPaymentData = [
                 'payment_date' => $request->date,
                 'customer_id' => $request->cid, // Assuming 'cid' refers to customer_id
@@ -143,16 +145,16 @@ class PaymentController extends Controller
                 'cheque_no' => $request->payment_method === 'Bank' ? $request->cheque_no : null,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ];
-
+            ];  
+            
             $CustomerPayment = CustomerPayment::create($CustomerPaymentData);
             $payment_insert_id = $CustomerPayment->id; // Retrieve the auto-incremented ID
             $predefine_account = TblAccPredefineAccount::first();
             $Narration          = "Payment Voucher";
             $Comment            = "Payment Voucher for customer";
-            if ($request->payment_method == 'Cash') {
+            if($request->payment_method == 'Cash'){
                 $COAID = $predefine_account->cashCode;
-            } elseif ($request->payment_method == 'Bank') {
+            }elseif($request->payment_method == 'Bank'){
                 $COAID = $predefine_account->bankCode;
             }
             $amnt_type = 'Credit';
@@ -160,10 +162,10 @@ class PaymentController extends Controller
             $reVID = $request->cid;
             $amnt = $request->paid_total;
             $VoucherController =  new TblVoucherController();
-            $valucher = $VoucherController->insert_sale_credit_voucher($Narration, $Comment, $COAID, $amnt_type, $amnt, $referenceNo, $reVID, $payment_insert_id);
-
+            $valucher = $VoucherController->insert_sale_credit_voucher($Narration, $Comment, $COAID, $amnt_type,$amnt, $referenceNo, $reVID, $payment_insert_id);
+            
             // $this->insert_sale_special_creditvoucher($Narration, $Comment, $COAID, $amnt_type,$amnt, $referenceNo, $reVID, $payment_insert_id);
-
+            
         } else {
             return redirect()->back()->with('error', 'Failed to created Payment.');
         }
@@ -173,8 +175,8 @@ class PaymentController extends Controller
     public function index()
     {
         $Supplierpaymentes = TblPayment::with('supplier')->get();
-
-        $supplierData = tbl_party::with('purchase', 'payments')
+       
+        $supplierData = tbl_party::with('purchase','payments')
             ->get()
             ->map(function ($party) {
                 return [
@@ -184,44 +186,43 @@ class PaymentController extends Controller
                     'purchases' => $party->purchase,
                     'payments' => $party->payments,
                     'total_inr_payments' => $party->payments->sum('amount_paid'),
-                    'total_remaining_payment' => $party->purchase->sum('inr_amount') - $party->payments->sum('amount_paid'),
+                    'total_remaining_payment' => $party->purchase->sum('inr_amount') - $party->payments->sum('amount_paid') ,
                     'total_payment' => $party->payments->sum('amount_paid'),
                 ];
             });
-
+        
         $customers = TblCustomer::all();
         $suppliers = tbl_party::all();
         // dd($Supplierpaymentes);
         return view('payment.index', compact('supplierData', 'Supplierpaymentes', 'suppliers', 'customers'));
     }
 
-    public function CustomerIndex()
-    {
-        $CustomerPayment = TblCustomer::with('Cuspayments', 'sales', 'SaleReturn')
-            ->get()
-            ->map(function ($Customer) {
-                return [
-                    'customer_id' => $Customer->id,
-                    'customer_name' => $Customer->customer_name, // Adjust column as needed
-                    'total_inr_amount' => $Customer->sales->sum('total_amount'),
-                    'sales' => $Customer->sales,
-                    'payments' => $Customer->Cuspayments,
-                    'total_inr_payments' => $Customer->Cuspayments->sum('amount_paid'),
-                    'total_remaining_payment' => $Customer->sales->sum('total_amount') - $Customer->Cuspayments->sum('amount_paid'),
-                    'total_payment' => $Customer->Cuspayments->sum('amount_paid'),
-                ];
-            });
+    public function CustomerIndex(){
+        $CustomerPayment = TblCustomer::with('Cuspayments','sales','SaleReturn')
+        ->get()
+        ->map(function ($Customer) {
+            return [
+                'customer_id' => $Customer->id,
+                'customer_name' => $Customer->customer_name, // Adjust column as needed
+                'total_inr_amount' => $Customer->sales->sum('total_amount'),
+                'sales' => $Customer->sales,
+                'payments' => $Customer->Cuspayments,
+                'total_inr_payments' => $Customer->Cuspayments->sum('amount_paid'),
+                'total_remaining_payment' => $Customer->sales->sum('total_amount') - $Customer->Cuspayments->sum('amount_paid') ,
+                'total_payment' => $Customer->Cuspayments->sum('amount_paid'),
+            ];
+        });
 
         return view('payment.CustomerIndex', compact('CustomerPayment'));
     }
 
-    public function insert_sale_special_creditvoucher($Narration, $Comment, $COAID, $amnt_type, $amnt = null, $referenceNo, $reVID, $payment_insert_id)
+    public function insert_sale_special_creditvoucher($Narration, $Comment, $COAID, $amnt_type,$amnt = null, $referenceNo, $reVID,$payment_insert_id)
     {
         $VDate = date('Y-m-d');
         $coaController = new TblAccCoaController();
         $maxid = $coaController->getMaxFieldNumber('id', 'tbl_acc_vaucher', 'Vtype', 'CV', 'VNo');
         $u_id = auth()->user()->id;
-        $vaucherNo = "CV-" . ($maxid + 1);
+        $vaucherNo = "CV-". ($maxid +1);
 
         $debitinsert = array(
             'fyear'          =>  0,
@@ -231,25 +232,26 @@ class PaymentController extends Controller
             'VDate'          =>  $VDate,
             'approvedDate'   =>  $VDate,
             'COAID'          =>  $COAID,
-            'Narration'      =>  $Narration,
-            'ledgerComment'  =>  $Comment,
+            'Narration'      =>  $Narration,     
+            'ledgerComment'  =>  $Comment,   
             'RevCodde'       =>  $reVID,
             'isApproved'     =>  1,
             'approvedBy'     =>  $u_id,
         );
 
-        if ($amnt_type == 'Debit') {
+        if($amnt_type == 'Debit'){
             $debitinsert['Debit']  = $amnt;
-            $debitinsert['Credit'] =  0.00;
-        } else {
+            $debitinsert['Credit'] =  0.00;    
+        }else{
             $debitinsert['Debit']  = 0.00;
-            $debitinsert['Credit'] =  $amnt;
+            $debitinsert['Credit'] =  $amnt; 
         }
 
         $voucherCreate = DB::table('tbl_acc_vaucher')->insert($debitinsert);
-        if ($voucherCreate) {
+        if($voucherCreate){
+            
         }
-
-        return true;
+        
+    return true;
     }
 }

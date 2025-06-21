@@ -203,6 +203,9 @@ Route::middleware('auth')->group(function () {
     Route::get('inward', [TblPurchaseController::class, 'index'])->name('inward.index');
     Route::get('good_inward', [TblPurchaseController::class, 'create'])->name('inward.good.view');
     Route::post('good_inward', [TblPurchaseItemController::class, 'create'])->name('inward.good');
+    Route::get('/inward/edit/{invoice_no}', [TblPurchaseItemController::class, 'edit'])->name('inward.edit');
+    Route::put('/inward/update/{invoice_no}', [TblPurchaseItemController::class, 'update'])->name('inward.update');
+
     Route::post('/get-invoice-details', [TblPurchaseItemController::class, 'getInvoiceDetails'])->name('invoice.details');
     Route::get('show_item-{invoice_no}', [TblPurchaseItemController::class, 'show_item'])->name(('show_item.details'));
     Route::get('search', [TblPurchaseController::class, 'filter'])->name('inward.search');  //View Item By Sr No.

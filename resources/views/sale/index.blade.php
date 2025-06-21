@@ -17,8 +17,8 @@
         {{ session('success') }}
     </div>
     @endif
-    <table class="table text-white">
-        <thead class="table-dark">
+    <table class="table text-dark">
+        <thead class="table-dark text-white">
             <tr>
                 <th>#</th>
                 {{-- <th>Date</th> --}}
@@ -36,7 +36,7 @@
                 <td>{{ $sale->customer_name ?? 'N/A' }}</td>
                 <td>{{ $sale->total_sale_amount ?? 0 }}</td>
                 <td>
-                    <button class="btn"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $sale->id ]) }}">
+                    <button class="btn btn-primary"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $sale->id ]) }}">
                             <i class="ri-history-fill"></i> </a></button>
                     </a>
                     {{-- <a class="btn" href="{{ route('sale.edit', ['sale_id' => $sale->id]) }}">

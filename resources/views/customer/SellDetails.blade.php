@@ -2,17 +2,42 @@
 @section('title', 'Customer')
 @section('content')
 <h1>Customer</h1>
+<style>
+    .nav-tabs .nav-link {
+        color: #343a40;
+        /* Dark grey text */
+        border: 1px solid #dee2e6;
+        border-bottom: none;
+        background-color: #3a6085;
+        /* Light gray */
+        margin-right: 4px;
+        font-weight: 500;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #3a6085 !important;
+        /* Bootstrap primary color */
+        background-color: #ffffff;
+        border: 1px solid #608cb9;
+        border-bottom: 2px solid white;
+        font-weight: bold;
+    }
+
+    .nav-tabs {
+        border-bottom: 2px solid #dee2e6;
+    }
+</style>
 <ul class="nav nav-tabs" id="customerTab" role="tablist">
     <li class="nav-item" role="presentation">
         <a href="{{route('customer.index')}}" class="btn btn-info mb-2"> All Customer </a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link text-info" id="customer-payment-tab" data-bs-toggle="tab"
+        <a class="nav-link" id="customer-payment-tab" data-bs-toggle="tab"
             href="#customer-payment" role="tab" aria-controls="customer-payment" aria-selected="true">Customer
             Payment</a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link active text-info" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history"
+        <a class="nav-link active" id="customer-history-tab" data-bs-toggle="tab" href="#customer-history"
             role="tab" aria-controls="customer-history" aria-selected="false">Customer Sale</a>
     </li>
 </ul>
@@ -31,8 +56,8 @@
         <div class="d-flex justify-content-center align-items-center mt-3">
             <h5>Sell Payment </h5>
         </div>
-        <table class="table text-white">
-            <thead class="table-dark">
+        <table class="table text-dark">
+            <thead class="table-dark text-white">
                 <tr>
                     <th>Payment ID</th>
                     <th>Amount Paid</th>
@@ -71,9 +96,10 @@
         {{-- <a href="?payment" class="btn btn-info mb-2">Customer Payment</a> --}}
         <div class="d-flex justify-content-center align-items-center">
             <h5>Sell Details </h5>
+            
         </div>
-        <table class="table text-white">
-            <thead class="table-dark">
+        <table class="table text-dark">
+                <thead class="table-dark text-white">
                 <tr>
                     <th>#</th>
                     <th>Date</th>
@@ -149,7 +175,7 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="d-flex justify-content-center align-items-center mt-5">
+        {{-- <div class="d-flex justify-content-center align-items-center mt-5">
             <h5>
                 <a href="#purchase-return-table" class="text-decoration-none" data-bs-toggle="collapse"
                     aria-expanded="false" aria-controls="purchase-return-table">
@@ -157,11 +183,20 @@
                 </a>
             </h5>
             <div class="ms-1">click on it..</div>
-        </div>
+        </div> --}}
+        <div class="text-center mt-5">
+                <h5>
+                    <a class="fw-bold text-dark text-decoration-none" data-bs-toggle="collapse" href="#purchase-return-table" role="button" aria-expanded="true" aria-controls="purchase-return-table">
+                        <i class="fa-solid fa-circle-chevron-down me-2"></i>Sell Return Details
+                    </a>
+                </h5>
+
+                <small class="text-muted">Click above to expand</small>
+            </div>
 
         <div class="collapse mt-3" id="purchase-return-table">
-            <table class="table text-white">
-                <thead class="table-dark">
+            <table class="table text-dark">
+                <thead class="table-dark text-white">
                     <tr>
                         <th>#</th>
                         <th>Date</th>
