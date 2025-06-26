@@ -181,6 +181,7 @@
                     </select>
                 </div>
                 <div class="col-md-2">
+                    <label class="">Qty</label>
                     <input type="number" name="items[][quantity]" class="form-control" placeholder="Qty" min="1" required>
                 </div>
                 <div class="col-md-4">

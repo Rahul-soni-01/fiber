@@ -256,13 +256,10 @@ input[type=number] {
     margin-bottom: 20px;
 }
 .logout-text {
-    display: none;
     margin-top: 5px; /* Adjust the spacing between icon and text */
     text-align: center;
 }
-.logout-link:hover .logout-text {
-    display: block;
-}
+
 .switch {
     position: relative;
     display: inline-block;
@@ -309,12 +306,7 @@ input[type=number] {
   .slider.round:before {
     border-radius: 50%;
   }
-  .link .websetting {
-    display: none; /* Hide the span by default */
-}
-.link:hover .websetting {
-    display: inline; /* Show the span when hovering over the link */
-}
+ 
 /* Fix DataTable control text color */
 .dataTables_wrapper label,
 .dataTables_wrapper .dataTables_info,

@@ -484,35 +484,46 @@
                 <nav class="navbar navbar-expand-lg">
                     <div class="container-fluid">
                         <!-- Sidebar Toggle Button -->
-                       <button class="navbar-toggler d-block" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
+                        <button class="navbar-toggler d-block" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#sidebar">
                             <i class="fa-solid fa-angles-right"></i>
                         </button>
-                       <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                        <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#mainNavbar">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <!-- Main Menu -->
                         <div class="collapse navbar-collapse" id="mainNavbar">
-                            
+
                         </div>
 
                         <!-- ADMIN & LogOut Button -->
-                        <div class="ms-auto d-flex align-items-center justify-content-center text-dark">
-                            <strong>{{ auth()->user()->type }}</strong> | <strong>{{ auth()->user()->name }}</strong>
+                        <div
+                            class="ms-auto d-flex align-items-center gap-3 px-3 py-2 bg-light rounded shadow-sm text-dark">
+                            <!-- User Info -->
+                            <div class="d-flex flex-column align-items-end text-end">
+                                <strong class="text-capitalize">{{ auth()->user()->type }}</strong>
+                                <small>{{ auth()->user()->name }}</small>
+                            </div>
 
+                            <!-- Logout Button -->
                             <a href="{{ route('logout') }}"
-                                class="logout-link ms-2 d-flex align-items-center p-3 bg-gradient rounded-circle transition-all duration-300">
-                                <i class="ml-2 fa-solid fa-user text-white"></i>
-                                <span class="logout-text ml-2 d-none">Log out</span>
+                                class="d-flex align-items-center justify-content-center bg-danger text-white rounded-circle"
+                                style="width: 40px; height: 40px; transition: 0.3s;">
+                                <i class="fa-solid fa-sign-out-alt"></i>
                             </a>
 
+                            <!-- Web Setting Link for Admin -->
                             @if(auth()->user()->type === 'admin')
                             <a href="{{ route('websetting') }}"
-                                class="ml-2 link text-primary transition-all duration-300 hover:text-dark">
-                                <i class="ri-settings-line"></i>
-                                <span class="websetting">Web Setting</span>
+                                class="text-primary d-flex align-items-center gap-1 text-decoration-none"
+                                style="transition: 0.3s;">
+                                <i class="ri-settings-3-line fs-5"></i>
+                                <span class="d-none d-md-inline">Web Setting</span>
                             </a>
                             @endif
                         </div>
+
                     </div>
                 </nav>
                 <div class="p-2">

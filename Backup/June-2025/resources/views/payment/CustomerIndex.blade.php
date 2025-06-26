@@ -8,9 +8,9 @@
 
 
 <div class="table-responsive">
-    <table class="table table-bordered datatable-remove">
+    <table class="table table-bordered datatable-remove text-dark">
 
-        <thead class="table-light">
+        <thead class="bg-dark text-white">
 
             <tr>
 

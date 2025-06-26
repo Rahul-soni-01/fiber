@@ -12,8 +12,8 @@
          <a href="{{ route('layouts.create') }}" class="btn btn-primary">+ Create New Layout</a>
      </div>
  
-     <table class="table table-bordered datatable-remove text-white">
-         <thead>
+     <table class="table table-bordered datatable-remove text-dark">
+         <thead class="bg-dark text-white">
              <tr>
                  <th>#</th>
                  <th>Layout Name</th>

@@ -166,10 +166,7 @@ body {
                 background-color 0.3s, 
                 box-shadow 0.3s;  
 }
-#main{
-    /* padding: 20px; */
-    /* font-weight: bold; */
-}
+
 #menu-bar{
     display: flex; /* Flexbox layout */
     transition: all 0.3s ease;
