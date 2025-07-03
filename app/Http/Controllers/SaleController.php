@@ -101,10 +101,12 @@ class SaleController extends Controller
             $customers = TblCustomer::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
+            $sale_product_categories = TblSaleProductCategory::all();
+            $sale_product_subcategories = TblSaleProductSubCategory::all();
             $serial_nos = Report::where('status', '1')->where('sale_status', 1)
                 ->where('part', '0')->get()->sortBy('sr_no_fiber');
 
-            return view('sale.return', compact('sales', 'customers', 'inwards', 'items', 'serial_nos'));
+            return view('sale.return', compact('sales', 'customers', 'inwards', 'items', 'serial_nos','sale_product_categories','sale_product_subcategories'));
             // return view('sale.return', compact('sales'));
         }
         return redirect('/unauthorized');

@@ -1407,7 +1407,7 @@ var count = 1;
 function BtnAdd(categories, subCategories) {
     if (window.location.pathname == '/sale-create' || window.location.pathname == '/sale-repair-create') {
         $('#TBody').append(`        
-        <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
+            <div class="row custom-row g-2 align-items-center" id="row_${count}" style="margin-top:10px;">
                 <div class="col">
                     <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
                         <option value="" disabled selected class="0" >Choose a Category</option>
@@ -1458,7 +1458,7 @@ function BtnAdd(categories, subCategories) {
                     <button type="button" class="btn btn-danger text-white" onclick="BtnDel(this)"><i class="ri-delete-bin-fill"></i></button>
                 </div>
             </div>
-     `);
+        `);
 
         if (categories && Array.isArray(categories)) {
             categories.forEach(category => {

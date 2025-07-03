@@ -892,7 +892,7 @@ class ReportController extends Controller
                 if ($request->srled[$index] == '0') {
                     $TblReportItem->used_qty = $request->used_qty[$index];
                 } else {
-                    $TblReportItem->used_qty = 1;
+                    $TblReportItem->used_qty = $request->used_qty[$index] ?? 1;
                 }
                 try {
                     $TblReportItem->save();
@@ -914,11 +914,10 @@ class ReportController extends Controller
 
     public function Latestupdate(Request $request, $id)
     {
-        // dd($request->all());
         // Step 1: Backup old report items
         $oldReportItems = TblReportItem::where('report_id', $id)->get();
         // $ReportItems =  TblReportItem::where('report_id', $id)->get();
-        // dd($ReportItems,$oldReportItems);
+        dd($request->all());
         try {
             // Check user type
             if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {
@@ -1142,6 +1141,7 @@ class ReportController extends Controller
 
                         // Create a new report item
                         $unit = tbl_sub_category::where('id', $request->sub_category[$index])->first()->unit ?? null;
+                        
                         $TblReportItem = new TblReportItem();
                         $TblReportItem->scid = $request->sub_category[$index];
                         $TblReportItem->unit = $unit;
