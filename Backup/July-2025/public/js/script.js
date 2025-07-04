@@ -1232,12 +1232,12 @@ function tbl_stock(row_id) {
         <div class="row mt-1" id="row_${row_id}">
             <input type="hidden" name="sr_no_or_not[]" value="0">
             <div class="col-12 col-md-3">
-                <input type="text" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                <input type="text" list="srled_${row_id}" name="used_qty[]" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
                 <datalist id="srled_${row_id}">
                     <option value=""></option>
                 </datalist>
                  <input type="hidden" name="srled[]" value="0">
-                 <input type="hidden" name="used_qty[]" class="form-control" placeholder="Enter Qty" value="1">
+                 
             </div>
              
 
@@ -1546,6 +1546,65 @@ function BtnAdd(categories, subCategories) {
     count++;
 }
 
+function BtnAddSaleReturn(categories, subCategories){
+      const rowHtml = `
+        <div class="row mt-2 align-items-center">
+              <div class="col-md-2">
+                <label class="form-label">Category</label>
+                <select id="data[${count}][cname]" name=cname[]" class="form-control" onchange="filterOptions(event)">
+                        <option value="" disabled selected class="0" >Choose a Category</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Sub Category</label>
+                <select id="data[${count}][scname]" name="scname[]" class="form-control" onchange="filterOptions(event)">
+                    <option value="" disabled selected class="0" data-unit="">Choose a Sub Category</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">Unit</label>
+                <select id="data[${count}][unit]" name="unit[]" class="form-control">
+                    <option value="" disabled selected>Select</option>
+                    <option value="Pic">Pcs</option>
+                    <option value="Mtr">Mtr</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">SR No</label>
+                <input type="text" name="sr_no[]" class="form-control" placeholder="SR No" required>
+            </div>
+           
+            <div class="col-md-1">
+                <label class="form-label">Qty</label>
+                <input type="number" name="qty[]" class="form-control" placeholder="Qty" min="1" value="1" required>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Reason</label>
+                <input type="text" name="reason[]" class="form-control" placeholder="Reason" required>
+            </div>            
+            <div class="col-md-1">
+                <label class="form-label">Rate</label>
+                <input type="number" step="0.01" name="rate[]" class="form-control" placeholder="Rate">
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+                <button type="button" class="btn btn-danger remove-row" onclick="NewremoveRow(this)">X</button>
+            </div>
+        </div>
+        `;
+    document.getElementById('ReturnItems').insertAdjacentHTML('beforeend', rowHtml);
+
+    if (categories && Array.isArray(categories)) {
+            categories.forEach(category => {
+                $(`#data\\[${count}\\]\\[cname\\]`).append(`
+                <option value="${category.id}">${category.name}</option>`);
+            });
+        }
+    if (subCategories && Array.isArray(subCategories)) {
+        subCategories.forEach(subCategory => {
+            $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.spcid}" data-unit="${subCategory.unit}" >${subCategory.name}</option>`);
+        });
+    }
+}
 function BtnDel(button) {
     $(button).closest('.custom-row').remove();
     // count--;

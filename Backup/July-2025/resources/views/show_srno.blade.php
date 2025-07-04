@@ -25,8 +25,8 @@
     </div>
 </form>
 
-<table class="table text-white">
-    <thead class=" bg-dark">
+<table class="table text-dark">
+    <thead class="bg-dark text-white">
         <tr>
             {{-- <th>#</th> --}}
             <th>Pur-Invoice</th>

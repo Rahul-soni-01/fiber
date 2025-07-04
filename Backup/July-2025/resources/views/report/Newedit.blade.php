@@ -269,7 +269,7 @@
                     <textarea id="note2" name="note2" class="form-control">{{ old('note2', $report->note2) }}</textarea>
                 </div>
             </div>
-            @if(in_array(auth()->user()->type, ['admin', 'user']))
+            {{-- @if(in_array(auth()->user()->type, ['admin', 'user'])) --}}
             <div class="row mt-3">
                 <div class="col-md-3">
                     <h5>Remark</h5>
@@ -279,7 +279,7 @@
                         class="form-control">{{ old('remark', $report->remark) }}</textarea>
                 </div>
             </div>
-            @endif
+            {{-- @endif --}}
         </div>
         <button type="button" id="submit-button" class="btn btn-success">SUBMIT</button>
 

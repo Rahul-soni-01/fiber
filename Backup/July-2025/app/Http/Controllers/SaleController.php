@@ -33,22 +33,22 @@ class SaleController extends Controller
 
             if ($request->has('status')) {
                 $status = $request->status;
-                
+
                 // Special case for Replacement (status 3)
                 if ($status == 3) {
                     $replacements = Replacement::with('sale', 'item')->get();
                     return view('sale.onlysale', ['sales' => $replacements, 'isReplacement' => true]);
                 }
-                
+
                 // Regular status filtering
                 $sales = Sale::with('customer')
-                            ->where('status', $status)
-                            ->get();
-                
+                    ->where('status', $status)
+                    ->get();
+
                 return view('sale.onlysale', ['sales' => $sales, 'isReplacement' => false]);
             }
             $sales = TblCustomer::with('sales')->get();
-           
+
             $sales = $sales->filter(function ($customer) {
                 return $customer->sales->isNotEmpty(); // Keep only customers with sales
             })->map(function ($customer) {
@@ -64,12 +64,12 @@ class SaleController extends Controller
     {
         if ($this->checkPermission($request, 'view')) {
             $salereturns = TblSaleReturn::selectRaw('sale_id, MAX(date) as max_date, SUM(qty) as total_qty, GROUP_CONCAT(reason) as reasons, MAX(customer_id) as cus')
-            ->groupBy('sale_id')
-            ->get();
+                ->groupBy('sale_id')
+                ->get();
             foreach ($salereturns as $index => $return) {
                 $firstSaleReturn = TblSaleReturn::where('sale_id', $return->sale_id)
-                ->first(); 
-                
+                    ->first();
+
                 $firstSaleReturn->load('customer', 'category', 'subCategory');
 
                 $return->customer = $firstSaleReturn->customer;
@@ -101,89 +101,102 @@ class SaleController extends Controller
             $customers = TblCustomer::all();
             $inwards = tbl_category::all();
             $items = tbl_sub_category::all();
+            $sale_product_categories = TblSaleProductCategory::all();
+            $sale_product_subcategories = TblSaleProductSubCategory::all();
             $serial_nos = Report::where('status', '1')->where('sale_status', 1)
                 ->where('part', '0')->get()->sortBy('sr_no_fiber');
 
-            return view('sale.return', compact('sales', 'customers', 'inwards', 'items', 'serial_nos'));
+            return view('sale.return', compact('sales', 'customers', 'inwards', 'items', 'serial_nos', 'sale_product_categories', 'sale_product_subcategories'));
             // return view('sale.return', compact('sales'));
         }
         return redirect('/unauthorized');
     }
     public function return_store(Request $request)
     {
-        // dd($request->all());
-        $validator = Validator::make(
-            $request->all(),
-            [
-                // 'date' => 'required|date',
-                'customer_id' => 'required|integer|exists:tbl_customers,id',
-                'saleitems.*' => [
-                    'required',
-                    'distinct',
-                    function ($attribute, $value, $fail) {
-                        if (!DB::table('tbl_sales_items')->where('id', $value)->exists()) {
-                            $fail("The Sale number {$value} does not exist in the reports.");
-                        }
-                    },
+        dd($request->all());
+        if ($request->return_type  == "old") {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    // 'date' => 'required|date',
+                    'customer_id' => 'required|integer|exists:tbl_customers,id',
                 ],
-            ],
-            [
-                'saleitems.*.distinct' => 'The Sale Items must not have duplicates within the input.',
-            ]
-        );
-
-        if ($validator->fails()) {
-            $firstErrorMessage = $validator->errors()->first();
-            return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+                [
+                    'saleitems.*.distinct' => 'The Sale Items must not have duplicates within the input.',
+                ]
+            );
         } else {
-            $count = count($request->saleitems);
-            for ($i = 0; $i < $count; $i++) {
-                $saleitems = SaleItem::findOrFail($request->saleitems[$i]);
-                $saleeqty = $saleitems->qty;
-                $totalReturnedQty = TblSaleReturn::where('sale_id', $request->invoice_no)
-                    ->where('customer_id', $request->pid)
-                    ->where('scid', $saleitems->scname)
-                    ->sum('qty');
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    // 'date' => 'required|date',
+                    'customer_id' => 'required|integer|exists:tbl_customers,id',
+                    'saleitems.*' => [
+                        'required',
+                        'distinct',
+                        function ($attribute, $value, $fail) {
+                            if (!DB::table('tbl_sales_items')->where('id', $value)->exists()) {
+                                $fail("The Sale number {$value} does not exist in the reports.");
+                            }
+                        },
+                    ],
+                ],
+                [
+                    'saleitems.*.distinct' => 'The Sale Items must not have duplicates within the input.',
+                ]
+            );
+            if ($validator->fails()) {
+                $firstErrorMessage = $validator->errors()->first();
+                return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+            } else {
+                $count = count($request->saleitems);
+                for ($i = 0; $i < $count; $i++) {
+                    $saleitems = SaleItem::findOrFail($request->saleitems[$i]);
+                    $saleeqty = $saleitems->qty;
+                    $totalReturnedQty = TblSaleReturn::where('sale_id', $request->invoice_no)
+                        ->where('customer_id', $request->pid)
+                        ->where('scid', $saleitems->scname)
+                        ->sum('qty');
 
-                if (($totalReturnedQty + $request->qty[$i]) <= $saleeqty) {
-                    $sale_return = new TblSaleReturn();
+                    if (($totalReturnedQty + $request->qty[$i]) <= $saleeqty) {
+                        $sale_return = new TblSaleReturn();
 
-                    $sale_return->date = date('Y-m-d');
-                    $sale_return->customer_id = $request->customer_id;
-                    $sale_return->sale_id = $request->sale_id;
-                    $sale_return->qty = $request->qty[$i];
-                    $sale_return->reason = $request->reason[$i];
-                    $sale_return->sr_no = $saleitems->sr_no;
-                    $sale_return->cid = $saleitems->cname;
-                    $sale_return->scid = $saleitems->scname;
-                    $sale_return->unit = $saleitems->unit;
-                    $sale_return->price = $saleitems->rate;
-                    $sale_return->save();
+                        $sale_return->date = date('Y-m-d');
+                        $sale_return->customer_id = $request->customer_id;
+                        $sale_return->sale_id = $request->sale_id;
+                        $sale_return->qty = $request->qty[$i];
+                        $sale_return->reason = $request->reason[$i];
+                        $sale_return->sr_no = $saleitems->sr_no;
+                        $sale_return->cid = $saleitems->cname;
+                        $sale_return->scid = $saleitems->scname;
+                        $sale_return->unit = $saleitems->unit;
+                        $sale_return->price = $saleitems->rate;
+                        $sale_return->save();
 
-                    // Eloquent way to update tbl_reports where sr_no_fiber matches
-                    if ($saleitems->sr_no != null) {
-                        $report = Report::where('sr_no_fiber', $saleitems->sr_no)->where('part', 0)->where('sale_status', 1)->first();
-                        if ($report) {
-                            $report->sale_status = 1;
-                            $report->stock_status = 1;
-                            $report->r_status = 1;
-                            $report->section = 0;
-                            $report->save();
+                        // Eloquent way to update tbl_reports where sr_no_fiber matches
+                        if ($saleitems->sr_no != null) {
+                            $report = Report::where('sr_no_fiber', $saleitems->sr_no)->where('part', 0)->where('sale_status', 1)->first();
+                            if ($report) {
+                                $report->sale_status = 1;
+                                $report->stock_status = 1;
+                                $report->r_status = 1;
+                                $report->section = 0;
+                                $report->save();
+                            }
                         }
+                    } else {
+                        // If return quantity exceeds purchase quantity, show error
+                        return redirect()->back()->withErrors([
+                            'qty' => 'The returned quantity for product ' . $saleitems->scname . ' exceeds the Sale quantity.',
+                        ]);
                     }
 
-                } else {
-                    // If return quantity exceeds purchase quantity, show error
-                    return redirect()->back()->withErrors([
-                        'qty' => 'The returned quantity for product ' . $saleitems->scname . ' exceeds the Sale quantity.',
-                    ]);
+                    // Data Store in tbl_sale_returns 
+
                 }
 
-                // Data Store in tbl_sale_returns 
-
+                return redirect()->route('sale.return.index')->with('success', 'Sale Return successfully.');
             }
-
-            return redirect()->route('sale.return.index')->with('success', 'Sale Return successfully.');
         }
     }
     public function create(Request $request)
@@ -200,7 +213,6 @@ class SaleController extends Controller
             return view('sale.newcreate', compact('sale_product_categories', 'sale_product_subcategories', 'types', 'customers', 'inwards', 'items', 'serial_nos'));
         }
         return redirect('/unauthorized');
-
     }
     public function repaircreate(Request $request)
     {
@@ -217,7 +229,6 @@ class SaleController extends Controller
             return view('sale.repaircreate', compact('sale_product_categories', 'sale_product_subcategories', 'types', 'customers', 'inwards', 'items', 'serial_nos'));
         }
         return redirect('/unauthorized');
-
     }
     public function store(Request $request)
     {
@@ -258,7 +269,7 @@ class SaleController extends Controller
         }
 
         $sale = new Sale();
-        if(empty($request->sale_id) || Sale::where('sale_id', $request->sale_id)->exists()) {
+        if (empty($request->sale_id) || Sale::where('sale_id', $request->sale_id)->exists()) {
             // Get the maximum existing sale_id and increment it
             $maxId = Sale::max('sale_id');
             $sale->sale_id = $maxId ? $maxId + 1 : 1; // Start with 1 if no sales exist
@@ -335,7 +346,6 @@ class SaleController extends Controller
                         // Catch any other exceptions and display a general error
                         return back()->with('error', 'An error occurred while saving the item: ' . $e->getMessage())->withInput();
                     }
-
                 }
             }
 
@@ -345,7 +355,8 @@ class SaleController extends Controller
         }
     }
 
-    public function replacement(Request $request){
+    public function replacement(Request $request)
+    {
         if ($this->checkPermission($request, 'edit')) {
             $customers = TblCustomer::all();
             $inwards = tbl_category::all();
@@ -356,26 +367,28 @@ class SaleController extends Controller
             $types = Tbltype::orderBy('id', 'asc')->get();
             $sales = Sale::with('items')->where('status', 0)->get();
             if ($request->query('cid') !== null) {
-                $sales = Sale::with('items')->where('customer_id',$request->query('cid') )->get();
+                $sales = Sale::with('items')->where('customer_id', $request->query('cid'))->get();
                 // dd($sale);
             }
             // return view('sale.replacement');
-            return view('sale.replacement', compact('sale_product_categories', 'sale_product_subcategories', 'types', 'customers', 'inwards', 'items', 'serial_nos','sales'));
+            return view('sale.replacement', compact('sale_product_categories', 'sale_product_subcategories', 'types', 'customers', 'inwards', 'items', 'serial_nos', 'sales'));
         }
     }
 
-    public function ItemReplacement(Request $request, $id){
-        $saleItem = SaleItem::with('sale','report')->find($id);
+    public function ItemReplacement(Request $request, $id)
+    {
+        $saleItem = SaleItem::with('sale', 'report')->find($id);
         $serial_nos = Report::where('status', '1')->where('sale_status', '!=', '1')->where('part', '0')->get()->sortBy('sr_no_fiber');
-        return view('sale.ItemReplacement',compact('saleItem','serial_nos'));
+        return view('sale.ItemReplacement', compact('saleItem', 'serial_nos'));
     }
 
-    public function replacementstore(Request $request){
-      
-        $saleItem = SaleItem::with('sale','report')->find($request->item_id);
+    public function replacementstore(Request $request)
+    {
+
+        $saleItem = SaleItem::with('sale', 'report')->find($request->item_id);
         $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->findOrFail($request->report_id);
         // dd($report->sr_no_fiber);
-        if($saleItem){
+        if ($saleItem) {
 
             $saleItem->status = 1;
             $saleItem->save();
@@ -393,7 +406,7 @@ class SaleController extends Controller
                 'p_tax' => $saleItem->p_tax,
                 'total' => $saleItem->total,
             ]);
-            
+
             if (!$itemResult) {
                 return redirect()->back()->with('error', 'Failed to insert sale');
                 // throw new \Exception('Failed to insert sale Item');
@@ -402,12 +415,12 @@ class SaleController extends Controller
 
         $replacement = Replacement::create([
             'sale_id' =>  $saleItem->sale_id,
-            'old_item_id' =>$request->item_id,
-            'new_item_id' =>$itemResult->id,
-            'date' =>$request->date,
-            'old_sr_no' =>$saleItem->sr_no,
+            'old_item_id' => $request->item_id,
+            'new_item_id' => $itemResult->id,
+            'date' => $request->date,
+            'old_sr_no' => $saleItem->sr_no,
             'new_sr_no' => $report->sr_no_fiber,
-            'note'=>$request->note,
+            'note' => $request->note,
 
         ]);
         if (!$replacement) {
@@ -443,7 +456,8 @@ class SaleController extends Controller
         return redirect('/unauthorized');
     }
 
-    public function standby(TblCustomer $tblCustomer, $id, Request $request){
+    public function standby(TblCustomer $tblCustomer, $id, Request $request)
+    {
         if ($this->checkPermission($request, 'view')) {
             $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);
             $customers = TblCustomer::all();
@@ -460,12 +474,13 @@ class SaleController extends Controller
                     });
             })->get()->sortBy('sr_no_fiber');
             // dd($sale,$customers,$inwards,$items,$serial_nos);
-            return view('sale.standbyreturn', compact('sale', 'customers', 'inwards', 'items', 'serial_nos','sale_product_categories','sale_product_subcategories','id'));
+            return view('sale.standbyreturn', compact('sale', 'customers', 'inwards', 'items', 'serial_nos', 'sale_product_categories', 'sale_product_subcategories', 'id'));
         }
         return redirect('/unauthorized');
     }
 
-    public function standbystore(Request $request, $id){
+    public function standbystore(Request $request, $id)
+    {
         // dd($id,$request->all());
         if ($this->checkPermission($request, 'edit')) {
             $oldsaleItems = SaleItem::where('sid', $id)->get();
@@ -480,10 +495,10 @@ class SaleController extends Controller
                 $sale->status = $request->status;
                 $sale->repair_status = $request->repair_status ?? 0;
                 $sale->sale_date = $request->date;
-                $sale->notes = $request->note; 
+                $sale->notes = $request->note;
                 $sale->save();
                 return redirect()->route('sale.index')->with('success', 'Stock Update successfully.');
-            }catch (\Exception $e) {
+            } catch (\Exception $e) {
                 SaleItem::where('report_id', $id)->delete();
                 foreach ($oldsaleItems as $item) {
                     SaleItem::create($item->toArray());
@@ -512,12 +527,13 @@ class SaleController extends Controller
                     });
             })->get()->sortBy('sr_no_fiber');
             // dd($sale);
-            return view('sale.edit', compact('sale', 'customers', 'inwards', 'items', 'serial_nos','sale_product_categories','sale_product_subcategories'));
+            return view('sale.edit', compact('sale', 'customers', 'inwards', 'items', 'serial_nos', 'sale_product_categories', 'sale_product_subcategories'));
         }
         return redirect('/unauthorized');
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         if ($this->checkPermission($request, 'edit')) {
             $oldsaleItems = SaleItem::where('sid', $id)->get();
             try {
@@ -527,7 +543,7 @@ class SaleController extends Controller
                     $report->save();
                 }
                 $delete = SaleItem::where('sid', $id)->delete();
-                
+
                 if (!$delete) {
                     throw new \Exception('Failed to delete sale item');
                 }
@@ -542,17 +558,17 @@ class SaleController extends Controller
                 $sale->shipping_cost = $request->shipping_cost;
                 $sale->round_total = $request->round_total;
                 $sale->amount = $request->amount;
-                $sale->notes = $request->note; 
+                $sale->notes = $request->note;
                 $sale->save();
                 $count = count($request->sr_no);
                 for ($i = 0; $i < $count; $i++) {
                     $sr = $request->sr_no[$i];
                     // dd($request->all(),$sale, $sr,$report);
                     $report = Report::where('sr_no_fiber', $sr)
-                    ->where('part', 0)
-                    ->where('sale_status', 0)
-                    ->first();
-                
+                        ->where('part', 0)
+                        ->where('sale_status', 0)
+                        ->first();
+
                     if (!$report) {
                         throw new \Exception("No available report found for SR No: $sr");
                     }
@@ -586,8 +602,7 @@ class SaleController extends Controller
                 }
 
                 return redirect()->route('sale.index')->with('success', 'Sale created successfully.');
-
-            }catch (\Exception $e) {
+            } catch (\Exception $e) {
                 dd("catch");
                 // If an error occurs, restore the old report items
                 SaleItem::where('report_id', $id)->delete();
@@ -671,7 +686,5 @@ class SaleController extends Controller
             ];
         }
         return response()->json($response, 200);
-
     }
-
 }
