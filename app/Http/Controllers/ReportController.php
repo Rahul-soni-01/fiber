@@ -917,7 +917,7 @@ class ReportController extends Controller
         // Step 1: Backup old report items
         $oldReportItems = TblReportItem::where('report_id', $id)->get();
         // $ReportItems =  TblReportItem::where('report_id', $id)->get();
-        dd($request->all());
+        
         try {
             // Check user type
             if (Auth()->user()->type === 'electric' || Auth()->user()->type === 'cavity' || Auth()->user()->type === 'user' || Auth()->user()->type === 'admin') {

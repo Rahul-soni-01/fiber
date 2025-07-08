@@ -8,6 +8,7 @@
     $bgColors = ['bg-secondary', 'bg-warning text-dark', 'bg-info', 'bg-light text-dark']; // Define 4 background colors
     $index = 0; // Initialize index
 @endphp
+ <a href="{{ route('generate-pdf', ['report_stock' => "all"]) }}" class="btn btn-primary mb-2">Download PDF</a>
 <div class="row">
     @foreach ($groupedSubcategoryData as $cid => $subcategories)
     <div class="col-md-12 mb-4">

@@ -66,7 +66,7 @@
             </div>
             <div class="col-md-3">
                 <label class="form-label">Customer Name</label>
-                 <select id="party_name" name="party_name" class="form-control" placeholder="Enter Customer Name">
+                 <select  name="party_name" class="form-control" id="party_name">
                     <option value="" disabled selected>Choose a Customer</option>
                     @foreach($customers as $customer)
                     <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>

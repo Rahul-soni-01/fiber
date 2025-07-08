@@ -12,8 +12,8 @@
 
     <a href="{{ route('saleproductsubcategory.create') }}" class="btn btn-primary mb-2">Add Sale Product Sub
         Category</a>
-    <table class="table text-white">
-        <thead class="table-dark">
+    <table class="table text-dark">
+        <thead class="table-dark text-white">
             <tr>
                 <th>#</th>
                 <th>Subcategory Name</th>

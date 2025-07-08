@@ -113,18 +113,40 @@ class SaleController extends Controller
     }
     public function return_store(Request $request)
     {
-        dd($request->all());
         if ($request->return_type  == "old") {
-            $validator = Validator::make(
+
+            $validator = Validator::make( 
                 $request->all(),
                 [
-                    // 'date' => 'required|date',
+                    'date' => 'required|date',
                     'customer_id' => 'required|integer|exists:tbl_customers,id',
-                ],
-                [
-                    'saleitems.*.distinct' => 'The Sale Items must not have duplicates within the input.',
                 ]
             );
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+            $count = count($request->saleitems);
+            for ($i = 0; $i < $count; $i++) {
+                $sr_no = $request->sr_no[$i];
+                $report = new Report();
+                $report->part = $request->input('part');
+
+                $report->f_status = $request->input('warranty') !== null ? $request->input('warranty') : 1;
+                $report->worker_name = $request->input('worker_name');
+                $report->sr_no_fiber = $request->input('sr_no_fiber');
+                $report->m_j = $request->input('m_j');
+                $report->type = $request->input('type');
+                $report->note1 = $request->input('note1');
+                $report->note2 = $request->input('note2');
+                $report->temp = $request->input('temp');
+                $report->sale_status = 0;
+
+                try {
+                    $report->save();
+                } catch (\Exception $e) {
+                    return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
+                }
+            }
         } else {
             $validator = Validator::make(
                 $request->all(),
@@ -160,7 +182,6 @@ class SaleController extends Controller
 
                     if (($totalReturnedQty + $request->qty[$i]) <= $saleeqty) {
                         $sale_return = new TblSaleReturn();
-
                         $sale_return->date = date('Y-m-d');
                         $sale_return->customer_id = $request->customer_id;
                         $sale_return->sale_id = $request->sale_id;

@@ -151,5 +151,21 @@ class PdfGeneratorController extends Controller
             // Stream PDF
             return $dompdf->stream("gst-invoice-$gstpdf.pdf", ['Attachment' => true]);
         }
+        $report_stock = $request->input('report_stock'); // Retrieve the report_stock parameter
+        if($report_stock){
+            $Controller =  new ReportController();
+            $Data = $Controller->stock( $request, $report_stock);
+            // dd($Data);
+            $data = $Data->getData();
+            // dd($data);
+            $html = view('report.stock_report', $data)->render(); // Create a dedicated view
+            $dompdf = new \Dompdf\Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+        
+            // Stream PDF
+            return $dompdf->stream("stockreport.pdf", ['Attachment' => true]);
+        }
     }
 }

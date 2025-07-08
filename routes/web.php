@@ -35,7 +35,7 @@ use App\Http\Controllers\CompanyController;
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
 
-Route::post('login', [TblUserController::class, 'login'])->name('login.post');
+Route::post('login', [TblUserController::class, 'lo gin'])->name('login.post');
 Route::get('/', function () {
     return view('welcome');
 })->middleware('guest')->name('login');

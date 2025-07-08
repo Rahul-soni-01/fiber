@@ -898,7 +898,7 @@ let invoiceResponse = null;
 
 // function getDataForReturn(subcategory,category,event){
 function getDataForReturn(event) {
-
+    event.preventDefault();
     const party = document.getElementById('party_name').value;
     const invoice_no = document.getElementById('invoice_no').value;
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -920,7 +920,8 @@ function getDataForReturn(event) {
         };
     }
     if (!party || !invoice_no) {
-        Swal.fire("Please Enter Party Or Invoice !");
+        console.error("Please enter Party or Invoice number.");
+        // Swal.fire("Please Enter Party Or Invoice !");
     } else {
         $.ajax({
             url: url,
@@ -1029,6 +1030,7 @@ function getDataForReturn(event) {
                         html += '';
                     }
                 } else {
+                    alert("No data found for the given Invoice Number or Party.");
                     Swal.fire({
                         icon: "error",
                         title: "No Data Found",
