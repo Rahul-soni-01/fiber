@@ -26,7 +26,8 @@ class TblUserController extends Controller
         ]);
 
         $user = tbl_user::where('email', $req->username)->first();
-
+        $reportCount = Report::with('tbl_type')->where('sale_status', 0)->count();
+        session(['report_count' => $reportCount]);
         if ($user) {
             // dd(Hash::check($req->password,$user->password));
             if (Hash::check($req->password, $user->password)) {
@@ -45,7 +46,7 @@ class TblUserController extends Controller
         Auth::logout();
 
         session()->pull('uid');
-
+        session()->forget('report_count');
         return redirect('/')->with('msg', 'You have been logged out successfully.');
     }
     public function check()
@@ -84,7 +85,6 @@ class TblUserController extends Controller
         // dd($result);
 
         return [];
-
     }
 
     public function permission(Request $request)
@@ -93,7 +93,6 @@ class TblUserController extends Controller
 
         $type = auth()->user()->type;
         return response()->json(['permissions' => $permissions, 'type' => $type]);
-
     }
     public function index()
     {
@@ -105,7 +104,6 @@ class TblUserController extends Controller
             return view('user.index', compact('users'));
         }
         return redirect('/unauthorized');
-
     }
 
     public function create()
@@ -118,7 +116,6 @@ class TblUserController extends Controller
             return view('user.create', compact('typies', 'departments'));
         }
         return redirect('/unauthorized');
-
     }
     public function store(Request $request)
     {
@@ -145,8 +142,8 @@ class TblUserController extends Controller
         $permissions = $this->check();
         $sales = Sale::whereDate('created_at', Carbon::today())->get();
         $purchases = tbl_purchase::whereDate('created_at', Carbon::today())->get();
-        $repairreports = Report::where('part',0)->whereDate('created_at', Carbon::today())->get();
-        $newreports = Report::where('part',1)->whereDate('created_at', Carbon::today())->get();
+        $repairreports = Report::where('part', 0)->whereDate('created_at', Carbon::today())->get();
+        $newreports = Report::where('part', 1)->whereDate('created_at', Carbon::today())->get();
         // $reports = Report::whereDate('created_at', Carbon::today())->get();
         $supplier_payments = TblPayment::whereDate('created_at', Carbon::today())->get();
         $customer_payments = CustomerPayment::whereDate('created_at', Carbon::today())->get();
@@ -157,7 +154,7 @@ class TblUserController extends Controller
         //     'supplier_payments' => $supplier_payments,
         //     'customer_payments' => $customer_payments,
         // ]);
-        return view('home', compact('permissions', 'sales', 'purchases', 'repairreports','newreports', 'supplier_payments','customer_payments'));
+        return view('home', compact('permissions', 'sales', 'purchases', 'repairreports', 'newreports', 'supplier_payments', 'customer_payments'));
     }
 
     public function edit(tbl_user $tbl_user, Request $request, $id)
@@ -203,6 +200,28 @@ class TblUserController extends Controller
             $user = $tbl_user->find($id);
             $user->delete();
             return redirect()->route('user.index')->with('success', 'Deleted Successfully.');
+        }
+    }
+
+    public function checkReportCount()
+    {
+        $reportCount = Report::with('tbl_type')->where('sale_status', 0)->count();
+        // $reportCount = 10;
+        $sessionCount = session('report_count') ?? 0;
+        
+        if ($reportCount === $sessionCount) {
+            return response()->json([
+                'status' => 'same',
+                'count' => $reportCount
+            ]);
+        } else {
+            // Update the session
+            session(['report_count' => $reportCount]);
+
+            return response()->json([
+                'status' => 'changed',
+                'count' => $reportCount
+            ]);
         }
     }
 }

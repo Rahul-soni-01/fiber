@@ -904,12 +904,12 @@ class ReportController extends Controller
             $Record_update_final_amount->final_amount = $amount;
             $Record_update_final_amount->save();
             if ($report->save()) {
-                return redirect()->route('report.index')->with('success', 'Report added successfully.');
+                return redirect()->route('report.new')->with('success', 'Report added successfully.');
             } else {
                 return redirect()->back()->with('error', 'Failed to store the report. Please try again.');
             }
         }
-        return redirect()->route('report.index')->with('success', 'Report added successfully.');
+        return redirect()->route('report.new')->with('success', 'Report added successfully.');
     }
 
     public function Latestupdate(Request $request, $id)
@@ -954,6 +954,17 @@ class ReportController extends Controller
                         throw new \Exception($firstErrorMessage); // Throw exception with the first error message
 
                         // return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+                    }
+                    if ($request->part == 0) {
+                        $exists = DB::table('tbl_reports')
+                            ->where('sr_no_fiber', $request->sr_no_fiber)
+                            ->where('part', 0)
+                            ->where('id', '!=', $id) 
+                            ->exists();
+
+                        if ($exists) {
+                            throw new \Exception('The sr_no_fiber already exists with part = 0.');
+                        }
                     }
                 }
 
@@ -1160,9 +1171,8 @@ class ReportController extends Controller
                     $Record_update_final_amount = Report::where('id', $report_id)->first();
                     $Record_update_final_amount->final_amount = $amount;
                     $Record_update_final_amount->save();
-
                 }
-                 return redirect()->route('report.index')->with('success', 'Report added successfully.');
+                return redirect()->route('report.new')->with('success', 'Report added successfully.');
             } elseif (Auth()->user()->type === 'account') {
                 // Handle account user logic
                 $report = Report::find($id);
@@ -1177,7 +1187,7 @@ class ReportController extends Controller
                 $report->remark = $request->remark;
                 $report->save();
 
-                return redirect()->route('report.index')->with('success', 'Report updated successfully.');
+                return redirect()->route('report.new')->with('success', 'Report updated successfully.');
             }
         } catch (\Exception $e) {
             // If an error occurs, restore the old report items

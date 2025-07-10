@@ -58,6 +58,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('companies', CompanyController::class);
 
+    Route::post('/check-report-count', [TblUserController::class, 'checkReportCount']);
+
     // User Crud
     Route::get('/user', [TblUserController::class, 'index'])->name('user.index');
     Route::get('/user-create', [TblUserController::class, 'create'])->name('user.create');

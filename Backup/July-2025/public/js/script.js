@@ -714,7 +714,39 @@ $(document).ready(function () {
         });
     });
 });
+function checkReportCount() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/check-report-count", true);
 
+    // Set CSRF Token
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    xhr.setRequestHeader('X-CSRF-TOKEN', token);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            var newCount = response.count;
+
+            // Update UI
+            document.getElementById('report-count-text').textContent = newCount;
+            document.querySelector('#notificationDropdown .badge').textContent = newCount;
+
+            // Optional: show something when count changes
+            if (response.status === 'changed') {
+                document.getElementById('toast-message').textContent =
+                    "New Report Added — Total Fiber Remaining: " + response.count;
+
+                var toastElement = document.getElementById('reportToast');
+                var toast = new bootstrap.Toast(toastElement);
+                toast.show();
+            }
+
+            previousCount = newCount;
+        }
+    };
+
+    xhr.send();
+}
 function SerialFocus(inputElement, row) {
     // console.log("Input focused for row:", row);
     const datalistId = `srled_${row}`;
@@ -1263,13 +1295,16 @@ function tbl_stock(row_id) {
             </div>
         </div>`;
         }
+        //  <input type="hidden" name="used_qty[]" class="form-control" value="1">
+        // <select id="srled_${row_id}" name="srled[]" class="form-control select2">
+        // </select>
         else if (Datasr_no === "1") {
             Tdhtml.innerHTML += `
                 </div> <!-- End previous col div -->
                 <div class="row" id="row_${row_id}">
                     <input type="hidden" name="sr_no_or_not[]" value="1">
                     <div class="col-12 col-md-3">
-                        <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
+                         <input type="text" name="srled[]" list="srled_${row_id}" class="form-control" placeholder="Select or enter a new sr no, Small Alpha Plz" required>
                         <datalist id="srled_${row_id}">
                             <option value=""></option>
                         </datalist>
@@ -1297,7 +1332,7 @@ function tbl_stock(row_id) {
                 </div>
             `;
         }
-
+        $('.select2').select2();
     }
 
     if (!subcategory_id) {
@@ -1409,8 +1444,8 @@ const currentURL = window.location.href;
 const pattern = /^https:\/\/erp\.maktechlaser\.com\/inward\/edit\/\d+$/;
 
 if (pattern.test(currentURL)) {
-    
-}else{
+
+} else {
     var count = 1;
 }
 function BtnAdd(categories, subCategories) {
@@ -1548,8 +1583,8 @@ function BtnAdd(categories, subCategories) {
     count++;
 }
 
-function BtnAddSaleReturn(categories, subCategories){
-      const rowHtml = `
+function BtnAddSaleReturn(categories, subCategories) {
+    const rowHtml = `
         <div class="row mt-2 align-items-center">
               <div class="col-md-2">
                 <label class="form-label">Category</label>
@@ -1596,11 +1631,11 @@ function BtnAddSaleReturn(categories, subCategories){
     document.getElementById('ReturnItems').insertAdjacentHTML('beforeend', rowHtml);
 
     if (categories && Array.isArray(categories)) {
-            categories.forEach(category => {
-                $(`#data\\[${count}\\]\\[cname\\]`).append(`
+        categories.forEach(category => {
+            $(`#data\\[${count}\\]\\[cname\\]`).append(`
                 <option value="${category.id}">${category.name}</option>`);
-            });
-        }
+        });
+    }
     if (subCategories && Array.isArray(subCategories)) {
         subCategories.forEach(subCategory => {
             $(`#data\\[${count}\\]\\[scname\\]`).append(`<option value="${subCategory.id}" class="${subCategory.spcid}" data-unit="${subCategory.unit}" >${subCategory.name}</option>`);
@@ -1613,9 +1648,9 @@ function BtnDel(button) {
     total();
 }
 function total() {
-    
+
     for (let i = 0; i < count; i++) {
-          
+
         var qtyElement = document.getElementById(`data[${i}][qty]`);
         if (qtyElement) {
             var qty = parseFloat(qtyElement.value) || 0;
@@ -1639,10 +1674,10 @@ function sub_total() {
     var subtotal = 0;
     for (var i = 0; i < count; i++) {
         var totalElement = document.getElementById(`data[${i}][total]`);
-     
+
         if (totalElement) {
             var total = parseFloat(document.getElementById(`data[${i}][total]`).value) || 0;
-            subtotal += total;   
+            subtotal += total;
         }
     }
     document.getElementById("amount_d").value = subtotal.toFixed(2);

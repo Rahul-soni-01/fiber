@@ -74,7 +74,8 @@
         }, 1000);
     });
 
-    
+    setInterval(checkReportCount, 4000);
+
 </script>
 
 <body>
@@ -82,6 +83,19 @@
 
     <div id="loading-spinner" class="spinner-border text-primary" role="status">
         <span class="sr-only">Loading...</span>
+    </div>
+    <!-- Toast Container -->
+    <div class="position-fixed end-0 p-3" style="z-index: 9999">
+        <div id="reportToast" class="toast align-items-center text-bg-primary border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toast-message">
+                    <!-- Will be updated by JS -->
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
     </div>
 
     <!-- Sidebar and Main Content -->
@@ -504,6 +518,36 @@
                             <div class="d-flex flex-column align-items-end text-end">
                                 <strong class="text-capitalize">{{ auth()->user()->type }}</strong>
                                 <small>{{ auth()->user()->name }}</small>
+                            </div>
+
+                            <!-- 🔔 Notification Dropdown -->
+                            <div class="dropdown position-relative">
+                                <a class="btn position-relative" href="#" role="button" id="notificationDropdown"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-bell fs-4 text-primary"></i>
+
+                                    <!-- Notification Badge -->
+                                    @php
+                                    $sessionCount = session('report_count') ?? 0;
+                                    @endphp
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                        style="font-size: 0.6rem;">
+                                        {{ $sessionCount }}
+                                    </span>
+                                </a>
+
+                                <!-- Dropdown Content -->
+                                <ul class="dropdown-menu dropdown-menu-end shadow p-3"
+                                    aria-labelledby="notificationDropdown" style="min-width: 200px;">
+                                    <li class="fw-bold">Fiber Count:</li>
+                                    <li class="text-center text-primary fs-5" id="report-count-text">{{ session('report_count') }}</li>
+                                    <li>
+                                        <a href="{{ route('report.new') }}" class="btn btn-sm btn-primary w-100">
+                                            View All 
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
 
                             <!-- Logout Button -->
