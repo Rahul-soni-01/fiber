@@ -515,7 +515,7 @@ $(document).ready(function () {
                                                 html += `
                                                 <div class="row align-items-center mb-1" id="row_${row}">
                                                     <div class="col-12 col-md-2">
-                                                        <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
+                                                        <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}-${field.sub_category.category.category_name}" readonly> 
                                                         <input type="hidden" id="subcategory_${row}" name="sub_category[]" value="${field.sub_category.id}"> 
                                                         <input type="hidden" name="sr_no_or_not[]" value="1">
                                                     </div>
@@ -553,7 +553,7 @@ $(document).ready(function () {
                                                 html += `
                                                 <div class="row align-items-center mb-1" id="row_${row}">
                                                  <div class="col-12 col-md-2">
-                                                    <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.sub_category_name}" readonly> 
+                                                    <input type="text" class="tbl_sub form-control mb-1" value="${field.sub_category.category.category_name}-${field.sub_category.sub_category_name}" readonly> 
                                                     <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
                                                     <input type="hidden" name="sr_no_or_not[]" value="0">
                                                 </div>

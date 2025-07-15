@@ -30,12 +30,12 @@ class TblCustomerController extends Controller
     {
         $request->validate([
             'customer_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
             'pincode' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
-            'telephone_no' => 'required|numeric',
-            'receiver_name' => 'required|string|max:255',
+            'telephone_no' => 'nullable|numeric',
+            'receiver_name' => 'nullable|string|max:255',
             'gst_no' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
@@ -89,7 +89,7 @@ class TblCustomerController extends Controller
         $customer->city = $request->city;
         $customer->state = $request->state;
         $customer->telephone_no = $request->telephone_no;
-        $customer->receiver_name = $request->receiver_name;
+        $customer->receiver_name = $request->receiver_name ?? $request->customer_name;
         $customer->gst_no = $request->gst_no ?? null;
         $customer->ship_address = $request->ship_address ?? null;
         $customer->ship_pincode = $request->ship_pincode ?? null;
@@ -156,7 +156,7 @@ class TblCustomerController extends Controller
         $customer->city = $request->city;
         $customer->state = $request->state;
         $customer->telephone_no = $request->telephone_no;
-        $customer->receiver_name = $request->receiver_name;
+        $customer->receiver_name = $request->receiver_name ?? $request->customer_name;
         $customer->gst_no = $request->gst_no;
         $customer->ship_address = $request->ship_address;
         $customer->ship_pincode = $request->ship_pincode;

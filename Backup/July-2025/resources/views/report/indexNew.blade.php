@@ -1,7 +1,7 @@
 @extends('demo')
 @section('title', 'Report Type')
 @section('content')
-<h1>Report Type</h1>
+<h1>Fiber Type</h1>
 <div class="text-white">
     @if ($errors->any())
     <div style="color: red;">
@@ -18,7 +18,7 @@
         <span class="slider"></span>
     </label> --}}
     @if ($types->isEmpty())
-    <p>No reports found.</p>
+    <p>No Fiber found.</p>
     @else
     <div id="div1">
         <table class="table text-dark">
@@ -46,20 +46,20 @@
 </div>
 <script>
     document.getElementById("toggleSwitch").addEventListener("change", function() {
-                const rows = document.querySelectorAll("table tbody tr");
-                if (this.checked) {
-                    rows.forEach(row => {
-                        if (row.classList.contains('new-part')) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
+        const rows = document.querySelectorAll("table tbody tr");
+        if (this.checked) {
+            rows.forEach(row => {
+                if (row.classList.contains('new-part')) {
+                    row.style.display = "";
                 } else {
-                    rows.forEach(row => {
-                        row.style.display = "";
-                    });
+                    row.style.display = "none";
                 }
             });
+        } else {
+            rows.forEach(row => {
+                row.style.display = "";
+            });
+        }
+    });
 </script>
 @endsection

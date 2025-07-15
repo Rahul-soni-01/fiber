@@ -317,8 +317,7 @@
                                     <a href="{{ route('report.ready') }}" class="nav-link">Ready Report</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
-                                    <a href="{{ route('invoices.index') }}" id="view" class="nav-link">Select
-                                        Invoice</a>
+                                    <a href="{{ route('invoices.index') }}" id="view" class="nav-link">Live Stock setting</a>
                                 </li>
                             </ul>
                         </div>

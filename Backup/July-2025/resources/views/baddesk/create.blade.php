@@ -4,7 +4,7 @@
 <h1>Move to Trash</h1>
 {{-- resources/views/baddesk/create.blade.php --}}
 
-<div class="container text-white">
+<div class="container text-dark">
      @if($reports->isEmpty() || $reports->first()->reportItems->isEmpty())
      <p>No items found. <a href="#">Add your
                first item</a></p>
@@ -37,8 +37,8 @@
                </div>
           </div>
      </div>
-     <table class="table datatable-remove table-bordered text-white">
-          <thead class="bg-dark">
+     <table class="table datatable-remove table-bordered text-dark">
+          <thead class="bg-dark text-light">
                <tr>
                     <th>#</th>
                     <th>report Id / Part </th>

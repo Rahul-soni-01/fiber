@@ -27,7 +27,7 @@
                         </div>
                         <div class="mb-3 col-md-4">
                             <label for="address">Address</label>
-                            <input type="text" name="address" class="form-control" placeholder="Enter Address" required>
+                            <input type="text" name="address" class="form-control" placeholder="Enter Address">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label for="pincode">Pincode</label>
@@ -44,12 +44,12 @@
                         <div class="mb-3 col-md-4">
                             <label for="telephone_no">Telephone No.</label>
                             <input type="number" name="telephone_no" class="form-control"
-                                placeholder="Enter Telephone No" required>
+                                placeholder="Enter Telephone No">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label for="receiver_name">Receiver Name</label>
                             <input type="text" name="receiver_name" class="form-control"
-                                placeholder="Enter Receiver Name" required>
+                                placeholder="Enter Receiver Name">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label for="gst_no">GSTIN</label>
@@ -58,21 +58,20 @@
 
                         <div class="mb-3 col-md-4">
                             <label for="ship_address">Shipping Address</label>
-                            <input type="text" name="ship_address" class="form-control" placeholder="Enter Shipping Address" required>
+                            <input type="text" name="ship_address" class="form-control" placeholder="Enter Shipping Address">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label for="ship_pincode">Shipping Pincode</label>
-                            <input type="text" name="ship_pincode" class="form-control" placeholder="Enter Shipping Pincode" required>
+                            <input type="text" name="ship_pincode" class="form-control" placeholder="Enter Shipping Pincode">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label for="ship_city">Shipping City</label>
-                            <input type="text" name="ship_city" class="form-control" placeholder="Enter Shipping City" required>
+                            <input type="text" name="ship_city" class="form-control" placeholder="Enter Shipping City">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label for="ship_state"> Shipping State</label>
-                            <input type="text" name="ship_state" class="form-control" placeholder="Enter Shipping State" required>
-                        </div>
-                        
+                            <input type="text" name="ship_state" class="form-control" placeholder="Enter Shipping State">
+                        </div>                        
                         <div class="text-center col-md-4">
                             <button class="btn btn-success">Add Customer</button>
                         </div>

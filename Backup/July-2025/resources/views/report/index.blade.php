@@ -48,16 +48,16 @@
     </form>
 
     @if(!isset($ready))
-    <p class="mt-2">New reports Filter.</p>
+    <p class="mt-2 text-dark">New reports Filter.</p>
     <label class="switch">
         <input type="checkbox" id="toggleSwitch">
         <span class="slider"></span>
     </label>
     @endif
     @if ($reports->isEmpty())
-     <div class="d-flex justify-content-center align-items-center flex-column mt-4 text-muted">
-        <i class="fas fa-exclamation-circle fa-5x mb-2 text-warning"></i>
-        <p class="text-white">No reports found.</p>
+    <div class="d-flex justify-content-center align-items-center flex-column mt-4 text-muted">
+        <i class="fas fa-exclamation-circle fa-5x mb-2 "></i>
+        <p class="text-dark">No reports found.</p>
     </div>
     @else
     <div id="div1" class="table-responsive mt-4">
@@ -67,6 +67,9 @@
                     <th>ID</th>
                     <th>Part</th>
                     <th>W/N.W.</th>
+                     @if(auth()->user()->type === 'godown')
+                    <th>SR(FIBER) / Temp No.</th>
+                    @endif
                     <th>Date</th>
                     <th>Section</th>
 
@@ -107,8 +110,11 @@
 
                     <th>SR(FIBER) / Temp No.</th>
                     <th>Type</th>
+                    <th>Final Amount</th>
                     <th>Action</th>
                     @endif
+
+                   
             </thead>
             <tbody>
                 @foreach ($reports as $index => $report)
@@ -136,14 +142,16 @@
                     <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
                     <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown')
                         }}</td>
-
+                    @if(auth()->user()->type === 'godown')
+                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
+                    @endif
                     <td>{{ $report->created_at->format('d-m-Y') }}</td>
                     <td> @switch($report->section)
                         @case(0)
                         Mainstore
                         @break
                         @case(1)
-                        Manufactur
+                        Manufacture
                         @break
                         @case(2)
                         Repair
@@ -187,17 +195,18 @@
                     <td>{{ $report->worker_name }}</td>
                     <td>{{ $report->final_amount }}</td>
                     <td>
-                        @if ($report->sale_status == 0)
-                        No sale
-                        @if ($report->r_status == 1)
-                        - Repair
-                        @endif
-                        @elseif ($report->sale_status == 1)
+                        @php
+                        $isSale = $report->sale_status;
+                        @endphp
+                        @if ($isSale == 1)
                         Sale
+                        @elseif ($isSale == 0)
+                        Nosale
                         @else
                         Unknown
                         @endif
                     </td>
+
                     @if(isset($ready) && $ready == 1)
                     <td>
                         <label class="switch">
@@ -231,10 +240,12 @@
 
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->tbl_type->name ?? 'N/A' }}</td>
+                    <td>{{ $report->final_amount }}</td>
                     <td> <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary"> <i
                                 class="ri-eye-fill"></i></a>
                     </td>
                     @endif
+                    
                 </tr>
                 @endforeach
             </tbody>
@@ -245,21 +256,21 @@
 
 <script>
     document.getElementById("toggleSwitch").addEventListener("change", function() {
-                const rows = document.querySelectorAll("table tbody tr");
-                if (this.checked) {
-                    rows.forEach(row => {
-                        if (row.classList.contains('new-part')) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
+        const rows = document.querySelectorAll("table tbody tr");
+        if (this.checked) {
+            rows.forEach(row => {
+                if (row.classList.contains('new-part')) {
+                    row.style.display = "";
                 } else {
-                    rows.forEach(row => {
-                        row.style.display = "";
-                    });
+                    row.style.display = "none";
                 }
             });
+        } else {
+            rows.forEach(row => {
+                row.style.display = "";
+            });
+        }
+    });
 </script>
 
 @endsection

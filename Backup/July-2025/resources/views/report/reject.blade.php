@@ -19,9 +19,9 @@
 <p>No reports found.</p>
 @else
 <div id="div1">
-    <table class="table text-white">
-        <thead>
-            <tr class="bg-warning">
+     <table class="table text-dark">
+            <thead class="bg-dark text-white">
+            <tr></tr>
                 <th>ID</th>
                 <th>Date</th>
                 @if(in_array(auth()->user()->type, ['admin', 'user', 'account']) )
@@ -46,8 +46,8 @@
                 <td>{{ $report->sr_no_fiber }}</td>
                 <td>{{ $report->note1 }} <br>{{ $report->note2 }}</td>
                 <td>{{ $report->remark }}</td>
-                <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
-                    <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary"> <i class="ri-eye-fill"></i></a>
+                <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-info">Edit</a>
+                    <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-primary"> <i class="ri-eye-fill"></i></a>
                 </td>
                 
                 @endif
@@ -61,20 +61,20 @@
 </div>
 <script>
     document.getElementById("toggleSwitch").addEventListener("change", function() {
-                const rows = document.querySelectorAll("table tbody tr");
-                if (this.checked) {
-                    rows.forEach(row => {
-                        if (row.classList.contains('new-part')) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
+        const rows = document.querySelectorAll("table tbody tr");
+        if (this.checked) {
+            rows.forEach(row => {
+                if (row.classList.contains('new-part')) {
+                    row.style.display = "";
                 } else {
-                    rows.forEach(row => {
-                        row.style.display = "";
-                    });
+                    row.style.display = "none";
                 }
             });
+        } else {
+            rows.forEach(row => {
+                row.style.display = "";
+            });
+        }
+    });
 </script>
 @endsection

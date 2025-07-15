@@ -85,7 +85,7 @@
                     @endif
                 </div>
                 <div class="col-md-2">
-                    <input type="text" id="temp" name="temp" class="form-control" placeholder="Enter Temperature"
+                    <input type="text" id="temp" name="temp" class="form-control" placeholder="Enter Body/ Temp No"
                         value="{{ old('temp', $report->temp) }}" @if(in_array(auth()->user()->type, ['cavity']))
                     readonly @endif>
                 </div>

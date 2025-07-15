@@ -88,7 +88,7 @@
                     <h5>M.J</h5>
                 </div>
                 <!-- M.J Input -->
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-2">
                     <input type="text" id="mj" name="m_j" class="form-control" placeholder="Enter M/J Value">
                 </div>
                 @endif
@@ -184,7 +184,7 @@
                 <div class="col-12 col-md-2">
                     <h5>M.J</h5>
                 </div>
-                <div class="col-12 col-md-3 mb-2">
+                <div class="col-12 col-md-2 mb-2">
                     <input type="text" name="m_j" class="form-control" placeholder="Enter M/J Value">
                 </div>
                 @break
@@ -196,7 +196,7 @@
                 <div class="col-12 col-md-3 mb-2">
                     <select name="warranty" class="form-control" required>
                         <option value="" disabled selected>Select Warranty</option>
-                        <option value="0">No Warranty</option>
+                        <option value="0">Out Warranty</option>
                         <option value="1">Warranty</option>
                     </select>
                 </div>

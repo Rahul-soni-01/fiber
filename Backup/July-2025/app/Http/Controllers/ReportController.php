@@ -692,11 +692,11 @@ class ReportController extends Controller
         $TblStockupdateIds = [];
         $TblReportiteminsertedIds = [];
         if ($sub_category) {
-            // dd($sub_category);
             foreach ($request->srled as $index => $serial_no) {
                 $sr_no_or_not = $request->sr_no_or_not[$index];
                 $dead = $request->dead[$index];
                 if ($sr_no_or_not == 1) {
+                   
                     $existingRecord = TblStock::where('serial_no', $serial_no)
                         ->where('status', 0)
                         ->first();
@@ -760,16 +760,7 @@ class ReportController extends Controller
                     $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
                 } elseif ($sr_no_or_not == 0) {
                     $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
-
-                    $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
-                    // $invoice_no = $SelectedInvoice;
-                    $date = $invoice->date;
-                    $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
-                        ->where('scid', $request->sub_category[$index])
-                        ->first();
-
-                    if ($invoice_data == null) {
-                        // dd( $request->sub_category[$index]);
+                    if(!$invoice_no){
                         $avalabile = 1;
                         try {
                             TblStock::whereIn('id', $TblStockinsertedIds)->delete();
@@ -783,14 +774,29 @@ class ReportController extends Controller
                         if ($Record_delete) {
                             $Record_delete->delete();
                         }
+                        return redirect()->back()->with('error', '!! No purchase Found in Stock, Please Select Valid Invoice No for Stock !!.');
+
+                    }
+                    
+
+                    $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
+                    // $invoice_no = $SelectedInvoice;
+                    $date = $invoice->date;
+                    $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
+                        ->where('scid', $request->sub_category[$index])
+                        ->first();
+                        // dd($invoice_data);
+                    if ($invoice_data == null) {
+                        // dd($request->sub_category[$index], $invoice_no, $invoice, $invoice_data);
+                        // throw new \Exception('No purchase found in stock. Please select a valid invoice number.');
                         $scid = $request->sub_category[$index];
                         $subCat = tbl_sub_category::find($sub_category[$index]);
                         $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
                         $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
                         $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
-                        return redirect()->back()->with('error', "Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
-                        // return redirect()->back()->with('error', '!! No purchase Found in Stock, Please Select Valid Invoice No for Stock !!.');
+                        throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                     }
+
                     $cid = $invoice_data->cid;
                     $serial_no_card_count = TblStock::where('invoice_no', $invoice_no)
                         ->where('scid', $request->sub_category[$index])

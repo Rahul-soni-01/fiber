@@ -205,7 +205,7 @@ class TblUserController extends Controller
 
     public function checkReportCount()
     {
-        $reportCount = Report::with('tbl_type')->where('sale_status', 0)->count();
+        $reportCount = Report::with('tbl_type')->where('section', 1)->orWhere('section',2)->count();
         // $reportCount = 10;
         $sessionCount = session('report_count') ?? 0;
         
