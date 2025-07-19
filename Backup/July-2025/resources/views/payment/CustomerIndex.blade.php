@@ -52,7 +52,7 @@
 
                     </button> --}}
 
-                    <button class="btn float-right"> <a
+                    <button class="btn btn-primary float-right"> <a
                             href="{{ route('customer.sell.details', ['customer_id' => $customer['customer_id'] ]) }}">
                             Show </a></button>
 
@@ -179,7 +179,7 @@
 
                     </table> --}}
 
-                    <a class="btn float-right"
+                    <a class="btn btn-warning float-right"
                         href="{{ route('customer.sell.details', ['customer_id' =>  $customer['customer_id'] ]) }}?payment">
                         Customer Payment </a>
 

@@ -15,6 +15,7 @@ use App\Models\tbl_purchase;
 use App\Models\Report;
 use App\Models\TblPayment;
 use App\Models\CustomerPayment;
+use App\Models\Message;
 
 class TblUserController extends Controller
 {
@@ -28,6 +29,11 @@ class TblUserController extends Controller
         $user = tbl_user::where('email', $req->username)->first();
         $reportCount = Report::with('tbl_type')->where('sale_status', 0)->count();
         session(['report_count' => $reportCount]);
+          $unreadCount = Message::where('receiver_id', $user->id)
+        ->where('mark_as_read', false)
+        ->count();
+
+        session(['unread_messages' => $unreadCount]);
         if ($user) {
             // dd(Hash::check($req->password,$user->password));
             if (Hash::check($req->password, $user->password)) {
@@ -92,7 +98,10 @@ class TblUserController extends Controller
         $permissions = $this->check();
 
         $type = auth()->user()->type;
-        return response()->json(['permissions' => $permissions, 'type' => $type]);
+
+        $userchats = tbl_user::whereNot('id',auth()->user()->id)->get();
+
+        return response()->json(['permissions' => $permissions, 'type' => $type, 'userchats' => $userchats]);
     }
     public function index()
     {
@@ -207,20 +216,38 @@ class TblUserController extends Controller
     {
         $reportCount = Report::with('tbl_type')->where('section', 1)->orWhere('section',2)->count();
         // $reportCount = 10;
-        $sessionCount = session('report_count') ?? 0;
+        $sessionCount = session('report_count') ?? 0; 
+
+        $unreadCount = Message::where('receiver_id', auth()->user()->id)
+        ->where('mark_as_read', 0)
+        ->count();
+        // $sessionChatCount = session('report_count') ?? 0; 
+        $unread_messages = session('unread_messages') ?? 0; 
         
         if ($reportCount === $sessionCount) {
             return response()->json([
                 'status' => 'same',
-                'count' => $reportCount
+                'count' => $reportCount,
+                'unread_messages' => $unread_messages
             ]);
-        } else {
-            // Update the session
-            session(['report_count' => $reportCount]);
+        }elseif($unread_messages === $unreadCount){
+            session(['unread_messages' => $unread_messages]);
 
             return response()->json([
                 'status' => 'changed',
-                'count' => $reportCount
+                'count' => $reportCount,
+                'unread_messages' => $unread_messages,
+            ]);
+        }
+         else {
+            // Update the session
+            session(['report_count' => $reportCount]);
+            session(['unread_messages' => $unread_messages]);
+
+            return response()->json([
+                'status' => 'changed',
+                'count' => $reportCount,
+                'unread_messages' => $unread_messages,
             ]);
         }
     }

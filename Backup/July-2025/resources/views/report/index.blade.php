@@ -101,7 +101,7 @@
                     @if(auth()->user()->type === 'user')
 
                     <th>SR(FIBER) / Temp No</th>
-                    <th>M.J</th>
+                    <th>Note</th>
                     <th>Type</th>
                     <th>Action</th>
                     @endif
@@ -184,7 +184,7 @@
                     @endif
                     @if($type === 'user')
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
-                    <td>{{ $report->m_j }}</td>
+                    <td>{{ $report->note1 }} ,{{ $report->note2 }} </td>
                     <td>{{ $report->tbl_type->name ?? null}}</td>
                     <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
                     </td>

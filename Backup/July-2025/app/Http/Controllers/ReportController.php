@@ -575,7 +575,6 @@ class ReportController extends Controller
 
     public function stockReport(Request $request)
     {
-        // dd($request->all());
         $validator = Validator::make(
             $request->all(),
             [
@@ -696,7 +695,23 @@ class ReportController extends Controller
                 $sr_no_or_not = $request->sr_no_or_not[$index];
                 $dead = $request->dead[$index];
                 if ($sr_no_or_not == 1) {
-                   
+                    // dd("VIRAJ");
+                    if(!$serial_no){
+                        $avalabile = 1;
+                        try {
+                            TblStock::whereIn('id', $TblStockinsertedIds)->delete();
+                        } catch (\Exception $e) {
+                            return redirect()->back()->with('error', 'Failed to delete inserted records: ' . $e->getMessage());
+                        }
+                        if ($TblReportiteminsertedIds) {
+                            TblReportItem::whereIn('id', $TblReportiteminsertedIds)->delete();
+                        }
+                        $Record_delete = Report::where('id', $report_id)->first();
+                        if ($Record_delete) {
+                            $Record_delete->delete();
+                        }
+                        return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
+                    }
                     $existingRecord = TblStock::where('serial_no', $serial_no)
                         ->where('status', 0)
                         ->first();
@@ -759,6 +774,7 @@ class ReportController extends Controller
                     }
                     $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
                 } elseif ($sr_no_or_not == 0) {
+                // dd("ISHITA");
                     $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
                     if(!$invoice_no){
                         $avalabile = 1;
@@ -778,7 +794,6 @@ class ReportController extends Controller
 
                     }
                     
-
                     $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
                     // $invoice_no = $SelectedInvoice;
                     $date = $invoice->date;
@@ -853,9 +868,7 @@ class ReportController extends Controller
                             $existingRecord->status = 1;
                         }
                         $amount += $existingRecord->priceofUnit;
-                        if ($dead == 1) {
-                            // $existingRecord->dead_status = 1;
-                        }
+                       
                         $existingRecord->save();
                     } else {
                         $avalabile = 1;
@@ -895,11 +908,8 @@ class ReportController extends Controller
                 $TblReportItem->amp = $request->ampled[$index] ?? null;
                 $TblReportItem->volt = $request->voltled[$index] ?? null;
                 $TblReportItem->watt = $request->wattled[$index] ?? null;
-                if ($request->srled[$index] == '0') {
-                    $TblReportItem->used_qty = $request->used_qty[$index];
-                } else {
-                    $TblReportItem->used_qty = 1;
-                }
+                $TblReportItem->used_qty = ($request->srled[$index] == '0') ? $request->used_qty[$index] : 1;
+
                 try {
                     $TblReportItem->save();
                 } catch (\Exception $e) {

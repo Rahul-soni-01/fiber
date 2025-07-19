@@ -261,13 +261,13 @@ class TblPurchaseItemController extends Controller
 
     public function edit($id, Request $request)
     {
-        $inward = tbl_purchase::with('Items')->findOrFail($id); 
-        // $inward = tbl_purchase_item::where('invoice_no',$id)->get();
-        // dd($inward);
+        $inward = tbl_purchase::with('Items')->where('invoice_no',$id)->first(); 
+        // $inward = tbl_purchase_item::with('Items')->where('invoice_no',$id)->get();
+        
         $inwards = tbl_category::all();
         $items = tbl_sub_category::all();
         $partyname = tbl_party::all();
-        $main_category = $request->query('main_category');
+        $main_category = $request->query('main_category')?? null;
 
         if($main_category){
             $inwards = tbl_category::where('main_category', $main_category)->get();

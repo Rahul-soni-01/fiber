@@ -177,10 +177,11 @@
                 @endif
             </div>
             @if(auth()->user()->type == 'account')
-            <small class="text-white">*Leave it unchanged if you don't want to update the status.</small>
+            <small class="text-dark">*Leave it unchanged if you don't want to update the status.</small>
             @endif
         </div>
-        @if(auth()->user()->type == 'account')
+        @if(auth()->user()->type == 'account' && $report->sale_status == '0' && $report->status !== '1' && ($report->section == '1' || $report->section == '2'))
+        
         <form action="{{ route('report.update', $report->id) }}" method="POST">
             @csrf
             @method('PUT')

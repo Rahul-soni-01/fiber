@@ -177,8 +177,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     // console.log("798");
                 }
+                let chatList = '<ul class="list-group">';
+                response.userchats.forEach(function (user) {
+                    chatList += `
+                        <li class="list-group-item list-group-item-action user-chat-item" 
+                            data-id="${user.id}" data-name="${user.name}" style="cursor:pointer;">
+                            ${user.name}
+                        </li>`;
+                });
+                chatList += '</ul>';
+
+                $('#chat-messages').html(chatList);
             }
         });
+
     }
 
     window.onload = checkQueryParams(), check_permission();
@@ -557,14 +569,13 @@ $(document).ready(function () {
                                                     <input type="hidden" name="sub_category[]" value="${field.sub_category.id}"> 
                                                     <input type="hidden" name="sr_no_or_not[]" value="0">
                                                 </div>
-                                                    <input type="hidden" name="sr_no_or_not[]" value="0">
+                                                    
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" list="srled_${row}" class="form-control" placeholder="Enter Quantity" required>
+                                                        <input type="text" list="srled_${row}" name="used_qty[]" class="form-control" placeholder="Enter Quantity" required>
                                                         <datalist id="srled_${row}">
                                                             <option value=""></option>
                                                         </datalist>
                                                         <input type="hidden" name="srled[]" value="0">
-                                                        <input type="hidden" name="used_qty[]" class="form-control" placeholder="Enter Qty" value="1">
                                                     </div>
                                                     
                                                     <div class="col-12 col-md-2">                     
@@ -713,6 +724,81 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('click', '.user-chat-item', function () {
+        let userId = $(this).data('id');
+        let userName = $(this).data('name');
+
+        $('#chat-user-name').text(userName);
+        $('#chat-receiver-id').val(userId);
+        $('#user-chat-body').html('<div class="text-muted text-center">Loading messages...</div>');
+
+         $.ajax({
+        url: '/chat-messages-' + userId,
+        method: 'post',
+          data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+            },
+        success: function (res) {
+            let html = '';
+            if (res.messages.length === 0) {
+                html = '<div class="text-muted text-center">No messages yet.</div>';
+            } else {
+                res.messages.forEach(function (msg) {
+                    if (msg.sender_id == res.auth_id) {
+                        html += `<div class="text-end mb-1"><span class="badge bg-primary">${msg.message}</span></div>`;
+                    } else {
+                        html += `<div class="text-start mb-1"><span class="badge bg-light text-dark border">${msg.message}</span></div>`;
+                    }
+                });
+            }
+
+            $('#user-chat-body').html(html);
+            $('#user-chat-body').scrollTop($('#user-chat-body')[0].scrollHeight);
+        }
+    });
+
+        $('#chatModal').modal('hide');
+        $('#userChatModal').modal('show');
+
+    });
+    $('#chat-send-form').on('submit', function (e) {
+        e.preventDefault();
+
+        const msg = $('#chat-message-input').val();
+        const receiverId = $('#chat-receiver-id').val();
+
+        if (msg.trim() === '') return;
+
+        // Append message immediately (UI feedback)
+        $('#user-chat-body').append(`
+            <div class="d-flex justify-content-end mb-1">
+                <div class="bg-primary text-white p-2 rounded-start rounded-pill small">${msg}</div>
+            </div>
+        `);
+
+        $('#chat-message-input').val('');
+        $('#user-chat-body').scrollTop($('#user-chat-body')[0].scrollHeight);
+
+        // 🔽 AJAX request to store message
+        $.ajax({
+            url: '/store-chat-message', // Route in Laravel
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                receiver_id: receiverId,
+                message: msg
+            },
+            success: function (response) {
+                // You can show success notification here if needed
+                console.log('Message saved:', response);
+            },
+            error: function (xhr) {
+                console.error('Error sending message:', xhr.responseText);
+            }
+        });
+    });
+
 });
 function checkReportCount() {
     var xhr = new XMLHttpRequest();
@@ -726,10 +812,12 @@ function checkReportCount() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);
             var newCount = response.count;
-
+            var newUnread = response.unread_messages;
             // Update UI
             document.getElementById('report-count-text').textContent = newCount;
             document.querySelector('#notificationDropdown .badge').textContent = newCount;
+
+               document.getElementById('chat-unread-count').textContent = newUnread;
 
             // Optional: show something when count changes
             if (response.status === 'changed') {
@@ -739,9 +827,18 @@ function checkReportCount() {
                 var toastElement = document.getElementById('reportToast');
                 var toast = new bootstrap.Toast(toastElement);
                 toast.show();
+                previousCount = newCount;
             }
+            if (newUnread > previousUnreadMessages) {
+                document.getElementById('toast-message').textContent =
+                    "📨 You have " + newUnread + " unread message(s).";
 
-            previousCount = newCount;
+                var toastElement = document.getElementById('reportToast');
+                var toast = new bootstrap.Toast(toastElement);
+                toast.show();
+
+                previousUnreadMessages = newUnread;
+            }
         }
     };
 

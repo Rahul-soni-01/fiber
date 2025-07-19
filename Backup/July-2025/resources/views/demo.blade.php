@@ -317,7 +317,8 @@
                                     <a href="{{ route('report.ready') }}" class="nav-link">Ready Report</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="view">
-                                    <a href="{{ route('invoices.index') }}" id="view" class="nav-link">Live Stock setting</a>
+                                    <a href="{{ route('invoices.index') }}" id="view" class="nav-link">Live Stock
+                                        setting</a>
                                 </li>
                             </ul>
                         </div>
@@ -540,10 +541,11 @@
                                 <ul class="dropdown-menu dropdown-menu-end shadow p-3"
                                     aria-labelledby="notificationDropdown" style="min-width: 200px;">
                                     <li class="fw-bold">Fiber Count:</li>
-                                    <li class="text-center text-primary fs-5" id="report-count-text">{{ session('report_count') }}</li>
+                                    <li class="text-center text-primary fs-5" id="report-count-text">{{
+                                        session('report_count') }}</li>
                                     <li>
                                         <a href="{{ route('report.new') }}" class="btn btn-sm btn-primary w-100">
-                                            View All 
+                                            View All
                                         </a>
                                     </li>
                                 </ul>
@@ -575,6 +577,83 @@
             </div>
         </div>
     </div>
+    <!-- Fixed Chat Icon Button -->
+    <button type="button" class="btn btn-primary rounded-circle shadow position-fixed bottom-0 end-0 m-4"
+        data-bs-toggle="modal" data-bs-target="#chatModal" style="width: 60px; height: 60px;">
+        💬
+    </button>
+
+    <!-- Chat Mini Modal -->
+    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm position-fixed bottom-0 end-0 m-5">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title" id="chatModalLabel">Chat</h6>
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body overflow-auto" style="max-height: 200px;" id="chat-messages">
+
+                </div>
+                <div class="modal-footer py-2">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Chat Modal (User Conversation) -->
+    <div class="modal fade" id="userChatModal" tabindex="-1" aria-labelledby="userChatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm position-fixed bottom-0 end-0 m-5">
+            <div class="modal-content d-flex flex-column" style="height: 400px;">
+                <!-- Header -->
+                <div class="modal-header py-2 bg-success text-white">
+                    <h6 class="modal-title mb-0" id="userChatModalLabel">
+                        <i class="bi bi-person-circle me-1"></i> Chat with <span id="chat-user-name"></span>
+                    </h6>
+                    <button type="button" class="btn-close btn-close-white btn-sm" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <!-- Chat Messages Area -->
+                <div class="modal-body flex-grow-1 overflow-auto px-2 py-1" id="user-chat-body"
+                    style="background-color: #f0f0f0;">
+                    <!-- Messages will go here -->
+                    <div class="text-muted text-center small">Start chatting...</div>
+                </div>
+
+                <!-- Footer Input -->
+                <div class="modal-footer p-2 bg-light">
+                    <form class="w-100 d-flex align-items-center gap-2" id="chat-send-form">
+                        <!-- Hidden Receiver ID -->
+                        <input type="hidden" id="chat-receiver-id" name="receiver_id" value="">
+
+                        <!-- Message Input -->
+                        <input type="text" class="form-control form-control-sm" id="chat-message-input"
+                            placeholder="Type a message..." required>
+
+                        <!-- Send Button -->
+                        <button type="submit" class="btn btn-sm btn-success">
+                            >
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div class="toast" id="reportToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <small>Just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-message">
+                <!-- Dynamic message here -->
+            </div>
+        </div>
+    </div>
+
     <div class="text-white bg-dark" id="footer">
         {{$websetting->footer_text ?? null}}
     </div>

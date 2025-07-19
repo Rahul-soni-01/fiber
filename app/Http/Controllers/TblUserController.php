@@ -20,6 +20,7 @@ class TblUserController extends Controller
 {
     public function login(Request $req)
     {
+        // dd(Hash::check($req->password));
         $req->validate([
             'username' => 'required|email',
             'password' => 'required|min:6',
@@ -28,7 +29,6 @@ class TblUserController extends Controller
         $user = tbl_user::where('email', $req->username)->first();
 
         if ($user) {
-            // dd(Hash::check($req->password,$user->password));
             if (Hash::check($req->password, $user->password)) {
                 Auth::login($user);
                 return redirect('/home');

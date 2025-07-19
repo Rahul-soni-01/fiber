@@ -31,6 +31,7 @@ use App\Http\Controllers\OpeningBalanceController;
 use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\ReportPermissionController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ChatController;
 
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
@@ -49,6 +50,13 @@ Route::get('/welcome', function () {
 Route::middleware('auth')->group(function () {
     Route::post('/check_permission', [TblUserController::class, 'permission'])->name('check_permission');
     Route::post('/check_stock', [TblStockController::class, 'check_stock'])->name('check_stock');
+
+     Route::get('/chat-{userId}', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat-send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::post('/store-chat-message', [ChatController::class, 'store']);
+    Route::post('/chat-messages-{userId}', [ChatController::class, 'getMessages']);
+
+
     // Home Blade
     Route::get('/home', [TblUserController::class, 'show'])->name('home');
     Route::get('/websetting', [DepartmentController::class, 'websetting'])->name('websetting');
