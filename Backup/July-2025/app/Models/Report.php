@@ -44,4 +44,8 @@ class Report extends Model
     {
         return $this->hasMany(TblReportItem::class, 'report_id', 'id');
     }
+    public function customer()
+    {
+        return $this->belongsTo(TblCustomer::class, 'party_name','id');
+    }
 }

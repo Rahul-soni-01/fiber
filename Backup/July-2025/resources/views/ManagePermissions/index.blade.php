@@ -56,7 +56,7 @@
 
             <td>{{ $permission->id }}</td>
 
-            <td>{{ $permission->user->name }}</td>
+            <td>{{ $permission->user->name ?? 'N/A' }}</td>
 
             <td>
 

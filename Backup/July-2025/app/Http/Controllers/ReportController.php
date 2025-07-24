@@ -39,8 +39,9 @@ class ReportController extends Controller
     }
     public function index(Request $request)
     {
+        // dd("65");
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_type')->get();
+            $reports = Report::with('tbl_type', 'customer')->get();
             // dd($reports);
             if (auth()->user()->type === 'godown') {
                 // dd("de");
@@ -52,11 +53,12 @@ class ReportController extends Controller
     }
     public function indexNew(Request $request)
     {
+        // dd("66");
         if ($this->checkPermission($request, 'view')) {
             $types = Tbltype::with(['reports' => function ($query) {
                 $query->where('sale_status', 0);
             }])->get();
-            // Use 'tbl_type' (singular) as defined in the model
+
             // $reports = Report::with('tbl_type')->get()->groupBy('type');
             // dd($types,$reports);
             if (auth()->user()->type === 'godown') {
@@ -73,7 +75,7 @@ class ReportController extends Controller
     }
     public function ReportNew(Request $request)
     {
-        $reports = Report::with('tbl_type')
+        $reports = Report::with('tbl_type', 'customer')
             // ->where('part', 0);
             ->where('sale_status', 0);
         // Apply filters conditionally
@@ -88,8 +90,12 @@ class ReportController extends Controller
         if ($request->query('worker_name') !== null) {
             $reports->where('worker_name', 'like', '%' . $request->query('worker_name') . '%');
         }
+        if ($request->query('c_name') !== null) {
+            dd($reports);
+            $reports->where('party_name', 'like', '%' . $request->query('c_name') . '%');
+        }
         $reports = $reports->get();
-        $tbl_parties = tbl_party::all();
+        $tbl_parties = TblCustomer::all();
         return view("report.index", compact('reports', 'tbl_parties'));
     }
     public function create(Request $request)
@@ -693,10 +699,11 @@ class ReportController extends Controller
         if ($sub_category) {
             foreach ($request->srled as $index => $serial_no) {
                 $sr_no_or_not = $request->sr_no_or_not[$index];
+                 $sub_cat = tbl_sub_category::where('id', $sub_category[$index])->first();
                 $dead = $request->dead[$index];
                 if ($sr_no_or_not == 1) {
                     // dd("VIRAJ");
-                    if(!$serial_no){
+                    if (!$serial_no) {
                         $avalabile = 1;
                         try {
                             TblStock::whereIn('id', $TblStockinsertedIds)->delete();
@@ -774,9 +781,9 @@ class ReportController extends Controller
                     }
                     $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
                 } elseif ($sr_no_or_not == 0) {
-                // dd("ISHITA");
                     $invoice_no = SelectedInvoice::where('scid', $request->sub_category[$index])->first()->invoice_no;
-                    if(!$invoice_no){
+                    // dd($invoice_no, $request->sub_category[$index], $serial_no);
+                    if (!$invoice_no) {
                         $avalabile = 1;
                         try {
                             TblStock::whereIn('id', $TblStockinsertedIds)->delete();
@@ -791,23 +798,22 @@ class ReportController extends Controller
                             $Record_delete->delete();
                         }
                         return redirect()->back()->with('error', '!! No purchase Found in Stock, Please Select Valid Invoice No for Stock !!.');
-
                     }
-                    
+
                     $invoice = tbl_purchase::where('invoice_no', $invoice_no)->first();
                     // $invoice_no = $SelectedInvoice;
                     $date = $invoice->date;
                     $invoice_data = tbl_purchase_item::where('invoice_no', $invoice_no)
                         ->where('scid', $request->sub_category[$index])
                         ->first();
-                        // dd($invoice_data);
+                    // dd($invoice_data);
                     if ($invoice_data == null) {
                         // dd($request->sub_category[$index], $invoice_no, $invoice, $invoice_data);
                         // throw new \Exception('No purchase found in stock. Please select a valid invoice number.');
                         $scid = $request->sub_category[$index];
                         $subCat = tbl_sub_category::find($sub_category[$index]);
                         $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
-                        $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
+                        // $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no ? 0;
                         $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
                         throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                     }
@@ -838,15 +844,18 @@ class ReportController extends Controller
                     );
                     if ($existingRecord) {
                         $tbl_stock_id = $existingRecord->id;
-                        $report_used_qty_counts = TblReportItem::where('tblstock_id', $tbl_stock_id)->get();
-                        $report_used_qty = 0;
-                        // dd($request->all(),$existingRecord);
-                        foreach ($report_used_qty_counts as $report_used_qty_count) {
-                            $report_used_qty += $report_used_qty_count->used_qty;
-                        }
+                        $report_used_qty = $request->used_qty[$index] ?? 0;
+                        $report_used_qty = is_numeric($report_used_qty) ? (float)$report_used_qty : 0;
+
+                        // Sum all used_qty values from the database in a single query
+                        $sum_used_qty = TblReportItem::where('tblstock_id', $tbl_stock_id)
+                            ->sum('used_qty');
+
+                        $report_used_qty += (float)$sum_used_qty;
 
                         // dd($invoice_no,$invoice_data,$existingRecord, $report_used_qty_counts, $report_used_qty);
                         if ($report_used_qty > $existingRecord->qty) {
+                            $subCat = tbl_sub_category::where('id', $sub_category[$index])->first();
                             $avalabile = 1;
                             try {
                                 TblStock::whereIn('id', $TblStockinsertedIds)->delete();
@@ -861,14 +870,14 @@ class ReportController extends Controller
                                 $Record_delete->delete();
                             }
                             // return redirect()->back()->with('error', 'Failed to store the report. You Not have a enough quantity in Stock, Please Check Your Stock Report.');
-                            $invoiceNo = $invoice_no ? $invoice_no->invoice_no : 'N/A';
+                            $invoiceNo = $invoice_no ? $invoice_no->invoice_no : 0;
                             $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
                             return redirect()->back()->with('error', "Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
                         } elseif ($report_used_qty = $existingRecord->qty) {
                             $existingRecord->status = 1;
                         }
                         $amount += $existingRecord->priceofUnit;
-                       
+
                         $existingRecord->save();
                     } else {
                         $avalabile = 1;
@@ -975,7 +984,7 @@ class ReportController extends Controller
                         $exists = DB::table('tbl_reports')
                             ->where('sr_no_fiber', $request->sr_no_fiber)
                             ->where('part', 0)
-                            ->where('id', '!=', $id) 
+                            ->where('id', '!=', $id)
                             ->exists();
 
                         if ($exists) {
@@ -1125,12 +1134,12 @@ class ReportController extends Controller
                             if ($existingRecord) {
                                 $tbl_stock_id = $existingRecord->id;
                                 $report_used_qty = $request->used_qty[$index] ?? 0;
-                                $report_used_qty_counts = TblReportItem::where('tblstock_id', $tbl_stock_id)->get();
+                                $report_used_qty = is_numeric($report_used_qty) ? (float)$report_used_qty : 0;
 
-                                foreach ($report_used_qty_counts as $report_used_qty_count) {
-                                    $report_used_qty += $report_used_qty_count->used_qty;
-                                }
+                                // Sum all used_qty values from the database in a single query
+                                $sum_used_qty = TblReportItem::where('tblstock_id', $tbl_stock_id)->sum('used_qty');
 
+                                $report_used_qty += (float)$sum_used_qty;
                                 if ($report_used_qty > $existingRecord->qty) {
 
                                     $scid = $request->sub_category[$index];

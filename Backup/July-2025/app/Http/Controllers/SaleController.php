@@ -41,7 +41,7 @@ class SaleController extends Controller
                 }
 
                 // Regular status filtering
-                $sales = Sale::with('customer')
+                $sales = Sale::with('customer','items')
                     ->where('status', $status)
                     ->get();
 

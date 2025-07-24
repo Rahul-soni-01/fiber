@@ -50,6 +50,7 @@
                <tr>
                <th>#</th>
                <th>Date</th>
+               <th>Sr-No</th>
                <th>Status</th>
                <th>Price</th>
                <th>Action</th>
@@ -60,6 +61,11 @@
                <tr>
                <td>{{$sale->sale_id}}</td>
                <td>{{$sale->sale_date}}</td>
+               <td> @foreach ($sale->items as $item)
+                    {{ $item->sr_no }}
+                    @if(!$loop->last), @endif
+                    @endforeach</td>
+                    
                <td> 
                     @switch($sale->status)
                          @case(0)

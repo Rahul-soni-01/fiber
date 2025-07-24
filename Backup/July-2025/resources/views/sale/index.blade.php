@@ -23,17 +23,19 @@
                 <th>#</th>
                 {{-- <th>Date</th> --}}
                 <th>Customer</th>
+                <th>Sr-No</th>
                 <th>Price</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($sales as $index => $sale)
-            {{-- {{ dd($sale);}} --}}
+             <!-- {{ dd($sale);}}  -->
             <tr>
                 <td>{{ $index + 1 }}</td>
-                {{-- <td>{{ $sale->sale_date ?? 'N/A' }}</td> --}}
+                
                 <td>{{ $sale->customer_name ?? 'N/A' }}</td>
+                <td>{{ $sale->items->sr_no ?? 'N/A' }}</td>
                 <td>{{ $sale->total_sale_amount ?? 0 }}</td>
                 <td>
                     <button class="btn btn-primary"> <a href="{{ route('customer.sell.details', ['customer_id' =>  $sale->id ]) }}">

@@ -84,19 +84,7 @@
     <div id="loading-spinner" class="spinner-border text-primary" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-    <!-- Toast Container -->
-    <div class="position-fixed end-0 p-3" style="z-index: 9999">
-        <div id="reportToast" class="toast align-items-center text-bg-primary border-0" role="alert"
-            aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="toast-message">
-                    <!-- Will be updated by JS -->
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Sidebar and Main Content -->
     <div class="container-fluid" id="content">
@@ -409,7 +397,7 @@
                                 <li class="nav-item nav-sub-item" id="add">
                                     <a href="{{ route('gst-pdf.index') }}" class="nav-link">GST PDF Invoice</a>
                                 </li>
-                                <li class="nav-item nav-sub-item" id="show">
+                                {{-- <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('final.balance') }}" class="nav-link">Final balance</a>
                                 </li>
                                 <li class="nav-item nav-sub-item" id="show">
@@ -424,7 +412,7 @@
                                 </li>
                                 <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('predefine.index') }}" id="view" class="nav-link">Predefine of
-                                        Accounts </a>
+                                        Accounts </a> --}}
                                 </li>
                             </ul>
                         </div>
@@ -641,18 +629,32 @@
         </div>
     </div>
 
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div class="toast" id="reportToast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <strong class="me-auto">Notification</strong>
-                <small>Just now</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body" id="toast-message">
-                <!-- Dynamic message here -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        <!-- New Msg Toast (User Conversation) -->
+        <div class="toast align-items-center text-bg-warning border-0" id="chatToast" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <span id="chat-toast-message">New message received!</span>
+                    <span id="chat-unread-count" class="badge bg-danger ms-2">0</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>
+    <!-- New Report Toast -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999; bottom: 60px;">
+        <div id="reportToast" class="toast align-items-center text-bg-primary border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toast-message"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
 
     <div class="text-white bg-dark" id="footer">
         {{$websetting->footer_text ?? null}}

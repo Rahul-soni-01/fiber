@@ -20,7 +20,7 @@
          <table class="table text-dark">
                 <thead class="table-dark text-white">
                     <th>ID</th>
-                    {{-- <th>Part</th> --}}
+                    <th>Part</th>
                     <th>W/N.W.</th>
                     <th>Section</th>
                     <th>Date</th>
@@ -37,15 +37,15 @@
                 @foreach ($reportGroup as $report)
                 <tr class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
                     <td>{{ $report->id }}</td>
-                    {{-- <td>
+                    <td>
                         @if($report->part == 0)
-                            <span class="badge badge-primary">New</span>
+                           New
                         @elseif($report->part == 1)
-                            <span class="badge badge-warning">Repair</span>
+                            Repair
                         @else
-                            <span class="badge badge-secondary">Unknown</span>
+                            Unknown
                         @endif
-                    </td> --}}
+                    </td>
 
                     <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown') }}</td>
                     <td><select id="section" class="form-select section"  data-id="{{ $report->id }}">

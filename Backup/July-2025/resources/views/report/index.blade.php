@@ -30,8 +30,8 @@
                     <select name="p_name" id="sid" class="form-control">
                         <option value="" disabled selected>Select Party</option>
                         @foreach($tbl_parties as $tbl_party)
-                        <option value="{{ $tbl_party->id }}" {{ request('p_name')==$tbl_party->id ? 'selected' : '' }}>
-                            {{ $tbl_party->party_name }}
+                        <option value="{{ $tbl_party->id }}" {{ request('c_name')==$tbl_party->id ? 'selected' : '' }}>
+                            {{ $tbl_party->customer_name }}
                         </option>
                         @endforeach
                     </select>
@@ -107,10 +107,10 @@
                     @endif
 
                     @if(auth()->user()->type === 'account')
-
                     <th>SR(FIBER) / Temp No.</th>
                     <th>Type</th>
                     <th>Final Amount</th>
+                    <th>Party</th>
                     <th>Action</th>
                     @endif
 
@@ -241,6 +241,7 @@
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->tbl_type->name ?? 'N/A' }}</td>
                     <td>{{ $report->final_amount }}</td>
+                    <td>{{ $report->customer->customer_name ?? "N/A" }}</td>
                     <td> <a href="{{ route('report.show', $report->id) }}" class="btn btn-primary"> <i
                                 class="ri-eye-fill"></i></a>
                     </td>

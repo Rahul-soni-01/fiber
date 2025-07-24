@@ -234,7 +234,7 @@
                     {{$result->category_name}} || {{ $result->sub_category_name}}
                 @elseif($result->table_name === 'tbl_report_items')
                   Fiber SR NO:-   {{ $result->report->sr_no_fiber ?? $result->report->temp ?? 'N/A'}}
-                  @if($result->report->part === 0)
+                @if(!empty($result->report) && $result->report->part === 0)
                     | Current Section: <strong class="bg-primary"> @switch($result->section)
                         @case(0) Mainstore @break
                         @case(1) Manufactur @break
@@ -245,7 +245,7 @@
                         @endswitch
                     </strong>
                     @endif
-                  @elseif($result->table_name === 'replacements')
+                @elseif($result->table_name === 'replacements')
                     <span class="badge bg-warning">Replaced</span>
                     ({{ $result->old_sr_no }} → {{ $result->new_sr_no }})
                 @endif

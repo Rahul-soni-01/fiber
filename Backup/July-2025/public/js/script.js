@@ -733,30 +733,30 @@ $(document).ready(function () {
         $('#chat-receiver-id').val(userId);
         $('#user-chat-body').html('<div class="text-muted text-center">Loading messages...</div>');
 
-         $.ajax({
-        url: '/chat-messages-' + userId,
-        method: 'post',
-          data: {
+        $.ajax({
+            url: '/chat-messages-' + userId,
+            method: 'post',
+            data: {
                 _token: $('meta[name="csrf-token"]').attr('content'),
             },
-        success: function (res) {
-            let html = '';
-            if (res.messages.length === 0) {
-                html = '<div class="text-muted text-center">No messages yet.</div>';
-            } else {
-                res.messages.forEach(function (msg) {
-                    if (msg.sender_id == res.auth_id) {
-                        html += `<div class="text-end mb-1"><span class="badge bg-primary">${msg.message}</span></div>`;
-                    } else {
-                        html += `<div class="text-start mb-1"><span class="badge bg-light text-dark border">${msg.message}</span></div>`;
-                    }
-                });
-            }
+            success: function (res) {
+                let html = '';
+                if (res.messages.length === 0) {
+                    html = '<div class="text-muted text-center">No messages yet.</div>';
+                } else {
+                    res.messages.forEach(function (msg) {
+                        if (msg.sender_id == res.auth_id) {
+                            html += `<div class="text-end mb-1"><span class="badge bg-primary">${msg.message}</span></div>`;
+                        } else {
+                            html += `<div class="text-start mb-1"><span class="badge bg-light text-dark border">${msg.message}</span></div>`;
+                        }
+                    });
+                }
 
-            $('#user-chat-body').html(html);
-            $('#user-chat-body').scrollTop($('#user-chat-body')[0].scrollHeight);
-        }
-    });
+                $('#user-chat-body').html(html);
+                $('#user-chat-body').scrollTop($('#user-chat-body')[0].scrollHeight);
+            }
+        });
 
         $('#chatModal').modal('hide');
         $('#userChatModal').modal('show');
@@ -810,39 +810,89 @@ function checkReportCount() {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
+            let previousCount = 0; // Report count
+
             var response = JSON.parse(xhr.responseText);
             var newCount = response.count;
             var newUnread = response.unread_messages;
+            var previousUnreadMessages = response.previousUnreadMessages;
             // Update UI
             document.getElementById('report-count-text').textContent = newCount;
             document.querySelector('#notificationDropdown .badge').textContent = newCount;
 
-               document.getElementById('chat-unread-count').textContent = newUnread;
+            document.getElementById('chat-unread-count').textContent = newUnread;
 
-            // Optional: show something when count changes
+            //  document.getElementById('report-count-text').textContent = newReportCount;
+            // document.querySelector('#notificationDropdown .badge').textContent = newReportCount;
+
+            // Update Unread Message Count UI
+            document.getElementById('chat-unread-count').textContent = newUnread;
+
             if (response.status === 'changed') {
-                document.getElementById('toast-message').textContent =
-                    "New Report Added — Total Fiber Remaining: " + response.count;
+                // Show Report Toast if report count changed
+                if (newCount !== parseInt(sessionStorage.getItem("report_count"))) {
+                    document.getElementById('toast-message').textContent =
+                        "📄 New Report Added — Total Fiber Remaining: " + newCount;
 
-                var toastElement = document.getElementById('reportToast');
-                var toast = new bootstrap.Toast(toastElement);
-                toast.show();
-                previousCount = newCount;
-            }
-            if (newUnread > previousUnreadMessages) {
-                document.getElementById('toast-message').textContent =
-                    "📨 You have " + newUnread + " unread message(s).";
+                    var reportToast = new bootstrap.Toast(document.getElementById('reportToast'));
+                    reportToast.show();
 
-                var toastElement = document.getElementById('reportToast');
-                var toast = new bootstrap.Toast(toastElement);
-                toast.show();
+                    sessionStorage.setItem("report_count", newCount);
+                }
 
-                previousUnreadMessages = newUnread;
+                // Show Chat Toast if unread message count changed
+                if (newUnread > previousUnreadMessages) {
+                    document.getElementById('chat-toast-message').textContent = "📨 New message received!";
+                    document.getElementById('chat-unread-count').textContent = newUnread;
+
+                    const toastEl = document.getElementById('chatToast');
+                    const toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+                }
             }
         }
     };
 
     xhr.send();
+}
+
+let selectedUserId = null;
+
+function startPollingChat(userId) {
+    selectedUserId = userId;
+
+    // Stop previous interval if any
+    if (chatInterval) clearInterval(chatInterval);
+
+    chatInterval = setInterval(() => {
+        if (selectedUserId) {
+            fetch(`/chat-fetch-messages-user_id=${selectedUserId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': token
+                }
+            })
+                .then(res => res.json())
+                .then(messages => {
+                    updateChatWindow(messages);
+                });
+        }
+    }, 500); // every 3 seconds
+}
+
+function updateChatWindow(messages) {
+    const chatContainer = document.getElementById('chat-body');
+    chatContainer.innerHTML = ''; // clear previous messages
+
+    messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.classList.add('message');
+        div.classList.add(msg.sender_id === CURRENT_USER_ID ? 'right' : 'left');
+        div.textContent = msg.message;
+        chatContainer.appendChild(div);
+    });
+
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 function SerialFocus(inputElement, row) {
     // console.log("Input focused for row:", row);

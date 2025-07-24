@@ -53,7 +53,7 @@ class ChatController extends Controller
     }
     public function getMessages($userId)
     {
-        $authId = Auth::id();
+        $authId = Auth::user()->id;
 
         $messages = Message::where(function ($q) use ($authId, $userId) {
             $q->where('sender_id', $authId)->where('receiver_id', $userId);
@@ -62,10 +62,38 @@ class ChatController extends Controller
         })
             ->orderBy('created_at', 'asc')
             ->get();
+             
+             // ✅ Auto-mark messages from the other user as read
+            Message::where('sender_id', $userId)
+            ->where('receiver_id', auth()->user()->id)
+            ->where('mark_as_read', 0)
+            ->update(['mark_as_read' => 1]);
 
         return response()->json([
             'messages' => $messages,
             'auth_id' => $authId
+        ]);
+    }
+    public function fetch( $id, Request $request)
+    {
+        dd($request->all(),$id);
+        $id = $request->user_id;
+        $messages = Message::where(function ($query) use ($id) {
+            $query->where('sender_id', auth()->user()->id)
+                ->where('receiver_id', $id);
+        })->orWhere(function ($query) use ($id) {
+            $query->where('sender_id', $id)
+                ->where('receiver_id', auth()->user()->id);
+        })->orderBy('created_at')->get();
+
+        // ✅ Auto-mark messages from the other user as read
+        Message::where('sender_id', $id)
+            ->where('receiver_id', auth()->user()->id)
+            ->where('mark_as_read', 0)
+            ->update(['mark_as_read' => 1]);
+
+        return response()->json([
+            'messages' => $messages,
         ]);
     }
 }

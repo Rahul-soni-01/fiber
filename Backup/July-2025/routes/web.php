@@ -51,10 +51,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/check_permission', [TblUserController::class, 'permission'])->name('check_permission');
     Route::post('/check_stock', [TblStockController::class, 'check_stock'])->name('check_stock');
 
-     Route::get('/chat-{userId}', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat-{userId}', [ChatController::class, 'index'])->name('chat.index');
     Route::post('/chat-send', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::post('/store-chat-message', [ChatController::class, 'store']);
     Route::post('/chat-messages-{userId}', [ChatController::class, 'getMessages']);
+    Route::post('/chat-fetch-messages-user_id={user_id}', [ChatController::class, 'fetch']);
 
 
     // Home Blade

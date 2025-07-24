@@ -2,9 +2,7 @@
 @section('title', 'Edit Permission')
 
 @section('content')
-<h3>User Name:-{{$managePermission->user->name}}, Department Name:- {{ $managePermission->user->department ?
-    $managePermission->user->department->name : 'ADMIN' }}
-</h3>
+<h3>Department Name:- {{ optional($managePermission->user->department)->name ?? 'ADMIN' }}</h3>
 <a href="{{ route('manage.permissions') }}" class="btn btn-primary">Back to Permission</a>
 <form action="{{ route('manage-permissions.update', $managePermission->id) }}" method="POST">
     @csrf
