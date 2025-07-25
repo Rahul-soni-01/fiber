@@ -102,11 +102,15 @@ class TblUserController extends Controller
         $type = auth()->user()->type;
 
         $userchats = tbl_user::whereNot('id', auth()->user()->id)->get();
-        $unreadCounts = Message::select('sender_id', DB::raw('COUNT(*) as unread'))
+         $unreadCounts = Message::select('sender_id', DB::raw('COUNT(*) as unread'))
         ->where('receiver_id', auth()->user()->id)
         ->where('mark_as_read', 0)
         ->groupBy('sender_id')
         ->pluck('unread', 'sender_id');
+
+        foreach ($userchats as $user) {
+            $user->unread_count = $unreadCounts[$user->id] ?? 0;
+        }
 
         return response()->json(['permissions' => $permissions, 'type' => $type, 'userchats' => $userchats, 'unreadCounts' => $unreadCounts ]);
     }

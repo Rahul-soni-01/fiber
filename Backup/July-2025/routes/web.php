@@ -243,7 +243,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/report-search', [ReportController::class, 'search'])->name('report.search');
     Route::get('/report-ready', [ReportController::class, 'ready'])->name('report.ready');
     Route::post('/report-ready', [ReportController::class, 'ready'])->name('report.ready.update');
-    Route::delete('/report-{sale_id}', [ReportController::class, 'destroy'])->name('report.destroy');
+    Route::delete('/report-{id}', [ReportController::class, 'destroy'])->name('report.destroy');
     
     Route::get('/serial-history', [SaleController::class, 'history'])->name('serial.history');
 

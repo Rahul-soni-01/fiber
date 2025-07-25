@@ -253,7 +253,7 @@ class SaleController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
+        // dd($request->all());  
         $validator = Validator::make($request->all(), [
             // 'sale_id' => 'required|unique:tbl_sales,sale_id',
             'date' => 'required|date',
@@ -286,17 +286,27 @@ class SaleController extends Controller
 
         ]);
         if ($validator->fails()) {
+            // dd($request->all(),"4");
+            
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $sale = new Sale();
-        if (empty($request->sale_id) || Sale::where('sale_id', $request->sale_id)->exists()) {
-            // Get the maximum existing sale_id and increment it
-            $maxId = Sale::max('sale_id');
-            $sale->sale_id = $maxId ? $maxId + 1 : 1; // Start with 1 if no sales exist
+        if (empty($request->sale_id)) {
+        // Get the maximum sale_id numerically (handles string IDs if they exist)
+        $maxId = Sale::query()
+                   ->selectRaw('MAX(CAST(sale_id AS UNSIGNED)) as max_id')
+                   ->value('max_id');
+        
+        $sale->sale_id = $maxId ? $maxId + 1 : 1;
         } else {
+            // Check if the requested sale_id already exists
+            if (Sale::where('sale_id', $request->sale_id)->exists()) {
+                return back()->withErrors(['sale_id' => 'This sale ID already exists']);
+            }
             $sale->sale_id = $request->sale_id;
         }
+        // dd($maxId);
         $sale->customer_id = $request->cid;
         $sale->status = $request->status;
         $sale->repair_status = $request->repair_status;
@@ -311,24 +321,33 @@ class SaleController extends Controller
             $sale->save();
             $count = count($request->sr_no);
             for ($i = 0; $i < $count; $i++) {
-                $report_id = $request->sr_no[$i];
-                $report = Report::with('reportItems')->where('sr_no_fiber', $report_id)->first();
+                $sr_no = $request->sr_no[$i];
+                $report_id = $request->report_id[$i];
+                
+                $report = Report::with('reportItems')->where('id', $report_id)->first();
+                if ($report) {
+                    $report->sale_status = 1;
+                    $report->stock_status = 0;
+                    $report->outdate = $request->date;
+                    $report->section = 4; // section 4 is for Sale
+                    $report->save();
+                }
+
+                $report = Report::with('reportItems')->where('sr_no_fiber', $sr_no)->first();
                 // dd($report);
                 if ($report) {
                     // Update sale_status to 1
                     $report->sale_status = 1;
                     $report->stock_status = 0;
-                    $report->outdate = $request->date;
                     $report->section = 4;
                     $report->save();
-                    // dd($report,$request->cname[$i]);
                     $report_id = $report->id;
                     try {
                         $itemResult = SaleItem::create([
                             'sid' => $sale->id,
                             'sale_id' => $sale->sale_id,
                             // 'serial_no' => $serial_no,
-                            'report_id' => $report_id, // Report ID
+                            'report_id' => $request->report_id[$i], // Report ID
                             'cname' => $request->cname[$i],
                             'scname' => $request->scname[$i],
                             'unit' => $request->unit[$i],
@@ -507,9 +526,11 @@ class SaleController extends Controller
             $oldsaleItems = SaleItem::where('sid', $id)->get();
             try {
                 foreach ($oldsaleItems as $oldsaleItem) {
-                    $report = Report::with('tbl_leds', 'tbl_cards', 'tbl_leds.tbl_sub_category')->where('id', $oldsaleItem->report_id)->first();
+                    $report = Report::with('tbl_type', 'reportItems')->where('id', $oldsaleItem->report_id)->first();
+                    // dd($request->all(),$oldsaleItem,$report);
                     $report->sale_status = 0;
                     $report->stock_status = 1;
+                    $report->section = 0; // Reset section to Mainstore
                     $report->save();
                 }
                 $sale = Sale::with(['items', 'customer', 'items.report'])->findOrFail($id);

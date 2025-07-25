@@ -41,7 +41,7 @@ class ReportController extends Controller
     {
         // dd("65");
         if ($this->checkPermission($request, 'view')) {
-            $reports = Report::with('tbl_type', 'customer')->get();
+            $reports = Report::with('tbl_type', 'customer')->orderByDesc('id')->get();
             // dd($reports);
             if (auth()->user()->type === 'godown') {
                 // dd("de");
@@ -90,11 +90,14 @@ class ReportController extends Controller
         if ($request->query('worker_name') !== null) {
             $reports->where('worker_name', 'like', '%' . $request->query('worker_name') . '%');
         }
-        if ($request->query('c_name') !== null) {
-            dd($reports);
-            $reports->where('party_name', 'like', '%' . $request->query('c_name') . '%');
+        if ($request->query('p_name') !== null) {
+            $reports->where('party_name', $request->query('p_name'));
+            // dd($reports);
         }
-        $reports = $reports->get();
+        if ($request->query('part') !== null) {
+            $reports->where('part', $request->query('part'));
+        }
+        $reports = $reports->orderByDesc('id')->get();
         $tbl_parties = TblCustomer::all();
         return view("report.index", compact('reports', 'tbl_parties'));
     }
@@ -187,6 +190,11 @@ class ReportController extends Controller
     public function get_sc_sr_no(Request $request)
     {
         $type = $request->type;
+        $responseData = [
+            'url' => $request->url,
+            'data' => []
+        ];
+
         if ($request->url == 'sale-repair-create') {
             $reports = Report::with('tbl_type')
                 ->where('part', 1)
@@ -195,8 +203,10 @@ class ReportController extends Controller
                 ->whereHas('tbl_type', function ($query) use ($type) {
                     $query->where('name', $type);
                 })
-                ->get()
-                ->pluck('sr_no_fiber');
+                ->select('id', 'sr_no_fiber')
+                ->get();
+
+            $responseData['data'] = $reports;
         } elseif ($request->url == 'sale-create') {
             $reports = Report::with('tbl_type')
                 ->where('part', 0)
@@ -207,10 +217,11 @@ class ReportController extends Controller
                 })
                 ->get()
                 ->pluck('sr_no_fiber');
+
+            $responseData['data'] = $reports;
         }
 
-        // dd($reports);
-        return response()->json($reports, 200);
+        return response()->json($responseData, 200);
         // dd(count($reports),$reports);
     }
     public function search(Request $request)
@@ -633,6 +644,32 @@ class ReportController extends Controller
             $firstErrorMessage = $validator->errors()->first();
             return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
         }
+        if (Auth()->user()->type === 'user') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'sr_no_fiber' => 'required|string|max:255',
+                    // 'type' => 'required|string|max:255',
+                ]
+            );
+            if ($validator->fails()) {
+                $firstErrorMessage = $validator->errors()->first();
+                throw new \Exception($firstErrorMessage); // Throw exception with the first error message
+
+                // return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+            }
+            if ($request->part == 0) {
+                $exists = DB::table('tbl_reports')
+                    ->where('sr_no_fiber', $request->sr_no_fiber)
+                    ->where('part', 0)
+                    ->exists();
+
+                if ($exists) {
+
+                    return redirect()->back()->withErrors($validator)->withInput()->with('error', "The sr_no_fiber already exists with New Stock");
+                }
+            }
+        }
 
         if (
             $request->has(['field_key', 'field_key_value']) &&
@@ -699,10 +736,10 @@ class ReportController extends Controller
         if ($sub_category) {
             foreach ($request->srled as $index => $serial_no) {
                 $sr_no_or_not = $request->sr_no_or_not[$index];
-                 $sub_cat = tbl_sub_category::where('id', $sub_category[$index])->first();
+                $sub_cat = tbl_sub_category::where('id', $sub_category[$index])->first();
                 $dead = $request->dead[$index];
                 if ($sr_no_or_not == 1) {
-                    // dd("VIRAJ");
+
                     if (!$serial_no) {
                         $avalabile = 1;
                         try {
@@ -717,11 +754,19 @@ class ReportController extends Controller
                         if ($Record_delete) {
                             $Record_delete->delete();
                         }
-                        return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
+                        return redirect()->back()->with('error', 'Serial Number "' . $serial_no . '" already exists. Failed to store the report.');
                     }
                     $existingRecord = TblStock::where('serial_no', $serial_no)
                         ->where('status', 0)
                         ->first();
+
+                    if ($existingRecord) {
+                        $usedstatus = $existingRecord->status;
+                        if ($usedstatus == 1) {
+                            // $existingSerialNo = $existingRecord->serial_no ?? '[no serial number]';
+                            throw new \Exception("Serial number ' . $serial_no . ' already exists. Failed to store the report.");
+                        }
+                    }
                     if ($existingRecord) {
                         $amount += $existingRecord->priceofUnit;
                         // $invoice_no =$existingRecord->invoice_no;
@@ -776,7 +821,8 @@ class ReportController extends Controller
                             if ($Record_delete) {
                                 $Record_delete->delete();
                             }
-                            return redirect()->back()->with('error', 'Same Serial Number Found, Failed to store the report.');
+                            return redirect()->back()->with('error', 'Same Serial Number Found ,' . $serial_no . ' Failed to store the report.');
+                               throw new \Exception("Serial number ' . $serial_no . ' already exists. Failed to store the report.");
                         }
                     }
                     $tbl_stock_id = TblStock::where('serial_no', $serial_no)->value('id');
@@ -813,9 +859,9 @@ class ReportController extends Controller
                         $scid = $request->sub_category[$index];
                         $subCat = tbl_sub_category::find($sub_category[$index]);
                         $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
-                        // $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no ? 0;
+                        // $invoice_no = $selectedInvoice ? $selectedInvoice->invoice_no ? 0;
                         $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
-                        throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
+                        throw new \Exception("Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoice_no). Please check your stock report.");
                     }
 
                     $cid = $invoice_data->cid;
@@ -870,9 +916,9 @@ class ReportController extends Controller
                                 $Record_delete->delete();
                             }
                             // return redirect()->back()->with('error', 'Failed to store the report. You Not have a enough quantity in Stock, Please Check Your Stock Report.');
-                            $invoiceNo = $invoice_no ? $invoice_no->invoice_no : 0;
+                            // $invoiceNo = $invoice_no ? $invoice_no->invoice_no : 0;
                             $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
-                            return redirect()->back()->with('error', "Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoiceNo). Please check your stock report.");
+                            return redirect()->back()->with('error', "Not enough quantity in stock for subcategory: $subCategoryName (Invoice No: $invoice_no). Please check your stock report.");
                         } elseif ($report_used_qty = $existingRecord->qty) {
                             $existingRecord->status = 1;
                         }
@@ -921,6 +967,7 @@ class ReportController extends Controller
 
                 try {
                     $TblReportItem->save();
+                    $TblReportiteminsertedIds[] = $TblReportItem->id;
                 } catch (\Exception $e) {
                     return redirect()->back()->with('error', 'Failed inserted records: ' . $e->getMessage());
                 }
@@ -1051,6 +1098,15 @@ class ReportController extends Controller
                             $existingRecord = TblStock::where('serial_no', $serial_no)
                                 ->where('scid', $sub_category[$index])
                                 ->first();
+                            if ($existingRecord) {
+                                $usedstatus = $existingRecord->status;
+                                if ($usedstatus == 1) {
+                                    // Get the serial number from the existing record
+                                    $existingSerialNo = $existingRecord->serial_no ?? '[no serial number]';
+
+                                    throw new \Exception("Serial number '{$existingSerialNo}' already exists. Failed to store the report.");
+                                }
+                            }
 
                             if ($existingRecord) {
                                 $amount += $existingRecord->priceofUnit;
@@ -1146,7 +1202,7 @@ class ReportController extends Controller
                                     $subCat = tbl_sub_category::find($sub_category[$index]);
                                     $selectedInvoice = SelectedInvoice::where('scid', $scid)->first();
 
-                                    $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : 'N/A';
+                                    $invoiceNo = $selectedInvoice ? $selectedInvoice->invoice_no : '0';
                                     $subCategoryName = $subCat ? $subCat->sub_category_name : 'Unknown';
                                     try {
                                         TblStock::whereIn('id', $TblStockinsertedIds)->delete();
@@ -1224,5 +1280,34 @@ class ReportController extends Controller
             }
             return redirect()->back()->with('error', 'Failed to update the report: ' . $e->getMessage());
         }
+    }
+
+    public function destroy($id)
+    {
+
+        $report = Report::findOrFail($id);
+        if ($report->sale_status == 1 || $report->stock_status == 0) {
+
+            $report->delete();
+            // Delete related report items
+            $report_items = TblReportItem::where('report_id', $id)->get();
+            foreach ($report_items as $item) {
+                // Check if the item has a serial number
+                if ($item->sr_no != 0) {
+                    // Find the stock item by serial number
+                    $stockItem = TblStock::where('serial_no', $item->sr_no)->first();
+                    if ($stockItem) {
+                        // Set the status to 0 (available)
+                        $stockItem->status = 0;
+                        $stockItem->save();
+                    }
+                }
+            }
+            // Delete related stock items
+            $report_items->delete();
+            return redirect()->route('report.new')->with('success', 'Report deleted successfully.');
+        }
+        return redirect()->route('report.new')->with('error', 'Report Not deleted, Try agian later.');
+
     }
 }

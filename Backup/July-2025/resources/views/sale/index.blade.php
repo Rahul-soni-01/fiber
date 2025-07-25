@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             @foreach ($sales as $index => $sale)
-             <!-- {{ dd($sale);}}  -->
+             {{-- <!-- {{ dd($sale);}}  --> --}}
             <tr>
                 <td>{{ $index + 1 }}</td>
                 

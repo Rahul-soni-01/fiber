@@ -177,14 +177,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     // console.log("798");
                 }
-                let chatList = '<ul class="list-group">';
+                let chatList = '<ul class="list-group list-group-flush">';
+
                 response.userchats.forEach(function (user) {
+                    const isUnread = user.unread_count > 0;
+
                     chatList += `
-                        <li class="list-group-item list-group-item-action user-chat-item" 
+                        <li class="list-group-item d-flex justify-content-between align-items-center user-chat-item"
                             data-id="${user.id}" data-name="${user.name}" style="cursor:pointer;">
-                            ${user.name}
+                            
+                            <span class="${isUnread ? 'fw-bold text-dark' : ''}">${user.name}</span>
+
+                            ${isUnread
+                            ? `<span class="badge bg-danger rounded-pill">${user.unread_count}</span>`
+                            : ''
+                        }
                         </li>`;
                 });
+
                 chatList += '</ul>';
 
                 $('#chat-messages').html(chatList);
@@ -385,7 +395,7 @@ $(document).ready(function () {
         responsive: true,
         // autoWidth: true, 
         paging: true,
-        ordering: true
+        order: [[0, 'desc']] 
         // info: true,
         // scrollY: true,
         // scrollX: true,
@@ -1237,38 +1247,66 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
         type: "POST",
         data: data,
         success: function (response) {
-            // console.log(response);
             let srNoDiv = document.querySelector(`#sr_no_div_${extractedIndex}`);
             let colDiv = document.querySelector(`#col_div_${extractedIndex}`);
             let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
 
-            if (sr_no_input) { // Check if the element exists
+            if (sr_no_input) {
                 sr_no_input.disabled = true;
             }
             if (srNoDiv) {
                 srNoDiv.style.display = 'block';
                 colDiv.style.display = 'none';
             }
+
             let sr_noSelect = document.querySelector(`#sr_no_div_${extractedIndex} select[id="data[${extractedIndex}][sr_no]"]`);
 
             if (sr_noSelect) {
-                // Clear all existing options
+                // Clear all existing options and hidden fields
                 sr_noSelect.innerHTML = '';
 
-                // Create the HTML for the options
-                let html = '';
-                response.forEach(function (item) {
-                    html += `<option value="${item}">${item}</option>`;
-                });
+                /*Remove any existing hidden input for report ID
+                let existingHiddenInput = document.querySelector(`#data\\[${extractedIndex}\\]\\[report_id\\]`);
+                if (existingHiddenInput) {
+                    existingHiddenInput.remove();
+                }*/
 
-                // Append the new options to the select element
+                // Create the HTML for the options and hidden input
+                let html = '<option value="" disabled selected></option>';
+                const items = response.data || response;
+
+                if (Array.isArray(items)) {
+                    items.forEach(function (item) {
+                        const value = typeof item === 'object' ? item.sr_no_fiber : item;
+                        const displayText = typeof item === 'object' ? item.sr_no_fiber : item;
+
+                        html += `<option value="${value}" data-id="${typeof item === 'object' ? item.id : ''}">${displayText}</option>`;
+                    });
+                }
+
                 sr_noSelect.innerHTML += html;
+
+                /*
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = `report_id[]`;
+                hiddenInput.id = `data[${extractedIndex}][report_id]`;
+                hiddenInput.value = '';
+
+                sr_noSelect.parentNode.insertBefore(hiddenInput, sr_noSelect.nextSibling);
+
+                sr_noSelect.addEventListener('change', function () {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const reportId = selectedOption.getAttribute('data-id');
+                    hiddenInput.value = reportId;
+                });*/
+
                 $('.select2').select2();
             } else {
                 console.error('Select element not found');
             }
-            let qtyInput = document.getElementById(`data[${extractedIndex}][qty]`);
 
+            let qtyInput = document.getElementById(`data[${extractedIndex}][qty]`);
             if (qtyInput) {
                 qtyInput.value = 1;
             }
@@ -1276,6 +1314,20 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
     });
 }
 
+function getSrNo(event,id){
+   const selectedOption = event.target.options[event.target.selectedIndex];
+    const reportId = selectedOption.getAttribute('data-id');
+    
+
+    // Fix selector based on the actual input ID
+    let existingHiddenInput = document.getElementById(`report_id_${id}`);
+    if (existingHiddenInput) {
+        console.log('Hidden input found:', existingHiddenInput);
+        existingHiddenInput.value = reportId;
+    } else {
+        console.error('Hidden input not found for index:', id);
+    }
+}
 function items_add() {
     const container = document.getElementById('item-container');
     const newRow = document.querySelector('.input-row').cloneNode(true);
@@ -1619,13 +1671,14 @@ function BtnAdd(categories, subCategories) {
                 </div>
                 <div class="col" id="sr_no_div_${count}" style="display:none;">
                     <select id="data[${count}][sr_no]" name="sr_no[]" placeholder="Plz dont write here"
-                        class="form-control select2">
+                        class="form-control select2" onchange="getSrNo(event, ${count})">
                         <option value="" disabled>Select Sr No</option>
                     </select>
                 </div>
                 <div class="col" id="col_div_${count}">
                     <input type="text" name="sr_no[]" class="form-control" id="sr_no_${count}" placeholder="Plz dont write here">
                 </div>
+                <input type="hidden" id="report_id_${count}" name="report_id[]" value="">
                 <div class="col">
                     <input type="number" id="data[${count}][qty]" name="qty[]" placeholder="Quantity"
                         class="form-control" onchange="total()">

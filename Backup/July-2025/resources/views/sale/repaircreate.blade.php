@@ -3,13 +3,9 @@
 @section('content')
 <h1>Repair Sale Invoice</h1>
 <a href="{{ route('sale.index') }}" class="btn btn-primary mb-3">Back</a>
-@if ($errors->any())
-<div style="color: red;">
-    <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
+@if (session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
 </div>
 @endif
 <div class="main" id="main">
@@ -108,21 +104,23 @@
                         <label for="data[0][unit]" class="form-label">Unit</label>
                         <select id="data[0][unit]" name="unit[]" class="form-control">
                             <option value="" disabled selected>Select</option>
-                            <option value="Pic">Pic</option>
+                            <option value="Pic">Pcs</option>
                             <option value="Mtr">Mtr</option>
                         </select>
                     </div>
                     <div class="col" id="sr_no_div_0" style="display: none;">
                         <label for="data[0][sr_no]" class="form-label">Sr No</label>
-                        <select id="data[0][sr_no]" name="sr_no[]" class="form-control select2">
+                        
+                        <select id="data[0][sr_no]" name="sr_no[]" class="form-control select2" onchange="getSrNo(event,0)">
                             <option value="" disabled selected>Select</option>
                         </select>
                     </div>
                     <div class="col" id="col_div_0">
                         <label for="data[0][sr_no]" class="form-label">Sr No</label>
                         <input type="text" name="sr_no[]" class="form-control" id="sr_no_0"
-                            placeholder="Plz dont write here">
+                            placeholder="Plz dont write here" >
                     </div>
+                    <input type="hidden" name="report_id[]" id="report_id_0" value="">
                     <!-- Quantity -->
                     <div class="col">
                         <label for="data[0][qty]" class="form-label">Qty</label>

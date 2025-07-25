@@ -101,7 +101,7 @@
           </div>
 
           <!-- Dynamic Product Rows -->
-          @foreach($inward->items as $index => $item)
+          @foreach($inwardsItems as $index => $item)
           <div class="row mt-2 align-items-end" id="row-{{ $index }}">
                <input type="hidden" name="item_ids[]" value="{{ $item->id }}">
 

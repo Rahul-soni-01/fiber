@@ -37,8 +37,11 @@
                     </select>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                    <input type="text" id="worker_name" name="worker_name" placeholder="Worker Name"
-                        class="form-control">
+                    <select id="part" name="part" required class="form-control">
+                        <option value="" selected disabled>Select Part</option>
+                        <option value="0">New</option>
+                        <option value="1">Repairing</option>
+                    </select>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-grid">
                     <button type="submit" class="btn btn-primary btn-sm">Search</button>
@@ -67,7 +70,7 @@
                     <th>ID</th>
                     <th>Part</th>
                     <th>W/N.W.</th>
-                     @if(auth()->user()->type === 'godown')
+                    @if(auth()->user()->type === 'godown')
                     <th>SR(FIBER) / Temp No.</th>
                     @endif
                     <th>Date</th>
@@ -114,7 +117,7 @@
                     <th>Action</th>
                     @endif
 
-                   
+
             </thead>
             <tbody>
                 @foreach ($reports as $index => $report)
@@ -125,19 +128,12 @@
                 $status = $report->status;
                 $sale_status = $report->sale_status;
                 $part = $report->part;
-                if (in_array($type, ['electric', 'cavity', 'user']) && $status == '1') {
-                continue;
-                }
-                // dd($sale_status);
-                if ($sale_status == 1) {
-                continue;
-                }
+               
 
                 @endphp
                 <tr
                     class="{{ $report->part == 0 ? 'new-part' : ($report->part == 1 ? 'repair-part' : 'unknown-part') }}">
-                    <td
-                        style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}">
+                    <td style="background-color: {{ $report->status == 1 ? 'green' : ($report->status == 2 ? 'red' : 'inherit') }}">
                         {{ $report->id }}</td>
                     <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
                     <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown')
@@ -224,16 +220,18 @@
                                 class="ri-eye-fill"></i></a>
                         <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning"> <i
                                 class="ri-pencil-fill"></i> </a>
-                        {{-- <form action="{{ route('sale.destroy', $report->id) }}" method="POST"
-                            style="display:inline;">
+                        @if (auth()->user()->type === 'admin')    
+                                <form action="{{ route('report.destroy', $report->id) }}" method="POST"
+                                    style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                onclick="return confirm('Are you sure you want to delete this sale?');"
-                                class="btn btn-sm  btn-danger">
-                                <i class="ri-delete-bin-fill"></i>
+                            onclick="return confirm('Are you sure you want to delete this sale?');"
+                            class="btn btn-sm  btn-danger">
+                            <i class="ri-delete-bin-fill"></i>
                             </button>
-                        </form> --}}
+                        </form>
+                        @endif
                     </td>
                     @endif
                     @if(auth()->user()->type === 'account')
@@ -246,7 +244,7 @@
                                 class="ri-eye-fill"></i></a>
                     </td>
                     @endif
-                    
+
                 </tr>
                 @endforeach
             </tbody>

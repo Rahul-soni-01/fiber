@@ -261,7 +261,13 @@ class TblPurchaseItemController extends Controller
 
     public function edit($id, Request $request)
     {
-        $inward = tbl_purchase::with('Items')->where('invoice_no',$id)->first(); 
+        $inward = tbl_purchase::with('party','Items')
+            ->where('invoice_no', $id)
+            ->orderBy('id', 'asc')
+            ->first();
+        $inwardsItems = tbl_purchase_item::with(['category', 'subCategory'])
+            ->where('invoice_no', $id)
+            ->get();
         // $inward = tbl_purchase_item::with('Items')->where('invoice_no',$id)->get();
         
         $inwards = tbl_category::all();
@@ -272,7 +278,7 @@ class TblPurchaseItemController extends Controller
         if($main_category){
             $inwards = tbl_category::where('main_category', $main_category)->get();
         }
-        return view('inward.edit', compact('inward', 'inwards', 'items', 'partyname'));
+        return view('inward.edit', compact('inward', 'inwards', 'items', 'partyname','inwardsItems'));
     }
 
 
@@ -280,6 +286,7 @@ class TblPurchaseItemController extends Controller
 
     public function update(Request $request, $invoice_no)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'cname' => 'required|array',
             'scname' => 'required|array',
