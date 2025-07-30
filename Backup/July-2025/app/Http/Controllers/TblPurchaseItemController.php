@@ -127,7 +127,7 @@ class TblPurchaseItemController extends Controller
 
             for ($i = 0; $i < $count; $i++) {
                 $itemResult = tbl_purchase_item::create([
-                    'invoice_no' =>  $maxId ? $maxId + 1 : 1,
+                    'invoice_no' => $inward->invoice_no,
                     'cid' => $request->cname[$i],
                     'scid' => $request->scname[$i],
                     'qty' => $request->qty[$i],

@@ -3,13 +3,9 @@
 @section('content')
 <h1>Product Out</h1>
 <a href="{{ route('sale.index') }}" class="btn btn-primary">Show Out Data</a>
-@if ($errors->any())
-<div style="color: red;">
-    <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
+@if (session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
 </div>
 @endif
 <div class="main" id="main">
@@ -26,25 +22,25 @@
             
             <div class="row align-items-center">
                 <div class="col-md-3 col-sm-6 col-12">
-                    <label class="d-md-none fw-bold">Invoice No.</label>
+                    <label for="invoice_no" class="d-md-none fw-bold">Invoice No.</label>
                     <input type="text" id="invoice_no" name="sale_id" class="form-control" placeholder="Enter Invoice No.">
                 </div>
                 <div class="col-md-3 col-sm-6 col-12">
-                    <label class="d-md-none fw-bold">Date</label>
+                    <label for="date" class="d-md-none fw-bold">Date</label>
                     <input type="date" id="date" name="date" class="form-control"
                         value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                 </div>
                 <div class="col-md-3 col-sm-6 col-12">
-                    <label class="d-md-none fw-bold">Customer Name</label>
+                    <label for="party_name" class="d-md-none fw-bold">Customer Name</label>
                     <select id="party_name" name="cid" class="form-control" required>
                         <option value="" disabled selected>Choose a Customer</option>
                         @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
+                            <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-3 col-sm-6 col-12">
-                    <label class="d-md-none fw-bold">Status</label>
+                    <label for="status" class="d-md-none fw-bold">Status</label>
                     <select id="status" name="status" class="form-control" required>
                         <option value="0">Sale</option>
                         <option value="1">Demo</option>
@@ -118,14 +114,15 @@
                     </div>
                     <div class="col custom-col" id="sr_no_div_0" style="display: none;">
                         <label for="data[0][sr_no]" class="form-label">Sr No</label>
-                        <select id="data[0][sr_no]" name="sr_no[]" class="form-control select2">
-                            <option value="" disabled selected>Select</option>
+                        <select id="data[0][sr_no]" name="sr_no[]" class="form-control select2" onchange="getSrNo(event,0)">
+                            <option value="">Select</option>
                         </select>
                     </div>
                     <div class="col custom-col" id="col_div_0">
                         <label for="data[0][sr_no]" class="form-label">Sr No</label>
                         <input type="text" name="sr_no[]" class="form-control" id="sr_no_0"
                             placeholder="Plz dont write here">
+                            <input type="hidden" name="report_id[]" id="report_id_0" value="">
                     </div>
                     <!-- Quantity -->
                     <div class="col custom-col">

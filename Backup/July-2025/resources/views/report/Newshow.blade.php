@@ -196,7 +196,7 @@
                 <div class="col-md-3">In-Date</div>
                 <div class="col-md-3">
                     <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date"
-                        value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+                    value="{{ old('indate', isset($report->indate) ? \Carbon\Carbon::parse($report->indate)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                 </div>
             </div>
 

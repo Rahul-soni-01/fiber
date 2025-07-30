@@ -26,6 +26,12 @@
                 </div>
                 @endif
             </div>
+             
+                <div class="col-md-3">In-Date</div>
+                <div class="col-md-3">
+                    <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date"
+                        value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+                </div>
             {{-- if admin login then option for report layout append --}}
             @if( auth()->user()->type == 'admin')
             @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')
@@ -54,6 +60,9 @@
                     <input type="text" id="worker_name" name="worker_name" class="form-control"
                         placeholder="Enter Worker Name">
                 </div>
+               
+             </div>
+
                 @endif
             </div>
             @endif

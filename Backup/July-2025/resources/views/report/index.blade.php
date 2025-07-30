@@ -71,7 +71,7 @@
                     <th>Part</th>
                     <th>W/N.W.</th>
                     @if(auth()->user()->type === 'godown')
-                    <th>SR(FIBER) / Temp No.</th>
+                        <th>SR(FIBER) / Temp No.</th>
                     @endif
                     <th>Date</th>
                     <th>Section</th>
@@ -141,7 +141,7 @@
                     @if(auth()->user()->type === 'godown')
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     @endif
-                    <td>{{ $report->created_at->format('d-m-Y') }}</td>
+                    <td>{{ $report->indate ? \Carbon\Carbon::parse($report->indate)->format('d-m-Y') : $report->created_at->format('d-m-Y') }}</td>
                     <td> @switch($report->section)
                         @case(0)
                         Mainstore

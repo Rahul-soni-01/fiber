@@ -215,8 +215,8 @@ class ReportController extends Controller
                 ->whereHas('tbl_type', function ($query) use ($type) {
                     $query->where('name', $type);
                 })
-                ->get()
-                ->pluck('sr_no_fiber');
+               ->select('id', 'sr_no_fiber')
+                ->get();
 
             $responseData['data'] = $reports;
         }
@@ -694,6 +694,7 @@ class ReportController extends Controller
         $report->note1 = $request->input('note1');
         $report->note2 = $request->input('note2');
         $report->temp = $request->input('temp');
+        $report->indate = $request->input('indate');
         $report->sale_status = 0;
         $report->extra_line = $jsonData;
         if ($request->input('part') == 1) {
@@ -1050,6 +1051,7 @@ class ReportController extends Controller
                 if ($request->filled('note1')) $report->note1 = $request->note1;
                 if ($request->filled('note2')) $report->note2 = $request->note2;
                 if ($request->filled('sr_no_fiber')) $report->sr_no_fiber = $request->sr_no_fiber;
+                if ($request->filled('indate')) $report->indate = $request->indate;
                 if ($request->filled('m_j')) $report->m_j = $request->m_j;
                 if ($request->filled('temp')) $report->temp = $request->temp;
                 if ($request->filled('type')) $report->type = $request->type;

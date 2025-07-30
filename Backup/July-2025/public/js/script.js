@@ -1242,11 +1242,13 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
     if (window.location.pathname == '/sale-repair-create') {
         data.url = 'sale-repair-create';
     }
+   
     $.ajax({
         url: "/get-sc-sr-no",
         type: "POST",
         data: data,
         success: function (response) {
+            console
             let srNoDiv = document.querySelector(`#sr_no_div_${extractedIndex}`);
             let colDiv = document.querySelector(`#col_div_${extractedIndex}`);
             let sr_no_input = document.querySelector(`#sr_no_${extractedIndex}`);
@@ -1315,15 +1317,15 @@ function SubCategorysale_sr_no(datavalue, extractedIndex) {
 }
 
 function getSrNo(event,id){
-   const selectedOption = event.target.options[event.target.selectedIndex];
+    const selectedOption = event.target.options[event.target.selectedIndex];
     const reportId = selectedOption.getAttribute('data-id');
-    
-
+    console.log(reportId);
     // Fix selector based on the actual input ID
     let existingHiddenInput = document.getElementById(`report_id_${id}`);
     if (existingHiddenInput) {
-        console.log('Hidden input found:', existingHiddenInput);
         existingHiddenInput.value = reportId;
+        console.log('Hidden input found:', reportId );
+
     } else {
         console.error('Hidden input not found for index:', id);
     }

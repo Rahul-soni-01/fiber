@@ -16,7 +16,7 @@
         @csrf
         @method('PUT')
         @if (session('error'))
-        <div  class="alert alert-danger">
+        <div class="alert alert-danger">
             {{ session('error') }}
         </div>
         @endif
@@ -30,6 +30,13 @@
             </ul>
         </div>
         @endif
+
+        <div class="col-md-3">In-Date</div>
+        <div class="col-md-3">
+            <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date"
+                value="{{ old('indate', isset($report->indate) ? \Carbon\Carbon::parse($report->indate)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d')) }}"
+                required>
+        </div>
         {{-- {{ dd($report);}} --}}
         <div id="Tbody">
             @if(in_array(auth()->user()->type, ['electric', 'admin', 'cavity', 'user']))
@@ -128,7 +135,8 @@
                         ['electric', 'cavity'])) readonly @endif>
                         <option value="" disabled selected>Select Type</option>
                         @foreach($types as $type)
-                        <option value="{{$type->id}}" @if($type->id == $report->type) selected @endif>{{$type->name}}
+                        <option value="{{$type->id}}" @if($type->id == $report->type) selected
+                            @endif>{{$type->name}}
                         </option>
                         @endforeach
                     </select>
@@ -231,7 +239,7 @@
                             @endif
                         </div>
                         <div class="col-12 col-md-5 d-flex justify-content-between">
-                            
+
                             @if($reportitem->sr_no != 0)
                             <input type="text" id="ampled_1" name="ampled[]" class="form-control"
                                 value="{{ $reportitem->amp }}" placeholder="Enter AMP">
@@ -241,7 +249,8 @@
                             @endif
                             <input type="hidden" name="dead[]" value="0" class="hidden-dead-{{$index+1}}"
                                 @if($reportitem->dead_status == '1') disabled @endif>
-                            <input type="checkbox" name="dead[]" value="1" class="m-2" @if($reportitem->dead_status ==
+                            <input type="checkbox" name="dead[]" value="1" class="m-2" @if($reportitem->dead_status
+                            ==
                             '1') checked @endif
                             onchange="syncHiddenInput(this, {{$index+1}})">
                             <lable class="m-2">Dead</lable>
