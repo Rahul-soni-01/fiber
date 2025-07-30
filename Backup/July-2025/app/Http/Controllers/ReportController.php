@@ -1263,7 +1263,6 @@ class ReportController extends Controller
                 if ($request->status == 1) {
                     $report->sale_status = 0;
                     $report->stock_status = 1;
-                    // $report->section = $request->section;
                     $report->section = 0;
                     $report->indate = $request->indate ?? null;
                 }
