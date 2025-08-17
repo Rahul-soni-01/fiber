@@ -1,4 +1,3 @@
-
 This is a Laravel project for managing fiber-related operations. It includes features for streamlined workflows, data management, and reporting.
 
 ## Features
