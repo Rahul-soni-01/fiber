@@ -8,6 +8,7 @@ use App\Models\tbl_sub_category;
 use App\Models\tbl_category;
 use App\Models\tbl_purchase;
 use App\Models\tbl_purchase_item;
+use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -168,30 +169,43 @@ class TblStockController extends Controller
     
     public function datainsert()
     {
+        $serialNos = [
+    'CY2210001',
+    'C22301037',
+    'M24210062',
+    'C02203092',
+];
 
-        $invoice_no = 103;
-        $price = 1000;
-        $cid = 14;  // 1,1,1
-        $scid = 27; // 1,2,3
 
-        for ($i = -1; $i <= 101; $i++) {
-            if ($i === 99) {
-                return redirect()->route('home');
-            }
-
-            TblStock::create([
-                'date' => now()->format('Y-m-d'),
-                'invoice_no' => $invoice_no,
-                'cid' => $cid,
-                'scid' => $scid,
-                'serial_no' => 3001 + $i,
-                'qty' => 1,
-                'price' => $price,
-                'priceofUnit' => $price / 100,
-                'status' => 0,
-                'dead_status' => 0,
-            ]);
-        }
+// Loop and insert
+foreach ($serialNos as $serial) {
+    Report::create([
+        'indate'       => '2025-09-19', // keep in Y-m-d format for DB safety
+        'worker_name'  => 'Test Worker',
+        'body'         => '1',
+        'part'        =>  "0",
+        'china'        => "1",
+        'opening'      => 1,
+        'sr_no_fiber'  => $serial, // loop value
+        'm_j'          => null,
+        'type'         => 1,
+        'section'      => 0,
+        'note1'        => 'No Data Available, This is an Opening Fiber',
+        'note2'        => null,
+        'remark'       => null,
+        'status'       => 1, // verify 
+        'temp'         => null,
+        'r_status'     => 0, 
+        'f_status'     => 1,
+        'party_name'   => null,
+        'sale_status'  => 0,
+        'stock_status' => 1,
+        'final_amount' => 0,
+        'extra_line'   => null,
+        'outdate'      => null,
+    ]);
+}
+           return redirect()->route('report.index')->with('success', 'Test data inserted successfully!');
 
     }
 

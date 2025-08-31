@@ -5,6 +5,20 @@
 <a href="{{ route('generate-pdf', ['report' => $report->id]) }}" class="btn btn-primary mb-3"
     id="download-btn1212">Download PDF</a>
 <div class="container-fluid custom-border">
+      <div class="row mb-3">
+            @if( auth()->user()->type === 'godown')
+            <div class="col-12 col-md-3">
+                <h5>Customer Name</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                {{ $report->customer->customer_name ?? 'N/A' }} 
+            </div>
+            @endif
+            <div class="col-md-3"><H5> In-Date </H5></div>
+            <div class="col-md-3">
+                 <span>{{ \Carbon\Carbon::parse($report->indate ?? $report->created_at)->format('Y-m-d') }}</span>
+            </div>
+        </div>
     <div class="row mt-4 ">
         <div class="col-md-3 col-sm-3">
             <h5>Part</h5>
@@ -27,41 +41,28 @@
             <h5>WORKER NAME</h5>
         </div>
         <div class="col-md-2 col-sm-2">
-            <span>{{ $report->worker_name }}</span>
+            <span>{{ $report->worker_name ?? 'N/A' }}</span>
         </div>
     </div>
-    @if(auth()->user()->type === 'account' || auth()->user()->type === 'electric' || auth()->user()->type
-    === 'admin' || auth()->user()->type === 'user')
+
     <div class="row mt-4 ">
         <div class="col-md-3">
-
             <h5>SR(FIBER)</h5>
-
         </div>
         <div class="col-md-2">
-
-            <span>{{ $report->sr_no_fiber ?? 'N/A'}}</span>
-
+            <span>{{ $report->sr_no_fiber ?? $report->temp }}</span>
         </div>
         <div class="col-md-2">
-            @if(auth()->user()->type == 'admin' || auth()->user()->type === 'electric')
-            <span>{{ $report->temp }}</span>
-            @endif
+            <span>{{ $report->temp ?? 'N/A' }}</span>
         </div>
         <div class="col-md-3">
-            @if(auth()->user()->type === 'account' || auth()->user()->type == 'admin'|| auth()->user()->type
-            === 'user')
             <h5>M.J</h5>
-            @endif
         </div>
         <div class="col-md-2">
-            @if(auth()->user()->type === 'account' || auth()->user()->type == 'admin' ||
-            auth()->user()->type === 'user')
-            <span>{{ $report->m_j }}</span>
-            @endif
+            <span>{{ $report->m_j ?? 'N/A' }}</span>
         </div>
     </div>
-    @endif
+
     <div class="row mt-4 ">
         <div class="col-md-3">
             <h5>Warranty</h5>
@@ -87,7 +88,6 @@
     </div>
 
     <div class="table-responsive">
-
         <table class="table text-dark datatable-remove">
             <thead class="bg-dark text-white">
                 <tr>
@@ -180,8 +180,9 @@
             <small class="text-dark">*Leave it unchanged if you don't want to update the status.</small>
             @endif
         </div>
-        @if(auth()->user()->type == 'account' && $report->sale_status == '0' && $report->status !== '1' && ($report->section == '1' || $report->section == '2'))
-        
+        @if(auth()->user()->type == 'account' && $report->sale_status == '0' && $report->status !== '1' &&
+        ($report->section == '1' || $report->section == '2'))
+
         <form action="{{ route('report.update', $report->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -196,7 +197,8 @@
                 <div class="col-md-3">In-Date</div>
                 <div class="col-md-3">
                     <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date"
-                    value="{{ old('indate', isset($report->indate) ? \Carbon\Carbon::parse($report->indate)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+                        value="{{ old('indate', isset($report->indate) ? \Carbon\Carbon::parse($report->indate)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d')) }}"
+                        required>
                 </div>
             </div>
 

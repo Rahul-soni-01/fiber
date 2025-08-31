@@ -70,51 +70,53 @@
                     <th>ID</th>
                     <th>Part</th>
                     <th>W/N.W.</th>
-                    @if(auth()->user()->type === 'godown')
-                        <th>SR(FIBER) / Temp No.</th>
-                    @endif
                     <th>Date</th>
                     <th>Section</th>
+                    @if(auth()->user()->type === 'godown')
+                        <th>SR(FIBER) / Temp No.</th>
+                        <th>Customer Name</th>
+                        <th>Action</th>
+                    @endif
+                    
 
                     @if(auth()->user()->type === 'admin')
-                    <th>Serial No.</th>
-                    <th>Type</th>
-                    <th>Worker Name</th>
-                    <th>Final Amount</th>
-                    <th>Sale</th>
-                    @if(isset($ready) && $ready == 1) // for stock route
-                    <th>Stock</th>
-                    @endif
-                    <th>Action</th>
+                        <th>Serial No.</th>
+                        <th>Type</th>
+                        <th>Worker Name</th>
+                        <th>Final Amount</th>
+                        <th>Sale</th>
+                        @if(isset($ready) && $ready == 1) // for stock route
+                        <th>Stock</th>
+                        @endif
+                        <th>Action</th>
                     @endif
 
                     @if(auth()->user()->type === 'electric')
 
-                    <th>SR(FIBER) / Temp No</th>
-                    <th>Note</th>
-                    <th>Action</th>
+                        <th>SR(FIBER) / Temp No</th>
+                        <th>Note</th>
+                        <th>Action</th>
                     @endif
                     @if(auth()->user()->type === 'cavity')
 
-                    <th>SR(FIBER) / Temp No</th>
-                    <th>Note</th>
-                    <th>Action</th>
+                        <th>SR(FIBER) / Temp No</th>
+                        <th>Note</th>
+                        <th>Action</th>
                     @endif
 
                     @if(auth()->user()->type === 'user')
-
-                    <th>SR(FIBER) / Temp No</th>
-                    <th>Note</th>
-                    <th>Type</th>
-                    <th>Action</th>
+                        <th>SR(FIBER) / Temp No</th>
+                        <th>Note</th>
+                        <th>Type</th>
+                        <th>Action</th>
                     @endif
 
                     @if(auth()->user()->type === 'account')
-                    <th>SR(FIBER) / Temp No.</th>
-                    <th>Type</th>
-                    <th>Final Amount</th>
-                    <th>Party</th>
-                    <th>Action</th>
+                        <th>SR(FIBER) / Temp No.</th>
+                        <th>Type</th>
+                        <th>Final Amount</th>
+                        <th>Party</th>
+                        <th>Action</th>
                     @endif
 
 
@@ -138,9 +140,6 @@
                     <td>{{ $report->part === 0 ? 'New' : ($report->part == 1 ? 'Repair' : 'Unknown') }}</td>
                     <td>{{ $report->f_status === 0 ? 'No warranty' : ($report->f_status == 1 ? 'Warranty' : 'Unknown')
                         }}</td>
-                    @if(auth()->user()->type === 'godown')
-                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
-                    @endif
                     <td>{{ $report->indate ? \Carbon\Carbon::parse($report->indate)->format('d-m-Y') : $report->created_at->format('d-m-Y') }}</td>
                     <td> @switch($report->section)
                         @case(0)
@@ -162,6 +161,16 @@
                         Unknown
                         @endswitch
                     </td>
+                    @if(auth()->user()->type === 'godown')
+                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
+                       <td>{{ $report->customer->customer_name ?? "N/A" }}</td>
+                     <td>  <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-primary"><i
+                                class="ri-eye-fill"></i></a>
+                         <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning"> <i
+                            class="ri-pencil-fill"></i> </a></td>
+                    @endif
+                   
+                    
                     @if ($type === 'electric')
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->note1 }}</td>
@@ -175,64 +184,66 @@
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->note1 }}</td>
                     <td>
-                        <a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                          <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning"> <i
+                                class="ri-pencil-fill"></i> </a>
                     </td>
                     @endif
                     @if($type === 'user')
                     <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
                     <td>{{ $report->note1 }} ,{{ $report->note2 }} </td>
                     <td>{{ $report->tbl_type->name ?? null}}</td>
-                    <td><a href="{{ route('report.edit', $report->id) }}" class="btn btn-info">Edit</a>
+                    <td>   <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning"> <i
+                                class="ri-pencil-fill"></i> </a>
                     </td>
                     @endif
                     @if ($type === 'admin' )
-                    <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
-                    <td>{{ $report->tbl_type->name ?? 0 }}</td>
-                    <td>{{ $report->worker_name }}</td>
-                    <td>{{ $report->final_amount }}</td>
-                    <td>
-                        @php
-                        $isSale = $report->sale_status;
-                        @endphp
-                        @if ($isSale == 1)
-                        Sale
-                        @elseif ($isSale == 0)
-                        Nosale
-                        @else
-                        Unknown
-                        @endif
-                    </td>
+                        <td>{{ $report->sr_no_fiber ?? $report->temp }}</td>
+                        <td>{{ $report->tbl_type->name ?? 0 }}</td>
+                        <td>{{ $report->worker_name }}</td>
+                        <td>{{ $report->final_amount }}</td>
+                        <td>
+                            @php
+                            $isSale = $report->sale_status;
+                            @endphp
+                            @if ($isSale == 1)
+                            Sale
+                            @elseif ($isSale == 0)
+                            Nosale
+                            @else
+                            Unknown
+                            @endif
+                        </td>
 
-                    @if(isset($ready) && $ready == 1)
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" {{ $report->stock_status == 1 ? 'checked' : '' }}
-                            id="ReadyStock" data-id="{{ $report->id}}">
-                            <span class="slider round"></span>
-                        </label>
-                        <div class="row-spinner spinner-border" role="status" style="display: none;">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </td>
-                    @endif
-                    <td>
-                        <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-primary"><i
-                                class="ri-eye-fill"></i></a>
-                        <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning"> <i
-                                class="ri-pencil-fill"></i> </a>
-                        @if (auth()->user()->type === 'admin')    
-                                <form action="{{ route('report.destroy', $report->id) }}" method="POST"
-                                    style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                            onclick="return confirm('Are you sure you want to delete this sale?');"
-                            class="btn btn-sm  btn-danger">
-                            <i class="ri-delete-bin-fill"></i>
-                            </button>
-                        </form>
+                        @if(isset($ready) && $ready == 1)
+                        <td>
+                            <label class="switch">
+                                <input type="checkbox" {{ $report->stock_status == 1 ? 'checked' : '' }}
+                                id="ReadyStock" data-id="{{ $report->id}}">
+                                <span class="slider round"></span>
+                            </label>
+                            <div class="row-spinner spinner-border" role="status" style="display: none;">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </td>
                         @endif
-                    </td>
+                        <td>
+                            <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-primary"><i
+                                    class="ri-eye-fill"></i></a>
+                            <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning"> <i
+                                    class="ri-pencil-fill"></i> </a>
+                            @if (auth()->user()->type === 'admin')    
+                                    <form action="{{ route('report.destroy', $report->id) }}" method="POST"
+                                        style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                onclick="return confirm('Are you sure you want to delete this sale?');"
+                                class="btn btn-sm  btn-danger">
+                                <i class="ri-delete-bin-fill"></i>
+                                </button>
+                            </form>
+                            @endif
+                        </td>
                     @endif
                     @if(auth()->user()->type === 'account')
 

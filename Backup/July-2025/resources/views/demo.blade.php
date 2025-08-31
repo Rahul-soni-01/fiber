@@ -276,7 +276,7 @@
                         </a>
                         <div class="collapse" id="reportMenu">
                             <ul class="nav flex-column ms-3">
-                                @if(in_array(auth()->user()->type, ['admin', 'electric', 'godown']))
+                                @if(in_array(auth()->user()->type, ['admin', 'electric', 'godown','user']))
                                 <li class="nav-item nav-sub-item" id="add">
                                     <a href="{{ route('report.create') }}" class="nav-link">Add Report</a>
                                 </li>
@@ -311,6 +311,25 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="nav-item" id="Report">
+                        <a href="{{ route('report.search') }}" class="nav-link"><i class="ri-search-line"></i> Search Report Details</a>
+                    </li>
+                    <li class="nav-item" id="Assign">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#assignMenu">
+                            <i class="ri-share-forward-line"></i> Assign Item <i class="ri-arrow-down-s-line float-end"></i>
+                        </a>
+                        <div class="collapse" id="assignMenu">
+                            <ul class="nav flex-column ms-3">
+                                <li class="nav-item nav-sub-item" id="add">
+                                    <a href="{{ route('assign-items.create') }}" class="nav-link">Add Assign</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="view">
+                                    <a href="{{ route('assign-items.index') }}" class="nav-link">Show Assigns</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <!-- Sale -->
                     <li class="nav-item" id="Sale">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#saleMenu">
@@ -412,11 +431,29 @@
                                 </li>
                                 <li class="nav-item nav-sub-item" id="show">
                                     <a href="{{ route('predefine.index') }}" id="view" class="nav-link">Predefine of
-                                        Accounts </a> --}}
+                                        Accounts </a> 
+                                    </li>
+                                    --}}
+                            </ul>
+                        </div>
+                    </li>
+                    {{-- Estimate --}}
+                    <li class="nav-item" id="Estimate">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#estimateMenu">
+                            <i class="ri-file-list-3-line"></i> Estimate <i class="ri-arrow-down-s-line float-end"></i>
+                        </a>
+                        <div class="collapse" id="estimateMenu">
+                            <ul class="nav flex-column ms-3">
+                                <li class="nav-item nav-sub-item" id="add">
+                                    <a href="{{ route('estimates.create') }}" class="nav-link">Add Estimate</a>
+                                </li>
+                                <li class="nav-item nav-sub-item" id="view">
+                                    <a href="{{ route('estimates.index') }}" class="nav-link">Show Estimates</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
+                    
                     <!-- Bank -->
                     <li class="nav-item" id="Bank">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#bankMenu">
@@ -433,6 +470,7 @@
                             </ul>
                         </div>
                     </li>
+
                     <!-- Expense -->
                     <li class="nav-item" id="Expense">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#expenseMenu">

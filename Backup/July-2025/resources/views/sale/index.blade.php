@@ -10,6 +10,8 @@
     <a href="?status=1" class="btn btn-info m-1">Demo</a>
     <a href="?status=2" class="btn btn-warning m-1">Standby</a>
     <a href="?status=3" class="btn btn-danger m-1">Replacement</a>
+    <a href="?status=4" class="btn btn-secondary m-1">Repair Out</a>
+
 </div>
     
     @if (session('success'))

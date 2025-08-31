@@ -13,6 +13,8 @@ class Report extends Model
     protected $fillable = [
         'indate',
         'worker_name',
+        'body',
+        'china',
         'sr_no_fiber',
         'm_j',
         'type',

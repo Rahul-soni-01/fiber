@@ -683,7 +683,7 @@ $(document).ready(function () {
             }
         }
     });
-    $('.section').on('change', function (e) {
+    $('#section').on('change', function (e) {
         // e.preventDefault();
 
         let selectedValue = $(this).val();                  // New section value
@@ -1448,6 +1448,14 @@ function NewReportCreateRow(subcategories) {
 function tbl_stock(row_id) {
     // alert(row_id);
     var subcategory_id = document.getElementById(`subcategory_${row_id}`).value;
+    // let allSelects = document.querySelectorAll('.tbl_sub');
+    // console.log(allSelects, subcategory_id, row_id);
+    // for (let select of allSelects) {
+    //     let val = select.value;
+    //     if (val == subcategory_id && select.id !== `subcategory_${row_id}`) {
+    //        toastr.error('Same Item Found in Fiber!');
+    //     }
+    // }
 
     var subcategoryElement = document.getElementById(`subcategory_${row_id}`);
     // console.log(subcategoryElement,subcategory_id);

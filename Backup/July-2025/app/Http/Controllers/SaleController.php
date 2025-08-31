@@ -24,6 +24,7 @@ class SaleController extends Controller
     private function checkPermission(Request $request, $action)
     {
         $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Sale ?? [];
+        // dd($permissions,$action);
         return in_array($action, $permissions);
     }
     public function index(Request $request)
@@ -40,11 +41,19 @@ class SaleController extends Controller
                     return view('sale.onlysale', ['sales' => $replacements, 'isReplacement' => true]);
                 }
 
+
                 // Regular status filtering
                 $sales = Sale::with('customer','items')
                     ->where('status', $status)
                     ->get();
 
+                    if($status == 4) {
+                        $sales = Sale::with('customer','items')
+                        ->where('repair_status', 1)
+                        ->get();
+                        // For Repair Out, we want to show all sales with status 4
+                        // return view('sale.onlysale', ['sales' => $sales, 'isReplacement' => false]);
+                    }
                 return view('sale.onlysale', ['sales' => $sales, 'isReplacement' => false]);
             }
             $sales = TblCustomer::with('sales')->get();

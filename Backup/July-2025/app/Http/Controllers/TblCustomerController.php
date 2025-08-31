@@ -14,7 +14,7 @@ class TblCustomerController extends Controller
 {
     private function checkPermission(Request $request, $action)
     {
-        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Party ?? [];
+        $permissions = app()->make('App\Http\Controllers\TblUserController')->permission($request)->getData()->permissions->Customer ?? [];
         return in_array($action, $permissions);
     }
 

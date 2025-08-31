@@ -58,7 +58,13 @@
                     <span class="form-control">{{$item1->subCategory->name}}</span>
                 </div>
                 <div class="col-sm-1">
-                    <span class="form-control">{{$item1['unit']}}</span>
+                    <span class="form-control">
+                          @if ($item1['unit'] == 'Pic')
+                        Pcs
+                    @else
+                        {{ $item1['unit'] }}
+                    @endif
+                    </span>
                 </div>
                 <div class="col-sm-2">
                     <span class="form-control">{{$item1['sr_no']}}</span>

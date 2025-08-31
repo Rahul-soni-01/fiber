@@ -157,9 +157,9 @@ class ReportController extends Controller
 
     public function show(Request $request, $id)
     {
-        $report = Report::with('tbl_type')->find($id);
+        $report = Report::with('tbl_type','customer')->find($id);
         $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category.category', 'tbl_sub_category')->where('report_id', $id)->get();
-        // dd($reportitems);
+        
         // return view('report.show', compact('report'));
         return view('report.Newshow', compact('report', 'reportitems'));
     }
@@ -248,7 +248,7 @@ class ReportController extends Controller
             $Advancedviewresults = collect();
 
             // tbl_reports
-            $reports = Report::where('sr_no_fiber', $sr_no)
+            $reports = Report::with('reportItems')->where('sr_no_fiber', $sr_no)
                 ->select('*', 'sr_no_fiber as sr_no', 'created_at as date', DB::raw("'tbl_reports' as table_name"))
                 ->get()
                 ->map($formatDate);
@@ -440,7 +440,7 @@ class ReportController extends Controller
 
     public function edit($id)
     {
-        $report = Report::with('tbl_type')->find($id);
+        $report = Report::with('tbl_type','customer')->find($id);
         $reportitems = TblReportItem::with('report', 'tbl_stocks', 'tbl_sub_category', 'tbl_sub_category.category')->where('report_id', $id)->get();
         // dd($id);
         $invoice_no = SelectedInvoice::first()->invoice_no;
@@ -448,6 +448,7 @@ class ReportController extends Controller
         $all_sub_categories = tbl_sub_category::with('category')
             ->orderBy('cid')
             ->get();
+              $customers = TblCustomer::all();
         // $cards = tbl_sub_category::where('cid', 7)->get();
         // $sub_categories = tbl_sub_category::where('cid', 1)->get();
         // $isolators = TblStock::where('cid', 8)
@@ -473,7 +474,7 @@ class ReportController extends Controller
         $types = Tbltype::orderBy('id', 'asc')->get();
         // dd($types);
         // return view('report.edit', compact('sub_categories', 'cards', 'isolators', 'qsswitches', 'couplars', 'hrs', 'report'));
-        return view('report.Newedit', compact('report', 'reportitems', 'all_sub_categories', 'types'));
+        return view('report.Newedit', compact('report', 'reportitems', 'all_sub_categories', 'types','customers'));
     }
 
     public function reject(Request $request)
@@ -592,58 +593,32 @@ class ReportController extends Controller
 
     public function stockReport(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                // 'part' => 'required|numeric',
-                // 'temp' => 'required|numeric',
-                /*'warranty' => 'required|numeric',
-                'worker_name' => 'required|string|max:255',
-                'sr_no_fiber' => 'required|string|max:255',
-                'm_j' => 'required|string|max:255',
-                'type' => 'required|numeric',*/
-                // 'card' => 'required|array',
-                // 'sr_card' => 'required|array',
-                // 'sr_cardamp' => 'required|array',
-                // 'sr_cardvolt' => 'required|array',
-                // 'sr_cardwatt' => 'required|array',
-                // 'srled.*' => 'nullable|distinct',
-                // 'ampled' => 'required|array',
-                // 'voltled' => 'required|array',
-                // 'wattled' => 'required|array',
-                // 'sr_isolator' => 'required|string|max:255',
-                // 'sr_aom_qswitch' => 'required|string|max:255',
-                // 'amp_aom_qswitch' => 'required|string|max:255',
-                // 'volt_aom_qswitch' => 'required|string|max:255',
-                // 'watt_aom_qswitch' => 'required|string|max:255',
-                /*'sr_cavity_nani' => 'required|string|max:255',
-                'sr_cavity_moti' => 'required|string|max:255',
-                'sr_combiner_3_1' => 'required|string|max:255',
-                'amp_combiner_3_1' => 'required|string|max:255',
-                'volt_combiner_3_1' => 'required|string|max:255',
-                'watt_combiner_3_1' => 'required|string|max:255',
-                'sr_couplar_2_2' => 'required|string|max:255',
-                'amp_couplar_2_2' => 'required|string|max:255',
-                'volt_couplar_2_2' => 'required|string|max:255',
-                'watt_couplar_2_2' => 'required|string|max:255',
-                'sr_hr' => 'required|string|max:255',
-                'sr_fiber_nano' => 'required|string|max:255',
-                'sr_fiber_moto' => 'required|string|max:255',
-                'output_amp' => 'required|string|max:255',
-                'output_volt' => 'required|string|max:255',
-                'nani_cavity' => 'required|string|max:255',
-                'final_cavity' => 'required|string|max:255',*/
-                // 'note1' => 'nullable|string|max:255',
-                // 'note2' => 'nullable|string|max:255',
-            ],
-            [
-                // 'srled.*.distinct' => 'Duplicate serial number found.',
-            ]
-        );
-        if ($validator->fails()) {
-            $firstErrorMessage = $validator->errors()->first();
-            return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+        if (Auth()->user()->type === 'godown') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    // 'part' => 'required|numeric',    
+                    'indate' => 'required|date',
+                    'party_name' => 'required|exists:tbl_customers,id',
+                    // 'temp' => 'required|numeric',
+                    'warranty' => 'required|numeric',
+                    // 'worker_name' => 'required|string|max:255',
+                    'sr_no_fiber' => 'required|string|max:255',
+                    // 'm_j' => 'required|string|max:255',
+                    'type' => 'required|numeric',
+                    'note1' => 'nullable|string|max:255',
+                    // 'note2' => 'nullable|string|max:255',
+                ],
+                [
+                    // 'srled.*.distinct' => 'Duplicate serial number found.',
+                ]
+            );
+            if ($validator->fails()) {
+                $firstErrorMessage = $validator->errors()->first();
+                return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+            }
         }
+
         if (Auth()->user()->type === 'user') {
             $validator = Validator::make(
                 $request->all(),
@@ -1263,6 +1238,48 @@ class ReportController extends Controller
                 if ($request->status == 1) {
                     $report->sale_status = 0;
                     $report->stock_status = 1;
+                    // $report->section = $request->section;
+                    $report->section = 0;
+                    // $report->indate = $request->indate ?? null;
+                }
+                $report->remark = $request->remark;
+                $report->save();
+
+                return redirect()->route('report.new')->with('success', 'Report updated successfully.');
+            } elseif (Auth()->user()->type === 'godown') {
+                
+                 $validator = Validator::make(
+                $request->all(),
+                [
+                    // 'part' => 'required|numeric',
+                    'indate' => 'required|date',
+                    'party_name' => 'required|exists:tbl_customers,id',
+                    // 'temp' => 'required|numeric',
+                    'warranty' => 'required|numeric',
+                    // 'worker_name' => 'required|string|max:255',
+                    'sr_no_fiber' => 'required|string|max:255',
+                    // 'm_j' => 'required|string|max:255',
+                    'type' => 'required|numeric',
+                    'note1' => 'nullable|string|max:255',
+                    // 'note2' => 'nullable|string|max:255',
+                ],
+                [
+                    // 'srled.*.distinct' => 'Duplicate serial number found.',
+                ]
+            );
+            if ($validator->fails()) {
+                $firstErrorMessage = $validator->errors()->first();
+                return redirect()->back()->withErrors($validator)->withInput()->with('error', $firstErrorMessage);
+            }
+                $report = Report::find($id);
+                $report->status = $request->status;
+                $report->party_name = $request->party_name;
+                $report->f_status = $request->warranty;
+                $report->sr_no_fiber = $request->sr_no_fiber;
+                if ($request->status == 1) {
+                    $report->sale_status = 0;
+                    $report->stock_status = 1;
+                    // $report->section = $request->section;
                     $report->section = 0;
                     $report->indate = $request->indate ?? null;
                 }
@@ -1270,6 +1287,8 @@ class ReportController extends Controller
                 $report->save();
 
                 return redirect()->route('report.new')->with('success', 'Report updated successfully.');
+            } else {
+                throw new \Exception('Unauthorized action.');
             }
         } catch (\Exception $e) {
             // If an error occurs, restore the old report items

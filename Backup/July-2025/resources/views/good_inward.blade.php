@@ -35,7 +35,7 @@
                     </option>
                     <option value="Consumable" {{ request('main_category')=='Consumable' ? 'selected' : '' }}>Consumable
                     </option>
-                    <option value="Others" {{ request('main_category')=='Others' ? 'selected' : '' }}>Others</option>
+                    <option value="" {{ request('main_category')=='' ? 'selected' : '' }}>Others</option>
                 </select>
 
             </div>
@@ -49,7 +49,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <select id="party_name" name="party_name" class="form-select" required>
-                    <option value="" disabled selected>Choose a Supplier</option>
+                    <option value="">Choose a Supplier</option>
                     @foreach($partyname as $party)
                     <option value="{{ $party->id }}">{{ $party->party_name }}</option>
                     @endforeach

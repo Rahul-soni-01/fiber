@@ -25,13 +25,14 @@
                     </select>
                 </div>
                 @endif
+                
+                <div class="col-12 col-md-2"> <h5> In-Date </h5></div>
+                <div class="col-md-3">
+                    <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date" value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
+                </div>
             </div>
              
-                <div class="col-md-3">In-Date</div>
-                <div class="col-md-3">
-                    <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date"
-                        value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
-                </div>
+           
             {{-- if admin login then option for report layout append --}}
             @if( auth()->user()->type == 'admin')
             @if(auth()->user()->type === 'electric' || auth()->user()->type === 'admin')

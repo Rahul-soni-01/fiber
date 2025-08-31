@@ -32,6 +32,9 @@ use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\ReportPermissionController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\EstimateController;
+use App\Http\Controllers\AssignItemController;
+
 
 
 Route::get('/generate-pdf', [PdfGeneratorController::class, 'pdfGenerator'])->name('generate-pdf');
@@ -57,6 +60,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat-messages-{userId}', [ChatController::class, 'getMessages']);
     Route::post('/chat-fetch-messages-user_id={user_id}', [ChatController::class, 'fetch']);
 
+    Route::resource('estimates', EstimateController::class);
+
+    Route::resource('assign-items', AssignItemController::class);
 
     // Home Blade
     Route::get('/home', [TblUserController::class, 'show'])->name('home');

@@ -81,7 +81,7 @@ class TblPurchaseItemController extends Controller
             'amount_r' => 'required',
             'shipping_cost' => 'required',
             'round_total' => 'required',
-            'main_category' => 'required',
+            // 'main_category' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -97,7 +97,7 @@ class TblPurchaseItemController extends Controller
             $inward->invoice_no = $request->invoice_no;
         }
 
-        $inward->main_category = $request->main_category;
+        $inward->main_category = $request->main_category ?? null;
         $inward->date = $request->date;
         $inward->currency = $request->currency;
         $inward->pid = $request->party_name;

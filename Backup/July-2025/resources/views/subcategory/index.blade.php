@@ -25,7 +25,7 @@
             <table class="table text-dark">
                 <thead class="table-dark text-white">
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         {{-- <th>Category Add Date</th> --}}
                         <th>Primary Category Name</th>
                         <th>Secoundry Category Name</th>
@@ -39,7 +39,7 @@
                 <tbody>
                     @foreach ($subCategories as $subcategory)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $subcategory->id }}</td>
                         {{-- <td>{{$subCategory['category_date']}}</td> --}}
                         <td>{{$subcategory['category']->main_category ?? 'N/A'}}</td>
                         <td>{{$subcategory['category']->category_name ?? 'N/A'}}</td>

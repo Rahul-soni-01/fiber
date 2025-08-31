@@ -30,16 +30,31 @@
             </ul>
         </div>
         @endif
-
-        <div class="col-md-3">In-Date</div>
-        <div class="col-md-3">
-            <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date"
-                value="{{ old('indate', isset($report->indate) ? \Carbon\Carbon::parse($report->indate)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d')) }}"
-                required>
+        <div class="row mb-3">
+            @if( auth()->user()->type === 'godown')
+            <div class="col-12 col-md-2">
+                <h5>Customer Name</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <select id="party_name" name="party_name" class="form-control" required>
+                    <option value="" disabled>Choose a Customer</option>
+                    @foreach($customers as $customer)
+                    <option value="{{ $customer->id }}" {{ $customer->id == $report->party_name ? 'selected' : '' }}>{{
+                        $customer->customer_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
+            <div class="col-md-3">In-Date</div>
+            <div class="col-md-3">
+                <input type="date" id="indate" name="indate" class="form-control" placeholder="Enter Date"
+                    value="{{ old('indate', isset($report->indate) ? \Carbon\Carbon::parse($report->indate)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d')) }}"
+                    required>
+            </div>
         </div>
         {{-- {{ dd($report);}} --}}
         <div id="Tbody">
-            @if(in_array(auth()->user()->type, ['electric', 'admin', 'cavity', 'user']))
+            @if(in_array(auth()->user()->type, ['electric', 'admin', 'cavity', 'user','godown']))
             <div class="row mt-3">
                 <div class="col-md-2">
                     <h5>Part</h5>
@@ -57,52 +72,51 @@
                             }}>Repairing</option>
                     </select>
                 </div>
+                @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
                 <div class="col-md-2">
                     <h5>Temp no.</h5>
                 </div>
                 <div class="col-md-2">
-                    @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
                     <h5>EMPLOYEE NAME</h5>
-                    @endif
                 </div>
+                @endif
                 <div class="col-md-3">
                     @if(in_array(auth()->user()->type, ['admin','user','electric', 'cavity']))
                     <input type="text" id="wn" name="worker_name" class="form-control" placeholder="Enter Worker Name"
                         value="{{ old('worker_name', $report->worker_name) }}" @if(in_array(auth()->user()->type,
                     ['electric', 'cavity']))
-                    readonly @endif
-                    >
+                    readonly @endif >
                     @endif
                 </div>
             </div>
             @endif
-            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
+            @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity','godown']))
             <div class="row mt-3">
                 <div class="col-md-2">
-                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
+                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity','godown']))
                     <h5>SR(FIBER)</h5>
                     @endif
                 </div>
                 <div class="col-md-3">
-                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
+                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity','godown']))
                     <input type="text" id="srfiber" name="sr_no_fiber" class="form-control"
                         placeholder="Enter SR No Fiber" value="{{ old('sr_no_fiber', $report->sr_no_fiber) }}"
                         @if(in_array(auth()->user()->type,
                     ['electric', 'cavity'])) readonly @endif>
                     @endif
                 </div>
+                @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                 <div class="col-md-2">
                     <input type="text" id="temp" name="temp" class="form-control" placeholder="Enter Body/ Temp No"
                         value="{{ old('temp', $report->temp) }}" @if(in_array(auth()->user()->type, ['cavity']))
                     readonly @endif>
                 </div>
                 <div class="col-md-2">
-                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
                     <h5>M.J</h5>
-                    @endif
                 </div>
+                @endif
                 <div class="col-md-3">
-                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
+                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity',]))
                     <input type="text" id="mj" name="m_j" class="form-control" placeholder="Enter M/J Value"
                         value="{{ old('m_j', $report->m_j) }}" @if(in_array(auth()->user()->type, ['electric',
                     'cavity'])) readonly @endif>
@@ -110,7 +124,7 @@
                 </div>
             </div>
             @endif
-            @if(in_array(auth()->user()->type, ['admin', 'user', 'cavity','electric']))
+            @if(in_array(auth()->user()->type, ['admin', 'user', 'cavity','electric','godown']))
             <div class="row mt-3">
                 <div class="col-md-2">
                     <h5>Warranty</h5>
@@ -125,12 +139,12 @@
                 </div>
                 <div class="col-md-2"></div>
                 <div class="col-md-2">
-                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
+                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity','godown']))
                     <h5>Type</h5>
                     @endif
                 </div>
                 <div class="col-md-3">
-                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity']))
+                    @if(in_array(auth()->user()->type, ['admin', 'user', 'electric', 'cavity','godown']))
                     <select id="type1" name="type" class="form-control" required @if(in_array(auth()->user()->type,
                         ['electric', 'cavity'])) readonly @endif>
                         <option value="" disabled selected>Select Type</option>
@@ -144,6 +158,8 @@
                 </div>
             </div>
             @endif
+            @if (!in_array(auth()->user()->type, ['godown']))
+                
             <div class="container-fluid">
                 <div class="row mt-3">
                     <!-- Empty Columns -->
@@ -153,13 +169,15 @@
                     <!-- Button Column -->
                     <div class="col-12 col-md-4 text-right">
                         <button type="button" onclick="NewReportCreateRow({{ json_encode($all_sub_categories) }})"
-                            class="btn btn-dark">
-                            Add
-                        </button>
+                        class="btn btn-dark">
+                        Add
+                    </button>
                     </div>
                     <div class="col-12 col-md-2"></div>
                 </div>
             </div>
+            
+            @endif
             <div class="row mt-3">
                 <div class="col-md-3">
                     <h5>ITEM</h5>
@@ -291,7 +309,5 @@
             {{-- @endif --}}
         </div>
         <button type="button" id="submit-button" class="btn btn-success">SUBMIT</button>
-
 </div>
-
 @endsection

@@ -8,6 +8,15 @@
     {{ session('error') }}
 </div>
 @endif
+@if ($errors->any())
+<div style="color: red;">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 <div class="main" id="main">
     <form action="{{route('sale.store')}}" method="post">
         @csrf
@@ -110,15 +119,16 @@
                     </div>
                     <div class="col" id="sr_no_div_0" style="display: none;">
                         <label for="data[0][sr_no]" class="form-label">Sr No</label>
-                        
-                        <select id="data[0][sr_no]" name="sr_no[]" class="form-control select2" onchange="getSrNo(event,0)">
+
+                        <select id="data[0][sr_no]" name="sr_no[]" class="form-control select2"
+                            onchange="getSrNo(event,0)">
                             <option value="" disabled selected>Select</option>
                         </select>
                     </div>
                     <div class="col" id="col_div_0">
                         <label for="data[0][sr_no]" class="form-label">Sr No</label>
                         <input type="text" name="sr_no[]" class="form-control" id="sr_no_0"
-                            placeholder="Plz dont write here" >
+                            placeholder="Plz dont write here">
                     </div>
                     <input type="hidden" name="report_id[]" id="report_id_0" value="">
                     <!-- Quantity -->
@@ -231,7 +241,8 @@
 
                 <div class="row mt-3">
                     <div class="col-sm-2 offset-sm-8">Amount</div>
-                    <div class="col-sm-2"><input type="number" id="amount" step="0.01" name="amount" class="form-control" readonly></div>
+                    <div class="col-sm-2"><input type="number" id="amount" step="0.01" name="amount"
+                            class="form-control" readonly></div>
                 </div>
 
                 <div class="row mt-3">
